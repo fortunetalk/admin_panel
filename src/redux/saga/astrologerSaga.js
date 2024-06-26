@@ -32,25 +32,23 @@ function* addAstrologer(actions) {
   try {
     const { payload } = actions;
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
     const response = yield ApiRequest.postRequest({
       url: api_url + add_astrologer,
       header: "form",
       data: payload?.data,
     });
 
-
     if (response) {
       Swal.fire({
         icon: "success",
-        title: "Astrologer Added Successfull",
+        title: "Astrologer Added Successfully",
         showConfirmButton: false,
         timer: 2000,
       });
       yield put({ type: actionTypes.GET_ALL_ASTROLOGER, payload: response });
-      yield call(payload);
+      yield call(payload.callback);
     } else {
-      yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
-      
       const errorMessage = extractErrorMessage(response?.Error?.message || 'Failed to add Astrologer');
 
       Swal.fire({
@@ -61,12 +59,10 @@ function* addAstrologer(actions) {
         timer: 2000,
       });
     }
-    yield put({ type: actionTypes.GET_ALL_ASTROLOGER });
-
   } catch (e) {
-    console.log("errror",e);
+    console.log("error", e);
+  } finally {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
-
   }
 }
 
@@ -109,7 +105,6 @@ function* getAstrologer(action) {
     console.log(e);
   }
 }
-
 function* getEnquiryAstrologers() {
   try {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
@@ -132,7 +127,6 @@ function* getEnquiryAstrologers() {
     console.log(e);
   }
 }
-
 function* updateAstrologerStatus(action) {
   try {
       const { payload } = action;
@@ -172,7 +166,6 @@ function* updateAstrologerStatus(action) {
       yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
     }
 }
-
 
 function* updateAstrologerCallStatus(action) {
   try {

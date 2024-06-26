@@ -1,0 +1,16 @@
+{
+    "builds": [
+        {
+            "src": "package.json",
+            "use": "@vercel/node"
+        }
+    ],
+    "build": {
+        "env": {
+            "NPM_FLAGS": "--legacy-peer-deps"
+        }
+    },
+    "scripts": {
+        "build": "npm install $NPM_FLAGS && npm run build"
+    }
+}

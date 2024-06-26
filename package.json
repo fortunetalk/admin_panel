@@ -60,12 +60,15 @@
   "resolutions": {
     "react-error-overlay": "6.0.9"
   },
+  
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "postinstall": "npm install --legacy-peer-deps"
+    "postinstall": "npm install --legacy-peer-deps",
+    "preinstall": "npx npm@latest install -g npm@10.8.1",
+    "install": "npm install --legacy-peer-deps"
   },
   "eslintConfig": {
     "extends": [

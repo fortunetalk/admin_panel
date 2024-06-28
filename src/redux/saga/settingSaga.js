@@ -20,6 +20,7 @@ import {
   add_new_city,
   country_state_list,
   state_city_list,
+  get_country_value
 } from "../../utils/Constants";
 import Swal from "sweetalert2";
 import { Colors } from "../../assets/styles";
@@ -41,7 +42,7 @@ function* createCountry(actions) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.SET_IS_LOADING, payload: response.data });
+      yield put({ type: actionTypes.GET_ALL_COUNTRY, payload: response.data });
     } else if (response.error) {
       // Check if the error is a validation error and display appropriate message
       const errorMessage = response.error.message || "Server Error";
@@ -84,6 +85,26 @@ function* getCountries() {
     }
 
     // yield put({ type: actionTypes.SET_IS_LOADING, payload: response.data });
+  } catch (e) {
+    // yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    console.log(e);
+  }
+}
+function* getCountryValue() {
+  try {
+    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    const response = yield ApiRequest.getRequest({
+      url: api_url + get_country_value,
+    });
+
+    if (response?.success) {
+      yield put({
+        type: actionTypes.GET_COUNTRY_VALUE,
+        payload: response?.data,
+      });
+    }
+
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: response.data });
   } catch (e) {
     // yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
     console.log(e);
@@ -639,6 +660,7 @@ function* deleteCity(actions) {
 export default function* settingSaga() {
   yield takeLeading(actionTypes.CREATE_COUNTRY, createCountry);
   yield takeLeading(actionTypes.GET_ALL_COUNTRY, getCountries);
+  yield takeLeading(actionTypes.GET_COUNTRY_VALUE, getCountryValue);
   yield takeLeading(actionTypes.COUNTRY_STATE_LIST, getCountryStateList);
   yield takeLeading(actionTypes.STATE_CITY_LIST, getStateCityList);
   yield takeLeading(actionTypes.UPDATE_COUNTRY_STATUS, updateCountryStatus);

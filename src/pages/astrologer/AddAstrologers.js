@@ -87,6 +87,7 @@ export const AddAstrologers = ({
   countryData,
   countryStateData,
   stateCityData,
+  countryValueData,
   isLoading,
 }) => {
   var classes = useStyles();
@@ -146,7 +147,8 @@ export const AddAstrologers = ({
 
     astrologyQualification: "",
     gallery: "",
-    astrologerType: "",
+    astrologerType: [],
+    countryValue: [],
   });
 
   const [profilePhoto, setprofilePhoto] = useState({
@@ -171,6 +173,7 @@ export const AddAstrologers = ({
     dispatch(ExpertiesActions.getActiveExpertiesData());
     dispatch(RemedyActions.getActiveRemediesData());
     dispatch(SettingActions.getCountries());
+    dispatch(SettingActions.getCountryValue());
   }, []);
 
   const handlecurrencyValueChange = (e) => {
@@ -196,6 +199,16 @@ export const AddAstrologers = ({
       updateState({ skills: [...skills, item?._id] });
     }
     handleError("skills", null);
+  };
+
+  const handleCountryValue = (item) => {
+    if (countryValue.some((selectedItem) => selectedItem === item._id)) {
+      let skilData = countryValue.filter((countryValue) => countryValue !== item?._id);
+      updateState({ countryValue: skilData });
+    } else {
+      updateState({ countryValue: [...countryValue, item?._id] });
+    }
+    handleError("countryValue", null);
   };
 
   const handleRemedies = (item) => {
@@ -237,16 +250,23 @@ export const AddAstrologers = ({
     handleError("preferredDays", null);
   };
 
-  const handleAstrologerType = (event) => {
-    const item = event.target.value;
-    if (state.astrologerType === item) {
-      updateState({ astrologerType: '' });
-    } else {
-      updateState({ astrologerType: item });
-    }
+  const handleAstrologerType = (item) => {
+    setState((prevState) => {
+      const { astrologerType } = prevState;
+      if (astrologerType.includes(item)) {
+        return {
+          ...prevState,
+          astrologerType: astrologerType.filter((selectedItem) => selectedItem !== item),
+        };
+      } else {
+        return {
+          ...prevState,
+          astrologerType: [...astrologerType, item],
+        };
+      }
+    });
     handleError("astrologerType", null);
   };
-
 
   const handleProfile = (e) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -503,6 +523,7 @@ export const AddAstrologers = ({
         formData.append("companyLiveCallPrice", companyLiveCallPrice);
         formData.append("status", "Active");
         formData.append("astrologerType", astrologerType);
+        formData.append("allowedCountry", countryValue);
 
 
         // formData.append("working", working);
@@ -627,7 +648,6 @@ export const AddAstrologers = ({
     error,
     name,
     displayName,
-    realName,
     email,
     phoneNumber,
     rating,
@@ -675,6 +695,7 @@ export const AddAstrologers = ({
     astrologyQualification,
     gallery,
     astrologerType,
+    countryValue
   } = states;
 
   const get_date_value = () => {
@@ -1136,6 +1157,37 @@ export const AddAstrologers = ({
             </Grid>
             {/* days & working */}
 
+            <Grid item lg={12} sm={12} md={12} xs={12}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Available Countries</FormLabel>
+                <FormGroup aria-label="position" row>
+                  {countryValueData &&
+                    countryValueData.map((item) => {
+                      return (
+                        <div className={classes.chips}>
+                          <FormControlLabel
+                            value={item.title}
+                            className={classes.checkbox}
+                            control={
+                              <Checkbox
+                                checked={countryValue && countryValue.includes(item._id)}
+                                onChange={() => handleCountryValue(item)}
+                              />
+                            }
+                            label={item.title + " " + item.countryValue + 'X'}
+                            
+                            labelPlacement="end"
+                          />
+                        </div>
+                      );
+                    })}
+                </FormGroup>
+              </FormControl>
+              {error.countryValue && (
+                <div className={classes.errorstyles}>{error.countryValue}</div>
+              )}
+            </Grid>
+
             <Grid
               item
               lg={3}
@@ -1497,31 +1549,34 @@ export const AddAstrologers = ({
               <div className={classes.errorStyle}>{error.gallery}</div>
             </Grid>
 
-            <Grid item lg={6} sm={12} md={12} xs={12}>
+            <Grid item lg={6} sm={12} md={6} xs={12}>
             <FormControl component="fieldset">
         <FormLabel component="legend">Astrologer Type</FormLabel>
-        <RadioGroup
-          value={astrologerType}
-          onChange={handleAstrologerType}
-          row
-        >
-          {astrologerTypeList.map((item) => (
-            <div className={classes.chips} key={item}>
-              <FormControlLabel
-                value={item}
-                className={classes.radio}
-                control={<Radio />}
-                label={item}
-                labelPlacement="end"
-              />
-            </div>
-          ))}
-        </RadioGroup>
+        <FormGroup aria-label="position" row>
+          {astrologerTypeList &&
+            astrologerTypeList.map((item) => (
+              <div className={classes.chips} key={item}>
+                <FormControlLabel
+                  value={item}
+                  className={classes.checkbox}
+                  control={
+                    <Checkbox
+                      checked={states.astrologerType.includes(item)}
+                      onChange={() => handleAstrologerType(item)}
+                    />
+                  }
+                  label={item}
+                  labelPlacement="end"
+                />
+              </div>
+            ))}
+        </FormGroup>
       </FormControl>
       {error.astrologerType && (
         <div className={classes.errorstyles}>{error.astrologerType}</div>
       )}
     </Grid>
+
             <Grid item lg={12} sm={12} md={12} xs={12}>
            {/* <Typography variant="h6" component="label">Gallery Image</Typography>  */}
             <Grid container direction="row" spacing={2} style={{ overflowX: 'auto', whiteSpace: 'nowrap' }}>
@@ -1670,6 +1725,7 @@ const mapStateToProps = (state) => ({
   countryData: state.setting.countryData,
   countryStateData: state.setting.countryStateData,
   stateCityData: state.setting.stateCityData,
+  countryValueData: state.setting.countryValueData,
   isLoading: state.dashboard.isLoading,
 });
 

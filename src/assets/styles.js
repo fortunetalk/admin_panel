@@ -180,6 +180,7 @@ export const useStyles = makeStyles({
 
 
 
+
 export const propStyles = {
   tableStyles: {
     sorting: false,

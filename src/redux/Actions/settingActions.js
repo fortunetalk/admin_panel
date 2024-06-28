@@ -8,6 +8,11 @@ export const getCountries = payload =>({
     type: actionTypes.GET_ALL_COUNTRY,
     payload
 })
+export const getCountryValue = payload =>({
+    type: actionTypes.GET_COUNTRY_VALUE,
+    payload
+})
+
 export const updateCountryStatus = payload =>({
     type: actionTypes.UPDATE_COUNTRY_STATUS,
     payload

@@ -107,6 +107,10 @@ import DisplayPooja from "./pages/fortuneStore/DisplayPooja";
 import AddPoojaBanner from "./pages/banner/AddPoojaBanner";
 import DisplayTestimonial from "./pages/testimonial/DisplayTestimonial";
 import AddTestimonial from "./pages/testimonial/AddTestimonial";
+import DisplayCourses from "./pages/courses/DisplayCourses";
+import AddCourses from "./pages/courses/AddCourses";
+import DisplayDemoClass from "./pages/courses/DisplayDemoClass";
+import AddDemoClass from "./pages/courses/AddDemoClass";
 
 function App() {
   return (
@@ -271,6 +275,12 @@ function App() {
 
           <Route path="/displayTestimonial" element={<DisplayTestimonial/>} />
           <Route path="/addTestimonial" element={<AddTestimonial/>} />
+
+          <Route path="/displayCourses" element={<DisplayCourses/>} />
+          <Route path="/addCourse" element={<AddCourses/>} />
+          <Route path="/displayDemoClass" element={<DisplayDemoClass/>} />
+          <Route path="/scheduleDemoClass" element={<AddDemoClass/>} />
+
 
           <Route
             path="/customerNotification"

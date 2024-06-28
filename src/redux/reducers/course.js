@@ -2,6 +2,7 @@ import * as actionTypes from "../actionTypes";
 
 const initialState = {
   courseData: null,
+  activeCourseData: null,
 };
 
 const course = (state = initialState, actions) => {
@@ -21,21 +22,27 @@ const course = (state = initialState, actions) => {
         courseData: payload,
       };
     }
-    case actionTypes.UPDATE_PRODUCT_STATUS: {
+    case actionTypes.GET_ACTIVE_COURSES: {
+      return {
+        ...state,
+        activeCourseData: payload,
+      };
+    }
+    case actionTypes.UPDATE_COURSE_STATUS: {
       
       return {
           ...state,
           courseData: payload,
       };
   }
-  case actionTypes.UPDATE_PRODUCT: {
+  case actionTypes.UPDATE_COURSE: {
    
     return {
         ...state,
         courseData: payload,
     };
 }
-  case actionTypes.DELETE_PRODUCT: {
+  case actionTypes.DELETE_COURSE: {
     return {
       ...state,
       courseData: payload,

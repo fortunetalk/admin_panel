@@ -23,7 +23,8 @@ const AddCountry = () => {
   const [title, setTitle] = useState("");
   const [error, setError] = useState({});
   const [status, setStatus] = useState("")
-  const [code,setcode]= useState("")
+  const [code,setcode]= useState("");
+  const [countryValue, setCountryValue] = useState('');
 
 
 
@@ -47,6 +48,7 @@ const AddCountry = () => {
       formData.append("title", title);
       formData.append("status", status);
       formData.append("code", code);
+      formData.append("countryValue", countryValue);
 
       dispatch(countryActions.addCountries(formData))
       handleReset();
@@ -81,7 +83,7 @@ const AddCountry = () => {
             </div>
           </Grid>
 
-          <Grid item lg={4} md={4} sm={12} xs={12}>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
               label="Enter Country Name"
               error={error.title ? true : false}
@@ -94,14 +96,20 @@ const AddCountry = () => {
             />
           </Grid>
           
-          <Grid item lg={4} md={4} sm={12} xs={12}>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
           <TextField fullWidth label="Country Code" id="fullWidth" value={code} 
                 onChange={(e) => setcode(e.target.value)}
           
           />
           </Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+          <TextField fullWidth label="Country Value" id="fullWidth" value={countryValue} 
+                onChange={(e) => setCountryValue(e.target.value)}
+          
+          />
+          </Grid>
         
-          <Grid item lg={4} sm={12} md={4} xs={12}>
+          <Grid item lg={6} sm={12} md={6} xs={12}>
               <FormControl fullWidth>
                 <InputLabel id="select-label">Select Status</InputLabel>
                 <Select

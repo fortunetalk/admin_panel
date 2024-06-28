@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Colors, propStyles, useStyles } from "../../assets/styles.js";
-import MaterialTable from "material-table"; 
+import MaterialTable from "material-table";
 import {
   Avatar,
   Box,
@@ -13,7 +13,7 @@ import {
   DialogContentText,
   DialogContent,
   DialogTitle,
-  Dialog
+  Dialog,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { getData, postData } from "../../utils/FetchNodeServices.js";
@@ -54,9 +54,8 @@ const ListAstrology = ({ astrologerListData }) => {
     // const selectedAstro = astrologerListData.find(astro => astro._id === astrologerId);
     // updateState({ editModalOpen: true, selectedAstro });
     navigate(`/editAstrologer/${astrologerId}`);
-    
   };
-  
+
   const handleView = (rowData) => {
     updateState({ viewModalOpen: true, selectedAstro: rowData });
   };
@@ -71,27 +70,6 @@ const ListAstrology = ({ astrologerListData }) => {
     }
   };
 
-  const confirmDelete = async (rowData) => {
-    // setIsLoading(true);
-    var response = await postData(delete_astrologer, {
-      astrologerId: rowData._id,
-    });
-    setIsLoading(false);
-    if (response.success) {
-      Swal.fire({
-        title: "Deleted!",
-        text: "Astrologer has been deleted.",
-        icon: "success",
-      });
-    } else {
-      Swal.fire({
-        title: "Failed",
-        text: "Failed to Delete the Astrologer",
-        icon: "error",
-      });
-    }
-  };
-
   const updateState = (data) => {
     setState((prevState) => {
       const newData = { ...prevState, ...data };
@@ -102,54 +80,68 @@ const ListAstrology = ({ astrologerListData }) => {
   const { editModalOpen, viewModalOpen, selectedAstro } = state;
 
   const handleClickOpen = (rowData) => {
-
     Swal.fire({
-      title: 'Are you sure to Change the Status?',
+      title: "Are you sure to Change the Status?",
       text: "You won't be able to revert this!",
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, Change it!'
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Change it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        const newStatus = rowData.status === 'Active' ? 'Blocked' : 'Active';
-        dispatch(updateAstrologerStatus({ astrologerId: rowData._id, status: newStatus }));
+        const newStatus = rowData.status === "Active" ? "Blocked" : "Active";
+        dispatch(
+          updateAstrologerStatus({
+            astrologerId: rowData._id,
+            status: newStatus,
+          })
+        );
       }
     });
   };
 
   const handleChangeCallStatus = (rowData) => {
-
     Swal.fire({
-      title: 'Are you sure to Change the Call Status?',
+      title: "Are you sure to Change the Call Status?",
       text: "You won't be able to revert this!",
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, Change it!'
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Change it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        const newStatus = rowData.callStatus === 'Online' ? 'Offline' : 'Online';
-        dispatch(updateAstrologerCallStatus({ astrologerId: rowData._id, callStatus: newStatus }));
+        const newStatus =
+          rowData.callStatus === "Online" ? "Offline" : "Online";
+        dispatch(
+          updateAstrologerCallStatus({
+            astrologerId: rowData._id,
+            callStatus: newStatus,
+          })
+        );
       }
     });
   };
   const handleChangeChatStatus = (rowData) => {
-
     Swal.fire({
-      title: 'Are you sure to Change the Chat Status?',
+      title: "Are you sure to Change the Chat Status?",
       text: "You won't be able to revert this!",
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, Change it!'
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Change it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        const newStatus = rowData.chatStatus === 'Online' ? 'Offline' : 'Online';
-        dispatch(updateAstrologerChatStatus({ astrologerId: rowData._id, chatStatus: newStatus }));
+        const newStatus =
+          rowData.chatStatus === "Online" ? "Offline" : "Online";
+        dispatch(
+          updateAstrologerChatStatus({
+            astrologerId: rowData._id,
+            chatStatus: newStatus,
+          })
+        );
       }
     });
   };
@@ -170,7 +162,7 @@ const ListAstrology = ({ astrologerListData }) => {
             title="List of Astrologers"
             data={astrologerListData}
             columns={[
-              {   
+              {
                 title: "S.No",
                 editable: "never",
                 render: (rowData) => astrologerListData.indexOf(rowData) + 1,
@@ -191,30 +183,60 @@ const ListAstrology = ({ astrologerListData }) => {
                 title: "Wallet",
                 field: "wallet_balance",
               },
-              { title: "Status", field: "status", render: rowData => (
-                <div className={classes.statusButton}
-                style={{ backgroundColor: rowData.status === 'Blocked' ? '#90EE90' : '#FF7F7F ' }}
-                onClick={() => handleClickOpen(rowData)}>
-                  {rowData.status}
-                </div>
-              )},
+              {
+                title: "Status",
+                field: "status",
+                render: (rowData) => (
+                  <div
+                    className={classes.statusButton}
+                    style={{
+                      backgroundColor:
+                        rowData.status === "Blocked" ? "#90EE90" : "#FF7F7F ",
+                    }}
+                    onClick={() => handleClickOpen(rowData)}
+                  >
+                    {rowData.status}
+                  </div>
+                ),
+              },
 
-              { title: "Call", field: "callStatus", render: rowData => (
-                <div className={classes.statusButton}
-                style={{ backgroundColor: rowData.callStatus === 'Online' ? '#90EE90' : '#FF7F7F ' }}
-                onClick={() => handleChangeCallStatus(rowData)}>
-                  {rowData.callStatus}
-                </div>
-              )},
+              {
+                title: "Call",
+                field: "callStatus",
+                render: (rowData) => (
+                  <div
+                    className={classes.statusButton}
+                    style={{
+                      backgroundColor:
+                        rowData.callStatus === "Online"
+                          ? "#90EE90"
+                          : "#FF7F7F ",
+                    }}
+                    onClick={() => handleChangeCallStatus(rowData)}
+                  >
+                    {rowData.callStatus}
+                  </div>
+                ),
+              },
 
-              { title: "Chat", field: "chatStatus", render: rowData => (
-                <div className={classes.statusButton}
-                style={{ backgroundColor: rowData.chatStatus === 'Online' ? '#90EE90' : '#FF7F7F ' }}
-                onClick={() => handleChangeChatStatus(rowData)}>
-                  {rowData.chatStatus}
-                </div>
-              )},
-
+              {
+                title: "Chat",
+                field: "chatStatus",
+                render: (rowData) => (
+                  <div
+                    className={classes.statusButton}
+                    style={{
+                      backgroundColor:
+                        rowData.chatStatus === "Online"
+                          ? "#90EE90"
+                          : "#FF7F7F ",
+                    }}
+                    onClick={() => handleChangeChatStatus(rowData)}
+                  >
+                    {rowData.chatStatus}
+                  </div>
+                ),
+              },
             ]}
             options={{ ...propStyles.tableStyles, filtering: false }}
             style={{ fontSize: "1.4rem" }}
@@ -242,12 +264,10 @@ const ListAstrology = ({ astrologerListData }) => {
               },
             ]}
           />
-         
         </Grid>
       </Grid>
     );
   }
-
 
   function viewModalInfo() {
     return (
@@ -278,7 +298,12 @@ const ListAstrology = ({ astrologerListData }) => {
             }}
             // onClick={(e) => e.stopPropagation()}
           >
-            <Typography id="modal-modal-title" variant="h6" component="h2" sx={{margin:'1rem'}}>
+            <Typography
+              id="modal-modal-title"
+              variant="h6"
+              component="h2"
+              sx={{ margin: "1rem" }}
+            >
               Astrologer Details
             </Typography>
             {selectedAstro && (
@@ -743,4 +768,3 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListAstrology);
-

@@ -81,11 +81,28 @@ const routes = [
     name: "Customer",
     icon: <BiAbacus />,
   },
-  // {
-  //   path: "/displayUser",
-  //   name: "User",
-  //   icon: <BiAbacus />,
-  // },
+  {
+    path: "/courses",
+    name: "Courses",
+    icon: <BiAbacus />,
+    subRoutes: [
+      {
+        path: "/displayCourses",
+        name: "Courses List",
+        icon: <BiAbacus />,
+      },
+      {
+        path: "/AddCourse",
+        name: "Add Course",
+        icon: <BiAbacus />,
+      },
+      {
+        path: "/displayDemoClass",
+        name: "Demo Class",
+        icon: <BiAbacus />,
+      },
+    ],
+  },
   {
     path: "/skills",
     name: "Skills",

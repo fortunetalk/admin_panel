@@ -36,6 +36,7 @@ const Country = ({  countryData }) => {
   const [error, setError] = useState({});
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("");
+  const [countryValue, setCountryValue] = useState("");
 
 
 
@@ -48,6 +49,7 @@ const Country = ({  countryData }) => {
     setcountry(rowData.title);
     setcode(rowData.code)
     setStatus(rowData.status)
+    setCountryValue(rowData.countryValue)
     setOpen(true);
   };
 
@@ -73,6 +75,7 @@ const Country = ({  countryData }) => {
       formData.append("title", country);
       formData.append("status", status);
       formData.append("code", code);
+      formData.append("countryValue", countryValue);
 
       dispatch(settingActions.updateCountry({formData, countryId}));
       setOpen(false);
@@ -140,6 +143,10 @@ const Country = ({  countryData }) => {
                 title: "Code",
                 field: "code",
               },
+              {
+                title: "Value",
+                field: "countryValue",
+              },
               {title: "State Count", field: "stateCount"},
               { title: "Status", field: "status", render: rowData => (
                 <div className={classes.statusButton}
@@ -196,7 +203,7 @@ const Country = ({  countryData }) => {
               <div className={classes.heading}>Edit Country</div>
             </div>
           </Grid>
-          <Grid item lg={12} sm={12} md={12} xs={12}>
+          <Grid item lg={6} sm={12} md={6} xs={12}>
             <TextField
               label="Enter Country Name"
               error={!!error.country}
@@ -220,6 +227,19 @@ const Country = ({  countryData }) => {
               fullWidth
             />
           </Grid>
+          <Grid item lg={6} sm={12} md={12} xs={12}>
+            <TextField
+              label="Country Value"
+              // error={!error.country}
+              helperText={error.countryValue}
+              value={countryValue}
+              onFocus={() => handleError("countryValue", null)}
+              onChange={(event) => setCountryValue(event.target.value)}
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+          
           <Grid item lg={6} sm={12} md={6} xs={12}>
               <FormControl fullWidth>
                 <InputLabel id="select-label">Select Status</InputLabel>

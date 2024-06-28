@@ -3,6 +3,11 @@ import * as actionTypes from "../actionTypes";
 export const getAllAstrologer = () => ({
   type: actionTypes.GET_ALL_ASTROLOGER,
 });
+
+export const getAllActiveAstrologer = () => ({
+  type: actionTypes.GET_ALL_ACTIVE_ASTROLOGER,
+});
+
 export const getAstrologer = (astrologerId) => ({
   type: actionTypes.GET_ASTROLOGER,
   payload: { astrologerId },

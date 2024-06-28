@@ -3,6 +3,7 @@ import * as actionTypes from "../actionTypes";
 const initialState = {
 
   astrologerListData:null,
+  activeAstrologerData:null,
   astrologerData:null,
   setAstrologerData:null,
   updateAstrologerStatus:null,
@@ -23,6 +24,12 @@ const astrologer = (state = initialState, actions) => {
       return {
         ...state,
         astrologerListData: payload,
+      };
+    }
+    case actionTypes.GET_ALL_ACTIVE_ASTROLOGER: {
+      return {
+        ...state,
+        activeAstrologerData: payload,
       };
     }
     case actionTypes.GET_ASTROLOGER: {

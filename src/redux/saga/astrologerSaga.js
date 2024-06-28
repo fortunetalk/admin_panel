@@ -4,8 +4,6 @@ import { ApiRequest } from "../../utils/apiRequest";
 import {
   add_astrologer,
   api_url,
-  change_call_status,
-  change_chat_status,
   change_enquiry_status,
   delete_astrologer,
   get_all_astrologers,
@@ -16,6 +14,7 @@ import {
   update_astrologer_status,
   update_astrologer_call_status,
   update_astrologer_chat_status,
+  get_all_active_astrologers
 } from "../../utils/Constants";
 import Swal from "sweetalert2";
 import { Colors } from "../../assets/styles";
@@ -76,6 +75,25 @@ function* getAstrologers() {
     if (response.success) {
       yield put({
         type: actionTypes.GET_ALL_ASTROLOGER,
+        payload: response?.data,
+      });
+    }
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: response.data });
+  } catch (e) {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    console.log(e);
+  }
+}
+function* getActiveAstrologers() {
+  try {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    const response = yield ApiRequest.getRequest({  
+      url: api_url + get_all_active_astrologers,
+    });
+
+    if (response.success) {
+      yield put({
+        type: actionTypes.GET_ALL_ACTIVE_ASTROLOGER,
         payload: response?.data,
       });
     }
@@ -404,6 +422,7 @@ function* deleteAstrologer(actions) {
 
 export default function* astrologerSaga() {
   yield takeLeading(actionTypes.GET_ALL_ASTROLOGER, getAstrologers);
+  yield takeLeading(actionTypes.GET_ALL_ACTIVE_ASTROLOGER, getActiveAstrologers);
   yield takeLeading(actionTypes.GET_ASTROLOGER, getAstrologer);
   yield takeLeading(actionTypes.GET_ENQUIRY_ASTROLOGERS, getEnquiryAstrologers);
   yield takeLeading(

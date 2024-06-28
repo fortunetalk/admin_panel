@@ -5,7 +5,8 @@ const initialState = {
   countryStateData:null,
   stateData: null,
   stateCityData: null,
-  cityData:null
+  cityData:null,
+  countryValueData: null,
 };
 
 const setting = (state = initialState, actions) => {
@@ -24,6 +25,12 @@ const setting = (state = initialState, actions) => {
       return {
         ...state,
         countryData: payload,
+      };
+    }
+    case actionTypes.GET_COUNTRY_VALUE: {
+      return {
+        ...state,
+        countryValueData: payload,
       };
     }
     case actionTypes.COUNTRY_STATE_LIST: {

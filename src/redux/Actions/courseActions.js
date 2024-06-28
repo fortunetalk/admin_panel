@@ -4,27 +4,27 @@ export const getCourseData = (payload) => ({
   type: actionTypes.GET_ALL_COURSES,
   payload,
 });
-
-export const setRemediesData = (payload) => ({
-  type: actionTypes.SET_ALL_REMEDIES,
+export const getActiveCourseData = (payload) => ({
+  type: actionTypes.GET_ACTIVE_COURSES,
   payload,
 });
 
-export const createRemedy = payload =>({
-  type: actionTypes.CREATE_REMEDY,
+export const addCourse = (payload) => ({
+  type: actionTypes.CREATE_COURSE,
+  payload,
+});
+
+
+export const updateCourse = payload =>({
+  type: actionTypes.UPDATE_COURSE,
+  payload
+})
+export const updateCourseStatus = payload =>({
+  type: actionTypes.UPDATE_COURSE_STATUS,
   payload
 })
 
-export const updateRemedy = payload =>({
-  type: actionTypes.UPDATE_REMEDY,
-  payload
-})
-export const updateRemedyStatus = payload =>({
-  type: actionTypes.CHANGE_REMEDY_STATUS,
-  payload
-})
-
-export const deleteRemedy = payload =>({
-  type: actionTypes.DELETE_REMEDY,
+export const deleteCourse = payload =>({
+  type: actionTypes.DELETE_COURSE,
   payload
 })

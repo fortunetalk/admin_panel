@@ -66,6 +66,7 @@ export const update_first_recharge_offer = "admin/update-first-recharge-offer"
 export const delete_first_recharge_offer = "admin/delete-first-recharge-offer"
 
 export const get_all_astrologers = "admin/astrologers";
+export const get_all_active_astrologers = "admin/acitve_astrologers";
 export const get_astrologer = "admin/astrologers/:astrologerId";
 export const verify_astrologer = "astrologer/verify-astrologer-profile";
 export const delete_astrologer = "admin/astrologer-delete"
@@ -158,6 +159,7 @@ export const delete_multiple_blog='admin/delete-multiple-blog'
 
 //country
 export const get_country='admin/country'
+export const get_country_value='admin/country_value'
 export const add_new_country='admin/add-new-country'
 export const update_country='admin/country/update/'
 export const delete_country='admin/country/delete'
@@ -182,9 +184,18 @@ export const change_city_status='admin/city/change-status'
 //COURSE
 export const create_course='admin/course/add'
 export const course_list='admin/course'
+export const active_course_list='admin/active_course'
 export const update_course = 'admin/course/update'
 export const change_course_status = 'admin/course/change-status'
 export const delete_course = 'admin/course/delete'
+
+//DEMO CLASS
+export const create_demo_class='admin/demo_class/add_new'
+export const demo_class_list='admin/demo_class'
+// export const get_demo_class='admin/demo_class'
+export const update_demo_class = 'admin/demo_class/update'
+export const change_demo_class_status = 'admin/demo_class/change_status'
+export const delete_demo_class = 'admin/demo_class/delete'
 
 //COURSE BANNER
 export const create_course_banner='admin/course-banner/add'

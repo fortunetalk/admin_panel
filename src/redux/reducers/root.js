@@ -27,6 +27,7 @@ import productBanner from './productBanner'
 import poojaBanner from './poojaBanner'
 import callChatBanner from "./callChatBanner";
 import testimonial from './testimonial'
+import demoClass from "./demoClass";
 
 const rootReducer = combineReducers({
   dashboard,
@@ -56,6 +57,7 @@ const rootReducer = combineReducers({
   poojaBanner,
   callChatBanner,
   testimonial,
+  demoClass,
 });
 
 // const appReducer = (state, action) => {

@@ -522,10 +522,6 @@ export const AddAstrologers = ({
         formData.append("liveCallPrice", liveCallPrice);
         formData.append("companyLiveCallPrice", companyLiveCallPrice);
         formData.append("status", "Active");
-        formData.append("astrologerType", astrologerType);
-        formData.append("allowedCountry", countryValue);
-
-
         // formData.append("working", working);
         formData.append("profileImage", profilePhoto.bytes);
         formData.append("bankProofImage", bankProof.bytes);
@@ -534,8 +530,14 @@ export const AddAstrologers = ({
           formData.append("galleryImage", imgFile);
         });
 
+        for (let i = 0; i < countryValue.length; i++) {
+          formData.append(`allowedCountry[${i}]`, countryValue[i]);
+        }
         for (let i = 0; i < preferredDays.length; i++) {
           formData.append(`preferredDays[${i}]`, preferredDays[i]);
+        }
+        for (let i = 0; i < astrologerType.length; i++) {
+          formData.append(`astrologerType[${i}]`, astrologerType[i]);
         }
         for (let i = 0; i < language.length; i++) {
           formData.append(`language[${i}]`, language[i]);

@@ -10,10 +10,6 @@ import {
   MenuItem,
 } from "@mui/material";
 import DvrIcon from "@mui/icons-material/Dvr";
-import { add_subSkill, get_skills } from "../../utils/Constants.js";
-import { getData, postData } from "../../utils/FetchNodeServices.js";
-import Swal from "sweetalert2";
-import { Colors } from "../../assets/styles.js";
 import { useNavigate } from "react-router-dom";
 import logo_icon from "../../assets/images/logo_icon.png";
 import { connect } from "react-redux";
@@ -92,15 +88,51 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
       isValid = false;
     }
     if (!astrologerId) {
-      handleError("courseId", "Please Select Astrologer");
+      handleError("astrologerId", "Please Select Astrologer");
       isValid = false;
     }
     if (!className) {
       handleError("className", "Please Input Class Name");
       isValid = false;
     }
+    if (!status) {
+      handleError("status", "Please Select Status");
+      isValid = false;
+    }
+    if (!date) {
+      handleError("date", "Please Input Date");
+      isValid = false;
+    }
     if (!file) {
       handleError("icon", "Please upload an image");
+      isValid = false;
+    }
+    if (!time) {
+      handleError("time", "Please Input Time");
+      isValid = false;
+    }
+    if (!sessionTime) {
+      handleError("sessionTime", "Please Input Session Time");
+      isValid = false;
+    }
+    if (!googleMeet) {
+      handleError("googleMeet", "Please Input Google Meet URL");
+      isValid = false;
+    }
+    if (!video.file) {
+      handleError("video", "Video is required");
+      isValid = false;
+    }
+    if (!learn) {
+      handleError("learn", "This field is required");
+      isValid = false;
+    }
+    if (!courseContent) {
+      handleError("courseContent", "This field is required");
+      isValid = false;
+    }
+    if (!description) {
+      handleError("description", "This field is required");
       isValid = false;
     }
     return isValid;
@@ -441,7 +473,6 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
 };
 
 const mapStateToProps = (state) => ({
-  subSkillData: state.skills.subSkillData,
   activeCourseData: state.course.activeCourseData,
   activeAstrologerData: state.astrologer.activeAstrologerData,
 });

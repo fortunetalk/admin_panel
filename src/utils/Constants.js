@@ -1,8 +1,8 @@
 // export const base_url = "http://165.232.182.110:4000/";
 // export const api_url = "http://165.232.182.110:4000/api/";
 
-export const base_url = "https://node-backend-live.onrender.com/";
-export const api_url = "https://node-backend-live.onrender.com/api/";
+export const base_url = "https://node-backend-jcdp.onrender.com/";
+export const api_url = "https://node-backend-jcdp.onrender.com/api/";
 
 export const get_dashboard = 'admin/get_dashboard'
 

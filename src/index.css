@@ -54,3 +54,7 @@ a {
 .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
   color: black !important;
 }
+
+.css-1t1j96h-MuiPaper-root-MuiDialog-paper {
+  max-width: 60% !important;
+}

@@ -16,13 +16,7 @@ import {
   Dialog,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { getData, postData } from "../../utils/FetchNodeServices.js";
-import {
-  base_url,
-  delete_astrologer,
-  get_all_astrologers,
-  verify_astrologer,
-} from "../../utils/Constants.js";
+import { CloseRounded } from "@mui/icons-material";
 import Swal from "sweetalert2";
 import Loader from "../../Components/loading/Loader.js";
 import { connect, useDispatch, useSelector } from "react-redux";
@@ -60,14 +54,12 @@ const ListAstrology = ({ astrologerListData }) => {
     updateState({ viewModalOpen: true, selectedAstro: rowData });
   };
 
-  const handleHistory = (rowData) => {
-    // Add your history logic here
+  const handleClose = () => {
+    updateState({ viewModalOpen: false });
   };
 
-  const handleViewClose = (event) => {
-    if (event.target === event.currentTarget) {
-      updateState({ viewModalOpen: false });
-    }
+  const handleHistory = (rowData) => {
+    // Add your history logic here
   };
 
   const updateState = (data) => {
@@ -270,42 +262,18 @@ const ListAstrology = ({ astrologerListData }) => {
   }
 
   function viewModalInfo() {
-    return (
-      <Modal
-        open={viewModalOpen}
-        onClose={handleViewClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        onClick={() => updateState({ viewModalOpen: false })}
-      >
-        <div
-          style={{
-            display: "flex",
-            flex: 1,
-            height: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Box
-            sx={{
-              backgroundColor: "#fff",
-              padding: "10px",
-              width: "60%",
-              maxHeight: "90%",
-              overflowY: "auto",
-              outline: 0,
-            }}
-            // onClick={(e) => e.stopPropagation()}
-          >
-            <Typography
-              id="modal-modal-title"
-              variant="h6"
-              component="h2"
-              sx={{ margin: "1rem" }}
-            >
-              Astrologer Details
-            </Typography>
+    const viewModal = () => {
+      return (
+        <Grid spacing={2}>
+          <Grid item lg={12} sm={12} md={12} xs={12}>
+            <div className={classes.headingContainer}>
+              <div className={classes.heading}>Astrologer Details</div>
+              <div onClick={handleClose} className={classes.closeButton}>
+                <CloseRounded />
+              </div>
+            </div>
+          </Grid>
+          <Box>
             {selectedAstro && (
               <form noValidate autoComplete="off">
                 <Grid container spacing={2}>
@@ -395,7 +363,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Country"
-                      value={selectedAstro.country}
+                      value={selectedAstro.countryId.title}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -405,7 +373,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="State"
-                      value={selectedAstro.state}
+                      value={selectedAstro.stateId.title}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -415,7 +383,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="City"
-                      value={selectedAstro.city}
+                      value={selectedAstro.cityId.title}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -435,7 +403,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Languages"
-                      value={selectedAstro.language.join(", ")}
+                      value={selectedAstro.language}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -449,6 +417,8 @@ const ListAstrology = ({ astrologerListData }) => {
                       InputProps={{
                         readOnly: true,
                       }}
+                      multiline
+                      rows={2}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -546,7 +516,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Account Holder Name"
-                      value={selectedAstro.accouuntHolderName}
+                      value={selectedAstro.accountHolderName}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -682,6 +652,110 @@ const ListAstrology = ({ astrologerListData }) => {
                       }}
                     />
                   </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Skills"
+                      value={
+                        selectedAstro.skillId.length > 1
+                          ? selectedAstro.skillId
+                              .map((skill) => skill.title)
+                              .join(", ")
+                          : selectedAstro.skillId.length === 1
+                          ? selectedAstro.skillId[0].title
+                          : ""
+                      }
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Remedies"
+                      value={
+                        selectedAstro.remediesId.length > 1
+                          ? selectedAstro.remediesId
+                              .map((remedy) => remedy.title)
+                              .join(", ")
+                          : selectedAstro.remediesId.length === 1
+                          ? selectedAstro.remediesId[0].title
+                          : ""
+                      }
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                  <TextField
+                      fullWidth
+                      label="Expertise"
+                      value={
+                        selectedAstro.expertiseId.length > 1
+                          ? selectedAstro.expertiseId
+                              .map((expertise) => expertise.title)
+                              .join(", ")
+                          : selectedAstro.expertiseId.length === 1
+                          ? selectedAstro.expertiseId[0].title
+                          : ""
+                      }
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Astrologer Type"
+                      value={selectedAstro.astrologerType}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Preferred Days"
+                      value={selectedAstro.preferredDays}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Login / Logout"
+                      value={selectedAstro.isLoggined ? "Login" : "Logout"}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Online / Offline"
+                      value={selectedAstro.isLoggined ? "Online" : "Offline"}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Live"
+                      value={selectedAstro.isLoggined ? "Online" : "Offline"}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </Grid>
                   <Grid container spacing={2} sx={{ margin: "10px" }}>
                     {/* Profile Image */}
                     <Grid item xs={12} sm={3}>
@@ -746,8 +820,16 @@ const ListAstrology = ({ astrologerListData }) => {
               </form>
             )}
           </Box>
-        </div>
-      </Modal>
+        </Grid>
+      );
+    };
+
+    return (
+      <div>
+        <Dialog open={viewModalOpen}>
+          <DialogContent>{viewModal()}</DialogContent>
+        </Dialog>
+      </div>
     );
   }
 };

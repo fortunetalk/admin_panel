@@ -95,6 +95,7 @@ export const AddAstrologers = ({
 
   const [galleryImage, setGalleryImage] = useState([]);
   const [galleryFiles, setGalleryFiles] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [states, setState] = useState({
     error: {},
@@ -482,6 +483,7 @@ export const AddAstrologers = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
       // if (handleValidation()) {
         let formData = new FormData();
@@ -562,6 +564,7 @@ export const AddAstrologers = ({
       // }
     } catch (e) {
       console.log("error submitting data", e);
+      setIsSubmitting(false);
     }
 
   };
@@ -1705,6 +1708,7 @@ export const AddAstrologers = ({
                 type="submit"
                 value="Submit"
                 className={classes.submitbutton}
+                disabled={isSubmitting}
               />
             </Grid>
             <Grid item lg={6} sm={6} md={6} xs={6}>

@@ -32,7 +32,6 @@ const DisplayDemoClass = ({
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [viewData, setViewData] = useState(false);
-  const [subcourseId, setSubcourseId] = useState("");
   const [courseId, setcourseId] = useState("");
   const [astrologerId, setAstrologerId] = useState("");
   const [className, setclassName] = useState("");
@@ -142,7 +141,6 @@ const DisplayDemoClass = ({
 
   const handleClose = () => {
     setcourseId("");
-    setSubcourseId("");
     setclassName("");
     setOpen(false);
     setViewData(false);

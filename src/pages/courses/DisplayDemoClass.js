@@ -143,6 +143,7 @@ const DisplayDemoClass = ({
     setcourseId("");
     setclassName("");
     setOpen(false);
+    
     setViewData(false);
   };
 

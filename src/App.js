@@ -111,6 +111,9 @@ import DisplayCourses from "./pages/courses/DisplayCourses";
 import AddCourses from "./pages/courses/AddCourses";
 import DisplayDemoClass from "./pages/courses/DisplayDemoClass";
 import AddDemoClass from "./pages/courses/AddDemoClass";
+import DisplayLiveClass from "./pages/courses/DisplayLiveClass";
+import AddLiveClass from "./pages/courses/AddLiveClass";
+import LiveClassList from "./pages/courses/LiveClassList";
 
 function App() {
   return (
@@ -280,6 +283,9 @@ function App() {
           <Route path="/addCourse" element={<AddCourses/>} />
           <Route path="/displayDemoClass" element={<DisplayDemoClass/>} />
           <Route path="/scheduleDemoClass" element={<AddDemoClass/>} />
+          <Route path="/displayLiveClass" element={<DisplayLiveClass/>} />
+          <Route path="/scheduleLiveClass" element={<AddLiveClass/>} />
+          <Route path="/liveClassList/:id" element={<LiveClassList/>} />
 
 
           <Route

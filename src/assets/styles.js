@@ -168,13 +168,25 @@ export const useStyles = makeStyles({
   statusButton: {
     display: "inline-block",
     padding: "0.5rem 1rem",
-    fontSize: "10px",
-    color: "#fff",
+    fontSize: "12px",
+    color: "black",
     border: "none",
     borderRadius: "1rem", 
     cursor: "pointer",
     textAlign: "center",
-  }
+    fontWeight:'600'
+
+  },
+  statusDropdown: {
+    fontSize: "14px",
+    padding: '0.5rem',
+    borderRadius: '1rem',
+    border: "none",
+    cursor: 'pointer',
+    color: "black",
+    textAlign: "center",
+    fontWeight:'600'
+  },
 
 });
 

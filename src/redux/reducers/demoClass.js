@@ -36,6 +36,13 @@ const demoClass = (state = initialState, actions) => {
         demoClassData: payload,
     };
 }
+  case actionTypes.UPDATE_DEMO_CLASS_ADMIN_STATUS: {
+   
+    return {
+        ...state,
+        demoClassData: payload,
+    };
+}
   case actionTypes.DELETE_DEMO_CLASS: {
     return {
       ...state,

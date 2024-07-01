@@ -192,10 +192,18 @@ export const delete_course = 'admin/course/delete'
 //DEMO CLASS
 export const create_demo_class='admin/demo_class/add_new'
 export const demo_class_list='admin/demo_class'
-// export const get_demo_class='admin/demo_class'
 export const update_demo_class = 'admin/demo_class/update'
 export const change_demo_class_status = 'admin/demo_class/change_status'
+export const change_demo_class_admin_status = 'admin/demo_class/change_admin_status'
 export const delete_demo_class = 'admin/demo_class/delete'
+
+//LIVE CLASS
+export const create_live_class='admin/live_class/add_new'
+export const live_class_list='admin/live_class'
+export const update_live_class = 'admin/live_class/update'
+export const change_live_class_status = 'admin/live_class/change_status'
+export const change_live_class_admin_status = 'admin/live_class/change_admin_status'
+export const delete_live_class = 'admin/live_class/delete'
 
 //COURSE BANNER
 export const create_course_banner='admin/course-banner/add'

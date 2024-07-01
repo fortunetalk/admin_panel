@@ -1,18 +1,24 @@
 import * as actionTypes from "../actionTypes";
 
 const initialState = {
-
-  astrologerListData:null,
-  activeAstrologerData:null,
-  astrologerData:null,
-  setAstrologerData:null,
-  updateAstrologerStatus:null,
+  astrologerListData: null,
+  activeAstrologerData: null,
+  astrologerData: null,
+  setAstrologerData: null,
+  updateAstrologerStatus: null,
+  isLoading: false,
 };
 
 const astrologer = (state = initialState, actions) => {
   const { payload, type } = actions;
 
   switch (type) {
+    case actionTypes.SET_IS_LOADING: {
+      return {
+        ...state,
+        isLoading: payload,
+      };
+    }
     case actionTypes.ADD_ASTROLOGER: {
       return {
         ...state,
@@ -46,36 +52,40 @@ const astrologer = (state = initialState, actions) => {
     }
     case actionTypes.UPDATE_ASTROLOGER_STATUS: {
       const { astrologerId, status } = payload;
-      const updatedAstrologers = state.astrologerListData?.map(astrologer =>
-          astrologer._id === astrologerId ? { ...astrologer, status } : astrologer
+      const updatedAstrologers = state.astrologerListData?.map((astrologer) =>
+        astrologer._id === astrologerId ? { ...astrologer, status } : astrologer
       );
       return {
-          ...state,
-          astrologerListData: updatedAstrologers,
+        ...state,
+        astrologerListData: updatedAstrologers,
       };
-  }
+    }
 
     case actionTypes.UPDATE_ASTROLOER_CALL_STATUS: {
       const { astrologerId, callStatus } = payload;
-      const updatedAstrologers = state.astrologerListData?.map(astrologer =>
-          astrologer._id === astrologerId ? { ...astrologer, callStatus } : astrologer
+      const updatedAstrologers = state.astrologerListData?.map((astrologer) =>
+        astrologer._id === astrologerId
+          ? { ...astrologer, callStatus }
+          : astrologer
       );
       return {
-          ...state,
-          astrologerListData: updatedAstrologers,
+        ...state,
+        astrologerListData: updatedAstrologers,
       };
-  }
+    }
     case actionTypes.UPDATE_ASTROLOGER_CHAT_STATUS: {
       const { astrologerId, chatStatus } = payload;
-      const updatedAstrologers = state.astrologerListData?.map(astrologer =>
-          astrologer._id === astrologerId ? { ...astrologer, chatStatus } : astrologer
+      const updatedAstrologers = state.astrologerListData?.map((astrologer) =>
+        astrologer._id === astrologerId
+          ? { ...astrologer, chatStatus }
+          : astrologer
       );
       return {
-          ...state,
-          astrologerListData: updatedAstrologers,
+        ...state,
+        astrologerListData: updatedAstrologers,
       };
-  }
-  
+    }
+
     default: {
       return state;
     }

@@ -1,51 +1,32 @@
+// Login.js
+
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { adminLoginRequest } from "../../redux/Actions/adminAction.js";
+
 import { useStyles } from "../../assets/styles.js";
-import { Avatar, Grid, IconButton, TextField, Button } from "@mui/material";
+import { Grid } from "@mui/material";
 import Swal from "sweetalert2";
 import logo_icon from "../../assets/images/logo_icon.png";
-import { Colors } from "../../assets/styles.js";
-import { useNavigate } from "react-router-dom";
 import login_background from "../../assets/images/login_background.jpg";
 import "./Login.css";
 
 const Login = () => {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const classes = useStyles();
   const [userEmail, setUserEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const validation = () => {
-    var valid = true;
-    if (userEmail.length == 0) {
-      valid = false;
-    }
-    if (password.length == 0) {
-      valid = false;
-    }
-    return valid;
+    return userEmail.length > 0 && password.length > 0;
   };
 
   const handleLogin = () => {
-    if (validation()) {
-      try {
-        localStorage.setItem("userDetails", userEmail);
-        Swal.fire({
-          icon: "success",
-          title: "Login Successful",
-          showConfirmButton: false,
-          timer: 2000,
-        });
-        navigate("/");
-      } catch (error) {
-        console.log(error.message);
-      }
+    console.log("sdhfdsfdfdsfdjfdsjfjdsfjdsjf=====================>");
+    console.log("email", userEmail);
+    console.log("password", password);
 
-      try {
-        navigate("/");
-      } catch (error) {
-        console.log(error);
-      }
-    }
+    dispatch(adminLoginRequest({ email: userEmail, password }));
   };
 
   return (
@@ -64,37 +45,57 @@ const Login = () => {
         <Grid container spacing={2}>
           <Grid item lg={12} sm={12} md={12} xs={12}>
             <div className={classes.loginheadingContainer}>
-              <img src={logo_icon} style={{ width: "5rem", height: "5rem" }} />
+              <img
+                src={logo_icon}
+                alt="logo"
+                style={{ width: "5rem", height: "5rem" }}
+              />
               <div className={classes.login}>Login to</div>
-              <div className={classes.loginheading}>Fortune Talk Admin</div>
+              <div className={classes.loginheading}>
+                Fortune Talk Admin
+              </div>
             </div>
           </Grid>
           <Grid item xs={12}>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <div class="label-float">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <div className="label-float">
                 <input
                   type="text"
                   placeholder=""
                   value={userEmail}
-                  onChange={(e) => setUserEmail(e.target.value)}
+                  onChange={(e) =>
+                    setUserEmail(e.target.value)
+                  }
                 />
                 <label>Username</label>
               </div>
             </div>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <div class="label-float">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <div className="label-float">
                 <input
                   type="password"
                   placeholder=""
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) =>
+                    setPassword(e.target.value)
+                  }
                 />
                 <label>Password</label>
               </div>
             </div>
           </Grid>
           <Grid item lg={12} sm={12} md={12} xs={12}>
-            <div class="loginButton" onClick={handleLogin}>
+            <div className="loginButton" onClick={handleLogin}>
               Login
             </div>
           </Grid>
@@ -103,4 +104,5 @@ const Login = () => {
     </div>
   );
 };
+
 export default Login;

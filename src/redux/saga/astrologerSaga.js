@@ -14,7 +14,8 @@ import {
   update_astrologer_status,
   update_astrologer_call_status,
   update_astrologer_chat_status,
-  get_all_active_astrologers
+  get_all_active_astrologers,
+  update_astrologer_skill,
 } from "../../utils/Constants";
 import Swal from "sweetalert2";
 import { Colors } from "../../assets/styles";
@@ -415,6 +416,40 @@ function* deleteAstrologer(actions) {
   }
 }
 
+function* updateAstrologerSkillData(actions) {
+  try {
+    const { payload } = actions;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
+    const response = yield call(ApiRequest.postRequest, {
+      url: api_url + update_astrologer_skill,
+      header: "application/json",
+      data: payload,
+    });
+
+    if (response.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Skill Updated Successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Failed to update Skill",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  } finally {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+  }
+}
+
 export default function* astrologerSaga() {
   yield takeLeading(actionTypes.GET_ALL_ASTROLOGER, getAstrologers);
   yield takeLeading(actionTypes.GET_ALL_ACTIVE_ASTROLOGER, getActiveAstrologers);
@@ -428,4 +463,5 @@ export default function* astrologerSaga() {
   yield takeLeading(actionTypes.ADD_ASTROLOGER, addAstrologer);
   yield takeLeading(actionTypes.VERIFY_UNVERIFY_ASTROLOGER, verifyUnverifyAstrologer);
   yield takeLeading(actionTypes.DELETE_ASTROLOGER, deleteAstrologer);
+  yield takeLeading(actionTypes.UPDATE_ASTROLOGER_SKILL, updateAstrologerSkillData);
 }

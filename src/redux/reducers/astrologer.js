@@ -6,6 +6,7 @@ const initialState = {
   astrologerData: null,
   setAstrologerData: null,
   updateAstrologerStatus: null,
+  updateAstrologerSkillData:null,
   isLoading: false,
 };
 
@@ -83,6 +84,13 @@ const astrologer = (state = initialState, actions) => {
       return {
         ...state,
         astrologerListData: updatedAstrologers,
+      };
+    }
+
+    case actionTypes.UPDATE_ASTROLOGER_SKILL: {
+      return {
+        ...state,
+        updateAstrologerSkillData: payload,
       };
     }
 

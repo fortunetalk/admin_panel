@@ -53,6 +53,8 @@ export const update_astrologer = "admin/update-astrologer";
 export const update_astrologer_status = "admin/astrologer-change-status";
 export const update_astrologer_call_status = "admin/astrologer-change-call-status";
 export const update_astrologer_chat_status = "admin/astrologer-change-chat-status";
+export const update_astrologer_skill = "admin//astrologer_update_skill";
+
 
 export const create_recharge_plan = "admin/create_recharge_plan";
 export const get_recharge_plans = "admin/get-all-recharge-plans";

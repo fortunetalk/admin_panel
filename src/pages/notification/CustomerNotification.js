@@ -209,7 +209,7 @@ const CustomerNotification = ({ customerNotificationData, dispatch }) => {
               },
               {
                 icon: "delete",
-                tooltip: "Delete Skill",
+                tooltip: "Delete Notification",
                 onClick: (event, rowData) =>
                   dispatch(
                     NotificationActions.deleteCustomerNotification({

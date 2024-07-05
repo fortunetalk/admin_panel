@@ -15,16 +15,16 @@ import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import * as Actions from "../../redux/Actions/notificationActions.js";
 
-const AddCustomerNotification = ({ dispatch, isLoading }) => {
+const AddAstrologerNotification = ({ dispatch, isLoading }) => {
   const classes = useStyles();
   const navigate = useNavigate();
   const [name, setName] = useState("");
-  const [error, setError] = useState({ name: "", description: "", customerType: "", icon: "" });
+  const [error, setError] = useState({ name: "", description: "", astrologerType: "", icon: "" });
   const [description, setDescriptionText] = useState("");
   const [status, setStatus] = useState("");
   const [icon, setIcon] = useState({ file: '', bytes: null });
   const [file, setFile] = useState(null);
-  const [customerType, setCustomerType] = useState("");
+  const [astrologerType, setastrologerType] = useState("");
 
   const handleError = (field, message) => {
     setError((prevError) => ({ ...prevError, [field]: message }));
@@ -55,8 +55,8 @@ const AddCustomerNotification = ({ dispatch, isLoading }) => {
       handleError("icon", "Please upload an image");
       isValid = false;
     }
-    if (!customerType) {
-      handleError("customerType", "Please Select Customer Type");
+    if (!astrologerType) {
+      handleError("astrologerType", "Please Select Customer Type");
       isValid = false;
     }
     return isValid;
@@ -69,9 +69,9 @@ const AddCustomerNotification = ({ dispatch, isLoading }) => {
       formData.append("description", description);
       formData.append("status", status);
       formData.append("image", file);
-      formData.append("customerType", customerType);
+      formData.append("astrologerType", astrologerType);
 
-      dispatch(Actions.sendCustomerNotification(formData));
+      dispatch(Actions.sendAstrologerNotification(formData));
       handleReset();
     }
   };
@@ -79,11 +79,11 @@ const AddCustomerNotification = ({ dispatch, isLoading }) => {
   const handleReset = useCallback(() => {
     setName("");
     setDescriptionText("");
-    setError({ name: "", description: "", customerType: "", icon: "" });
+    setError({ name: "", description: "", astrologerType: "", icon: "" });
     setStatus("");
     setIcon({ file: "", bytes: null });
     setFile(null);
-    setCustomerType("");
+    setastrologerType("");
   }, []);
 
   return (
@@ -92,10 +92,10 @@ const AddCustomerNotification = ({ dispatch, isLoading }) => {
         <Grid container spacing={2}>
           <Grid item lg={12} sm={12} md={12} xs={12}>
             <div className={classes.headingContainer}>
-              <div className={classes.heading}>Add Customer Notification</div>
-              <div onClick={() => navigate("/customerNotification")} className={classes.addButton}>
+              <div className={classes.heading}>Add Astrologer Notification</div>
+              <div onClick={() => navigate("/astrologerNotification")} className={classes.addButton}>
                 <DvrIcon />
-                <div className={classes.addButtontext}>Display Customer Notification</div>
+                <div className={classes.addButtontext}>Display Astrologer Notification</div>
               </div>
             </div>
           </Grid>
@@ -129,19 +129,19 @@ const AddCustomerNotification = ({ dispatch, isLoading }) => {
           </Grid>
           <Grid item lg={6} sm={12} md={6} xs={12}>
             <FormControl fullWidth>
-              <InputLabel id="select-customerType-label">Select Customer Type</InputLabel>
+              <InputLabel id="select-astrologerType-label">Select Astrologer Type</InputLabel>
               <Select
-                labelId="select-customerType-label"
-                value={customerType}
-                onChange={(e) => setCustomerType(e.target.value)}
+                labelId="select-astrologerType-label"
+                value={astrologerType}
+                onChange={(e) => setastrologerType(e.target.value)}
                 variant="outlined"
-                error={!!error.customerType}
+                error={!!error.astrologerType}
               >
                 <MenuItem value="All">All</MenuItem>
                 <MenuItem value="New">New</MenuItem>
                 <MenuItem value="Old">Old</MenuItem>
               </Select>
-              <div className={classes.errorstyles}>{error.customerType}</div>
+              <div className={classes.errorstyles}>{error.astrologerType}</div>
             </FormControl>
           </Grid>
           <Grid item lg={4} sm={6} md={6} xs={6} className={classes.uploadContainer}>
@@ -190,4 +190,4 @@ const mapStateToProps = (state) => ({
   
   const mapDispatchToProps = (dispatch) => ({ dispatch });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddCustomerNotification);
+export default connect(mapStateToProps, mapDispatchToProps)(AddAstrologerNotification);

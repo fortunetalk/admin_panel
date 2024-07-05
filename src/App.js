@@ -118,6 +118,7 @@ import AddWorkshop from "./pages/workshop/AddWorkshop";
 import DisplayMCQ from "./pages/courses/DisplayMCQ";
 import AddMCQ from "./pages/courses/AddMCQ";
 import AddCustomerNotification from "./pages/notification/AddCustomerNotification";
+import AddAstrologerNotification from "./pages/notification/AddAstrologerNotification";
 
 function App() {
   return (
@@ -301,6 +302,10 @@ function App() {
           <Route
             path="/addCustomerNotification"
             element={<AddCustomerNotification/>}
+          />
+          <Route
+            path="/addAstrologerNotification"
+            element={<AddAstrologerNotification/>}
           />
           <Route
             path="/astrologerNotification"

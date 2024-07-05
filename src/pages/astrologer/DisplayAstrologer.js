@@ -235,7 +235,7 @@ const ListAstrology = ({ astrologerListData }) => {
             actions={[
               {
                 icon: "edit",
-                tooltip: "Edit Skill",
+                tooltip: "Edit Astrologer",
                 onClick: (event, rowData) => handleEdit(rowData._id),
               },
               {

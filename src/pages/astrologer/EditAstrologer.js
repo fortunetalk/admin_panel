@@ -15,9 +15,15 @@ import {
   FormGroup,
   FormControlLabel,
   FormLabel,
+  Button,
   Modal,
   Box,
   Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 
 import { useNavigate, useParams } from "react-router-dom";
@@ -26,7 +32,10 @@ import logo_icon from "../../assets/images/logo_icon.png";
 
 import { connect, useDispatch } from "react-redux";
 import * as AstrologerActions from "../../redux/Actions/astrologerActions.js";
-import {getAstrologer, setAllAstrologer} from "../../redux/Actions/astrologerActions.js";
+import {
+  getAstrologer,
+  setAllAstrologer,
+} from "../../redux/Actions/astrologerActions.js";
 import * as ExpertiesActions from "../../redux/Actions/expertiesActions.js";
 import * as SkillActions from "../../redux/Actions/skillsActions.js";
 import * as RemedyActions from "../../redux/Actions/remediesActions.js";
@@ -39,22 +48,21 @@ const preferredDaysList = ["Mon", "Tues", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const optionsList = ["Consultation", "Teaching", "Pandit at Home", "All"];
 
 export const EditAstrologer = ({
-  skillsData,
-  subSkillData,
+  activeSkillsData,
   expertiesData,
   mainExpertiesData,
   remediesData,
   languageData,
-  astrologerData
+  astrologerData,
 }) => {
   var classes = useStyles();
   const { astrologerId } = useParams();
   const dispatch = useDispatch();
 
-
   const [galleryImages, setGalleryImages] = useState([]);
+  const [open, setOpen] = useState(false);
 
-  const backendGalleryImages= astrologerData?.galleryImage || [];
+  const backendGalleryImages = astrologerData?.galleryImage || [];
 
   const [state, setState] = useState({
     error: {},
@@ -85,7 +93,7 @@ export const EditAstrologer = ({
     bankAcountNumber: "",
     accountType: "",
     ifscCode: "",
-    accouuntHolderName: "",
+    accountHolderName: "",
     panNumber: "",
     addharNumber: "",
     consultationPrice: "",
@@ -131,14 +139,15 @@ export const EditAstrologer = ({
   });
 
   useEffect(() => {
-    dispatch(SkillActions.getSkillData());
+    dispatch(SkillActions.getActiveSkillData());
     dispatch(getAstrologer(astrologerId));
-    dispatch(SkillActions.getSkillData());
-    dispatch(SkillActions.getSubSkillData());
     dispatch(ExpertiesActions.getExpertiesData());
     dispatch(ExpertiesActions.getMainExpertiesData());
     dispatch(RemedyActions.getRemediesData());
     dispatch(LanguageActions.getAllLanguage());
+    if (astrologerData?.skillId) {
+      updateState({ skills: astrologerData.skillId });
+    }
   }, []);
 
   const [profilePhoto, setprofilePhoto] = useState({
@@ -146,7 +155,6 @@ export const EditAstrologer = ({
     file: astrologerData?.profileImage,
     bytes: "",
   });
-
 
   const [bankProof, setbankProof] = useState({
     file: astrologerData?.bankProofImage,
@@ -160,7 +168,7 @@ export const EditAstrologer = ({
 
   const handleChange = (field) => (event) => {
     const { value } = event.target;
-    setState(prevState => ({
+    setState((prevState) => ({
       ...prevState,
       [field]: value,
     }));
@@ -301,40 +309,11 @@ export const EditAstrologer = ({
     }
   };
 
-  const handleTimeChange = (e, editTo) => {
-    const newStartTime = e.target.value;
-    // Create a date object with a specific date (e.g., "1998-10-10") and combine it with the entered time
-    const currentDate = new Date("1998-10-10");
-    const enteredTime = new Date(
-      currentDate.toDateString() + " " + newStartTime
-    );
-
-    // Check if the entered time is a valid date
-    if (isNaN(enteredTime.getTime())) {
-      updateState({ error: { startTime: "Please enter a valid time" } });
-    } else {
-      // Clear the error if the entered time is valid
-      updateState({ error: { startTime: null } });
-
-      // Format the time to the desired format "1998-10-10T00:00:00.000Z"
-      const formattedTime = enteredTime.toISOString();
-      // Update the state with the formatted time
-      if (editTo == "startTime") {
-        updateState({ startTime: formattedTime });
-        updateState({ error: { startTime: null } });
-      } else {
-        updateState({ endTime: formattedTime });
-        updateState({ error: { endTime: null } });
-      }
-    }
-  };
-
   const handleError = (field, message) => {
     updateState({ error: { ...error, [field]: message } });
   };
 
   const handleValidation = () => {
-    console.log("hoi");
     var isValid = true;
     if (displayName.length == 0) {
       handleError("display name", "Display Name is required");
@@ -445,8 +424,8 @@ export const EditAstrologer = ({
     } else if (ifscCode.length == 0) {
       handleError("ifscCode", "IFSC Code is required");
       isValid = false;
-    } else if (accouuntHolderName.length == 0) {
-      handleError("accouuntHolderName", "Account Holder Name is required");
+    } else if (accountHolderName.length == 0) {
+      handleError("accountHolderName", "Account Holder Name is required");
       isValid = false;
     } else if (panNumber.length == 0) {
       handleError("panNumber", "PAN Number is required");
@@ -493,10 +472,7 @@ export const EditAstrologer = ({
     } else if (!mainExpertise || mainExpertise.length === 0) {
       handleError("mainExpertise", "Please Select Main Expertise");
       isValid = false;
-    } else if (
-      !educationQualification ||
-      educationQualification.length === 0
-    ) {
+    } else if (!educationQualification || educationQualification.length === 0) {
       handleError(
         "educationQualification",
         "Please Select educational Qualification"
@@ -583,10 +559,7 @@ export const EditAstrologer = ({
         "Please Select Company Chat Price Dollar"
       );
       isValid = false;
-    } else if (
-      !astrologyQualification ||
-      astrologyQualification.length === 0
-    ) {
+    } else if (!astrologyQualification || astrologyQualification.length === 0) {
       handleError(
         "astrologyQualification",
         "Please Select Astrological Qualification"
@@ -661,7 +634,7 @@ export const EditAstrologer = ({
         formData.append("account_number", bankAcountNumber);
         formData.append("account_type", accountType);
         formData.append("IFSC_code", ifscCode);
-        formData.append("account_holder_name", accouuntHolderName);
+        formData.append("account_holder_name", accountHolderName);
         formData.append("panCard", panNumber);
         formData.append("addharNumber", addharNumber);
         formData.append("commission_remark", astrologerType);
@@ -691,7 +664,10 @@ export const EditAstrologer = ({
         formData.append("liveVideoPriceDollar", liveVideoPriceDollar);
         formData.append("companyChatPriceDollar", companyChatPriceDollar);
         formData.append("astrologyQualification", astrologyQualification);
-        formData.append("companyLiveVideoPriceDollar",companyLiveVideoPriceDollar);
+        formData.append(
+          "companyLiveVideoPriceDollar",
+          companyLiveVideoPriceDollar
+        );
         formData.append("liveCallPriceDollar", liveCallPriceDollar);
         formData.append("gallery", gallery);
         formData.append("options", options);
@@ -757,7 +733,7 @@ export const EditAstrologer = ({
       bankAcountNumber: "",
       accountType: "",
       ifscCode: "",
-      accouuntHolderName: "",
+      accountHolderName: "",
       panNumber: "",
       addharNumber: "",
       consultationPrice: "",
@@ -825,6 +801,25 @@ export const EditAstrologer = ({
     });
   };
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = (event, reason) => {
+    if (reason !== "backdropClick") {
+      setOpen(false);
+    }
+  };
+
+  const handleUpdateSkills = () => {
+    var formData = new FormData();
+    formData.append("astrologerId", astrologerId);
+    for (let i = 0; i < skills.length; i++) {
+      formData.append(`skill[${i}]`, skills[i]);
+    }
+    dispatch(AstrologerActions.updateAstrologerSkill(formData));
+    handleClose();
+  };
+
   const {
     error,
     name,
@@ -851,7 +846,7 @@ export const EditAstrologer = ({
     bankName,
     bankAcountNumber,
     ifscCode,
-    accouuntHolderName,
+    accountHolderName,
     accountType,
     addharNumber,
     about,
@@ -990,12 +985,11 @@ export const EditAstrologer = ({
                 accept="image/*"
                 type="file"
               />
-
             </Grid>
             <div className={classes.errorstyles}>{error.profilePhoto}</div>
           </Grid>
           <Grid item lg={1} sm={1} md={1} xs={1}>
-              <Avatar
+            <Avatar
               color={Colors.primaryDark}
               src={profilePhoto.file}
               style={{ width: 56, height: 56 }}
@@ -1075,21 +1069,19 @@ export const EditAstrologer = ({
               }
               helperText={error.bankAcountNumber}
               error={error.bankAcountNumber ? true : false}
-            InputLabelProps={{ shrink: true }}
-
+              InputLabelProps={{ shrink: true }}
             />
           </Grid>
           <Grid item lg={3} sm={12} md={12} xs={12}>
             <TextField
               label="Enter Bank Name"
-              defaultValue={astrologerData?.bankName ||""}
+              defaultValue={astrologerData?.bankName || ""}
               variant="outlined"
               fullWidth
               onChange={(e) => updateState({ bankName: e.target.value })}
               helperText={error.bankName}
               error={!!error.bankName ? true : false}
-            InputLabelProps={{ shrink: true }}
-
+              InputLabelProps={{ shrink: true }}
             />
           </Grid>
           <Grid item lg={3} md={12} sm={12} xs={12}>
@@ -1107,12 +1099,9 @@ export const EditAstrologer = ({
                 helperText={error.accountType}
                 error={error.accountType ? true : false}
                 InputLabelProps={{ shrink: true }}
-
               >
                 <div className={classes.errorstyles}>{error.accountType}</div>
-                <MenuItem value="">
-                  -Select Account type-
-                </MenuItem>
+                <MenuItem value="">-Select Account type-</MenuItem>
                 <MenuItem value="saving">Saving</MenuItem>
                 <MenuItem value="current">Current</MenuItem>
               </Select>
@@ -1128,23 +1117,21 @@ export const EditAstrologer = ({
               helperText={error.ifscCode}
               error={error.ifscCode ? true : false}
               InputLabelProps={{ shrink: true }}
-
             />
           </Grid>
 
           <Grid item lg={4} sm={12} md={12} xs={12}>
             <TextField
               label="Account Holder Name"
-              defaultValue={astrologerData?.accouuntHolderName || ""}
+              defaultValue={astrologerData?.accountHolderName || ""}
               variant="outlined"
               fullWidth
               onChange={(e) =>
-                updateState({ accouuntHolderName: e.target.value })
+                updateState({ accountHolderName: e.target.value })
               }
-              helperText={error.accouuntHolderName}
-              error={error.accouuntHolderName ? true : false}
+              helperText={error.accountHolderName}
+              error={error.accountHolderName ? true : false}
               InputLabelProps={{ shrink: true }}
-
             />
           </Grid>
           <Grid item lg={4} sm={12} md={12} xs={12}>
@@ -1157,7 +1144,6 @@ export const EditAstrologer = ({
               helperText={error.panNumber}
               error={error.panNumber ? true : false}
               InputLabelProps={{ shrink: true }}
-
             />
           </Grid>
           <Grid item lg={4} sm={12} md={12} xs={12}>
@@ -1172,7 +1158,6 @@ export const EditAstrologer = ({
               helperText={error.addharNumber}
               error={error.addharNumber ? true : false}
               InputLabelProps={{ shrink: true }}
-
             />
           </Grid>
           <Grid item lg={4} sm={12} md={12} xs={12}>
@@ -1188,7 +1173,6 @@ export const EditAstrologer = ({
               helperText={error.educationQualification}
               error={error.educationQualification ? true : false}
               InputLabelProps={{ shrink: true }}
-
             />
           </Grid>
           <Grid item lg={4} sm={12} md={12} xs={12}>
@@ -1204,7 +1188,6 @@ export const EditAstrologer = ({
               helperText={error.astrologyQualification}
               error={error.astrologyQualification ? true : false}
               InputLabelProps={{ shrink: true }}
-
             />
           </Grid>
           <Grid item lg={4} sm={12} md={12} xs={12}>
@@ -1214,64 +1197,13 @@ export const EditAstrologer = ({
               variant="outlined"
               fullWidth
               onFocus={() => handleError("astrologerType", null)}
-              onChange={(e) =>
-                updateState({ astrologerType: e.target.value })
-              }
+              onChange={(e) => updateState({ astrologerType: e.target.value })}
               helperText={error.astrologerType}
               error={error.astrologerType ? true : false}
-            InputLabelProps={{ shrink: true }}
-
+              InputLabelProps={{ shrink: true }}
             />
           </Grid>
-          {/* <Grid item lg={4} sm={12} md={12} xs={12}>
-            <TextField
-              type="text"
-              label="Followers Value"
-              inputMode="numeric"
-              defaultValue={followersValue}
-              variant="outlined"
-              fullWidth
-              onChange={(e) => updateState({ followersValue: e.target.value })}
-              helperText={error.followersValue}
-              error={error.followersValue ? true : false}
-              InputLabelProps={{ shrink: true }}
 
-            />
-          </Grid> */}
-          {/* <Grid item lg={4} sm={12} md={12} xs={12}>
-            <TextField
-              type="number"
-              label="India Display Price"
-              inputMode="numeric"
-              defaultValue={indiaDisplayPrice}
-              variant="outlined"
-              fullWidth
-              onChange={(e) =>
-                updateState({ indiaDisplayPrice: e.target.value })
-              }
-              helperText={error.indiaDisplayPrice}
-              error={error.indiaDisplayPrice ? true : false}
-              InputLabelProps={{ shrink: true }}
-
-            />
-          </Grid>
-          <Grid item lg={4} sm={12} md={12} xs={12}>
-            <TextField
-              type="number"
-              label="Display Price International"
-              inputMode="numeric"
-              defaultValue={displayPriceInternational}
-              variant="outlined"
-              fullWidth
-              onChange={(e) =>
-                updateState({ displayPriceInternational: e.target.value })
-              }
-              helperText={error.displayPriceInternational}
-              error={error.displayPriceInternational ? true : false}
-              InputLabelProps={{ shrink: true }}
-
-            />
-          </Grid> */}
           <Grid item lg={4} sm={12} md={12} xs={12}>
             <TextField
               type="number"
@@ -1280,13 +1212,10 @@ export const EditAstrologer = ({
               defaultValue={astrologerData?.callPrice}
               variant="outlined"
               fullWidth
-              onChange={(e) =>
-                updateState({ callPrice: e.target.value })
-              }
+              onChange={(e) => updateState({ callPrice: e.target.value })}
               helperText={error.callPrice}
               error={error.callPrice ? true : false}
               InputLabelProps={{ shrink: true }}
-
             />
           </Grid>
           <Grid item lg={4} sm={12} md={12} xs={12}>
@@ -1303,7 +1232,6 @@ export const EditAstrologer = ({
               helperText={error.companyCallPrice}
               error={error.companyCallPrice ? true : false}
               InputLabelProps={{ shrink: true }}
-
             />
           </Grid>
           <Grid item lg={4} sm={12} md={12} xs={12}>
@@ -1314,13 +1242,10 @@ export const EditAstrologer = ({
               defaultValue={astrologerData?.chatPrice}
               variant="outlined"
               fullWidth
-              onChange={(e) =>
-                updateState({ chatPrice: e.target.value })
-              }
+              onChange={(e) => updateState({ chatPrice: e.target.value })}
               helperText={error.chatPrice}
               error={error.chatPrice ? true : false}
               InputLabelProps={{ shrink: true }}
-
             />
           </Grid>
           <Grid item lg={4} sm={12} md={12} xs={12}>
@@ -1337,7 +1262,6 @@ export const EditAstrologer = ({
               helperText={error.companyChatPrice}
               error={error.companyChatPrice ? true : false}
               InputLabelProps={{ shrink: true }}
-
             />
           </Grid>
           <Grid item lg={4} sm={12} md={12} xs={12}>
@@ -1352,7 +1276,6 @@ export const EditAstrologer = ({
               helperText={error.liveVideoPrice}
               error={error.liveVideoPrice ? true : false}
               InputLabelProps={{ shrink: true }}
-
             />
           </Grid>
           <Grid item lg={4} sm={12} md={12} xs={12}>
@@ -1369,7 +1292,6 @@ export const EditAstrologer = ({
               helperText={error.companyLiveVideoPrice}
               error={error.companyLiveVideoPrice ? true : false}
               InputLabelProps={{ shrink: true }}
-
             />
           </Grid>
           <Grid item lg={4} sm={12} md={12} xs={12}>
@@ -1384,7 +1306,6 @@ export const EditAstrologer = ({
               helperText={error.liveCallPrice}
               error={error.liveCallPrice ? true : false}
               InputLabelProps={{ shrink: true }}
-
             />
           </Grid>
           <Grid item lg={4} sm={12} md={12} xs={12}>
@@ -1400,12 +1321,10 @@ export const EditAstrologer = ({
               }
               helperText={error.companyLiveCallPrice}
               error={error.companyLiveCallPrice ? true : false}
-               InputLabelProps={{ shrink: true }}
-
+              InputLabelProps={{ shrink: true }}
             />
           </Grid>
-         
-         
+
           <Grid item lg={6} sm={12} md={12} xs={12}>
             <FormControl component="fieldset">
               <FormLabel component="legend">Options</FormLabel>
@@ -1437,74 +1356,76 @@ export const EditAstrologer = ({
             )}
           </Grid>
           <Grid
-        item
-        lg={6}
-        sm={12}
-        md={12}
-        xs={12}
-        className={classes.uploadContainer}
-      >
-        {galleryImages.length === 0 ? (
-          <Grid component="label" className={classes.uploadImageButton}>
-            Change Gallery Images
-            <input
-              onChange={handleGallery}
-              hidden
-              accept="image/*"
-              type="file"
-              multiple
-            />
-          </Grid>
-        ) : (
-          <div className={classes.imagePreviewContainer} style={{display:'flex',height:'50px',width:'50px',objectFit:'cover' }}>
-            {galleryImages.map((image, index) => (
-              <img
-                key={index}
-                src={image.file}
-                alt={`Gallery ${index}`}
-                className={classes.previewImage}
-              />
-            ))}
-          </div>
-        )}
-        
-        <div className={classes.errorStyle}>{error.gallery}</div>
-      </Grid>
-      <Grid item lg={12} sm={12} md={12} xs={12}>
-      {galleryImages.length === 0 ? (
-        <div className={classes.imagePreviewContainer} style={{display:'flex',height:'100px',width:'100px', objectFit:'cover' }}>
-           Gallery Images
-         {backendGalleryImages.map((image, index) => (
-           <>
-           <img
-           style={{padding:'1rem'}}
-             key={index}
-             src={image}
-             alt={`Gallery ${index}`}
-             className={classes.previewImage}
-           />
-           </>
-         ))}
-       </div>
-        ) :<> </>}
-      </Grid>
-          {/* <Grid item lg={6} sm={12} md={12} xs={12}>
-            <TextField
-              id="outlined-multiline-static"
-              multiline
-              rows={4}
-              label="Short Bio(max-150)"
-              defaultValue={shortBio}
-              variant="outlined"
-              fullWidth
-              onFocus={() => handleError("shortBio", null)}
-              onChange={(e) => updateState({ shortBio: e.target.value })}
-              helperText={error.shortBio}
-              error={error.shortBio ? true : false}
-            InputLabelProps={{ shrink: true }}
+            item
+            lg={6}
+            sm={12}
+            md={12}
+            xs={12}
+            className={classes.uploadContainer}
+          >
+            {galleryImages.length === 0 ? (
+              <Grid component="label" className={classes.uploadImageButton}>
+                Change Gallery Images
+                <input
+                  onChange={handleGallery}
+                  hidden
+                  accept="image/*"
+                  type="file"
+                  multiple
+                />
+              </Grid>
+            ) : (
+              <div
+                className={classes.imagePreviewContainer}
+                style={{
+                  display: "flex",
+                  height: "50px",
+                  width: "50px",
+                  objectFit: "cover",
+                }}
+              >
+                {galleryImages.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image.file}
+                    alt={`Gallery ${index}`}
+                    className={classes.previewImage}
+                  />
+                ))}
+              </div>
+            )}
 
-            />
-          </Grid> */}
+            <div className={classes.errorStyle}>{error.gallery}</div>
+          </Grid>
+          <Grid item lg={12} sm={12} md={12} xs={12}>
+            {galleryImages.length === 0 ? (
+              <div
+                className={classes.imagePreviewContainer}
+                style={{
+                  display: "flex",
+                  height: "100px",
+                  width: "100px",
+                  objectFit: "cover",
+                }}
+              >
+                Gallery Images
+                {backendGalleryImages.map((image, index) => (
+                  <>
+                    <img
+                      style={{ padding: "1rem" }}
+                      key={index}
+                      src={image}
+                      alt={`Gallery ${index}`}
+                      className={classes.previewImage}
+                    />
+                  </>
+                ))}
+              </div>
+            ) : (
+              <> </>
+            )}
+          </Grid>
+
           <Grid item lg={12} sm={12} md={12} xs={12}>
             <TextField
               id="outlined-multiline-static"
@@ -1518,20 +1439,19 @@ export const EditAstrologer = ({
               onChange={(e) => updateState({ about: e.target.value })}
               helperText={error.about}
               error={error.about ? true : false}
-            InputLabelProps={{ shrink: true }}
-
+              InputLabelProps={{ shrink: true }}
             />
           </Grid>
           <Grid item lg={6} sm={12} md={12} xs={12}>
             <FormControl component="fieldset">
               <FormLabel component="legend">Skills</FormLabel>
               <FormGroup aria-label="position" row>
-                {skillsData &&
-                  skillsData.map((item) => {
+                {activeSkillsData &&
+                  activeSkillsData.map((item) => {
                     return (
                       <div className={classes.chips}>
                         <FormControlLabel
-                          defaultValue={item._id}
+                          value={item.title}
                           className={classes.checkbox}
                           control={
                             <Checkbox
@@ -1539,7 +1459,7 @@ export const EditAstrologer = ({
                               onChange={() => handleSkills(item)}
                             />
                           }
-                          label={item.skill}
+                          label={item.title}
                           labelPlacement="end"
                         />
                       </div>
@@ -1550,6 +1470,50 @@ export const EditAstrologer = ({
             {error.skills && (
               <div className={classes.errorstyles}>{error.skills}</div>
             )}
+            <Button
+              variant="outlined"
+              color="primary"
+              className={classes.updateButton}
+              onClick={handleClickOpen}
+            >
+              Update Skills
+            </Button>
+
+            <Dialog open={open} onClose={handleClose}>
+              <DialogTitle>Update Skills</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Please update the skills below:
+                </DialogContentText>
+                <FormGroup aria-label="position" row>
+                  {activeSkillsData &&
+                    activeSkillsData.map((item) => (
+                      <div className={classes.chips} key={item._id}>
+                        <FormControlLabel
+                          value={item.title}
+                          className={classes.checkbox}
+                          control={
+                            <Checkbox
+                              checked={skills && skills.includes(item._id)}
+                              onChange={() => handleSkills(item)}
+                            />
+                          }
+                          label={item.title}
+                          labelPlacement="end"
+                        />
+                      </div>
+                    ))}
+                </FormGroup>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                  Cancel
+                </Button>
+                <Button onClick={handleUpdateSkills} color="primary">
+                  Update
+                </Button>
+              </DialogActions>
+            </Dialog>
           </Grid>
           <Grid item lg={6} sm={12} md={12} xs={12}>
             <FormControl component="fieldset">
@@ -1691,9 +1655,7 @@ export const EditAstrologer = ({
             onChange={(e) => updateState({ displayName: e.target.value })}
             helperText={error.displayName}
             InputLabelProps={{ shrink: true }}
-            
           />
-           
         </Grid>
         <Grid item lg={4} sm={12} md={12} xs={12}>
           <TextField
@@ -1706,7 +1668,6 @@ export const EditAstrologer = ({
             onChange={(e) => updateState({ name: e.target.value })}
             helperText={error.name}
             InputLabelProps={{ shrink: true }}
-
           />
         </Grid>
         <Grid item lg={4} sm={12} md={12} xs={12}>
@@ -1720,7 +1681,6 @@ export const EditAstrologer = ({
             onChange={(e) => updateState({ email: e.target.value })}
             helperText={error.email}
             InputLabelProps={{ shrink: true }}
-
           />
         </Grid>
         <Grid item lg={4} sm={12} md={12} xs={12}>
@@ -1735,10 +1695,9 @@ export const EditAstrologer = ({
             onFocus={() => handleError("phoneNumber", null)}
             onChange={(e) => updateState({ phoneNumber: e.target.value })}
             InputLabelProps={{ shrink: true }}
-
           />
         </Grid>
-       
+
         <Grid item lg={4} md={12} sm={12} xs={12}>
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Currency Type</InputLabel>
@@ -1751,9 +1710,7 @@ export const EditAstrologer = ({
               onFocus={() => handleError("currencyType", null)}
               onChange={(e) => updateState({ currencyType: e.target.value })}
             >
-              <MenuItem value="">
-                -Select currencyType-
-              </MenuItem>
+              <MenuItem value="">-Select currencyType-</MenuItem>
               <MenuItem value="INR">INR</MenuItem>
               <MenuItem value="USD">USD</MenuItem>
             </Select>
@@ -1763,28 +1720,26 @@ export const EditAstrologer = ({
           </FormControl>
         </Grid>
         <Grid item lg={4} md={12} sm={12} xs={12}>
-        <FormControl fullWidth>
-        <InputLabel id="gender-label">Gender</InputLabel>
-        <Select
-          labelId="gender-label"
-          id="gender-select"
-          label="Gender"
-          value={state.gender}
-          error={!!state.error.gender}
-          onFocus={() => handleError("gender", null)}
-          onChange={handleChange("gender")}
-        >
-          <MenuItem value="">
-            -Select Gender-
-          </MenuItem>
-          <MenuItem value="Male">Male</MenuItem>
-          <MenuItem value="Female">Female</MenuItem>
-          <MenuItem value="Other">Other</MenuItem>
-        </Select>
-        {state.error.gender && (
-          <div className={classes.errorstyles}>{state.error.gender}</div>
-        )}
-      </FormControl>
+          <FormControl fullWidth>
+            <InputLabel id="gender-label">Gender</InputLabel>
+            <Select
+              labelId="gender-label"
+              id="gender-select"
+              label="Gender"
+              value={state.gender}
+              error={!!state.error.gender}
+              onFocus={() => handleError("gender", null)}
+              onChange={handleChange("gender")}
+            >
+              <MenuItem value="">-Select Gender-</MenuItem>
+              <MenuItem value="Male">Male</MenuItem>
+              <MenuItem value="Female">Female</MenuItem>
+              <MenuItem value="Other">Other</MenuItem>
+            </Select>
+            {state.error.gender && (
+              <div className={classes.errorstyles}>{state.error.gender}</div>
+            )}
+          </FormControl>
         </Grid>
         <Grid item lg={4} sm={12} md={12} xs={12}>
           <TextField
@@ -1798,7 +1753,6 @@ export const EditAstrologer = ({
             helperText={error.password}
             error={error.password ? true : false}
             InputLabelProps={{ shrink: true }}
-
           />
         </Grid>
         <Grid item lg={4} sm={12} md={12} xs={12}>
@@ -1816,7 +1770,6 @@ export const EditAstrologer = ({
             helperText={error.dateOfBirth}
             error={error.dateOfBirth ? true : false}
             InputLabelProps={{ shrink: true }}
-
           />
         </Grid>
         <Grid item lg={4} md={12} sm={12} xs={12}>
@@ -1834,11 +1787,8 @@ export const EditAstrologer = ({
               onChange={(e) => updateState({ experience: e.target.value })}
               error={error.experience ? true : false} // Highlight the field if there's an error
               InputLabelProps={{ shrink: true }}
-
             >
-              <MenuItem value="">
-                -Experience in Years-
-              </MenuItem>
+              <MenuItem value="">-Experience in Years-</MenuItem>
               <MenuItem value="1">1</MenuItem>
               <MenuItem value="2">2</MenuItem>
               <MenuItem value="3">3</MenuItem>
@@ -1868,7 +1818,6 @@ export const EditAstrologer = ({
               onFocus={() => handleError("language", null)}
               onChange={(e) => updateState({ language: e.target.value })}
               InputLabelProps={{ shrink: true }}
-
             >
               <MenuItem disabled defaultValue={null}>
                 -Select Language-
@@ -1886,16 +1835,6 @@ export const EditAstrologer = ({
               <div className={classes.errorstyles}>{error.language}</div>
             )}
           </FormControl>
-          {/* <TextField
-            label="Language"
-            defaultValue={language}
-            variant="outlined"
-            fullWidth
-            onFocus={() => handleError("language", null)}
-            onChange={(e) => updateState({ language: e.target.value })}
-            helperText={error.language}
-            error={error.language} // Highlight the field if there's an error
-          /> */}
         </Grid>
         <Grid item lg={4} sm={12} md={12} xs={12}>
           <TextField
@@ -1908,11 +1847,10 @@ export const EditAstrologer = ({
             helperText={error.address}
             error={error.address ? true : false}
             InputLabelProps={{ shrink: true }}
-
           />
         </Grid>
         <Grid item lg={4} md={12} sm={12} xs={12}>
-        <FormControl fullWidth>
+          <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Country</InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -1923,11 +1861,8 @@ export const EditAstrologer = ({
               onFocus={() => handleError("country", null)}
               onChange={(e) => updateState({ country: e.target.value })}
               InputLabelProps={{ shrink: true }}
-
             >
-              <MenuItem value="">
-                -Select Country-
-              </MenuItem>
+              <MenuItem value="">-Select Country-</MenuItem>
               <MenuItem value="India">India</MenuItem>
               <MenuItem value="Brazil">Brazil</MenuItem>
             </Select>
@@ -1947,12 +1882,9 @@ export const EditAstrologer = ({
               onFocus={() => handleError("state", null)}
               onChange={(e) => updateState({ countryState: e.target.value })}
               error={error.state ? true : false}
-            InputLabelProps={{ shrink: true }}
-
+              InputLabelProps={{ shrink: true }}
             >
-              <MenuItem>
-                -Select your State-
-              </MenuItem>
+              <MenuItem>-Select your State-</MenuItem>
               <MenuItem value="Jammu & Kashmir">Jammu & Kashmir</MenuItem>
               <MenuItem value="Uttar Pradesh">Uttar Pradesh</MenuItem>
               <MenuItem value="UttraKhand">UttraKhand</MenuItem>
@@ -1973,12 +1905,9 @@ export const EditAstrologer = ({
               onFocus={() => handleError("city", null)}
               onChange={(e) => updateState({ city: e.target.value })}
               error={error.city ? true : false}
-            InputLabelProps={{ shrink: true }}
-
+              InputLabelProps={{ shrink: true }}
             >
-              <MenuItem value="">
-                -Select your City-
-              </MenuItem>
+              <MenuItem value="">-Select your City-</MenuItem>
               <MenuItem value="Meerut">Meerut</MenuItem>
               <MenuItem value="Delhi">Delhi</MenuItem>
               <MenuItem value="Noida">Noida</MenuItem>
@@ -2001,7 +1930,6 @@ export const EditAstrologer = ({
             helperText={error.currencyValue}
             error={error.currencyValue ? true : false}
             InputLabelProps={{ shrink: true }}
-
           />
         </Grid>
         <Grid item lg={4} sm={12} md={12} xs={12}>
@@ -2016,7 +1944,6 @@ export const EditAstrologer = ({
             helperText={error.zipCode}
             error={error.zipCode ? true : false}
             InputLabelProps={{ shrink: true }}
-
           />
         </Grid>
         <Grid item lg={4} sm={12} md={12} xs={12}>
@@ -2030,10 +1957,9 @@ export const EditAstrologer = ({
             helperText={error.phoneCode}
             error={error.phoneCode ? true : false}
             InputLabelProps={{ shrink: true }}
-
           />
         </Grid>
-        
+
         <Grid item lg={4} sm={12} md={12} xs={12}>
           <TextField
             type="number"
@@ -2059,7 +1985,6 @@ export const EditAstrologer = ({
             onFocus={() => handleError("follower_count", null)}
             onChange={(e) => updateState({ follower_count: e.target.value })}
             InputLabelProps={{ shrink: true }}
-
           />
         </Grid>
       </>
@@ -2068,14 +1993,12 @@ export const EditAstrologer = ({
 };
 
 const mapStateToProps = (state) => ({
-  skillsData: state.skills.skillsData,
-  subSkillData: state.skills.subSkillData,
+  activeSkillsData: state.skills.activeSkillsData,
   expertiesData: state.experites.expertiesData,
   mainExpertiesData: state.experites.mainExpertiesData,
   remediesData: state.remedies.remediesData,
   languageData: state.language.languageData,
   astrologerData: state.astrologer.astrologerData,
-  
 });
 
 // const mapDispatchToProps = (dispatch) => ({ dispatch });

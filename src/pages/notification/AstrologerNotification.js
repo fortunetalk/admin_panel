@@ -18,8 +18,7 @@ const AstrologerNotification = ({ astrologerNotificationData, dispatch }) => {
   const [status, setStatus] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [customerType, setCustomerType] = useState("");
-  const [recipients, setRecipients] = useState([]);
+  const [astrologerType, setastrologerType] = useState("");
   const [time, setTime] = useState("");
   const [icon, setIcon] = useState({ file: '', bytes: null });
   const [file, setFile] = useState(null);
@@ -41,8 +40,7 @@ const AstrologerNotification = ({ astrologerNotificationData, dispatch }) => {
     setStatus(rowData.status);
     setTitle(rowData.title);
     setDescription(rowData.description);
-    setCustomerType(rowData.customerType);
-    setRecipients(rowData.recipients);
+    setastrologerType(rowData.astrologerType);
     setTime(rowData.sentAt);
     setIcon({file:rowData.image, bytes:rowData.imageSize});
   }
@@ -80,8 +78,7 @@ const AstrologerNotification = ({ astrologerNotificationData, dispatch }) => {
       formData.append("status", status);
       formData.append("title", title);
       formData.append("description", description);
-      formData.append("customerType", customerType);
-      formData.append("recipients", recipients);
+      formData.append("astrologerType", astrologerType);
 
       dispatch(NotificationActions.updateAstrologerNotification(formData));
       setOpen(false);
@@ -209,7 +206,7 @@ const AstrologerNotification = ({ astrologerNotificationData, dispatch }) => {
               },
               {
                 icon: "delete",
-                tooltip: "Delete Skill",
+                tooltip: "Delete Notification",
                 onClick: (event, rowData) =>
                   dispatch(
                     NotificationActions.deleteAstrologerNotification({
@@ -228,7 +225,7 @@ const AstrologerNotification = ({ astrologerNotificationData, dispatch }) => {
                 tooltip: "Add New",
                 isFreeAction: true,
                 onClick: () =>
-                  navigate("/addCustomerNotification", {
+                  navigate("/addAstrologerNotification", {
                     state: { type: "customer" },
                   }),
               },
@@ -283,16 +280,16 @@ const AstrologerNotification = ({ astrologerNotificationData, dispatch }) => {
               <InputLabel id="select-label">Select Customer Type</InputLabel>
               <Select
                 labelId="select-label"
-                value={customerType}
-                onChange={(e)=>setCustomerType(e.target.value)}
+                value={astrologerType}
+                onChange={(e)=>setastrologerType(e.target.value)}
                 variant="outlined"
-                error={!!error.customerType}
+                error={!!error.astrologerType}
               >
                 <MenuItem value="All">All</MenuItem>
                 <MenuItem value="New">New</MenuItem>
                 <MenuItem value="Old">Old</MenuItem>
               </Select>
-              <div className={classes.errorstyles}>{error.customerType}</div>
+              <div className={classes.errorstyles}>{error.astrologerType}</div>
             </FormControl>
           </Grid>
 

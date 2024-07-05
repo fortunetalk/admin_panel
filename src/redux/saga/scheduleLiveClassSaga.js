@@ -3,30 +3,30 @@ import { put, call, takeLeading } from 'redux-saga/effects';
 import * as actionTypes from '../actionTypes';
 import { ApiRequest } from '../../utils/apiRequest';
 import Swal from "sweetalert2";
-import { api_url,live_class_list, create_live_class, change_live_class_status,change_live_class_admin_status, delete_live_class, update_live_class } from '../../utils/Constants';
+import { api_url,class_list, add_class, change_class_status, delete_class, update_class } from '../../utils/Constants';
 import { Colors } from "../../assets/styles";
+import { getScheduleClassData } from '../Actions/scheduleLiveClassActions';
 
 
-function* addLiveClass(actions) {
+function* scheduleClass(actions) {
   try {
     const { payload } = actions;
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
     const response = yield ApiRequest.postRequest({
-      url: api_url + create_live_class,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+      url: api_url + add_class,
+      header: "application/json",
       data: payload,
     });
+
 
     if (response?.success) {
       Swal.fire({
         icon: "success",
-        title: "Live Class Added Successfully",
+        title: "Class Added Successfully",
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.LIVE_CLASS_LIST, payload: response});
+      yield put({ type: actionTypes.SCHEDULE_CLASS_LIST, payload: response});
     } else if (response.error) {
       const errorMessage = response.error.message || "Server Error";
       Swal.fire({
@@ -50,40 +50,43 @@ function* addLiveClass(actions) {
       timer: 2000,
     });
     yield put({ type: actionTypes.SET_IS_LOADING, payload: e });
-  }finally{
+  } finally{
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+
   }
 }
 
-function* getAllLiveClass() {
-  try {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
-    const response = yield call(ApiRequest.getRequest, {
-      url: api_url + live_class_list,
-    });
-
-
-    if (response) {
-      yield put({
-        type: actionTypes.LIVE_CLASS_LIST,
-        payload: response?.data,
+function* getAllScheduleClass(action) {
+    try {
+      yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+      const { liveClassId } = action.payload;
+      const response = yield call(ApiRequest.getRequest, {
+        url: `${api_url}${class_list}/${liveClassId}`,
       });
+  
+      if (response) {
+        yield put({
+          type: actionTypes.SCHEDULE_CLASS_LIST,
+          payload: response.data,
+        });
+      }
+      yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    } catch (e) {
+      yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+      console.log(e);
     }
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
-  } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
-    console.log(e);
   }
-}
-function* updateLiveClassStatus(action) {
+  
+function* updateScheduleClassStatus(action) {
+    const { payload } = action;
   try {
-      const { payload } = action;
       yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
       const response = yield ApiRequest.postRequest({
-          url: api_url + change_live_class_status,
+          url: api_url + change_class_status,
           header: "json",
           data: payload,
       });
+      console.log('response',response.data.liveClassId)
       if (response && response.success) {
         Swal.fire({
           icon: "success",
@@ -91,7 +94,10 @@ function* updateLiveClassStatus(action) {
           showConfirmButton: false,
           timer: 2000,
         });
-        yield put({ type: actionTypes.LIVE_CLASS_LIST, payload: response });
+        yield put({ type: actionTypes.SCHEDULE_CLASS_LIST, payload: response.data.liveClassId });
+        yield put(getScheduleClassData({
+            classId: response.data.liveClassId
+        }));
       } else {
         Swal.fire({
           icon: "error",
@@ -112,54 +118,18 @@ function* updateLiveClassStatus(action) {
       });
     } finally {
       yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+        // yield put(getScheduleClassData(payload.liveClassId));
+
     }
 }
-function* updateLiveClassAdminStatus(action) {
-  try {
-      const { payload } = action;
-      yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
-      const response = yield ApiRequest.postRequest({
-          url: api_url + change_live_class_admin_status,
-          header: "json",
-          data: payload,
-      });
-      if (response && response.success) {
-        Swal.fire({
-          icon: "success",
-          title: "Live Class Status Updated Successfully",
-          showConfirmButton: false,
-          timer: 2000,
-        });
-        yield put({ type: actionTypes.LIVE_CLASS_LIST, payload: response });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Server Error",
-          text: "Status Updation Failed",
-          showConfirmButton: false,
-          timer: 2000,
-        });
-      }
-    } catch (error) {
-      console.error('Error Updating Live Class Status:', error);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Failed to Change Live Class Status",
-        showConfirmButton: false,
-        timer: 2000,
-      });
-    } finally {
-      yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
-    }
-}
-function* updateLiveClass(actions) {
+
+function* updateScheduleClass(actions) {
   try {
     const { payload } = actions;
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
     
     const response = yield ApiRequest.postRequest({
-      url: api_url+update_live_class,
+      url: api_url+update_class,
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -169,16 +139,16 @@ function* updateLiveClass(actions) {
     if (response.success) {
       Swal.fire({
         icon: "success",
-        title: "Live Class Updated Successfully",
+        title: "Class Updated Successfully",
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.LIVE_CLASS_LIST, payload: null });
+      yield put({ type: actionTypes.SCHEDULE_CLASS_LIST, payload: null });
     } else {
       Swal.fire({
         icon: "error",
         title: "Server Error",
-        text: "Live Class Update Failed",
+        text: "Class Update Failed",
         showConfirmButton: false,
         timer: 2000,
       });
@@ -189,7 +159,7 @@ function* updateLiveClass(actions) {
     console.log(e);
   }
 }
-function* deleteLiveClass(actions) {
+function* deleteScheduleClass(actions) {
   try {
     const { payload } = actions;
     const result = yield Swal.fire({
@@ -206,10 +176,10 @@ function* deleteLiveClass(actions) {
       yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
       const response = yield ApiRequest.postRequest({
-        url: api_url + delete_live_class,
+        url: api_url + delete_class,
         header: "json",
         data: {
-          liveClassId: payload?.liveClassId
+          classId: payload?.classId
 
         },
       });
@@ -217,18 +187,18 @@ function* deleteLiveClass(actions) {
       if (response.success) {
         Swal.fire({
           icon: "success",
-          title: "Live Class Deleted Successfull",
+          title: "Class Deleted Successfull",
           showConfirmButton: false,
           timer: 2000,
         });
 
-        yield put({type: actionTypes.LIVE_CLASS_LIST, payload: null})
+        yield put({type: actionTypes.SCHEDULE_CLASS_LIST, payload: response.data.liveClassId })
 
       } else {
         Swal.fire({
           icon: "error",
           title: "Server Error",
-          text: "Live Class Delete Failed",
+          text: "Class Delete Failed",
           showConfirmButton: false,
           timer: 2000,
         });
@@ -242,11 +212,10 @@ function* deleteLiveClass(actions) {
     console.log(e);
   }
 }
-export default function* liveClassSaga() {
-  yield takeLeading(actionTypes.CREATE_LIVE_CLASS, addLiveClass);
-  yield takeLeading(actionTypes.LIVE_CLASS_LIST, getAllLiveClass);
-  yield takeLeading(actionTypes.UPDATE_LIVE_CLASS, updateLiveClass);
-  yield takeLeading(actionTypes.UPDATE_LIVE_CLASS_STATUS, updateLiveClassStatus);
-  yield takeLeading(actionTypes.UPDATE_LIVE_CLASS_ADMIN_STATUS, updateLiveClassAdminStatus);
-  yield takeLeading(actionTypes.DELETE_LIVE_CLASS, deleteLiveClass);
+export default function* scheduleLiveClassSaga() {
+  yield takeLeading(actionTypes.SCHEDULE_CLASS, scheduleClass);
+  yield takeLeading(actionTypes.SCHEDULE_CLASS_LIST, getAllScheduleClass);
+  yield takeLeading(actionTypes.UPDATE_SCHEDULE_CLASS, updateScheduleClass);
+  yield takeLeading(actionTypes.UPDATE_SCHEDULE_CLASS_STATUS, updateScheduleClassStatus);
+  yield takeLeading(actionTypes.DELETE_SCHEDULE_CLASS, deleteScheduleClass);
 }

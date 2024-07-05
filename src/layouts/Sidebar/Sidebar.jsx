@@ -109,6 +109,11 @@ const routes = [
     ],
   },
   {
+    path: "/displayWorkshop",
+    name: "Workshop",
+    icon: <BiAbacus />,
+  },
+  {
     path: "/skills",
     name: "Skills",
     icon: <BiAbacus />,

@@ -28,6 +28,9 @@ import callChatBannerSaga from "./callChatBannerSaga";
 import testimonialSaga from "./testimonialSaga";
 import demoClassSaga from "./demoClassSaga";
 import liveClassSaga from "./liveClassSaga";
+import scheduleLiveClassSaga from "./scheduleLiveClassSaga";
+import workshopSaga from "./workshopSaga";
+import mcqSaga from "./mcqSaga";
 
 export default function* rootSaga() {
   yield all([
@@ -60,5 +63,8 @@ export default function* rootSaga() {
     testimonialSaga(),
     demoClassSaga(),
     liveClassSaga(),
+    scheduleLiveClassSaga(),
+    workshopSaga(),
+    mcqSaga(),
   ]);
 }

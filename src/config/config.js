@@ -9,7 +9,8 @@ if (process.env.NODE_ENV === "development") {
 } else {
   API_URL = "https://node-backend-live.onrender.com";
 }
-API_URL = "https://node-backend-jcdp.onrender.com";
+API_URL = "http://localhost:8000";
+// API_URL = "https://node-backend-jcdp.onrender.com";
 // API_URL = "https://node-backend-live.onrender.com";
 
 API_URL = `${API_URL}/api/v1`;

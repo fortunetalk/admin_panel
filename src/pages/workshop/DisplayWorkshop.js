@@ -10,7 +10,7 @@ import {
   MenuItem,
   Tooltip,
 } from "@mui/material";
-import { AddCircleRounded, PictureAsPdf, School, QuestionAnswer } from "@mui/icons-material";
+import { AddCircleRounded, PictureAsPdf } from "@mui/icons-material";
 import MaterialTable from "material-table";
 import { useNavigate } from "react-router-dom";
 import Dialog from "@mui/material/Dialog";
@@ -19,13 +19,12 @@ import { CloseRounded } from "@mui/icons-material";
 import Swal from "sweetalert2";
 import * as CourseActions from "../../redux/Actions/courseActions.js";
 import * as AstrologerActions from "../../redux/Actions/astrologerActions.js";
-import * as LiveClassActions from "../../redux/Actions/liveClassActions.js";
-import * as ScheduleClassActions from "../../redux/Actions/scheduleLiveClassActions.js";
+import * as WorkshopActions from "../../redux/Actions/workshopActions.js";
 import { connect } from "react-redux";
 
-const DisplayLiveClass = ({
+const DisplayWorkshop = ({
   dispatch,
-  liveClassData,
+  workshopData,
   activeAstrologerData,
   activeCourseData,
 }) => {
@@ -33,27 +32,29 @@ const DisplayLiveClass = ({
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [viewData, setViewData] = useState(false);
-  const [liveClassId, setliveClassId] = useState("");
+  const [workshopId, setworkshopId] = useState("");
   const [courseId, setcourseId] = useState("");
   const [astrologerId, setAstrologerId] = useState("");
-  const [className, setclassName] = useState("");
+  const [workShopName, setworkShopName] = useState("");
   const [error, setError] = useState({});
   const [status, setStatus] = useState("");
   const [description, setDescription] = useState("");
+  const [learn, setLearn] = useState("");
   const [courseContent, setCourseContent] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
-  const [price, setprice] = useState("");
-  const [discount, setdiscount] = useState("");
+  const [sessionTime, setSessionTime] = useState("");
+  const [googleMeet, setGoogleMeet] = useState("");
+  const [price, setPrice] = useState("");
+  const [discount, setDiscount] = useState("");
   const [icon, setIcon] = useState({ file: "", bytes: null });
   const [file, setFile] = useState(null);
-  const [video, setVideo] = useState({ file: "", bytes: null });
-  const [pdf, setPdf] = useState({ file: "", bytes: null });
-
+  const [video, setVideo] = useState({ file: '', bytes: null });
+  const [pdf, setPdf] = useState({ file: '', bytes: null });
 
   useEffect(function () {
     dispatch(CourseActions.getActiveCourseData());
-    dispatch(LiveClassActions.getLiveClassData());
+    dispatch(WorkshopActions.getWorkshopData());
     dispatch(AstrologerActions.getAllActiveAstrologer());
   }, []);
 
@@ -73,16 +74,19 @@ const DisplayLiveClass = ({
     setOpen(true);
     const formattedDate = new Date(rowData?.date).toISOString().split("T")[0];
     setDate(formattedDate);
-    setliveClassId(rowData?._id);
+    setworkshopId(rowData?._id)
     setcourseId(rowData?.courseId?.title);
     setAstrologerId(rowData?.astrologerId?.displayName);
-    setclassName(rowData?.className);
+    setworkShopName(rowData?.workShopName);
     setStatus(rowData?.status);
     setDescription(rowData?.description);
+    setLearn(rowData?.learn);
     setCourseContent(rowData?.courseContent);
     setTime(rowData?.time);
-    setprice(rowData?.price);
-    setdiscount(rowData?.discount);
+    setSessionTime(rowData?.sessionTime);
+    setGoogleMeet(rowData?.googleMeet);
+    setPrice(rowData?.price);
+    setDiscount(rowData?.discount);
     setIcon(rowData?.image);
     setVideo(rowData?.video);
   };
@@ -91,28 +95,23 @@ const DisplayLiveClass = ({
     setViewData(true);
     const formattedDate = new Date(rowData?.date).toISOString().split("T")[0];
     setDate(formattedDate);
-    setliveClassId(rowData?._id);
+    setworkshopId(rowData?._id)
     setcourseId(rowData?.courseId?.title);
     setAstrologerId(rowData?.astrologerId?.displayName);
-    setclassName(rowData?.className);
+    setworkShopName(rowData?.workShopName);
     setStatus(rowData?.status);
     setDescription(rowData?.description);
+    setLearn(rowData?.learn);
     setCourseContent(rowData?.courseContent);
     setTime(rowData?.time);
-    setprice(rowData?.price);
-    setdiscount(rowData?.discount);
+    setSessionTime(rowData?.sessionTime);
+    setGoogleMeet(rowData?.googleMeet);
+    setPrice(rowData?.price);
+    setDiscount(rowData?.discount);
     setIcon(rowData?.image);
     setVideo(rowData?.video);
+    
   };
-
-  const handleNavigate=(rowData)=>{
-    dispatch(ScheduleClassActions.getScheduleClassData(rowData?._id))
-    navigate(`/liveClassList/${rowData?._id}`);
-
-  }
-  const handleMCQ=(rowData)=>{
-    navigate(`/mcqList/${rowData?._id}`);
-  }
 
   const handleError = (input, value) => {
     setError((prev) => ({ ...prev, [input]: value }));
@@ -136,7 +135,7 @@ const DisplayLiveClass = ({
         file: selectedVideo.name,
         bytes: selectedVideo,
       });
-      handleError("video", null);
+      handleError('video', null);
     }
   };
 
@@ -147,17 +146,17 @@ const DisplayLiveClass = ({
         file: selectedPdf.name,
         bytes: selectedPdf,
       });
-      handleError("pdf", null);
+      handleError('pdf', null);
     }
   };
 
   const validation = () => {
     var isValid = true;
     if (!courseId) {
-      handleError("courseId", "Please Select Course");
+      handleError("courseId", "Please Select Skill");
       isValid = false;
     }
-
+   
     // if (!file) {
     //   handleError("icon", "Please upload an image");
     //   isValid = false;
@@ -168,29 +167,32 @@ const DisplayLiveClass = ({
   const handleSubmit = async () => {
     if (validation()) {
       var formData = new FormData();
-      formData.append("liveClassId", liveClassId);
+      formData.append("workshopId", workshopId);
       formData.append("astrologerId", astrologerId);
       formData.append("courseId", courseId);
-      formData.append("className", className);
+      formData.append("workShopName", workShopName);
       formData.append("description", description);
       formData.append("status", status);
       formData.append("image", file);
+      formData.append("learn", learn);
       formData.append("courseContent", courseContent);
       formData.append("date", date);
       formData.append("time", time);
-      formData.append("price", price);
-      formData.append("discount", discount);
+      formData.append("sessionTime", sessionTime);
+      formData.append("googleMeet", googleMeet);
+        formData.append("price", price);
+        formData.append("discount", discount);
       formData.append("video", video.bytes);
       formData.append("pdf", pdf.bytes);
 
-      dispatch(LiveClassActions.updateLiveClass(formData));
+        dispatch(WorkshopActions.updateWorkshop(formData));
       handleClose();
     }
   };
 
   const handleClose = () => {
     setcourseId("");
-    setclassName("");
+    setworkShopName("");
     setOpen(false);
     setViewData(false);
   };
@@ -207,15 +209,15 @@ const DisplayLiveClass = ({
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(
-          LiveClassActions.updateLiveClassAdminStatus({
-            liveClassId: rowData._id,
+          WorkshopActions.updateWorkshopAdminStatus({
+            workshopId: rowData._id,
             adminStatus: newStatus,
           })
         );
       }
     });
   };
-
+  
   const handleClickOpen = (rowData) => {
     Swal.fire({
       title: "Are you sure to Change the Status?",
@@ -229,8 +231,8 @@ const DisplayLiveClass = ({
       if (result.isConfirmed) {
         const newStatus = rowData.status === "Active" ? "InActive" : "Active";
         dispatch(
-          LiveClassActions.updateLiveClassStatus({
-            liveClassId: rowData._id,
+          WorkshopActions.updateWorkshopStatus({
+            workshopId: rowData._id,
             status: newStatus,
           })
         );
@@ -250,7 +252,7 @@ const DisplayLiveClass = ({
   return (
     <div className={classes.container}>
       <div className={classes.box}>
-        {liveClassData && displayTable()}
+        {workshopData && displayTable()}
         {editModal()}
         {viewModal()}
       </div>
@@ -262,28 +264,25 @@ const DisplayLiveClass = ({
       <Grid container spacing={1}>
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
-            title="Live Class"
-            data={liveClassData}
+            title="Workshop"
+            data={workshopData}
             columns={[
               {
                 title: "S.No",
                 editable: "never",
                 render: (rowData) =>
-                  Array.isArray(liveClassData)
-                    ? liveClassData.indexOf(rowData) + 1
+                  Array.isArray(workshopData)
+                    ? workshopData.indexOf(rowData) + 1
                     : "N/A",
               },
               { title: "Course Name", field: "courseId.title" },
               {
                 title: "Astrologer Name",
                 field: "astrologerId.displayName",
-                render: (rowData) =>
-                  rowData.astrologerId
-                    ? rowData.astrologerId.displayName
-                    : "N/A",
+                render: rowData => rowData.astrologerId ? rowData.astrologerId.displayName : 'N/A'
               },
-
-              { title: "Class Name", field: "className" },
+              
+              { title: "Workshop Name", field: "workShopName" },
 
               {
                 title: "Date and Time",
@@ -291,7 +290,8 @@ const DisplayLiveClass = ({
                 render: (rowData) => formatDate(rowData.date, rowData.time),
               },
 
-              { title: "Price", field: "price" },
+              { title: "Session Time", field: "sessionTime" },
+
 
               {
                 title: "Image",
@@ -306,25 +306,23 @@ const DisplayLiveClass = ({
               },
 
               {
-                title: "Admin Status",
-                field: "adminStatus",
+                title: 'Admin Status',
+                field: 'adminStatus',
                 render: (rowData) => (
                   <div>
                     <select
                       className={classes.statusDropdown}
                       value={rowData.adminStatus}
-                      onChange={(e) =>
-                        handleAdminStatusChange(rowData, e.target.value)
-                      }
+                      onChange={(e) => handleAdminStatusChange(rowData, e.target.value)}
                       style={{
                         backgroundColor:
-                          rowData.adminStatus === "Approved"
-                            ? "#90EE90" // Light Green
-                            : rowData.adminStatus === "Rejected"
-                            ? "#FF7F7F" // Light Red
-                            : rowData.adminStatus === "Pending"
-                            ? "#FFD700" // Gold
-                            : "#D3D3D3",
+                          rowData.adminStatus === 'Approved'
+                            ? '#90EE90' // Light Green
+                            : rowData.adminStatus === 'Rejected'
+                            ? '#FF7F7F' // Light Red
+                            : rowData.adminStatus === 'Pending'
+                            ? '#FFD700' // Gold
+                            : '#D3D3D3', 
                       }}
                     >
                       <option value="Approved">Approved</option>
@@ -353,18 +351,13 @@ const DisplayLiveClass = ({
               },
 
               {
-                title: "PDF",
-                field: "pdf",
+                title: 'PDF',
+                field: 'pdf',
                 render: (rowData) => (
                   <Tooltip title="Download PDF">
                     <PictureAsPdf
-                      onClick={() => window.open(rowData.pdf, "_blank")}
-                      style={{
-                        cursor: "pointer",
-                        color: "#1976d2",
-                        width: "30px",
-                        height: "30px",
-                      }}
+                      onClick={() => window.open(rowData.pdf, '_blank')}
+                      style={{ cursor: 'pointer', color: '#1976d2', width:'30px', height: '30px' }}
                     />
                   </Tooltip>
                 ),
@@ -375,35 +368,24 @@ const DisplayLiveClass = ({
             actions={[
               {
                 icon: "visibility",
-                tooltip: "View Live Class",
+                tooltip: "View Workshop",
                 onClick: (event, rowData) => handleView(rowData),
               },
               {
                 icon: "edit",
-                tooltip: "Edit Live Class",
+                tooltip: "Edit Workshop",
                 onClick: (event, rowData) => handleOpen(rowData),
               },
               {
                 icon: "delete",
-                tooltip: "Delete Live Class",
+                tooltip: "Delete Workshop",
                 onClick: (event, rowData) =>
                   dispatch(
-                    LiveClassActions.deleteLiveClass({
-                      liveClassId: rowData?._id,
+                    WorkshopActions.deleteWorkshop({
+                        workshopId: rowData?._id,
                     })
                   ),
               },
-              {
-                icon: School,
-                tooltip: 'Go to Class List',
-                onClick: (event, rowData) => handleNavigate(rowData),
-              },
-              {
-                icon: QuestionAnswer,
-                tooltip: 'Go to MCQ List',
-                onClick: (event, rowData) => handleMCQ(rowData),
-              },
-
               {
                 icon: () => (
                   <div className={classes.addButton}>
@@ -411,9 +393,9 @@ const DisplayLiveClass = ({
                     <div className={classes.addButtontext}>Add New</div>
                   </div>
                 ),
-                tooltip: "Add Demo Class",
+                tooltip: "Add Workshop",
                 isFreeAction: true,
-                onClick: () => navigate("/scheduleLiveClass"),
+                onClick: () => navigate("/addWorkshop"),
               },
             ]}
           />
@@ -423,15 +405,16 @@ const DisplayLiveClass = ({
   }
 
   function editModal() {
+
     const showEditForm = () => {
       return (
         <Grid container spacing={2}>
           <Grid item lg={12} sm={12} md={12} xs={12}>
             <div className={classes.headingContainer}>
-              <div className={classes.heading}>Edit Live Class</div>
+              <div className={classes.heading}>Edit Workshop</div>
             </div>
           </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
+           <Grid item lg={6} md={6} sm={12} xs={12}>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">
                 Select Course
@@ -445,7 +428,7 @@ const DisplayLiveClass = ({
                 onChange={(e) => setcourseId(e.target.value)}
                 error={error.courseId ? true : false}
               >
-                <MenuItem disabled value="">
+                <MenuItem disabled value={null}>
                   -Select Course-
                 </MenuItem>
                 {activeCourseData && fillCourseList()}
@@ -494,11 +477,11 @@ const DisplayLiveClass = ({
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
               label="Class Name"
-              error={error.className ? true : false}
-              helperText={error.className}
-              value={className}
-              onFocus={() => handleError("className", null)}
-              onChange={(event) => setclassName(event.target.value)}
+              error={error.workShopName ? true : false}
+              helperText={error.workShopName}
+              value={workShopName}
+              onFocus={() => handleError("workShopName", null)}
+              onChange={(event) => setworkShopName(event.target.value)}
               variant="outlined"
               fullWidth
             />
@@ -532,13 +515,39 @@ const DisplayLiveClass = ({
           </Grid>
           <Grid item lg={6} sm={12} md={6} xs={12}>
             <TextField
+              type="text"
+              label="Session Time"
+              value={sessionTime}
+              variant="outlined"
+              fullWidth
+              onFocus={() => handleError("sessionTime", null)}
+              onChange={(event) => setSessionTime(event.target.value)}
+              helperText={error.sessionTime}
+              error={error.sessionTime ? true : false}
+            />
+          </Grid>
+          <Grid item lg={6} sm={12} md={6} xs={12}>
+            <TextField
+              type="text"
+              label="Google Meet URL"
+              value={googleMeet}
+              variant="outlined"
+              fullWidth
+              onFocus={() => handleError("googleMeet", null)}
+              onChange={(event) => setGoogleMeet(event.target.value)}
+              helperText={error.googleMeet}
+              error={error.googleMeet ? true : false}
+            />
+          </Grid>
+          <Grid item lg={6} sm={12} md={6} xs={12}>
+            <TextField
               type="number"
               label="Price"
               value={price}
               variant="outlined"
               fullWidth
               onFocus={() => handleError("price", null)}
-              onChange={(event) => setprice(event.target.value)}
+              onChange={(event) => setPrice(event.target.value)}
               helperText={error.price}
               error={error.price ? true : false}
             />
@@ -551,12 +560,26 @@ const DisplayLiveClass = ({
               variant="outlined"
               fullWidth
               onFocus={() => handleError("discount", null)}
-              onChange={(event) => setdiscount(event.target.value)}
+              onChange={(event) => setDiscount(event.target.value)}
               helperText={error.discount}
               error={error.discount ? true : false}
             />
           </Grid>
 
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <TextField
+              fullWidth
+              label="Learn"
+              id="fullWidth"
+              value={learn}
+              multiline
+              rows={4}
+              onFocus={() => handleError("learn", null)}
+              onChange={(event) => setLearn(event.target.value)}
+              helperText={error.learn}
+              error={error.learn ? true : false}
+            />
+          </Grid>
 
           <Grid item lg={12} md={12} sm={12} xs={12}>
             <TextField
@@ -572,7 +595,7 @@ const DisplayLiveClass = ({
               error={error.description ? true : false}
             />
           </Grid>
-
+          
           <Grid item lg={12} md={12} sm={12} xs={12}>
             <TextField
               fullWidth
@@ -597,17 +620,21 @@ const DisplayLiveClass = ({
             className={classes.uploadContainer}
           >
             <label className={classes.uploadImageButton}>
-              {icon.file ? icon.file : "Upload Image"}
+              {
+                icon.file ? 
+                icon.file:
+                'Upload Image'
+              }
               <input
-                onChange={handleIcon}
-                hidden
-                accept="image/*"
-                type="file"
-              />
-            </label>
-            <div className={classes.errorStyles}>{error.icon}</div>
+            onChange={handleIcon}
+            hidden
+            accept="image/*"
+            type="file"
+          />
+        </label>
+        <div className={classes.errorStyles}>{error.icon}</div>
           </Grid>
-
+          
           <Grid
             item
             lg={4}
@@ -618,40 +645,46 @@ const DisplayLiveClass = ({
           >
             <label className={classes.uploadImageButton}>
               Upload Video
-              <input
-                onChange={handleVideo}
-                hidden
-                accept="video/*"
-                type="file"
-              />
+               <input
+            onChange={handleVideo}
+            hidden
+            accept="video/*"
+            type="file"
+          />
             </label>
             <div className={classes.errorstyles}>{error.video}</div>
           </Grid>
           <Grid item lg={2} sm={6} md={2} xs={6}>
-            {video.file && (
-              <video src={video.file} style={{ width: 150 }} controls />
-            )}
+          {video.file && (
+          <video
+            src={video.file}
+            style={{ width: 150 }}
+            controls
+          />
+        )}
           </Grid>
 
           <Grid
-            item
-            lg={2}
-            sm={6}
-            md={2}
-            xs={6}
-            className={classes.uploadContainer}
-          >
-            <label className={classes.uploadImageButton}>
-              {pdf.file ? pdf.file : "Upload PDF"}
-              <input
-                onChange={handlePdf}
-                hidden
-                accept="application/pdf"
-                type="file"
-              />
-            </label>
-            <div className={classes.errorStyles}>{error.pdf}</div>
-          </Grid>
+        item
+        lg={2}
+        sm={6}
+        md={2}
+        xs={6}
+        className={classes.uploadContainer}
+      >
+        <label className={classes.uploadImageButton}>
+          {
+            pdf.file ? pdf.file : 'Upload PDF'
+          }
+          <input
+            onChange={handlePdf}
+            hidden
+            accept="application/pdf"
+            type="file"
+          />
+        </label>
+        <div className={classes.errorStyles}>{error.pdf}</div>
+      </Grid>
 
           <Grid item lg={6} sm={6} md={6} xs={6}>
             <div onClick={handleSubmit} className={classes.submitbutton}>
@@ -682,7 +715,7 @@ const DisplayLiveClass = ({
         <Grid container spacing={2}>
           <Grid item lg={12} sm={12} md={12} xs={12}>
             <div className={classes.headingContainer}>
-              <div className={classes.heading}>Live Class Data</div>
+              <div className={classes.heading}>Workshop Data</div>
               <div onClick={handleClose} className={classes.closeButton}>
                 <CloseRounded />
               </div>
@@ -712,8 +745,8 @@ const DisplayLiveClass = ({
           </Grid>
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
-              label="Class Name"
-              value={className}
+              label="Workshop Name"
+              value={workShopName}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -766,6 +799,28 @@ const DisplayLiveClass = ({
           </Grid>
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
+              label="Session Time"
+              value={sessionTime}
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <TextField
+              label="Google Meet"
+              value={googleMeet}
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <TextField
               label="Price"
               value={price}
               variant="outlined"
@@ -799,7 +854,19 @@ const DisplayLiveClass = ({
               }}
             />
           </Grid>
-       
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <TextField
+              fullWidth
+              label="Learn"
+              id="fullWidth"
+              value={learn}
+              multiline
+              rows={2}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
           <Grid item lg={12} md={12} sm={12} xs={12}>
             <TextField
               fullWidth
@@ -854,9 +921,9 @@ const DisplayLiveClass = ({
 const mapStateToProps = (state) => ({
   activeCourseData: state.course.activeCourseData,
   activeAstrologerData: state.astrologer.activeAstrologerData,
-  liveClassData: state.liveClass.liveClassData,
+  workshopData: state.workshop.workshopData,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });
 
-export default connect(mapStateToProps, mapDispatchToProps)(DisplayLiveClass);
+export default connect(mapStateToProps, mapDispatchToProps)(DisplayWorkshop);

@@ -14,11 +14,14 @@ import {
   get_review,
   send_astrologer_notification,
   send_customer_notification,
-  verify_review,
+  delete_customer_notification,
+  update_customer_notification,
+  update_customer_notification_status,
 } from "../../utils/Constants";
 import { ApiRequest } from "../../utils/apiRequest";
 import * as actionTypes from "../actionTypes";
 import Swal from "sweetalert2";
+import { Colors } from "../../assets/styles";
 
 function* getCustomerNotification() {
   try {
@@ -30,7 +33,7 @@ function* getCustomerNotification() {
     if (response.success) {
       yield put({
         type: actionTypes.SET_CUSTOMER_NOTIFICATIONS,
-        payload: response.notifications.reverse(),
+        payload: response.data,
       });
     }
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
@@ -49,7 +52,7 @@ function* getAstrologerNotification() {
     if (response.success) {
       yield put({
         type: actionTypes.SET_ASTROLOGER_NOTIFICATIONS,
-        payload: response.notifications,
+        payload: response.data,
       });
     }
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
@@ -65,7 +68,9 @@ function* sendCustomerNotifications(actions) {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
     const response = yield ApiRequest.postRequest({
       url: api_url + send_customer_notification,
-      header: "json",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
       data: payload,
     });
     if (response && response.success) {
@@ -133,10 +138,149 @@ function* sendAstrologerNotifications(actions) {
   }
 }
 
+function* updateCustomerNotificationStatus(action) {
+  try {
+    const { payload } = action;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    const response = yield ApiRequest.postRequest({
+      url: api_url + update_customer_notification_status,
+      header: "json",
+      data: payload,
+    });
+    if (response && response.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Notification Status Updated Successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      yield put({ type: actionTypes.GET_CUSTOMER_NOTIFICATIONS, payload: response });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Status Updation Failed",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+  } catch (error) {
+    console.error("Error Updating Notification Status:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Failed to Change Notification Status",
+      showConfirmButton: false,
+      timer: 2000,
+    });
+  } finally {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+  }
+}
+
+function* updateCustomerNotification(actions) {
+  try {
+    const { payload } = actions;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
+    const response = yield ApiRequest.postRequest({
+      url: api_url + update_customer_notification,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      data: payload,
+    });
+
+    if (response.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Notification Updated Successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      yield put({ type: actionTypes.GET_CUSTOMER_NOTIFICATIONS, payload: null });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Notification Update Failed",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+  } catch (e) {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    console.log(e);
+  }
+}
+function* deleteCustomerNotifications(actions) {
+  try {
+    const { payload } = actions;
+    const result = yield Swal.fire({
+      title: `Are you sure to Delete Notification`,
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: Colors.primaryLight,
+      cancelButtonColor: Colors.red,
+      confirmButtonText: "Delete",
+    });
+
+    if (result.isConfirmed) {
+      yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
+      const response = yield ApiRequest.postRequest({
+        url: api_url + delete_customer_notification,
+        header: "json",
+        data: {
+          notificationId: payload?.notificationId,
+        },
+      });
+
+      if (response.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Notification Deleted Successfull",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+
+        yield put({ type: actionTypes.GET_CUSTOMER_NOTIFICATIONS, payload: null });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Server Error",
+          text: "Notification Delete Failed",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      }
+    }
+
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+  } catch (e) {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    console.log(e);
+  }
+}
+
 export default function* notificationSaga() {
   yield takeLeading(
     actionTypes.GET_CUSTOMER_NOTIFICATIONS,
     getCustomerNotification
+  );
+  yield takeLeading(
+    actionTypes.UPDATE_CUSTOMER_NOTIFICATION,
+    updateCustomerNotification
+  );
+  yield takeLeading(
+    actionTypes.UPDATE_CUSTOMER_NOTIFICATION_STATUS,
+    updateCustomerNotificationStatus
+  );
+  yield takeLeading(
+    actionTypes.DELETE_CUSTOMER_NOTIFICATION,
+    deleteCustomerNotifications
   );
   yield takeLeading(
     actionTypes.GET_ASTROLOGER_NOTIFICATIONS,

@@ -3,16 +3,16 @@ import { put, call, takeLeading } from 'redux-saga/effects';
 import * as actionTypes from '../actionTypes';
 import { ApiRequest } from '../../utils/apiRequest';
 import Swal from "sweetalert2";
-import { api_url,live_class_list, create_live_class, change_live_class_status,change_live_class_admin_status, delete_live_class, update_live_class } from '../../utils/Constants';
+import { api_url,workshop_list, create_workshop, change_workshop_status,change_workshop_admin_status, update_workshop, delete_workshop } from '../../utils/Constants';
 import { Colors } from "../../assets/styles";
 
 
-function* addLiveClass(actions) {
+function* addWorkshop(actions) {
   try {
     const { payload } = actions;
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
     const response = yield ApiRequest.postRequest({
-      url: api_url + create_live_class,
+      url: api_url + create_workshop,
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -22,11 +22,11 @@ function* addLiveClass(actions) {
     if (response?.success) {
       Swal.fire({
         icon: "success",
-        title: "Live Class Added Successfully",
+        title: "Workshop Added Successfully",
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.LIVE_CLASS_LIST, payload: response});
+      yield put({ type: actionTypes.WORKSHOP_LIST, payload: response});
     } else if (response.error) {
       const errorMessage = response.error.message || "Server Error";
       Swal.fire({
@@ -50,22 +50,20 @@ function* addLiveClass(actions) {
       timer: 2000,
     });
     yield put({ type: actionTypes.SET_IS_LOADING, payload: e });
-  }finally{
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   }
 }
 
-function* getAllLiveClass() {
+function* getAllWorkshop() {
   try {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
     const response = yield call(ApiRequest.getRequest, {
-      url: api_url + live_class_list,
+      url: api_url + workshop_list,
     });
 
 
     if (response) {
       yield put({
-        type: actionTypes.LIVE_CLASS_LIST,
+        type: actionTypes.WORKSHOP_LIST,
         payload: response?.data,
       });
     }
@@ -75,23 +73,23 @@ function* getAllLiveClass() {
     console.log(e);
   }
 }
-function* updateLiveClassStatus(action) {
+function* updateWorkshopStatus(action) {
   try {
       const { payload } = action;
       yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
       const response = yield ApiRequest.postRequest({
-          url: api_url + change_live_class_status,
+          url: api_url + change_workshop_status,
           header: "json",
           data: payload,
       });
       if (response && response.success) {
         Swal.fire({
           icon: "success",
-          title: "Live Class Status Updated Successfully",
+          title: "Workshop Status Updated Successfully",
           showConfirmButton: false,
           timer: 2000,
         });
-        yield put({ type: actionTypes.LIVE_CLASS_LIST, payload: response });
+        yield put({ type: actionTypes.WORKSHOP_LIST, payload: response });
       } else {
         Swal.fire({
           icon: "error",
@@ -102,11 +100,11 @@ function* updateLiveClassStatus(action) {
         });
       }
     } catch (error) {
-      console.error('Error Updating Live Class Status:', error);
+      console.error('Error Updating Workshop Status:', error);
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Failed to Change Live Class Status",
+        text: "Failed to Change Workshop Status",
         showConfirmButton: false,
         timer: 2000,
       });
@@ -114,23 +112,23 @@ function* updateLiveClassStatus(action) {
       yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
     }
 }
-function* updateLiveClassAdminStatus(action) {
+function* updateWorkshopAdminStatus(action) {
   try {
       const { payload } = action;
       yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
       const response = yield ApiRequest.postRequest({
-          url: api_url + change_live_class_admin_status,
+          url: api_url + change_workshop_admin_status,
           header: "json",
           data: payload,
       });
       if (response && response.success) {
         Swal.fire({
           icon: "success",
-          title: "Live Class Status Updated Successfully",
+          title: "Admin Status Updated Successfully",
           showConfirmButton: false,
           timer: 2000,
         });
-        yield put({ type: actionTypes.LIVE_CLASS_LIST, payload: response });
+        yield put({ type: actionTypes.WORKSHOP_LIST, payload: response });
       } else {
         Swal.fire({
           icon: "error",
@@ -141,11 +139,11 @@ function* updateLiveClassAdminStatus(action) {
         });
       }
     } catch (error) {
-      console.error('Error Updating Live Class Status:', error);
+      console.error('Error Updating Admin Status:', error);
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Failed to Change Live Class Status",
+        text: "Failed to Change Admin Status",
         showConfirmButton: false,
         timer: 2000,
       });
@@ -153,13 +151,13 @@ function* updateLiveClassAdminStatus(action) {
       yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
     }
 }
-function* updateLiveClass(actions) {
+function* updateWorkshop(actions) {
   try {
     const { payload } = actions;
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
     
     const response = yield ApiRequest.postRequest({
-      url: api_url+update_live_class,
+      url: api_url+update_workshop,
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -169,16 +167,16 @@ function* updateLiveClass(actions) {
     if (response.success) {
       Swal.fire({
         icon: "success",
-        title: "Live Class Updated Successfully",
+        title: "Workshop Updated Successfully",
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.LIVE_CLASS_LIST, payload: null });
+      yield put({ type: actionTypes.WORKSHOP_LIST, payload: null });
     } else {
       Swal.fire({
         icon: "error",
         title: "Server Error",
-        text: "Live Class Update Failed",
+        text: "Workshop Update Failed",
         showConfirmButton: false,
         timer: 2000,
       });
@@ -189,11 +187,11 @@ function* updateLiveClass(actions) {
     console.log(e);
   }
 }
-function* deleteLiveClass(actions) {
+function* deleteWorkshop(actions) {
   try {
     const { payload } = actions;
     const result = yield Swal.fire({
-      title: `Are you sure to Delete Live Class`,
+      title: `Are you sure to Delete Workshop`,
       text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
@@ -206,10 +204,10 @@ function* deleteLiveClass(actions) {
       yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
       const response = yield ApiRequest.postRequest({
-        url: api_url + delete_live_class,
+        url: api_url + delete_workshop,
         header: "json",
         data: {
-          liveClassId: payload?.liveClassId
+          workshopId: payload?.workshopId
 
         },
       });
@@ -217,18 +215,18 @@ function* deleteLiveClass(actions) {
       if (response.success) {
         Swal.fire({
           icon: "success",
-          title: "Live Class Deleted Successfull",
+          title: "Workshop Deleted Successfull",
           showConfirmButton: false,
           timer: 2000,
         });
 
-        yield put({type: actionTypes.LIVE_CLASS_LIST, payload: null})
+        yield put({type: actionTypes.WORKSHOP_LIST, payload: null})
 
       } else {
         Swal.fire({
           icon: "error",
           title: "Server Error",
-          text: "Live Class Delete Failed",
+          text: "Workshop Delete Failed",
           showConfirmButton: false,
           timer: 2000,
         });
@@ -242,11 +240,11 @@ function* deleteLiveClass(actions) {
     console.log(e);
   }
 }
-export default function* liveClassSaga() {
-  yield takeLeading(actionTypes.CREATE_LIVE_CLASS, addLiveClass);
-  yield takeLeading(actionTypes.LIVE_CLASS_LIST, getAllLiveClass);
-  yield takeLeading(actionTypes.UPDATE_LIVE_CLASS, updateLiveClass);
-  yield takeLeading(actionTypes.UPDATE_LIVE_CLASS_STATUS, updateLiveClassStatus);
-  yield takeLeading(actionTypes.UPDATE_LIVE_CLASS_ADMIN_STATUS, updateLiveClassAdminStatus);
-  yield takeLeading(actionTypes.DELETE_LIVE_CLASS, deleteLiveClass);
+export default function* workshopSaga() {
+  yield takeLeading(actionTypes.CREATE_WORKSHOP, addWorkshop);
+  yield takeLeading(actionTypes.WORKSHOP_LIST, getAllWorkshop);
+  yield takeLeading(actionTypes.UPDATE_WORKSHOP, updateWorkshop);
+  yield takeLeading(actionTypes.UPDATE_WORKSHOP_STATUS, updateWorkshopStatus);
+  yield takeLeading(actionTypes.UPDATE_WORKSHOP_ADMIN_STATUS, updateWorkshopAdminStatus);
+  yield takeLeading(actionTypes.DELETE_WORKSHOP, deleteWorkshop);
 }

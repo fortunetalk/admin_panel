@@ -2,12 +2,19 @@ import * as actionTypes from "../actionTypes";
 
 const initialState = {
   liveClassData: null,
+  isLoading: false,
 };
 
 const liveClass = (state = initialState, actions) => {
   const { payload, type } = actions;
 
   switch (type) {
+    case actionTypes.SET_IS_LOADING: {
+      return {
+        ...state,
+        isLoading: payload,
+      };
+    } 
     case actionTypes.CREATE_LIVE_CLASS: {
       return {
         ...state,

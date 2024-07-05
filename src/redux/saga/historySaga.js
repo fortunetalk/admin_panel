@@ -20,10 +20,11 @@ function* getChatHistory() {
       url: api_url + get_chat_history,
     });
 
+
     if (response?.success) {
       yield put({
         type: actionTypes.SET_CHAT_HISTORY,
-        payload: response?.history.reverse(),
+        payload: response?.data,
       });
     }
 
@@ -129,10 +130,11 @@ function* getCallHistory() {
     const response = yield ApiRequest.getRequest({
       url: api_url + get_call_history,
     });
+
     if (response?.success) {
       yield put({
         type: actionTypes.SET_CALL_HISTORY,
-        payload: response?.history,
+        payload: response?.data,
       });
     }
 

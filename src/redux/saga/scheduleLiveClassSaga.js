@@ -3,30 +3,30 @@ import { put, call, takeLeading } from 'redux-saga/effects';
 import * as actionTypes from '../actionTypes';
 import { ApiRequest } from '../../utils/apiRequest';
 import Swal from "sweetalert2";
-import { api_url,demo_class_list, create_demo_class, change_demo_class_status,change_demo_class_admin_status, delete_demo_class, update_demo_class } from '../../utils/Constants';
+import { api_url,class_list, add_class, change_class_status, delete_class, update_class } from '../../utils/Constants';
 import { Colors } from "../../assets/styles";
+import { getScheduleClassData } from '../Actions/scheduleLiveClassActions';
 
 
-function* addDemoClass(actions) {
+function* scheduleClass(actions) {
   try {
     const { payload } = actions;
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
     const response = yield ApiRequest.postRequest({
-      url: api_url + create_demo_class,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+      url: api_url + add_class,
+      header: "application/json",
       data: payload,
     });
+
 
     if (response?.success) {
       Swal.fire({
         icon: "success",
-        title: "Demo Class Added Successfully",
+        title: "Class Added Successfully",
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.DEMO_CLASS_LIST, payload: response});
+      yield put({ type: actionTypes.SCHEDULE_CLASS_LIST, payload: response});
     } else if (response.error) {
       const errorMessage = response.error.message || "Server Error";
       Swal.fire({
@@ -50,46 +50,54 @@ function* addDemoClass(actions) {
       timer: 2000,
     });
     yield put({ type: actionTypes.SET_IS_LOADING, payload: e });
+  } finally{
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+
   }
 }
 
-function* getAllDemoClass() {
-  try {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
-    const response = yield call(ApiRequest.getRequest, {
-      url: api_url + demo_class_list,
-    });
-
-
-    if (response) {
-      yield put({
-        type: actionTypes.DEMO_CLASS_LIST,
-        payload: response?.data,
+function* getAllScheduleClass(action) {
+    try {
+      yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+      const { liveClassId } = action.payload;
+      const response = yield call(ApiRequest.getRequest, {
+        url: `${api_url}${class_list}/${liveClassId}`,
       });
+  
+      if (response) {
+        yield put({
+          type: actionTypes.SCHEDULE_CLASS_LIST,
+          payload: response.data,
+        });
+      }
+      yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    } catch (e) {
+      yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+      console.log(e);
     }
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
-  } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
-    console.log(e);
   }
-}
-function* updateDemoClassStatus(action) {
+  
+function* updateScheduleClassStatus(action) {
+    const { payload } = action;
   try {
-      const { payload } = action;
       yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
       const response = yield ApiRequest.postRequest({
-          url: api_url + change_demo_class_status,
+          url: api_url + change_class_status,
           header: "json",
           data: payload,
       });
+      console.log('response',response.data.liveClassId)
       if (response && response.success) {
         Swal.fire({
           icon: "success",
-          title: "Demo Class Status Updated Successfully",
+          title: "Live Class Status Updated Successfully",
           showConfirmButton: false,
           timer: 2000,
         });
-        yield put({ type: actionTypes.DEMO_CLASS_LIST, payload: response });
+        yield put({ type: actionTypes.SCHEDULE_CLASS_LIST, payload: response.data.liveClassId });
+        yield put(getScheduleClassData({
+            classId: response.data.liveClassId
+        }));
       } else {
         Swal.fire({
           icon: "error",
@@ -100,64 +108,28 @@ function* updateDemoClassStatus(action) {
         });
       }
     } catch (error) {
-      console.error('Error Updating Demo Class Status:', error);
+      console.error('Error Updating Live Class Status:', error);
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Failed to Change Demo Class Status",
+        text: "Failed to Change Live Class Status",
         showConfirmButton: false,
         timer: 2000,
       });
     } finally {
       yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+        // yield put(getScheduleClassData(payload.liveClassId));
+
     }
 }
-function* updateDemoClassAdminStatus(action) {
-  try {
-      const { payload } = action;
-      yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
-      const response = yield ApiRequest.postRequest({
-          url: api_url + change_demo_class_admin_status,
-          header: "json",
-          data: payload,
-      });
-      if (response && response.success) {
-        Swal.fire({
-          icon: "success",
-          title: "Admin Status Updated Successfully",
-          showConfirmButton: false,
-          timer: 2000,
-        });
-        yield put({ type: actionTypes.DEMO_CLASS_LIST, payload: response });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Server Error",
-          text: "Status Updation Failed",
-          showConfirmButton: false,
-          timer: 2000,
-        });
-      }
-    } catch (error) {
-      console.error('Error Updating Admin Status:', error);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Failed to Change Admin Status",
-        showConfirmButton: false,
-        timer: 2000,
-      });
-    } finally {
-      yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
-    }
-}
-function* updateDemoClass(actions) {
+
+function* updateScheduleClass(actions) {
   try {
     const { payload } = actions;
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
     
     const response = yield ApiRequest.postRequest({
-      url: api_url+update_demo_class,
+      url: api_url+update_class,
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -167,16 +139,16 @@ function* updateDemoClass(actions) {
     if (response.success) {
       Swal.fire({
         icon: "success",
-        title: "Demo Class Updated Successfully",
+        title: "Class Updated Successfully",
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.DEMO_CLASS_LIST, payload: null });
+      yield put({ type: actionTypes.SCHEDULE_CLASS_LIST, payload: null });
     } else {
       Swal.fire({
         icon: "error",
         title: "Server Error",
-        text: "Demo Class Update Failed",
+        text: "Class Update Failed",
         showConfirmButton: false,
         timer: 2000,
       });
@@ -187,11 +159,11 @@ function* updateDemoClass(actions) {
     console.log(e);
   }
 }
-function* deleteDemoClass(actions) {
+function* deleteScheduleClass(actions) {
   try {
     const { payload } = actions;
     const result = yield Swal.fire({
-      title: `Are you sure to Delete Demo Class`,
+      title: `Are you sure to Delete Live Class`,
       text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
@@ -204,10 +176,10 @@ function* deleteDemoClass(actions) {
       yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
       const response = yield ApiRequest.postRequest({
-        url: api_url + delete_demo_class,
+        url: api_url + delete_class,
         header: "json",
         data: {
-          demoClassId: payload?.demoClassId
+          classId: payload?.classId
 
         },
       });
@@ -215,18 +187,18 @@ function* deleteDemoClass(actions) {
       if (response.success) {
         Swal.fire({
           icon: "success",
-          title: "Demo Class Deleted Successfull",
+          title: "Class Deleted Successfull",
           showConfirmButton: false,
           timer: 2000,
         });
 
-        yield put({type: actionTypes.DEMO_CLASS_LIST, payload: null})
+        yield put({type: actionTypes.SCHEDULE_CLASS_LIST, payload: response.data.liveClassId })
 
       } else {
         Swal.fire({
           icon: "error",
           title: "Server Error",
-          text: "Demo Class Delete Failed",
+          text: "Class Delete Failed",
           showConfirmButton: false,
           timer: 2000,
         });
@@ -240,11 +212,10 @@ function* deleteDemoClass(actions) {
     console.log(e);
   }
 }
-export default function* demoClassSaga() {
-  yield takeLeading(actionTypes.CREATE_DEMO_CLASS, addDemoClass);
-  yield takeLeading(actionTypes.DEMO_CLASS_LIST, getAllDemoClass);
-  yield takeLeading(actionTypes.UPDATE_DEMO_CLASS, updateDemoClass);
-  yield takeLeading(actionTypes.UPDATE_DEMO_CLASS_STATUS, updateDemoClassStatus);
-  yield takeLeading(actionTypes.UPDATE_DEMO_CLASS_ADMIN_STATUS, updateDemoClassAdminStatus);
-  yield takeLeading(actionTypes.DELETE_DEMO_CLASS, deleteDemoClass);
+export default function* scheduleLiveClassSaga() {
+  yield takeLeading(actionTypes.SCHEDULE_CLASS, scheduleClass);
+  yield takeLeading(actionTypes.SCHEDULE_CLASS_LIST, getAllScheduleClass);
+  yield takeLeading(actionTypes.UPDATE_SCHEDULE_CLASS, updateScheduleClass);
+  yield takeLeading(actionTypes.UPDATE_SCHEDULE_CLASS_STATUS, updateScheduleClassStatus);
+  yield takeLeading(actionTypes.DELETE_SCHEDULE_CLASS, deleteScheduleClass);
 }

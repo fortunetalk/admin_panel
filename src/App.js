@@ -12,7 +12,6 @@ import AddRechargePlans from "./pages/recharge/AddRechargePlans";
 import DisplayRechargePlans from "./pages/recharge/DisplayRechargePlans";
 import DisplayFirstRechargeOffer from "./pages/recharge/DisplayFirstRechargeOffer";
 import AddFirstRechargeOffer from "./pages/recharge/AddFirstRechargeOffer";
-import Notifications from "./pages/notification/Notifications";
 
 import AddRemedies from "./pages/remedies/AddRemedies";
 import DisplayRemedies from "./pages/remedies/DisplayRemedies";
@@ -64,7 +63,6 @@ import SaleSummary from "./pages/reports/SaleSummary";
 import EditAstrologer from "./pages/astrologer/EditAstrologer";
 import Try from "../src/pages/try/Try";
 import GooglePlacesAutocomplete from "../src/pages/try/Try";
-import DisplayNotification from "./pages/notification/DisplayNotification";
 import DisplayCustomerOrderHistory from "./pages/customer/DisplayCustomerOrderHistory";
 import DisplayCustomerPaymentHistory from "./pages/customer/DisplayCustomerPaymentHisotry";
 import AppReviews from "./pages/review/AppReviews";
@@ -111,6 +109,15 @@ import DisplayCourses from "./pages/courses/DisplayCourses";
 import AddCourses from "./pages/courses/AddCourses";
 import DisplayDemoClass from "./pages/courses/DisplayDemoClass";
 import AddDemoClass from "./pages/courses/AddDemoClass";
+import DisplayLiveClass from "./pages/courses/DisplayLiveClass";
+import AddLiveClass from "./pages/courses/AddLiveClass";
+import LiveClassList from "./pages/courses/LiveClassList";
+import AddClass from "./pages/courses/AddClass";
+import DisplayWorkshop from "./pages/workshop/DisplayWorkshop";
+import AddWorkshop from "./pages/workshop/AddWorkshop";
+import DisplayMCQ from "./pages/courses/DisplayMCQ";
+import AddMCQ from "./pages/courses/AddMCQ";
+import AddCustomerNotification from "./pages/notification/AddCustomerNotification";
 
 function App() {
   return (
@@ -136,11 +143,7 @@ function App() {
             path="/addFirstRechargeOffer"
             element={<AddFirstRechargeOffer />}
           />
-          <Route path="/notifications" element={<Notifications />} />
-          <Route
-            path="/displayNotifications"
-            element={<DisplayNotification />}
-          />
+        
 
           <Route path="/displayRemedise" element={<DisplayRemedies />} />
           <Route path="/AddRemedies" element={<AddRemedies />} />
@@ -280,11 +283,24 @@ function App() {
           <Route path="/addCourse" element={<AddCourses/>} />
           <Route path="/displayDemoClass" element={<DisplayDemoClass/>} />
           <Route path="/scheduleDemoClass" element={<AddDemoClass/>} />
+          <Route path="/displayLiveClass" element={<DisplayLiveClass/>} />
+          <Route path="/scheduleLiveClass" element={<AddLiveClass/>} />
+          <Route path="/liveClassList/:liveClassId" element={<LiveClassList/>} />
+          <Route path="/addClass/:liveClassId" element={<AddClass/>} />
+          <Route path="/mcqList/:liveClassId" element={<DisplayMCQ/>} />
+          <Route path="/addMCQ/:liveClassId" element={<AddMCQ/>} />
+
+          <Route path="/displayWorkshop" element={<DisplayWorkshop/>} />
+          <Route path="/addWorkshop" element={<AddWorkshop/>} />
 
 
           <Route
             path="/customerNotification"
             element={<CustomerNotification />}
+          />
+          <Route
+            path="/addCustomerNotification"
+            element={<AddCustomerNotification/>}
           />
           <Route
             path="/astrologerNotification"

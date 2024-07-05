@@ -19,12 +19,12 @@ import { CloseRounded } from "@mui/icons-material";
 import Swal from "sweetalert2";
 import * as CourseActions from "../../redux/Actions/courseActions.js";
 import * as AstrologerActions from "../../redux/Actions/astrologerActions.js";
-import * as DemoClassActions from "../../redux/Actions/demoClassActions.js";
+import * as WorkshopActions from "../../redux/Actions/workshopActions.js";
 import { connect } from "react-redux";
 
-const DisplayDemoClass = ({
+const DisplayWorkshop = ({
   dispatch,
-  demoClassData,
+  workshopData,
   activeAstrologerData,
   activeCourseData,
 }) => {
@@ -32,10 +32,10 @@ const DisplayDemoClass = ({
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [viewData, setViewData] = useState(false);
-  const [demoClassId, setDemoClassId] = useState("");
+  const [workshopId, setworkshopId] = useState("");
   const [courseId, setcourseId] = useState("");
   const [astrologerId, setAstrologerId] = useState("");
-  const [className, setclassName] = useState("");
+  const [workShopName, setworkShopName] = useState("");
   const [error, setError] = useState({});
   const [status, setStatus] = useState("");
   const [description, setDescription] = useState("");
@@ -45,6 +45,8 @@ const DisplayDemoClass = ({
   const [time, setTime] = useState("");
   const [sessionTime, setSessionTime] = useState("");
   const [googleMeet, setGoogleMeet] = useState("");
+  const [price, setPrice] = useState("");
+  const [discount, setDiscount] = useState("");
   const [icon, setIcon] = useState({ file: "", bytes: null });
   const [file, setFile] = useState(null);
   const [video, setVideo] = useState({ file: '', bytes: null });
@@ -52,7 +54,7 @@ const DisplayDemoClass = ({
 
   useEffect(function () {
     dispatch(CourseActions.getActiveCourseData());
-    dispatch(DemoClassActions.getDemoClassData());
+    dispatch(WorkshopActions.getWorkshopData());
     dispatch(AstrologerActions.getAllActiveAstrologer());
   }, []);
 
@@ -72,10 +74,10 @@ const DisplayDemoClass = ({
     setOpen(true);
     const formattedDate = new Date(rowData?.date).toISOString().split("T")[0];
     setDate(formattedDate);
-    setDemoClassId(rowData?._id)
+    setworkshopId(rowData?._id)
     setcourseId(rowData?.courseId?.title);
     setAstrologerId(rowData?.astrologerId?.displayName);
-    setclassName(rowData?.className);
+    setworkShopName(rowData?.workShopName);
     setStatus(rowData?.status);
     setDescription(rowData?.description);
     setLearn(rowData?.learn);
@@ -83,6 +85,8 @@ const DisplayDemoClass = ({
     setTime(rowData?.time);
     setSessionTime(rowData?.sessionTime);
     setGoogleMeet(rowData?.googleMeet);
+    setPrice(rowData?.price);
+    setDiscount(rowData?.discount);
     setIcon(rowData?.image);
     setVideo(rowData?.video);
   };
@@ -91,10 +95,10 @@ const DisplayDemoClass = ({
     setViewData(true);
     const formattedDate = new Date(rowData?.date).toISOString().split("T")[0];
     setDate(formattedDate);
-    setDemoClassId(rowData?._id)
+    setworkshopId(rowData?._id)
     setcourseId(rowData?.courseId?.title);
     setAstrologerId(rowData?.astrologerId?.displayName);
-    setclassName(rowData?.className);
+    setworkShopName(rowData?.workShopName);
     setStatus(rowData?.status);
     setDescription(rowData?.description);
     setLearn(rowData?.learn);
@@ -102,6 +106,8 @@ const DisplayDemoClass = ({
     setTime(rowData?.time);
     setSessionTime(rowData?.sessionTime);
     setGoogleMeet(rowData?.googleMeet);
+    setPrice(rowData?.price);
+    setDiscount(rowData?.discount);
     setIcon(rowData?.image);
     setVideo(rowData?.video);
     
@@ -161,10 +167,10 @@ const DisplayDemoClass = ({
   const handleSubmit = async () => {
     if (validation()) {
       var formData = new FormData();
-      formData.append("demoClassId", demoClassId);
+      formData.append("workshopId", workshopId);
       formData.append("astrologerId", astrologerId);
       formData.append("courseId", courseId);
-      formData.append("className", className);
+      formData.append("workShopName", workShopName);
       formData.append("description", description);
       formData.append("status", status);
       formData.append("image", file);
@@ -174,19 +180,20 @@ const DisplayDemoClass = ({
       formData.append("time", time);
       formData.append("sessionTime", sessionTime);
       formData.append("googleMeet", googleMeet);
+        formData.append("price", price);
+        formData.append("discount", discount);
       formData.append("video", video.bytes);
       formData.append("pdf", pdf.bytes);
 
-        dispatch(DemoClassActions.updateDemoClass(formData));
+        dispatch(WorkshopActions.updateWorkshop(formData));
       handleClose();
     }
   };
 
   const handleClose = () => {
     setcourseId("");
-    setclassName("");
+    setworkShopName("");
     setOpen(false);
-    
     setViewData(false);
   };
 
@@ -202,8 +209,8 @@ const DisplayDemoClass = ({
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(
-          DemoClassActions.updateDemoClassAdminStatus({
-            demoClassId: rowData._id,
+          WorkshopActions.updateWorkshopAdminStatus({
+            workshopId: rowData._id,
             adminStatus: newStatus,
           })
         );
@@ -224,8 +231,8 @@ const DisplayDemoClass = ({
       if (result.isConfirmed) {
         const newStatus = rowData.status === "Active" ? "InActive" : "Active";
         dispatch(
-          DemoClassActions.updateDemoClassStatus({
-            demoClassId: rowData._id,
+          WorkshopActions.updateWorkshopStatus({
+            workshopId: rowData._id,
             status: newStatus,
           })
         );
@@ -245,7 +252,7 @@ const DisplayDemoClass = ({
   return (
     <div className={classes.container}>
       <div className={classes.box}>
-        {demoClassData && displayTable()}
+        {workshopData && displayTable()}
         {editModal()}
         {viewModal()}
       </div>
@@ -257,15 +264,15 @@ const DisplayDemoClass = ({
       <Grid container spacing={1}>
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
-            title="Demo Class"
-            data={demoClassData}
+            title="Workshop"
+            data={workshopData}
             columns={[
               {
                 title: "S.No",
                 editable: "never",
                 render: (rowData) =>
-                  Array.isArray(demoClassData)
-                    ? demoClassData.indexOf(rowData) + 1
+                  Array.isArray(workshopData)
+                    ? workshopData.indexOf(rowData) + 1
                     : "N/A",
               },
               { title: "Course Name", field: "courseId.title" },
@@ -275,7 +282,7 @@ const DisplayDemoClass = ({
                 render: rowData => rowData.astrologerId ? rowData.astrologerId.displayName : 'N/A'
               },
               
-              { title: "Class Name", field: "className" },
+              { title: "Workshop Name", field: "workShopName" },
 
               {
                 title: "Date and Time",
@@ -361,21 +368,21 @@ const DisplayDemoClass = ({
             actions={[
               {
                 icon: "visibility",
-                tooltip: "View Demo Class",
+                tooltip: "View Workshop",
                 onClick: (event, rowData) => handleView(rowData),
               },
               {
                 icon: "edit",
-                tooltip: "Edit Demo Class",
+                tooltip: "Edit Workshop",
                 onClick: (event, rowData) => handleOpen(rowData),
               },
               {
                 icon: "delete",
-                tooltip: "Delete Demo Class",
+                tooltip: "Delete Workshop",
                 onClick: (event, rowData) =>
                   dispatch(
-                    DemoClassActions.deleteDemoClass({
-                        demoClassId: rowData?._id,
+                    WorkshopActions.deleteWorkshop({
+                        workshopId: rowData?._id,
                     })
                   ),
               },
@@ -386,9 +393,9 @@ const DisplayDemoClass = ({
                     <div className={classes.addButtontext}>Add New</div>
                   </div>
                 ),
-                tooltip: "Add Demo Class",
+                tooltip: "Add Workshop",
                 isFreeAction: true,
-                onClick: () => navigate("/scheduleDemoClass"),
+                onClick: () => navigate("/addWorkshop"),
               },
             ]}
           />
@@ -404,7 +411,7 @@ const DisplayDemoClass = ({
         <Grid container spacing={2}>
           <Grid item lg={12} sm={12} md={12} xs={12}>
             <div className={classes.headingContainer}>
-              <div className={classes.heading}>Edit Demo Class</div>
+              <div className={classes.heading}>Edit Workshop</div>
             </div>
           </Grid>
            <Grid item lg={6} md={6} sm={12} xs={12}>
@@ -470,11 +477,11 @@ const DisplayDemoClass = ({
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
               label="Class Name"
-              error={error.className ? true : false}
-              helperText={error.className}
-              value={className}
-              onFocus={() => handleError("className", null)}
-              onChange={(event) => setclassName(event.target.value)}
+              error={error.workShopName ? true : false}
+              helperText={error.workShopName}
+              value={workShopName}
+              onFocus={() => handleError("workShopName", null)}
+              onChange={(event) => setworkShopName(event.target.value)}
               variant="outlined"
               fullWidth
             />
@@ -530,6 +537,32 @@ const DisplayDemoClass = ({
               onChange={(event) => setGoogleMeet(event.target.value)}
               helperText={error.googleMeet}
               error={error.googleMeet ? true : false}
+            />
+          </Grid>
+          <Grid item lg={6} sm={12} md={6} xs={12}>
+            <TextField
+              type="number"
+              label="Price"
+              value={price}
+              variant="outlined"
+              fullWidth
+              onFocus={() => handleError("price", null)}
+              onChange={(event) => setPrice(event.target.value)}
+              helperText={error.price}
+              error={error.price ? true : false}
+            />
+          </Grid>
+          <Grid item lg={6} sm={12} md={6} xs={12}>
+            <TextField
+              type="number"
+              label="Discount"
+              value={discount}
+              variant="outlined"
+              fullWidth
+              onFocus={() => handleError("discount", null)}
+              onChange={(event) => setDiscount(event.target.value)}
+              helperText={error.discount}
+              error={error.discount ? true : false}
             />
           </Grid>
 
@@ -682,7 +715,7 @@ const DisplayDemoClass = ({
         <Grid container spacing={2}>
           <Grid item lg={12} sm={12} md={12} xs={12}>
             <div className={classes.headingContainer}>
-              <div className={classes.heading}>Demo Class Data</div>
+              <div className={classes.heading}>Workshop Data</div>
               <div onClick={handleClose} className={classes.closeButton}>
                 <CloseRounded />
               </div>
@@ -712,8 +745,8 @@ const DisplayDemoClass = ({
           </Grid>
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
-              label="Class Name"
-              value={className}
+              label="Workshop Name"
+              value={workShopName}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -779,6 +812,28 @@ const DisplayDemoClass = ({
             <TextField
               label="Google Meet"
               value={googleMeet}
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <TextField
+              label="Price"
+              value={price}
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <TextField
+              label="Discount"
+              value={discount}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -866,9 +921,9 @@ const DisplayDemoClass = ({
 const mapStateToProps = (state) => ({
   activeCourseData: state.course.activeCourseData,
   activeAstrologerData: state.astrologer.activeAstrologerData,
-  demoClassData: state.demoClass.demoClassData,
+  workshopData: state.workshop.workshopData,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });
 
-export default connect(mapStateToProps, mapDispatchToProps)(DisplayDemoClass);
+export default connect(mapStateToProps, mapDispatchToProps)(DisplayWorkshop);

@@ -12,19 +12,6 @@ import {
 } from "@mui/material";
 import { AddCircleRounded, Close } from "@mui/icons-material";
 import MaterialTable from "material-table";
-import logo_icon from "../../assets/images/logo_icon.png";
-import {
-  base_url,
-  delete_skill,
-  get_skills,
-  update_skill,
-} from "../../utils/Constants.js";
-import {
-  deleteData,
-  getData,
-  postData,
-  putData,
-} from "../../utils/FetchNodeServices.js";
 import { useNavigate } from "react-router-dom";
 import Dialog from "@mui/material/Dialog";
 import { DialogContent, CircularProgress } from "@mui/material";

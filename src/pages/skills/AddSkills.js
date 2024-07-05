@@ -14,8 +14,9 @@ import { useNavigate } from "react-router-dom";
 import logo_icon from "../../assets/images/logo_icon.png";
 import { connect } from "react-redux";
 import * as SkillActions from "../../redux/Actions/skillsActions.js";
+import CircularProgress from "@mui/material/CircularProgress";
 
-const AddSkills = ({ dispatch }) => {
+const AddSkills = ({ dispatch, isLoading }) => {
   const navigate = useNavigate();
   const classes = useStyles();
   const [skill, setSkill] = useState("");
@@ -148,7 +149,7 @@ const AddSkills = ({ dispatch }) => {
           </Grid>
           <Grid item lg={6} sm={6} md={6} xs={6}>
             <div onClick={handleSubmit} className={classes.submitbutton}>
-              Submit
+              {isLoading ? <CircularProgress size={24} /> : "Submit"}
             </div>
           </Grid>
           <Grid item lg={6} sm={6} md={6} xs={6}>
@@ -162,6 +163,10 @@ const AddSkills = ({ dispatch }) => {
   );
 };
 
+const mapStateToProps = (state) => ({
+  isLoading: state.skills.isLoading,
+});
+
 const mapDispatchToProps = (dispatch) => ({ dispatch });
 
-export default connect(null, mapDispatchToProps)(AddSkills);
+export default connect(mapStateToProps, mapDispatchToProps)(AddSkills);

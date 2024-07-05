@@ -8,17 +8,18 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  CircularProgress
 } from "@mui/material";
 import DvrIcon from "@mui/icons-material/Dvr";
 import { useNavigate } from "react-router-dom";
 import logo_icon from "../../assets/images/logo_icon.png";
 import { connect } from "react-redux";
-import * as DemoActions from "../../redux/Actions/demoClassActions.js";
+import * as LiveActions from "../../redux/Actions/liveClassActions.js";
 import * as CourseActions from "../../redux/Actions/courseActions.js";
 import * as AstrologerActions from "../../redux/Actions/astrologerActions.js";
 import Loader from "../../Components/loading/Loader.js";
 
-const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
+const AddLiveClass = ({ dispatch, activeAstrologerData, activeCourseData, isLoading }) => {
   const navigate = useNavigate();
   const classes = useStyles();
   const [courseId, setcourseId] = useState("");
@@ -27,12 +28,11 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
   const [error, setError] = useState({});
   const [status, setStatus] = useState("");
   const [description, setDescription] = useState("");
-  const [learn, setLearn] = useState("");
   const [courseContent, setCourseContent] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
-  const [sessionTime, setSessionTime] = useState("");
-  const [googleMeet, setGoogleMeet] = useState("");
+  const [price, setprice] = useState("");
+  const [discount, setdiscount] = useState("");
   const [icon, setIcon] = useState({ file: "", bytes: null });
   const [file, setFile] = useState(null);
   const [video, setVideo] = useState({ file: '', bytes: null });
@@ -111,20 +111,16 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
       handleError("time", "Please Input Time");
       isValid = false;
     }
-    if (!sessionTime) {
-      handleError("sessionTime", "Please Input Session Time");
+    if (!price) {
+      handleError("price", "Please Input Session Time");
       isValid = false;
     }
-    if (!googleMeet) {
-      handleError("googleMeet", "Please Input Google Meet URL");
+    if (!discount) {
+      handleError("discount", "Please Input Google Meet URL");
       isValid = false;
     }
     if (!video.file) {
       handleError("video", "Video is required");
-      isValid = false;
-    }
-    if (!learn) {
-      handleError("learn", "This field is required");
       isValid = false;
     }
     if (!courseContent) {
@@ -146,19 +142,18 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
       formData.append("className", className);
       formData.append("description", description);
       formData.append("status", status);
-      formData.append("learn", learn);
       formData.append("courseContent", courseContent);
       formData.append("date", date);
       formData.append("time", time);
-      formData.append("sessionTime", sessionTime);
-      formData.append("googleMeet", googleMeet);
+      formData.append("price", price);
+      formData.append("discount", discount);
       formData.append("image", file);
-      formData.append("video", video.bytes, video.file);
-      formData.append("pdf", pdf.bytes, pdf.file);
+      formData.append("video",  video.bytes);
+      formData.append("pdf", pdf.file);
 
-      dispatch(DemoActions.addDemoClass(formData));
+      dispatch(LiveActions.addLiveClass(formData));
       handleReset();
-      navigate("/displayDemoClass");
+      // navigate("/displayLiveClass");
     }
   };
 
@@ -167,12 +162,11 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
     setStatus("");
     setAstrologerId("");
     setclassName("");
-    setLearn("");
     setCourseContent("");
     setDate("");
     setTime("");
-    setSessionTime("");
-    setGoogleMeet("");
+    setprice("");
+    setdiscount("");
     setIcon({ file: "", bytes: null });
     setFile(null);
     setError({});
@@ -188,13 +182,13 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
         <Grid container spacing={2}>
           <Grid item lg={12} sm={12} md={12} xs={12}>
             <div className={classes.headingContainer}>
-              <div className={classes.heading}>Add Demo Class</div>
+              <div className={classes.heading}>Add Live Class</div>
               <div
-                onClick={() => navigate("/displayDemoClass")}
+                onClick={() => navigate("/displayLiveClass")}
                 className={classes.addButton}
               >
                 <DvrIcon />
-                <div className={classes.addButtontext}>Display Demo Class</div>
+                <div className={classes.addButtontext}>Display Live Class</div>
               </div>
             </div>
           </Grid>
@@ -301,42 +295,27 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
           <Grid item lg={6} sm={12} md={6} xs={12}>
             <TextField
               type="text"
-              label="Session Time"
-              value={sessionTime}
+              label="Price"
+              value={price}
               variant="outlined"
               fullWidth
-              onFocus={() => handleError("sessionTime", null)}
-              onChange={(event) => setSessionTime(event.target.value)}
-              helperText={error.sessionTime}
-              error={error.sessionTime ? true : false}
+              onFocus={() => handleError("price", null)}
+              onChange={(event) => setprice(event.target.value)}
+              helperText={error.price}
+              error={error.price ? true : false}
             />
           </Grid>
           <Grid item lg={6} sm={12} md={6} xs={12}>
             <TextField
               type="text"
-              label="Google Meet URL"
-              value={googleMeet}
+              label="Discount"
+              value={discount}
               variant="outlined"
               fullWidth
-              onFocus={() => handleError("googleMeet", null)}
-              onChange={(event) => setGoogleMeet(event.target.value)}
-              helperText={error.googleMeet}
-              error={error.googleMeet ? true : false}
-            />
-          </Grid>
-
-          <Grid item lg={12} md={12} sm={12} xs={12}>
-            <TextField
-              fullWidth
-              label="Learn"
-              id="fullWidth"
-              value={learn}
-              multiline
-              rows={4}
-              onFocus={() => handleError("learn", null)}
-              onChange={(event) => setLearn(event.target.value)}
-              helperText={error.learn}
-              error={error.learn ? true : false}
+              onFocus={() => handleError("discount", null)}
+              onChange={(event) => setdiscount(event.target.value)}
+              helperText={error.discount}
+              error={error.discount ? true : false}
             />
           </Grid>
 
@@ -445,9 +424,9 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
         <div className={classes.errorStyles}>{error.pdf}</div>
       </Grid>
 
-          <Grid item lg={6} sm={6} md={6} xs={6}>
+      <Grid item lg={6} sm={6} md={6} xs={6}>
             <div onClick={handleSubmit} className={classes.submitbutton}>
-              Submit
+              {isLoading ? <CircularProgress size={24} /> : "Submit"}
             </div>
           </Grid>
           <Grid item lg={6} sm={6} md={6} xs={6}>
@@ -475,8 +454,9 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
 const mapStateToProps = (state) => ({
   activeCourseData: state.course.activeCourseData,
   activeAstrologerData: state.astrologer.activeAstrologerData,
+  isLoading: state.liveClass.isLoading,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddDemoClass);
+export default connect(mapStateToProps, mapDispatchToProps)(AddLiveClass);

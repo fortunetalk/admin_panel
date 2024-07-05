@@ -20,6 +20,7 @@ import {
   Modal,
   Box,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 
 import { useNavigate } from "react-router-dom";
@@ -88,14 +89,15 @@ export const AddAstrologers = ({
   countryStateData,
   stateCityData,
   countryValueData,
-  isLoading,
+  // isLoading,
 }) => {
   var classes = useStyles();
   const dispatch = useDispatch();
 
+  // console.log("isLOading", isLoading);
+
   const [galleryImage, setGalleryImage] = useState([]);
   const [galleryFiles, setGalleryFiles] = useState([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [states, setState] = useState({
     error: {},
@@ -204,7 +206,9 @@ export const AddAstrologers = ({
 
   const handleCountryValue = (item) => {
     if (countryValue.some((selectedItem) => selectedItem === item._id)) {
-      let skilData = countryValue.filter((countryValue) => countryValue !== item?._id);
+      let skilData = countryValue.filter(
+        (countryValue) => countryValue !== item?._id
+      );
       updateState({ countryValue: skilData });
     } else {
       updateState({ countryValue: [...countryValue, item?._id] });
@@ -257,7 +261,9 @@ export const AddAstrologers = ({
       if (astrologerType.includes(item)) {
         return {
           ...prevState,
-          astrologerType: astrologerType.filter((selectedItem) => selectedItem !== item),
+          astrologerType: astrologerType.filter(
+            (selectedItem) => selectedItem !== item
+          ),
         };
       } else {
         return {
@@ -282,7 +288,7 @@ export const AddAstrologers = ({
   const handleGallery = (event) => {
     const files = Array.from(event.target.files);
     const updatedGalleryImages = files.map((file) => URL.createObjectURL(file));
-  
+
     setGalleryImage((prevImages) => [...prevImages, ...updatedGalleryImages]);
     setGalleryFiles((prevFiles) => [...prevFiles, ...files]);
   };
@@ -306,7 +312,6 @@ export const AddAstrologers = ({
       });
       updateState({ error: { idProof: null } });
       handleError("idProof", null);
-
     }
   };
 
@@ -356,7 +361,6 @@ export const AddAstrologers = ({
       handleError("country", "Country is required");
       isValid = false;
     } else if (state.length == 0) {
-
       handleError("state", "State is required");
       isValid = false;
     } else if (city.length == 0) {
@@ -380,14 +384,10 @@ export const AddAstrologers = ({
     } else if (!preferredDays || preferredDays.length == 0) {
       handleError("preferredDays", "Preferred Days is required");
       isValid = false;
-    } 
-   
-    else if (profilePhoto.bytes =='') {
-
+    } else if (profilePhoto.bytes == "") {
       handleError("profilePhoto", "Please Select a Profile Picutre");
       isValid = false;
-    } else if (bankProof.bytes == '') {
-
+    } else if (bankProof.bytes == "") {
       handleError("bankProof", "Please Select a Bank Proof");
       isValid = false;
     } else if (idProof.bytes != 0) {
@@ -396,11 +396,11 @@ export const AddAstrologers = ({
     } else if (bankAccountNumber.length == 0) {
       handleError("bankAccountNumber", "Bank Account Number is required");
       isValid = false;
-    } 
+    }
     // else if (isNaN(bankAccountNumber) || bankAccountNumber <= 0) {
     //   handleError("bankAccountNumber", "Invalid Bank Account Number");
     //   isValid = false;
-    // } 
+    // }
     else if (bankName.length == 0) {
       handleError("bankName", "Bank Name is required");
       isValid = false;
@@ -428,7 +428,7 @@ export const AddAstrologers = ({
     } else if (callPrice.length == 0) {
       handleError("callPrice", "Call Price is required");
       isValid = false;
-    } 
+    }
     // else if (educationQualification || educationQualification.length != 0) {
     //   console.log('edu qualification',educationQualification.length)
     //   handleError(
@@ -436,8 +436,7 @@ export const AddAstrologers = ({
     //     "Please Select educational Qualification"
     //   );
     //   isValid = false;
-    // } 
-   
+    // }
     else if (!companyCallPrice || companyCallPrice.length == 0) {
       handleError("companyCallPrice", "Please Select company Call price");
       isValid = false;
@@ -468,7 +467,7 @@ export const AddAstrologers = ({
         "Please Select Astrological Qualification"
       );
       isValid = false;
-    } 
+    }
     // else if (!gallery || gallery.length === 0) {
     //   handleError("gallery", "Please select gallery");
     //   isValid = false;
@@ -483,90 +482,87 @@ export const AddAstrologers = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
     try {
       // if (handleValidation()) {
-        let formData = new FormData();
-        formData.append("displayName", displayName);
-        formData.append("name", name);
-        formData.append("email", email);
-        formData.append("password", password);
-        formData.append("phoneNumber", phoneNumber);
-        formData.append("phoneCode", phoneCode);
-        formData.append("gender", gender);
-        formData.append("dateOfBirth", dateOfBirth);
-        formData.append("experience", experience);
-        formData.append("address", address);
-        formData.append("currencyType", currency);
-        formData.append("currencyValue", currencyValue);
-        formData.append("country", country);
-        formData.append("state", state);
-        formData.append("city", city);
-        formData.append("zipCode", zipCode);
-        formData.append("about", about);
-        formData.append("educationQualification", educationQualification);
-        formData.append("astrologyQualification", "12th");
-        formData.append("follower_count", follower_count);
-        formData.append("rating", rating);
-        formData.append("bankAcountNumber", bankAccountNumber);
-        formData.append("bankName", bankName);
-        formData.append("accountType", accountType);
-        formData.append("ifscCode", ifscCode);
-        formData.append("accountHolderName", accountHolderName);
-        formData.append("addharNumber", aadharNumber);
-        formData.append("panNumber", panNumber);
-        formData.append("chatPrice", chatPrice);
-        formData.append("companyChatPrice", companyChatPrice);
-        formData.append("callPrice", callPrice);
-        formData.append("companyCallPrice", companyCallPrice);
-        formData.append("liveVideoPrice", liveVideoPrice);
-        formData.append("companyLiveVideoPrice", companyLiveVideoPrice);
-        formData.append("liveCallPrice", liveCallPrice);
-        formData.append("companyLiveCallPrice", companyLiveCallPrice);
-        formData.append("status", "Active");
-        // formData.append("working", working);
-        formData.append("profileImage", profilePhoto.bytes);
-        formData.append("bankProofImage", bankProof.bytes);
-        formData.append("idProofImage", idProof.bytes);
-        galleryFiles.forEach((imgFile) => {
-          formData.append("galleryImage", imgFile);
-        });
+      let formData = new FormData();
+      formData.append("displayName", displayName);
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("phoneNumber", phoneNumber);
+      formData.append("phoneCode", phoneCode);
+      formData.append("gender", gender);
+      formData.append("dateOfBirth", dateOfBirth);
+      formData.append("experience", experience);
+      formData.append("address", address);
+      formData.append("currencyType", currency);
+      formData.append("currencyValue", currencyValue);
+      formData.append("country", country);
+      formData.append("state", state);
+      formData.append("city", city);
+      formData.append("zipCode", zipCode);
+      formData.append("about", about);
+      formData.append("educationQualification", educationQualification);
+      formData.append("astrologyQualification", "12th");
+      formData.append("follower_count", follower_count);
+      formData.append("rating", rating);
+      formData.append("bankAcountNumber", bankAccountNumber);
+      formData.append("bankName", bankName);
+      formData.append("accountType", accountType);
+      formData.append("ifscCode", ifscCode);
+      formData.append("accountHolderName", accountHolderName);
+      formData.append("addharNumber", aadharNumber);
+      formData.append("panNumber", panNumber);
+      formData.append("chatPrice", chatPrice);
+      formData.append("companyChatPrice", companyChatPrice);
+      formData.append("callPrice", callPrice);
+      formData.append("companyCallPrice", companyCallPrice);
+      formData.append("liveVideoPrice", liveVideoPrice);
+      formData.append("companyLiveVideoPrice", companyLiveVideoPrice);
+      formData.append("liveCallPrice", liveCallPrice);
+      formData.append("companyLiveCallPrice", companyLiveCallPrice);
+      formData.append("status", "Active");
+      // formData.append("working", working);
+      formData.append("profileImage", profilePhoto.bytes);
+      formData.append("bankProofImage", bankProof.bytes);
+      formData.append("idProofImage", idProof.bytes);
+      galleryFiles.forEach((imgFile) => {
+        formData.append("galleryImage", imgFile);
+      });
 
-        for (let i = 0; i < countryValue.length; i++) {
-          formData.append(`allowedCountry[${i}]`, countryValue[i]);
-        }
-        for (let i = 0; i < preferredDays.length; i++) {
-          formData.append(`preferredDays[${i}]`, preferredDays[i]);
-        }
-        for (let i = 0; i < astrologerType.length; i++) {
-          formData.append(`astrologerType[${i}]`, astrologerType[i]);
-        }
-        for (let i = 0; i < language.length; i++) {
-          formData.append(`language[${i}]`, language[i]);
-        }
-        for (let i = 0; i < skills.length; i++) {
-          formData.append(`skill[${i}]`, skills[i]);
-        }
-        for (let i = 0; i < remedies.length; i++) {
-          formData.append(`remedies[${i}]`, remedies[i]);
-        }
-        for (let i = 0; i < expertise.length; i++) {
-          formData.append(`expertise[${i}]`, expertise[i]);
-        }
+      for (let i = 0; i < countryValue.length; i++) {
+        formData.append(`allowedCountry[${i}]`, countryValue[i]);
+      }
+      for (let i = 0; i < preferredDays.length; i++) {
+        formData.append(`preferredDays[${i}]`, preferredDays[i]);
+      }
+      for (let i = 0; i < astrologerType.length; i++) {
+        formData.append(`astrologerType[${i}]`, astrologerType[i]);
+      }
+      for (let i = 0; i < language.length; i++) {
+        formData.append(`language[${i}]`, language[i]);
+      }
+      for (let i = 0; i < skills.length; i++) {
+        formData.append(`skill[${i}]`, skills[i]);
+      }
+      for (let i = 0; i < remedies.length; i++) {
+        formData.append(`remedies[${i}]`, remedies[i]);
+      }
+      for (let i = 0; i < expertise.length; i++) {
+        formData.append(`expertise[${i}]`, expertise[i]);
+      }
 
-        dispatch(
-          AstrologerActions.addAstrologer({
-            data: formData,
-            reset: handleReset,
-          })
-        );
-        console.log("data submitted");
+      dispatch(
+        AstrologerActions.addAstrologer({
+          data: formData,
+          reset: handleReset,
+        })
+      );
+      console.log("data submitted");
       // }
     } catch (e) {
       console.log("error submitting data", e);
-      setIsSubmitting(false);
     }
-
   };
 
   const handleReset = () => {
@@ -621,9 +617,9 @@ export const AddAstrologers = ({
       astrologyQualification: "",
       voicePriceLiveDollar: "",
       gallery: [],
-      astrologerType:'',
-      galleryImage:'',
-      galleryFiles:'',
+      astrologerType: "",
+      galleryImage: "",
+      galleryFiles: "",
     });
 
     setprofilePhoto({
@@ -700,7 +696,7 @@ export const AddAstrologers = ({
     astrologyQualification,
     gallery,
     astrologerType,
-    countryValue
+    countryValue,
   } = states;
 
   const get_date_value = () => {
@@ -728,9 +724,9 @@ export const AddAstrologers = ({
   }, [state]);
 
   return (
-   <>
-    {/* <Loader isLoading={isLoading}/> */}
-    <form onSubmit={handleSubmit}>
+    <>
+      {/* <Loader isLoading={isLoading}/> */}
+
       <div className={classes.container}>
         <div className={classes.box}>
           <Grid container spacing={2}>
@@ -1175,12 +1171,14 @@ export const AddAstrologers = ({
                             className={classes.checkbox}
                             control={
                               <Checkbox
-                                checked={countryValue && countryValue.includes(item._id)}
+                                checked={
+                                  countryValue &&
+                                  countryValue.includes(item._id)
+                                }
                                 onChange={() => handleCountryValue(item)}
                               />
                             }
-                            label={item.title + " " + item.countryValue + 'X'}
-                            
+                            label={item.title + " " + item.countryValue + "X"}
                             labelPlacement="end"
                           />
                         </div>
@@ -1411,7 +1409,6 @@ export const AddAstrologers = ({
                 error={error.astrologyQualification ? true : false}
               />
             </Grid>
-           
 
             <Grid item lg={4} sm={12} md={12} xs={12}>
               <TextField
@@ -1527,9 +1524,7 @@ export const AddAstrologers = ({
                 error={error.companyLiveCallPrice ? true : false}
               />
             </Grid>
-            <Grid item lg={4} sm={12} md={12} xs={12}>
-             
-             </Grid>
+            <Grid item lg={4} sm={12} md={12} xs={12}></Grid>
 
             <Grid
               item
@@ -1539,64 +1534,70 @@ export const AddAstrologers = ({
               xs={12}
               className={classes.uploadContainer}
             >
+              <Grid component="label" className={classes.uploadImageButton}>
+                Upload Gallery Images
+                <input
+                  onChange={handleGallery}
+                  hidden
+                  accept="image/*"
+                  type="file"
+                  multiple
+                />
+              </Grid>
 
-                <Grid component="label" className={classes.uploadImageButton}>
-                  Upload Gallery Images
-                  <input
-                    onChange={handleGallery}
-                    hidden
-                    accept="image/*"
-                    type="file"
-                    multiple
-                  />
-                </Grid>
-           
               <div className={classes.errorStyle}>{error.gallery}</div>
             </Grid>
 
             <Grid item lg={6} sm={12} md={6} xs={12}>
-            <FormControl component="fieldset">
-        <FormLabel component="legend">Astrologer Type</FormLabel>
-        <FormGroup aria-label="position" row>
-          {astrologerTypeList &&
-            astrologerTypeList.map((item) => (
-              <div className={classes.chips} key={item}>
-                <FormControlLabel
-                  value={item}
-                  className={classes.checkbox}
-                  control={
-                    <Checkbox
-                      checked={states.astrologerType.includes(item)}
-                      onChange={() => handleAstrologerType(item)}
-                    />
-                  }
-                  label={item}
-                  labelPlacement="end"
-                />
-              </div>
-            ))}
-        </FormGroup>
-      </FormControl>
-      {error.astrologerType && (
-        <div className={classes.errorstyles}>{error.astrologerType}</div>
-      )}
-    </Grid>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Astrologer Type</FormLabel>
+                <FormGroup aria-label="position" row>
+                  {astrologerTypeList &&
+                    astrologerTypeList.map((item) => (
+                      <div className={classes.chips} key={item}>
+                        <FormControlLabel
+                          value={item}
+                          className={classes.checkbox}
+                          control={
+                            <Checkbox
+                              checked={states.astrologerType.includes(item)}
+                              onChange={() => handleAstrologerType(item)}
+                            />
+                          }
+                          label={item}
+                          labelPlacement="end"
+                        />
+                      </div>
+                    ))}
+                </FormGroup>
+              </FormControl>
+              {error.astrologerType && (
+                <div className={classes.errorstyles}>
+                  {error.astrologerType}
+                </div>
+              )}
+            </Grid>
 
             <Grid item lg={12} sm={12} md={12} xs={12}>
-           {/* <Typography variant="h6" component="label">Gallery Image</Typography>  */}
-            <Grid container direction="row" spacing={2} style={{ overflowX: 'auto', whiteSpace: 'nowrap' }}>
-              {galleryImage.map((imgSrc, index) => (
-                <Grid item key={index} style={{ width: 'auto' }}>
-                  <Avatar
-                    src={imgSrc}
-                    variant="square"
-                    style={{ width: '100px', height: '100px' }}
-                  />
-                </Grid>
-              ))}
+              {/* <Typography variant="h6" component="label">Gallery Image</Typography>  */}
+              <Grid
+                container
+                direction="row"
+                spacing={2}
+                style={{ overflowX: "auto", whiteSpace: "nowrap" }}
+              >
+                {galleryImage.map((imgSrc, index) => (
+                  <Grid item key={index} style={{ width: "auto" }}>
+                    <Avatar
+                      src={imgSrc}
+                      variant="square"
+                      style={{ width: "100px", height: "100px" }}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
             </Grid>
-          </Grid>
-         
+
             <Grid item lg={12} sm={12} md={12} xs={12}>
               <TextField
                 id="outlined-multiline-static"
@@ -1704,12 +1705,11 @@ export const AddAstrologers = ({
               )}
             </Grid>
             <Grid item lg={6} sm={6} md={6} xs={6}>
-              <input
-                type="submit"
-                value="Submit"
-                className={classes.submitbutton}
-                disabled={isSubmitting}
-              />
+              <div onClick={handleSubmit} className={classes.submitbutton}>
+                {/* {isLoading ? <CircularProgress size={24} /> : ""}
+                 */}
+                Submit
+              </div>
             </Grid>
             <Grid item lg={6} sm={6} md={6} xs={6}>
               <div className={classes.denyButton} onClick={() => handleReset()}>
@@ -1719,8 +1719,7 @@ export const AddAstrologers = ({
           </Grid>
         </div>
       </div>
-    </form>
-   </>
+    </>
   );
 };
 
@@ -1732,7 +1731,7 @@ const mapStateToProps = (state) => ({
   countryStateData: state.setting.countryStateData,
   stateCityData: state.setting.stateCityData,
   countryValueData: state.setting.countryValueData,
-  isLoading: state.dashboard.isLoading,
+  isLoading: state.astrologer.isLoading,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

@@ -28,6 +28,10 @@ import poojaBanner from './poojaBanner'
 import callChatBanner from "./callChatBanner";
 import testimonial from './testimonial'
 import demoClass from "./demoClass";
+import liveClass from "./liveClass";
+import scheduleLiveClass from "./scheduleLiveClass";
+import workshop from "./workshop";
+import mcq from "./mcq";
 
 const rootReducer = combineReducers({
   dashboard,
@@ -58,6 +62,10 @@ const rootReducer = combineReducers({
   callChatBanner,
   testimonial,
   demoClass,
+  liveClass,
+  scheduleLiveClass,
+  workshop,
+  mcq,
 });
 
 // const appReducer = (state, action) => {

@@ -8,22 +8,23 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  CircularProgress
 } from "@mui/material";
 import DvrIcon from "@mui/icons-material/Dvr";
 import { useNavigate } from "react-router-dom";
 import logo_icon from "../../assets/images/logo_icon.png";
 import { connect } from "react-redux";
-import * as DemoActions from "../../redux/Actions/demoClassActions.js";
+import * as WorkshopActions from "../../redux/Actions/workshopActions.js";
 import * as CourseActions from "../../redux/Actions/courseActions.js";
 import * as AstrologerActions from "../../redux/Actions/astrologerActions.js";
 import Loader from "../../Components/loading/Loader.js";
 
-const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
+const AddWorkshop = ({ dispatch, activeAstrologerData, activeCourseData, isLoading }) => {
   const navigate = useNavigate();
   const classes = useStyles();
   const [courseId, setcourseId] = useState("");
   const [astrologerId, setAstrologerId] = useState("");
-  const [className, setclassName] = useState("");
+  const [workShopName, setworkShopName] = useState("");
   const [error, setError] = useState({});
   const [status, setStatus] = useState("");
   const [description, setDescription] = useState("");
@@ -33,6 +34,8 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
   const [time, setTime] = useState("");
   const [sessionTime, setSessionTime] = useState("");
   const [googleMeet, setGoogleMeet] = useState("");
+  const [price, setPrice] = useState("");
+  const [discount, setDiscount] = useState("");
   const [icon, setIcon] = useState({ file: "", bytes: null });
   const [file, setFile] = useState(null);
   const [video, setVideo] = useState({ file: '', bytes: null });
@@ -91,8 +94,8 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
       handleError("astrologerId", "Please Select Astrologer");
       isValid = false;
     }
-    if (!className) {
-      handleError("className", "Please Input Class Name");
+    if (!workShopName) {
+      handleError("workShopName", "Please Input Workshop Name");
       isValid = false;
     }
     if (!status) {
@@ -143,7 +146,7 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
       var formData = new FormData();
       formData.append("astrologerId", astrologerId);
       formData.append("courseId", courseId);
-      formData.append("className", className);
+      formData.append("workShopName", workShopName);
       formData.append("description", description);
       formData.append("status", status);
       formData.append("learn", learn);
@@ -152,13 +155,14 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
       formData.append("time", time);
       formData.append("sessionTime", sessionTime);
       formData.append("googleMeet", googleMeet);
+      formData.append("price", price);
+      formData.append("discount", discount);
       formData.append("image", file);
       formData.append("video", video.bytes, video.file);
       formData.append("pdf", pdf.bytes, pdf.file);
 
-      dispatch(DemoActions.addDemoClass(formData));
+      dispatch(WorkshopActions.addWorkshop(formData));
       handleReset();
-      navigate("/displayDemoClass");
     }
   };
 
@@ -166,13 +170,15 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
     setDescription("");
     setStatus("");
     setAstrologerId("");
-    setclassName("");
+    setworkShopName("");
     setLearn("");
     setCourseContent("");
     setDate("");
     setTime("");
     setSessionTime("");
     setGoogleMeet("");
+    setPrice("");
+    setDiscount("");
     setIcon({ file: "", bytes: null });
     setFile(null);
     setError({});
@@ -188,13 +194,13 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
         <Grid container spacing={2}>
           <Grid item lg={12} sm={12} md={12} xs={12}>
             <div className={classes.headingContainer}>
-              <div className={classes.heading}>Add Demo Class</div>
+              <div className={classes.heading}>Add Workshop</div>
               <div
-                onClick={() => navigate("/displayDemoClass")}
+                onClick={() => navigate("/displayWorkshop")}
                 className={classes.addButton}
               >
                 <DvrIcon />
-                <div className={classes.addButtontext}>Display Demo Class</div>
+                <div className={classes.addButtontext}>Display Workshop</div>
               </div>
             </div>
           </Grid>
@@ -261,12 +267,12 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
           </Grid>
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
-              label="Class Name"
-              error={error.className ? true : false}
-              helperText={error.className}
-              value={className}
-              onFocus={() => handleError("className", null)}
-              onChange={(event) => setclassName(event.target.value)}
+              label="Workshop Name"
+              error={error.workShopName ? true : false}
+              helperText={error.workShopName}
+              value={workShopName}
+              onFocus={() => handleError("workShopName", null)}
+              onChange={(event) => setworkShopName(event.target.value)}
               variant="outlined"
               fullWidth
             />
@@ -322,6 +328,33 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
               onChange={(event) => setGoogleMeet(event.target.value)}
               helperText={error.googleMeet}
               error={error.googleMeet ? true : false}
+            />
+          </Grid>
+          <Grid item lg={6} sm={12} md={6} xs={12}>
+            <TextField
+              type="number"
+              label="Price"
+              value={price}
+              variant="outlined"
+              fullWidth
+              onFocus={() => handleError("price", null)}
+              onChange={(event) => setPrice(event.target.value)}
+              helperText={error.price}
+              error={error.price ? true : false}
+            />
+          </Grid>
+
+          <Grid item lg={6} sm={12} md={6} xs={12}>
+            <TextField
+              type="number"
+              label="Discount"
+              value={discount}
+              variant="outlined"
+              fullWidth
+              onFocus={() => handleError("discount", null)}
+              onChange={(event) => setDiscount(event.target.value)}
+              helperText={error.discount}
+              error={error.discount ? true : false}
             />
           </Grid>
 
@@ -445,9 +478,9 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
         <div className={classes.errorStyles}>{error.pdf}</div>
       </Grid>
 
-          <Grid item lg={6} sm={6} md={6} xs={6}>
+      <Grid item lg={6} sm={6} md={6} xs={6}>
             <div onClick={handleSubmit} className={classes.submitbutton}>
-              Submit
+              {isLoading ? <CircularProgress size={24} /> : "Submit"}
             </div>
           </Grid>
           <Grid item lg={6} sm={6} md={6} xs={6}>
@@ -475,8 +508,10 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
 const mapStateToProps = (state) => ({
   activeCourseData: state.course.activeCourseData,
   activeAstrologerData: state.astrologer.activeAstrologerData,
+  isLoading: state.workshop.isLoading,
+
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddDemoClass);
+export default connect(mapStateToProps, mapDispatchToProps)(AddWorkshop);

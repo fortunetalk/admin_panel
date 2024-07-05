@@ -1,8 +1,8 @@
 // export const base_url = "http://165.232.182.110:4000/";
 // export const api_url = "http://165.232.182.110:4000/api/";
 
-export const base_url = "https://node-backend-live.onrender.com/";
-export const api_url = "https://node-backend-live.onrender.com/api/";
+export const base_url = "http://localhost:8000/";
+export const api_url = "http://localhost:8000/api/";
 
 export const get_dashboard = 'admin/get_dashboard'
 
@@ -98,14 +98,22 @@ export const update_banner = "admin/banner/update"
 export const delete_banner = "admin/banner/delete"
 export const change_redirect_banner_status='admin/banner/change-status'
 
-export const send_customer_notification = 'admin/send_customer_notification'
-export const get_customer_notification = 'admin/get-customer-notification'
-export const send_astrologer_notification = 'admin/send_astrologer_notification'
-export const get_astrologer_notification = 'admin/get-astrologer-notification'
+//notification
+export const send_customer_notification = 'admin/customer/notification/add'
+export const update_customer_notification = 'admin/customer/notification/update'
+export const update_customer_notification_status = 'admin/customer/notification/change_status'
+export const delete_customer_notification = 'admin/customer/notification/delete'
+export const get_customer_notification = 'admin/customer/notification'
 
-export const get_chat_history = 'admin/get_chat_history'
+export const send_astrologer_notification = 'admin/astrologer/notification/add'
+export const get_astrologer_notification = 'admin/astrologer/notification'
+export const update_astrologer_notification = 'admin/astrologer/notification/update'
+export const update_astrologer_notification_status = 'admin/astrologer/notification/change_status'
+export const delete_astrologer_notification = 'admin/astrologer/notification/delete'
+
+export const get_chat_history = 'admin/chat_history'
 export const get_admin_earnig_history = 'admin/get_admin_earnig_history'
-export const get_call_history = 'admin/get_call_history'
+export const get_call_history = 'admin/call_history'
 export const get_wallet_payments = 'admin/get_wallet_payments'
 
 export const create_language = 'admin/create_language'
@@ -192,10 +200,41 @@ export const delete_course = 'admin/course/delete'
 //DEMO CLASS
 export const create_demo_class='admin/demo_class/add_new'
 export const demo_class_list='admin/demo_class'
-// export const get_demo_class='admin/demo_class'
 export const update_demo_class = 'admin/demo_class/update'
 export const change_demo_class_status = 'admin/demo_class/change_status'
+export const change_demo_class_admin_status = 'admin/demo_class/change_admin_status'
 export const delete_demo_class = 'admin/demo_class/delete'
+
+//WORKSHOP
+export const create_workshop='admin/workshop/add_new'
+export const workshop_list='admin/workshop'
+export const update_workshop = 'admin/workshop/update'
+export const change_workshop_status = 'admin/workshop/change_status'
+export const change_workshop_admin_status = 'admin/workshop/change_admin_status'
+export const delete_workshop = 'admin/workshop/delete'
+
+//MCQ
+export const create_mcq='admin/mcq/add_new'
+export const mcq_list='admin/mcq'
+export const update_mcq = 'admin/mcq/update'
+export const change_mcq_status = 'admin/mcq/change_status'
+export const change_mcq_admin_status = 'admin/mcq/change_admin_status'
+export const delete_mcq = 'admin/mcq/delete'
+
+//LIVE CLASS
+export const create_live_class='admin/live_class/add_new'
+export const live_class_list='admin/live_class'
+export const update_live_class = 'admin/live_class/update'
+export const change_live_class_status = 'admin/live_class/change_status'
+export const change_live_class_admin_status = 'admin/live_class/change_admin_status'
+export const delete_live_class = 'admin/live_class/delete'
+
+//SCHEDULE CLASS
+export const add_class='admin/class/add_new'
+export const class_list='admin/class'
+export const update_class = 'admin/class/update'
+export const change_class_status = 'admin/class/change_status'
+export const delete_class = 'admin/class/delete'
 
 //COURSE BANNER
 export const create_course_banner='admin/course-banner/add'

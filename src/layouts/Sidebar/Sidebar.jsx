@@ -101,7 +101,17 @@ const routes = [
         name: "Demo Class",
         icon: <BiAbacus />,
       },
+      {
+        path: "/displayLiveClass",
+        name: "Live Class",
+        icon: <BiAbacus />,
+      },
     ],
+  },
+  {
+    path: "/displayWorkshop",
+    name: "Workshop",
+    icon: <BiAbacus />,
   },
   {
     path: "/skills",

@@ -49,9 +49,8 @@ const optionsList = ["Consultation", "Teaching", "Pandit at Home", "All"];
 
 export const EditAstrologer = ({
   activeSkillsData,
-  expertiesData,
-  mainExpertiesData,
-  remediesData,
+  activeExpertiseData,
+  activeRemediesData,
   languageData,
   astrologerData,
 }) => {
@@ -61,6 +60,8 @@ export const EditAstrologer = ({
 
   const [galleryImages, setGalleryImages] = useState([]);
   const [open, setOpen] = useState(false);
+  const [openExpertise, setOpenExpertise] = useState(false);
+  const [openRemedies, setOpenRemedies] = useState(false);
 
   const backendGalleryImages = astrologerData?.galleryImage || [];
 
@@ -141,14 +142,20 @@ export const EditAstrologer = ({
   useEffect(() => {
     dispatch(SkillActions.getActiveSkillData());
     dispatch(getAstrologer(astrologerId));
-    dispatch(ExpertiesActions.getExpertiesData());
-    dispatch(ExpertiesActions.getMainExpertiesData());
-    dispatch(RemedyActions.getRemediesData());
+    dispatch(ExpertiesActions.getActiveExpertiesData());
+    dispatch(RemedyActions.getActiveRemediesData());
     dispatch(LanguageActions.getAllLanguage());
     if (astrologerData?.skillId) {
       updateState({ skills: astrologerData.skillId });
     }
+    if (astrologerData?.expertiseId) {
+      updateState({ expertise: astrologerData.expertiseId });
+    }
+    if (astrologerData?.remediesId) {
+      updateState({ remedies: astrologerData.remediesId });
+    }
   }, []);
+
 
   const [profilePhoto, setprofilePhoto] = useState({
     // file: logo_icon,
@@ -211,34 +218,19 @@ export const EditAstrologer = ({
     } else {
       updateState({ remedies: [...remedies, item?._id] });
     }
-
-    console.log(remedies);
-
     handleError("remedies", null);
   };
 
   const handleExpertise = (item) => {
     if (expertise.some((selectedItem) => selectedItem === item._id)) {
-      const expertiesData = expertise.filter(
+      const expertiseData = expertise.filter(
         (selectedItem) => selectedItem !== item._id
       );
-      updateState({ expertise: expertiesData });
+      updateState({ expertise: expertiseData });
     } else {
       updateState({ expertise: [...expertise, item?._id] });
     }
     handleError("expertise", null);
-  };
-
-  const handleMainExpertise = (item) => {
-    if (mainExpertise.some((selectedItem) => selectedItem === item._id)) {
-      const mainExpertiesData = mainExpertise.filter(
-        (selectedItem) => selectedItem !== item._id
-      );
-      updateState({ mainExpertise: mainExpertiesData });
-    } else {
-      updateState({ mainExpertise: [...mainExpertise, item?._id] });
-    }
-    handleError("mainExpertise", null);
   };
 
   const handlePreferredDays = (item) => {
@@ -804,9 +796,28 @@ export const EditAstrologer = ({
   const handleClickOpen = () => {
     setOpen(true);
   };
+
+  const handleClickOpenExpertise = () => {
+    setOpenExpertise(true);
+  };
+
+  const handleClickOpenRemedies = () => {
+    setOpenRemedies(true);
+  };
+
   const handleClose = (event, reason) => {
     if (reason !== "backdropClick") {
       setOpen(false);
+    }
+  };
+  const handleCloseExpertiseDialog = (event, reason) => {
+    if (reason !== "backdropClick") {
+      setOpenExpertise(false);
+    }
+  };
+  const handleCloseRemediesDialog = (event, reason) => {
+    if (reason !== "backdropClick") {
+      setOpenRemedies(false);
     }
   };
 
@@ -818,6 +829,26 @@ export const EditAstrologer = ({
     }
     dispatch(AstrologerActions.updateAstrologerSkill(formData));
     handleClose();
+  };
+
+  const handleUpdateExperties = () => {
+    var formData = new FormData();
+    formData.append("astrologerId", astrologerId);
+    for (let i = 0; i < expertise.length; i++) {
+      formData.append(`expertise[${i}]`, expertise[i]);
+    }
+    dispatch(AstrologerActions.updateAstrologerExperties(formData));
+    handleCloseExpertiseDialog();
+  };
+
+  const handleUpdateRemedies = () => {
+    var formData = new FormData();
+    formData.append("astrologerId", astrologerId);
+    for (let i = 0; i < remedies.length; i++) {
+      formData.append(`remedies[${i}]`, remedies[i]);
+    }
+    dispatch(AstrologerActions.updateAstrologerRemedies(formData));
+    handleCloseRemediesDialog();
   };
 
   const {
@@ -1516,96 +1547,149 @@ export const EditAstrologer = ({
             </Dialog>
           </Grid>
           <Grid item lg={6} sm={12} md={12} xs={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Remedies</FormLabel>
-              <FormGroup aria-label="position" row>
-                {remediesData &&
-                  remediesData.map((item) => {
-                    return (
-                      <div key={item._id} className={classes.chips}>
-                        <FormControlLabel
-                          className={classes.checkbox}
-                          control={
-                            <Checkbox
-                              checked={remedies && remedies.includes(item._id)}
-                              onChange={() => handleRemedies(item)}
-                            />
-                          }
-                          label={item.remedy}
-                          labelPlacement="end"
-                        />
-                      </div>
-                    );
-                  })}
-              </FormGroup>
-            </FormControl>
-            {error.remedies && (
-              <div className={classes.errorstyles}>{error.remedies}</div>
-            )}
-          </Grid>
-          <Grid item lg={6} sm={12} md={12} xs={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Expertise</FormLabel>
-              <FormGroup aria-label="position" row>
-                {expertiesData &&
-                  expertiesData.map((item) => {
-                    return (
-                      <div className={classes.chips}>
-                        <FormControlLabel
-                          defaultValue={item._id}
-                          className={classes.checkbox}
-                          control={
-                            <Checkbox
-                              checked={
-                                expertise && expertise.includes(item._id)
-                              }
-                              onChange={() => handleExpertise(item)}
-                            />
-                          }
-                          label={item.expertise}
-                          labelPlacement="end"
-                        />
-                      </div>
-                    );
-                  })}
-              </FormGroup>
-            </FormControl>
-            {error.expertise && (
-              <div className={classes.errorstyles}>{error.expertise}</div>
-            )}
-          </Grid>
-          <Grid item lg={6} sm={12} md={12} xs={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend"> Main Expertise</FormLabel>
-              <FormGroup aria-label="position" row>
-                {mainExpertiesData &&
-                  mainExpertiesData.map((item) => {
-                    return (
-                      <div className={classes.chips}>
-                        <FormControlLabel
-                          defaultValue={item._id}
-                          className={classes.checkbox}
-                          control={
-                            <Checkbox
-                              checked={
-                                mainExpertise &&
-                                mainExpertise.includes(item._id)
-                              }
-                              onChange={() => handleMainExpertise(item)}
-                            />
-                          }
-                          label={item.mainExpertise}
-                          labelPlacement="end"
-                        />
-                      </div>
-                    );
-                  })}
-              </FormGroup>
-            </FormControl>
-            {error.mainExpertise && (
-              <div className={classes.errorstyles}>{error.mainExpertise}</div>
-            )}
-          </Grid>
+      <FormControl component="fieldset">
+        <FormLabel component="legend">Remedies</FormLabel>
+        <FormGroup aria-label="position" row>
+          {activeRemediesData &&
+            activeRemediesData.map((item) => (
+              <div key={item._id} className={classes.chips}>
+                <FormControlLabel
+                  value={item.title}
+                  className={classes.checkbox}
+                  control={
+                    <Checkbox
+                      checked={remedies && remedies.includes(item._id)}
+                      onChange={() => handleRemedies(item)}
+                    />
+                  }
+                  label={item.title}
+                  labelPlacement="end"
+                />
+              </div>
+            ))}
+        </FormGroup>
+      </FormControl>
+      {error.remedies && (
+        <div className={classes.errorstyles}>{error.remedies}</div>
+      )}
+      <Button
+        variant="outlined"
+        color="primary"
+        className={classes.updateButton}
+        onClick={handleClickOpenRemedies}
+      >
+        Update Remedies
+      </Button>
+
+      <Dialog open={openRemedies} onClose={handleCloseRemediesDialog}>
+        <DialogTitle>Update Remedies</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please update the remedies below:
+          </DialogContentText>
+          <FormGroup aria-label="position" row>
+            {activeRemediesData &&
+              activeRemediesData.map((item) => (
+                <div key={item._id} className={classes.chips}>
+                  <FormControlLabel
+                    value={item.title}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        checked={remedies && remedies.includes(item._id)}
+                        onChange={() => handleRemedies(item)}
+                      />
+                    }
+                    label={item.title}
+                    labelPlacement="end"
+                  />
+                </div>
+              ))}
+          </FormGroup>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseRemediesDialog} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleUpdateRemedies} color="primary">
+            Update
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Grid>
+          <Grid item lg={12} sm={12} md={12} xs={12}>
+  <FormControl component="fieldset">
+    <FormLabel component="legend">Expertise</FormLabel>
+    <FormGroup aria-label="position" row>
+      {activeExpertiseData &&
+        activeExpertiseData.map((item) => (
+          <div className={classes.chips} key={item._id}>
+            <FormControlLabel
+              value={item.title}
+              className={classes.checkbox}
+              control={
+                <Checkbox
+                  checked={expertise && expertise.includes(item._id)}
+                  onChange={() => handleExpertise(item)}
+                />
+              }
+              label={item.title}
+              labelPlacement="end"
+            />
+          </div>
+        ))}
+    </FormGroup>
+  </FormControl>
+  {error.expertise && (
+    <div className={classes.errorstyles}>{error.expertise}</div>
+  )}
+  <Button
+    variant="outlined"
+    color="primary"
+    className={classes.updateButton}
+    onClick={handleClickOpenExpertise}
+  >
+    Update Expertise
+  </Button>
+
+  <Dialog open={openExpertise} onClose={handleClose}>
+    <DialogTitle>Update Expertise</DialogTitle>
+    <DialogContent>
+      <DialogContentText>
+        Please update the expertise below:
+      </DialogContentText>
+      <FormGroup aria-label="position" row>
+        {activeExpertiseData &&
+          activeExpertiseData.map((item) => (
+            <div className={classes.chips} key={item._id}>
+              <FormControlLabel
+                value={item._id}
+                className={classes.checkbox}
+                control={
+                  <Checkbox
+                    checked={expertise && expertise.includes(item._id)}
+                    onChange={() => handleExpertise(item)}
+                  />
+                }
+                label={item.title}
+                labelPlacement="end"
+              />
+            </div>
+          ))}
+      </FormGroup>
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={handleCloseExpertiseDialog} color="primary">
+        Cancel
+      </Button>
+      <Button onClick={handleUpdateExperties} color="primary">
+        Update
+      </Button>
+    </DialogActions>
+  </Dialog>
+</Grid>
+
+        
           <Grid item lg={6} sm={6} md={6} xs={6}>
             <div
               onClick={() => handleSubmit()}
@@ -1994,9 +2078,8 @@ export const EditAstrologer = ({
 
 const mapStateToProps = (state) => ({
   activeSkillsData: state.skills.activeSkillsData,
-  expertiesData: state.experites.expertiesData,
-  mainExpertiesData: state.experites.mainExpertiesData,
-  remediesData: state.remedies.remediesData,
+  activeExpertiseData: state.experites.activeExpertiseData,
+  activeRemediesData: state.remedies.activeRemediesData,
   languageData: state.language.languageData,
   astrologerData: state.astrologer.astrologerData,
 });

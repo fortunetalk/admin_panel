@@ -67,3 +67,11 @@ export const updateAstrologerSkill = payload =>({
   type: actionTypes.UPDATE_ASTROLOGER_SKILL, 
   payload
 })
+export const updateAstrologerRemedies = payload =>({
+  type: actionTypes.UPDATE_ASTROLOGER_REMEDIES, 
+  payload
+})
+export const updateAstrologerExperties = payload =>({
+  type: actionTypes.UPDATE_ASTROLOGER_EXPERTIES, 
+  payload
+})

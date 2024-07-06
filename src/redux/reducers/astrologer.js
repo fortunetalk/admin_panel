@@ -7,6 +7,8 @@ const initialState = {
   setAstrologerData: null,
   updateAstrologerStatus: null,
   updateAstrologerSkillData:null,
+  updateAstrologerRemediesData:null,
+  updateAstrologerExpertiesData:null,
   isLoading: false,
 };
 
@@ -91,6 +93,18 @@ const astrologer = (state = initialState, actions) => {
       return {
         ...state,
         updateAstrologerSkillData: payload,
+      };
+    }
+    case actionTypes.UPDATE_ASTROLOGER_REMEDIES: {
+      return {
+        ...state,
+        updateAstrologerRemediesData: payload,
+      };
+    }
+    case actionTypes.UPDATE_ASTROLOGER_EXPERTIES: {
+      return {
+        ...state,
+        updateAstrologerExpertiesData: payload,
       };
     }
 

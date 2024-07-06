@@ -16,6 +16,8 @@ import {
   update_astrologer_chat_status,
   get_all_active_astrologers,
   update_astrologer_skill,
+  update_astrologer_remedies,
+  update_astrologer_experties,
 } from "../../utils/Constants";
 import Swal from "sweetalert2";
 import { Colors } from "../../assets/styles";
@@ -449,6 +451,72 @@ function* updateAstrologerSkillData(actions) {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   }
 }
+function* updateAstrologerRemediesData(actions) {
+  try {
+    const { payload } = actions;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
+    const response = yield call(ApiRequest.postRequest, {
+      url: api_url + update_astrologer_remedies,
+      header: "application/json",
+      data: payload,
+    });
+
+    if (response.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Remedies Updated Successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Failed to update Remedies",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  } finally {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+  }
+}
+function* updateAstrologerExpertiesData(actions) {
+  try {
+    const { payload } = actions;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
+    const response = yield call(ApiRequest.postRequest, {
+      url: api_url + update_astrologer_experties,
+      header: "application/json",
+      data: payload,
+    });
+
+    if (response.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Expertise Updated Successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Failed to update Expertise",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  } finally {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+  }
+}
 
 export default function* astrologerSaga() {
   yield takeLeading(actionTypes.GET_ALL_ASTROLOGER, getAstrologers);
@@ -464,4 +532,6 @@ export default function* astrologerSaga() {
   yield takeLeading(actionTypes.VERIFY_UNVERIFY_ASTROLOGER, verifyUnverifyAstrologer);
   yield takeLeading(actionTypes.DELETE_ASTROLOGER, deleteAstrologer);
   yield takeLeading(actionTypes.UPDATE_ASTROLOGER_SKILL, updateAstrologerSkillData);
+  yield takeLeading(actionTypes.UPDATE_ASTROLOGER_REMEDIES, updateAstrologerRemediesData);
+  yield takeLeading(actionTypes.UPDATE_ASTROLOGER_EXPERTIES, updateAstrologerExpertiesData);
 }

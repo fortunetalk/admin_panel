@@ -4,18 +4,18 @@ import { ApiRequest } from "../../utils/apiRequest";
 import { api_url, admin_login, admin_logout, admin_change_password } from "../../utils/Constants";
 import Swal from "sweetalert2";
 
-function* adminLogin(actions) {
+function* adminLogin(action) {
     try {
-        const { payload } = actions;
+        const { payload } = action;
         yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
         const response = yield call(ApiRequest.postRequest, {
             url: api_url + admin_login,
-            header: "json",
+            header: "application/json",
             data: payload,
         });
 
         if (response.success) {
-            // Handle successful login
             yield put({ type: actionTypes.ADMIN_LOGIN_SUCCESS, payload: response.data });
 
             Swal.fire({
@@ -25,18 +25,17 @@ function* adminLogin(actions) {
                 timer: 2000,
             });
 
-            // Example: Save tokens to local storage
-            localStorage.setItem("accessToken", response.accessToken);
-            localStorage.setItem("refreshToken", response.refreshToken);
+            localStorage.setItem("accessToken", response.data.accessToken);
+            localStorage.setItem("refreshToken", response.data.refreshToken);
         } else {
-            // Handle login failure
             Swal.fire({
                 icon: "error",
                 title: "Login Failed",
-                text: "Invalid credentials or server error",
+                text: response.message || "Invalid credentials or server error",
                 showConfirmButton: false,
                 timer: 2000,
             });
+            yield put({ type: actionTypes.ADMIN_LOGIN_FAILURE, error: response.message });
         }
     } catch (error) {
         console.error('Error logging in:', error);
@@ -47,6 +46,7 @@ function* adminLogin(actions) {
             showConfirmButton: false,
             timer: 2000,
         });
+        yield put({ type: actionTypes.ADMIN_LOGIN_FAILURE, error: error.message });
     } finally {
         yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
     }
@@ -56,22 +56,16 @@ function* adminLogout() {
     try {
         yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
-        // Get tokens from local storage
         const accessToken = localStorage.getItem("accessToken");
         const refreshToken = localStorage.getItem("refreshToken");
 
-        // Call API to logout
         const response = yield call(ApiRequest.postRequest, {
             url: api_url + admin_logout,
-            header: "json",
-            data: {}, 
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
+            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
+            data: {},
         });
 
         if (response?.success) {
-            // Clear tokens from local storage
             localStorage.removeItem("accessToken");
             localStorage.removeItem("refreshToken");
 
@@ -95,23 +89,24 @@ function* adminLogout() {
             showConfirmButton: false,
             timer: 2000,
         });
+        yield put({ type: actionTypes.ADMIN_LOGOUT_FAILURE, error: error.message });
     } finally {
         yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
     }
 }
 
-function* adminChangePassword(actions) {
+function* adminChangePassword(action) {
     try {
-        const { payload } = actions;
+        const { payload } = action;
         yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
         const response = yield call(ApiRequest.postRequest, {
             url: api_url + admin_change_password,
-            header: "json",
+            header: "application/json",
             data: payload,
         });
 
         if (response.success) {
-            // Handle successful password change
             Swal.fire({
                 icon: "success",
                 title: "Password Changed Successfully",
@@ -120,14 +115,14 @@ function* adminChangePassword(actions) {
             });
             yield put({ type: actionTypes.ADMIN_CHANGE_PASSWORD_SUCCESS });
         } else {
-            // Handle password change failure
             Swal.fire({
                 icon: "error",
                 title: "Password Change Failed",
-                text: "Server error or invalid input",
+                text: response.message || "Server error or invalid input",
                 showConfirmButton: false,
                 timer: 2000,
             });
+            yield put({ type: actionTypes.ADMIN_CHANGE_PASSWORD_FAILURE, error: response.message });
         }
     } catch (error) {
         console.error('Error changing password:', error);
@@ -138,6 +133,7 @@ function* adminChangePassword(actions) {
             showConfirmButton: false,
             timer: 2000,
         });
+        yield put({ type: actionTypes.ADMIN_CHANGE_PASSWORD_FAILURE, error: error.message });
     } finally {
         yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
     }

@@ -31,7 +31,7 @@ import liveClassSaga from "./liveClassSaga";
 import scheduleLiveClassSaga from "./scheduleLiveClassSaga";
 import workshopSaga from "./workshopSaga";
 import mcqSaga from "./mcqSaga";
-
+import adminLogin from './adminSaga';
 export default function* rootSaga() {
   yield all([
     reviewSaga(),
@@ -66,5 +66,6 @@ export default function* rootSaga() {
     scheduleLiveClassSaga(),
     workshopSaga(),
     mcqSaga(),
+    adminLogin()
   ]);
 }

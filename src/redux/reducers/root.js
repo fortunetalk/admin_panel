@@ -32,8 +32,10 @@ import liveClass from "./liveClass";
 import scheduleLiveClass from "./scheduleLiveClass";
 import workshop from "./workshop";
 import mcq from "./mcq";
+import admin from './admin';
 
 const rootReducer = combineReducers({
+  admin,
   dashboard,
   review,
   customer,

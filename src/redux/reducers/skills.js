@@ -1,7 +1,7 @@
 import * as actionTypes from "../actionTypes";
 
 const initialState = {
-  skillsData: null,
+  skillsData: [],
   activeSkillsData: null,
   subSkillData: null,
   isLoading: false,

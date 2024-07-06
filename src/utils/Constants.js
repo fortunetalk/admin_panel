@@ -282,4 +282,11 @@ export const update_testimonial = 'admin/testimonial/update'
 export const change_testimonial_status = 'admin/testimonial/change-status'
 export const delete_testimonial = 'admin/testimonial/delete'
 
+//Testimonials
+export const create_gift='admin/gift/add'
+export const gift_list='admin/gift'
+export const update_gift = 'admin/gift/update'
+export const change_gift_status = 'admin/gift/change_status'
+export const delete_gift = 'admin/gift/delete'
+
 export const get_all_country = 'https://api.countrystatecity.in/v1/countries'

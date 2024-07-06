@@ -862,33 +862,18 @@ export const AddAstrologers = ({
                 error={error.dateOfBirth ? true : false}
               />
             </Grid>
-            <Grid item lg={4} md={12} sm={12} xs={12}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">
-                  Experience in Years
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="Experience in years"
-                  value={experience}
-                  onFocus={() => handleError("experience", null)}
-                  onChange={(e) => updateState({ experience: e.target.value })}
-                  error={error.experience ? true : false} // Highlight the field if there's an error
-                >
-                  <MenuItem disabled value={null}>
-                    -Experience in Years-
-                  </MenuItem>
-                  {[...Array(10).keys()].map((i) => (
-                    <MenuItem key={i + 1} value={i + 1}>
-                      {i + 1}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {error.experience && (
-                  <div className={classes.errorstyles}>{error.experience}</div>
-                )}
-              </FormControl>
+            <Grid item lg={4} sm={12} md={12} xs={12}>
+              <TextField
+                label="Experience"
+                type="number"
+                value={experience}
+                variant="outlined"
+                fullWidth
+                onFocus={() => handleError("experience", null)}
+                onChange={(e) => updateState({ experience: e.target.value })}
+                helperText={error.experience}
+                error={error.experience ? true : false}
+              />
             </Grid>
             <Grid item lg={4} sm={12} md={12} xs={12}>
               <FormControl fullWidth>

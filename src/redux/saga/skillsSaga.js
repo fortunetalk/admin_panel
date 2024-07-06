@@ -244,6 +244,7 @@ function* createSubSkill(actions) {
         showConfirmButton: false,
         timer: 2000,
       });
+      yield put({ type: actionTypes.GET_ALL_SKILLS, payload: response });
     } else {
       Swal.fire({
         icon: "error",

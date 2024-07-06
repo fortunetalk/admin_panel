@@ -174,11 +174,18 @@ const DisplaySubSkills = ({ dispatch, subSkillData, skillsData }) => {
   }
 
   function editModal() {
-    const fillSkillList = () => {
-      return skillsData.map((item) => {
-        return <MenuItem value={item._id}>{item.title}</MenuItem>;
-      });
-    };
+    function fillSkillList() {
+      if (!Array.isArray(skillsData)) {
+        return <MenuItem disabled>No skills available</MenuItem>;
+      }
+    
+      return skillsData.map((item) => (
+        <MenuItem key={item._id} value={item._id}>
+          {item.title}
+        </MenuItem>
+      ));
+    }
+    
     const showEditForm = () => {
       return (
         <Grid container spacing={2}>

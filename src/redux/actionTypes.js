@@ -315,6 +315,13 @@ export const UPDATE_MCQ='UPDATE_MCQ'
 export const DELETE_MCQ='DELETE_MCQ'
 export const UPDATE_MCQ_STATUS = 'UPDATE_MCQ_STATUS'
 
+//GIFT
+export const CREATE_GIFT='CREATE_GIFT'
+export const GIFT_LIST='GIFT_LIST'
+export const UPDATE_GIFT='UPDATE_GIFT'
+export const DELETE_GIFT='DELETE_GIFT'
+export const UPDATE_GIFT_STATUS = 'UPDATE_GIFT_STATUS'
+
 
 
 

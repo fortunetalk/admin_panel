@@ -23,12 +23,12 @@ import * as DashboardActions from "../../redux/Actions/dashboardActions";
 import Loader from "../../Components/loading/Loader";
 
 const Dashboard = ({ dashboardData, dispatch }) => {
-  console.log(dashboardData);
+  // console.log(dashboardData);
   var classes = useStyles();
 
-  useEffect(() => {
-    dispatch(DashboardActions.getDashboard());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(DashboardActions.getDashboard());
+  // }, []);
 
   const [chartData, setChartData] = useState({
     options: {},
@@ -42,13 +42,13 @@ const Dashboard = ({ dashboardData, dispatch }) => {
         id: "basic-bar",
       },
       xaxis: {
-        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,2000,20001,2002,2003,2004,2005],
+        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 20001, 2002, 2003, 2004, 2005],
       },
     },
     series: [
       {
         name: "series-1",
-        data: [30, 40, 45, 50, 49, 60, 70, 91,44,76,95,31,88],
+        data: [30, 40, 45, 50, 49, 60, 70, 91, 44, 76, 95, 31, 88],
       },
     ],
   });
@@ -59,7 +59,7 @@ const Dashboard = ({ dashboardData, dispatch }) => {
   // Take the top 10 items
   // const top10Series = sortedSeriesData.slice(0, 10);
 
-  const astrologers=['Astro Sunita','Astro Sri','Astro Anita','Astro Santosh','Astro Sanjay','Astro Sunil','Astro Rajesh','Astro Gita','Astro Sanjay','Astro Sunil']
+  const astrologers = ['Astro Sunita', 'Astro Sri', 'Astro Anita', 'Astro Santosh', 'Astro Sanjay', 'Astro Sunil', 'Astro Rajesh', 'Astro Gita', 'Astro Sanjay', 'Astro Sunil']
 
   const [selectedOption, setSelectedOption] = useState('all-astrologers');
 
@@ -84,9 +84,9 @@ const Dashboard = ({ dashboardData, dispatch }) => {
   const [formWidth, setFormWidth] = useState("auto");
   const formRef = useRef(null);
 
-  const [topAstrologers,setTopAstrologers]=useState(false);
+  const [topAstrologers, setTopAstrologers] = useState(false);
 
-  const handleShowAstrologer=()=>{
+  const handleShowAstrologer = () => {
     selectedOption(!setSelectedOption)
   }
 
@@ -127,55 +127,55 @@ const Dashboard = ({ dashboardData, dispatch }) => {
                 justifyContent: "center",
                 alignItems: "center",
                 height: "100%",
-                gap:'4px',
+                gap: '4px',
                 width: "100%",
                 borderRadius: "10px",
                 backgroundColor: "#F27806",
-                p:1,
+                p: 1,
                 textAlign: "center",
-                fontWeight:"1rem",
-                cursor:'pointer'
+                fontWeight: "1rem",
+                cursor: 'pointer'
               }}
             >
-              <RemoveRedEyeIcon sx={{ fontSize: '2rem' }}/>
-              <span style={{fontSize:'2rem', fontWeight:"700"}}>4556</span>
+              <RemoveRedEyeIcon sx={{ fontSize: '2rem' }} />
+              <span style={{ fontSize: '2rem', fontWeight: "700" }}>4556</span>
             </Box>
-           
+
           </Grid>
         </Grid>
 
-        <Grid container spacing={2} sx={{mt:4,mb:4}}>
+        <Grid container spacing={2} sx={{ mt: 4, mb: 4 }}>
           <Grid item lg={4} sm={12} md={12} xs={12}>
             <div className={classes.dashboard_card}>
               <div className="donut">
-                <CurrencyRupeeIcon style={{ height: "8rem", width: "8rem",color:'#F27806' }}/>
-                
-                <h3 style={{color:'#F27806'}}>Total Recharge</h3>
-                <h1 style={{color:'#F27806'}}>₹ 23,74566</h1>
+                <CurrencyRupeeIcon style={{ height: "8rem", width: "8rem", color: '#F27806' }} />
+
+                <h3 style={{ color: '#F27806' }}>Total Recharge</h3>
+                <h1 style={{ color: '#F27806' }}>₹ 23,74566</h1>
               </div>
             </div>
           </Grid>
           <Grid item lg={4} sm={12} md={12} xs={12}>
             <div className={classes.dashboard_card}>
               <div className="donut">
-                <ChatIcon style={{ height: "8rem", width: "8rem",color:'#F27806' }}/>
-                
-                <h3 style={{color:'#F27806'}}>Total Chat</h3>
-                <h1 style={{color:'#F27806'}}>4566</h1>
+                <ChatIcon style={{ height: "8rem", width: "8rem", color: '#F27806' }} />
+
+                <h3 style={{ color: '#F27806' }}>Total Chat</h3>
+                <h1 style={{ color: '#F27806' }}>4566</h1>
               </div>
             </div>
           </Grid>
           <Grid item lg={4} sm={12} md={12} xs={12}>
             <div className={classes.dashboard_card}>
               <div className="donut">
-                <CallIcon style={{ height: "8rem", width: "8rem",color:'#F27806' }}/>
-                
-                <h3 style={{color:'#F27806'}}>Total Call</h3>
-                <h1 style={{color:'#F27806'}}>6766</h1>
+                <CallIcon style={{ height: "8rem", width: "8rem", color: '#F27806' }} />
+
+                <h3 style={{ color: '#F27806' }}>Total Call</h3>
+                <h1 style={{ color: '#F27806' }}>6766</h1>
               </div>
             </div>
           </Grid>
-          
+
           {/* <Grid item lg={3} sm={12} md={12} xs={12}>
             <div className={classes.dashboard_card}>
               <div className="donut" style={{ paddingTop: "20px" }}>
@@ -253,65 +253,65 @@ const Dashboard = ({ dashboardData, dispatch }) => {
                 justifyContent: "center",
                 alignItems: "center",
                 height: "100%",
-                gap:'4px',
+                gap: '4px',
                 width: "100%",
                 borderRadius: "10px",
                 backgroundColor: "#F27806",
-                p:1,
+                p: 1,
                 textAlign: "center",
-                fontWeight:"1rem",
-                cursor:'pointer'
+                fontWeight: "1rem",
+                cursor: 'pointer'
               }}
             >
-              <RemoveRedEyeIcon sx={{ fontSize: '2rem' }}/>
-              <span style={{fontSize:'2rem', fontWeight:"700"}}>4556</span>
+              <RemoveRedEyeIcon sx={{ fontSize: '2rem' }} />
+              <span style={{ fontSize: '2rem', fontWeight: "700" }}>4556</span>
             </Box>
-           
+
           </Grid>
         </Grid>
 
-         <Box sx={{width:'100%',p:2,mt:4,mb:4, border: "5px solid #F27806",textAlign: "center",cursor:'pointer',borderRadius: "10px"}}
-         onClick={handleShowAstrologer}>
-          <span style={{fontSize:'2rem', fontWeight:"700", color:'#F27806'}}>Top 10 Astrologers</span>
+        <Box sx={{ width: '100%', p: 2, mt: 4, mb: 4, border: "5px solid #F27806", textAlign: "center", cursor: 'pointer', borderRadius: "10px" }}
+          onClick={handleShowAstrologer}>
+          <span style={{ fontSize: '2rem', fontWeight: "700", color: '#F27806' }}>Top 10 Astrologers</span>
         </Box>
-          
-          {selectedOption &&
+
+        {selectedOption &&
           <Grid container spancing={2}>
-          <Grid item lg={6} sm={12} md={12} xs={12}>
-          <List>
-          {filteredAstrologers.map((item, index) => (
-            <ListItem key={index}>
-              <ListItemText style={{color:'black',}} primary={item}  primaryTypographyProps={{
-      style: {
-        fontSize: '1.5rem', 
-        textAlign: 'center',
-        lineHeight:'1rem' ,
-        fontWeight:'600'
-      }
-    }}/>
-            </ListItem>
-          ))}
-        </List>
-          </Grid>
-          <Grid item lg={6} sm={12} md={12} xs={12}>
-            <div className={classes.graph_card}>
-              <div className="app">
-                <div className="row">
-                  <div className="mixed-chart">
-                    <Chart
-                      options={data.options}
-                      series={data.series}
-                      type="bar"
-                      width="450"
-                    />
+            <Grid item lg={6} sm={12} md={12} xs={12}>
+              <List>
+                {filteredAstrologers.map((item, index) => (
+                  <ListItem key={index}>
+                    <ListItemText style={{ color: 'black', }} primary={item} primaryTypographyProps={{
+                      style: {
+                        fontSize: '1.5rem',
+                        textAlign: 'center',
+                        lineHeight: '1rem',
+                        fontWeight: '600'
+                      }
+                    }} />
+                  </ListItem>
+                ))}
+              </List>
+            </Grid>
+            <Grid item lg={6} sm={12} md={12} xs={12}>
+              <div className={classes.graph_card}>
+                <div className="app">
+                  <div className="row">
+                    <div className="mixed-chart">
+                      <Chart
+                        options={data.options}
+                        series={data.series}
+                        type="bar"
+                        width="450"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </Grid>
+
           </Grid>
-          
-          </Grid>
-          }
+        }
       </div>
     </div>
   );

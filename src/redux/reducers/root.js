@@ -34,8 +34,10 @@ import workshop from "./workshop";
 import mcq from "./mcq";
 import gift from "./gift";
 import privacyPolicy from "./privacyPolicy";
+import admin from './admin';
 
 const rootReducer = combineReducers({
+  admin,
   dashboard,
   review,
   customer,

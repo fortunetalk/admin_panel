@@ -3,21 +3,24 @@ import "./header.css";
 import { FaBars, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { NavLink, Navigate } from "react-router-dom";
 import { BiLogOutCircle } from "react-icons/bi";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import logo_icon from "../../assets/images/logo_icon.png";
 import { useNavigate } from "react-router-dom";
 import { Colors } from "../../assets/styles";
 import Swal from "sweetalert2";
 import * as Actions from '../../redux/Actions/dashboardActions'
+import { adminLogoutRequest } from "../../redux/Actions/adminAction";
 
-const Header = ({dispatch, isSidebarOpen}) => {
+
+const Header = ({isSidebarOpen}) => {
+  const dispatch = useDispatch();
   const [userToggle, setUserToggle] = useState(false);
   const navigate = useNavigate();
   const [data, setData] = useState();
 
   useEffect(() => {
     try {
-      const userData = localStorage.getItem("userDetails");
+      const userData = localStorage.getItem("accessToken");
       setData(userData);
 
       if (!userData) {
@@ -38,12 +41,13 @@ const Header = ({dispatch, isSidebarOpen}) => {
       showCancelButton: true,
       confirmButtonColor: Colors.primaryLight,
       cancelButtonColor: Colors.grayDark,
-      confirmButtonText: "Delete",
+      confirmButtonText: "Logout",
     }).then((result) => {
       if (result.isConfirmed) {
         try {
-          setData("");
-          localStorage.clear();
+          dispatch(adminLogoutRequest());
+          // setData("");
+          // localStorage.clear();
         } catch (e) {
           console.log(e);
         }

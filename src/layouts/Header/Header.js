@@ -12,7 +12,7 @@ import * as Actions from '../../redux/Actions/dashboardActions'
 import { adminLogoutRequest } from "../../redux/Actions/adminAction";
 
 
-const Header = ({isSidebarOpen}) => {
+const Header = ({ isSidebarOpen }) => {
   const dispatch = useDispatch();
   const [userToggle, setUserToggle] = useState(false);
   const navigate = useNavigate();
@@ -34,20 +34,30 @@ const Header = ({isSidebarOpen}) => {
   const toggle = () =>
     dispatch(Actions.setIsSidebarOpne(!isSidebarOpen));
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     Swal.fire({
-      title: `Are you sure to Logout`,
-      icon: "warning",
+      title: 'Are you sure you want to Logout?',
+      icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: Colors.primaryLight,
       cancelButtonColor: Colors.grayDark,
-      confirmButtonText: "Logout",
+      confirmButtonText: 'Logout',
     }).then((result) => {
       if (result.isConfirmed) {
         try {
           dispatch(adminLogoutRequest());
-          // setData("");
-          // localStorage.clear();
+          Swal.fire({
+            icon: 'success',
+            title: 'Logout Successful',
+            showConfirmButton: false,
+            timer: 2000,
+          }).then(() => {
+            setTimeout(() => {
+              setData('');
+              localStorage.clear();
+              navigate('/login');
+            }, 1500);
+          });
         } catch (e) {
           console.log(e);
         }
@@ -76,12 +86,12 @@ const Header = ({isSidebarOpen}) => {
       </header>
     </>
   );
-} ;   
+};
 
-const mapStateToProps = state =>({
+const mapStateToProps = state => ({
   isSidebarOpen: state.dashboard.isSidebarOpen
 })
 
-const mapDispatchToProps = dispatch =>({dispatch})
+const mapDispatchToProps = dispatch => ({ dispatch })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

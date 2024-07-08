@@ -16,7 +16,7 @@ const Login = () => {
   const [userEmail, setUserEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  
+
   const validation = () => {
     return userEmail.length > 0 && password.length > 0;
   };
@@ -24,14 +24,22 @@ const Login = () => {
   const handleLogin = () => {
     if (validation()) {
       dispatch(adminLoginRequest({ email: userEmail, password }));
-      setTimeout(() => {
-        navigate('/');
-      }, 1500);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Login Successful',
+        showConfirmButton: false,
+        timer: 2000,
+      }).then(() => {
+        setTimeout(() => {
+          navigate('/');
+        }, 1500);
+      });
     } else {
       Swal.fire({
-        icon: "error",
-        title: "Login Failed",
-        text: "Please fill in both fields",
+        icon: 'error',
+        title: 'Login Failed',
+        text: 'Please fill in both fields',
         showConfirmButton: false,
         timer: 2000,
       });

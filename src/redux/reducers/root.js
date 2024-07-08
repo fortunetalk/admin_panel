@@ -33,6 +33,7 @@ import scheduleLiveClass from "./scheduleLiveClass";
 import workshop from "./workshop";
 import mcq from "./mcq";
 import gift from "./gift";
+import privacyPolicy from "./privacyPolicy";
 
 const rootReducer = combineReducers({
   dashboard,
@@ -68,6 +69,7 @@ const rootReducer = combineReducers({
   workshop,
   mcq,
   gift,
+  privacyPolicy,
 });
 
 // const appReducer = (state, action) => {

@@ -119,6 +119,7 @@ import DisplayMCQ from "./pages/courses/DisplayMCQ";
 import AddMCQ from "./pages/courses/AddMCQ";
 import AddCustomerNotification from "./pages/notification/AddCustomerNotification";
 import AddAstrologerNotification from "./pages/notification/AddAstrologerNotification";
+import AddPrivacyPolicy from "./pages/pages/AddPrivacyPolicy";
 
 function App() {
   return (
@@ -216,6 +217,7 @@ function App() {
             element={<TermsAndConditions />}
           />
           <Route path="/displayPrivacyPolicy" element={<PrivacyPolicy />} />
+          <Route path="/addPrivacyPolicy" element={<AddPrivacyPolicy/>} />
           <Route
             path="/displayTestimonials"
             element={<DisplayTestimonials />}

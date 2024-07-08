@@ -160,6 +160,10 @@ const ListAstrology = ({ astrologerListData }) => {
                 render: (rowData) => astrologerListData.indexOf(rowData) + 1,
               },
               {
+                title: "Unique ID",
+                field: "astroUniqueId",
+              },
+              {
                 title: "Display Name",
                 field: "displayName",
               },

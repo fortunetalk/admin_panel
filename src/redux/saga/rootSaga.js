@@ -32,6 +32,7 @@ import scheduleLiveClassSaga from "./scheduleLiveClassSaga";
 import workshopSaga from "./workshopSaga";
 import mcqSaga from "./mcqSaga";
 import giftSaga from "./giftSaga";
+import privacyPolicySaga from "./privacyPolicySaga";
 
 export default function* rootSaga() {
   yield all([
@@ -68,5 +69,7 @@ export default function* rootSaga() {
     workshopSaga(),
     mcqSaga(),
     giftSaga(),
+    privacyPolicySaga(),
+    
   ]);
 }

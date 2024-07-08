@@ -558,6 +558,7 @@ export const AddAstrologers = ({
           reset: handleReset,
         })
       );
+      navigate('/astrologers/displayAstrologer')
       console.log("data submitted");
       // }
     } catch (e) {

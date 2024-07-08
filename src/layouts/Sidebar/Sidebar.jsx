@@ -391,8 +391,15 @@ const routes = [
         name: "City",
         icon: <BiUser />, 
       },
+     
+      
     ],
   },
+  // {
+  //   path: "/displayPrivacyPolicy",
+  //   name: "Privacy Policy",
+  //   icon: <BiAbacus />,
+  // },
   {
     path: "/appVersion",
     name: "App Version",

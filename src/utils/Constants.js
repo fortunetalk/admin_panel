@@ -289,4 +289,11 @@ export const update_gift = 'admin/gift/update'
 export const change_gift_status = 'admin/gift/change_status'
 export const delete_gift = 'admin/gift/delete'
 
+//Privacy Policy
+export const create_privacy_policy='admin/privacy-policy/add'
+export const privacy_policy_list='admin/privacy-policy'
+export const update_privacy_policy = 'admin/privacy-policy/update'
+export const change_privacy_policy_status = 'admin/privacy-policy/change-status'
+export const delete_privacy_policy = 'admin/privacy-policy/delete'
+
 export const get_all_country = 'https://api.countrystatecity.in/v1/countries'

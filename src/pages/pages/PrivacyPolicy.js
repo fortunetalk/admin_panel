@@ -210,7 +210,7 @@ const PrivacyPolicy = ({ dispatch, privacyPolicyData, isLoading }) => {
                     <div className={classes.addButtontext}>Add New</div>
                   </div>
                 ),
-                tooltip: "Add Gift",
+                tooltip: "Add Privacy Policy",
                 isFreeAction: true,
                 onClick: () => navigate("/addPrivacyPolicy"),
               },

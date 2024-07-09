@@ -62,8 +62,10 @@ export const update_astrologer_status = "admin/astrologer-change-status";
 export const update_astrologer_call_status = "admin/astrologer-change-call-status";
 export const update_astrologer_chat_status = "admin/astrologer-change-chat-status";
 export const update_astrologer_skill = "admin//astrologer_update_skill";
-export const update_astrologer_remedies = "admin//astrologer_update_remedies";
-export const update_astrologer_experties = "admin//astrologer_update_expertise";
+export const update_astrologer_remedies = "admin/astrologer_update_remedies";
+export const update_astrologer_experties = "admin/astrologer_update_expertise";
+export const update_astrologer_allowed_countries = "admin/astrologer_update_allowedCountry";
+export const update_astrologer_preferred_days = "admin/astrologer_update_prefer_days";
 
 
 export const create_recharge_plan = "admin/create_recharge_plan";

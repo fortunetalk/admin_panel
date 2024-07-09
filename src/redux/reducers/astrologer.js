@@ -9,6 +9,8 @@ const initialState = {
   updateAstrologerSkillData:null,
   updateAstrologerRemediesData:null,
   updateAstrologerExpertiesData:null,
+  updateAstrologerAllowedCountriesData:null,
+  updateAstrologerPreferredDaysData:null,
   isLoading: false,
 };
 
@@ -51,6 +53,13 @@ const astrologer = (state = initialState, actions) => {
       return {
         ...state,
         enquiryAstroData: payload,
+      };
+    }
+
+    case actionTypes.UPDATE_ASTROLOGER_DATA: {
+      return {
+        ...state,
+        astrologerListData: payload,
       };
     }
     case actionTypes.UPDATE_ASTROLOGER_STATUS: {
@@ -105,6 +114,18 @@ const astrologer = (state = initialState, actions) => {
       return {
         ...state,
         updateAstrologerExpertiesData: payload,
+      };
+    }
+    case actionTypes.UPDATE_ASTROLOGER_ALLOWED_COUNTRIES: {
+      return {
+        ...state,
+        updateAstrologerAllowedCountriesData: payload,
+      };
+    }
+    case actionTypes.UPDATE_ASTROLOGER_PREFERRED_DAYS: {
+      return {
+        ...state,
+        updateAstrologerPreferredDaysData: payload,
       };
     }
 

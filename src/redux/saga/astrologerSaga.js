@@ -18,15 +18,17 @@ import {
   update_astrologer_skill,
   update_astrologer_remedies,
   update_astrologer_experties,
+  update_astrologer_allowed_countries,
+  update_astrologer_preferred_days
 } from "../../utils/Constants";
 import Swal from "sweetalert2";
 import { Colors } from "../../assets/styles";
 
 function extractErrorMessage(html) {
   const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
-  const pre = doc.querySelector('pre');
-  return pre ? pre.textContent : 'Failed to add Astrologer';
+  const doc = parser.parseFromString(html, "text/html");
+  const pre = doc.querySelector("pre");
+  return pre ? pre.textContent : "Failed to add Astrologer";
 }
 
 function* addAstrologer(actions) {
@@ -50,7 +52,9 @@ function* addAstrologer(actions) {
       yield put({ type: actionTypes.GET_ALL_ASTROLOGER, payload: response });
       yield call(payload.callback);
     } else {
-      const errorMessage = extractErrorMessage(response?.Error?.message || 'Failed to add Astrologer');
+      const errorMessage = extractErrorMessage(
+        response?.Error?.message || "Failed to add Astrologer"
+      );
       Swal.fire({
         icon: "error",
         title: "Server Error",
@@ -69,7 +73,7 @@ function* addAstrologer(actions) {
 function* getAstrologers() {
   try {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
-    const response = yield call(ApiRequest.getRequest, {  
+    const response = yield call(ApiRequest.getRequest, {
       url: api_url + get_all_astrologers,
     });
 
@@ -89,7 +93,7 @@ function* getAstrologers() {
 function* getActiveAstrologers() {
   try {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
-    const response = yield call(ApiRequest.getRequest, {  
+    const response = yield call(ApiRequest.getRequest, {
       url: api_url + get_all_active_astrologers,
     });
 
@@ -110,7 +114,7 @@ function* getAstrologer(action) {
   try {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
     const { astrologerId } = action.payload;
-    const response = yield call(ApiRequest.getRequest, {  
+    const response = yield call(ApiRequest.getRequest, {
       url: api_url + `admin/astrologers/${astrologerId}`,
     });
 
@@ -165,7 +169,10 @@ function* updateAstrologerStatus(action) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.UPDATE_ASTROLOGER_STATUS, payload: response });
+      yield put({
+        type: actionTypes.UPDATE_ASTROLOGER_STATUS,
+        payload: response,
+      });
     } else {
       Swal.fire({
         icon: "error",
@@ -176,7 +183,7 @@ function* updateAstrologerStatus(action) {
       });
     }
   } catch (error) {
-    console.error('Error Updating Astrologer Status:', error);
+    console.error("Error Updating Astrologer Status:", error);
     Swal.fire({
       icon: "error",
       title: "Error",
@@ -207,7 +214,10 @@ function* updateAstrologerCallStatus(action) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.UPDATE_ASTROLOER_CALL_STATUS, payload: response });
+      yield put({
+        type: actionTypes.UPDATE_ASTROLOER_CALL_STATUS,
+        payload: response,
+      });
     } else {
       Swal.fire({
         icon: "error",
@@ -218,7 +228,7 @@ function* updateAstrologerCallStatus(action) {
       });
     }
   } catch (error) {
-    console.error('Error Updating Astrologer Call Status:', error);
+    console.error("Error Updating Astrologer Call Status:", error);
     Swal.fire({
       icon: "error",
       title: "Error",
@@ -249,7 +259,10 @@ function* updateAstrologerChatStatus(action) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.UPDATE_ASTROLOGER_CHAT_STATUS, payload: response });
+      yield put({
+        type: actionTypes.UPDATE_ASTROLOGER_CHAT_STATUS,
+        payload: response,
+      });
     } else {
       Swal.fire({
         icon: "error",
@@ -260,7 +273,7 @@ function* updateAstrologerChatStatus(action) {
       });
     }
   } catch (error) {
-    console.error('Error Updating Astrologer Chat Status:', error);
+    console.error("Error Updating Astrologer Chat Status:", error);
     Swal.fire({
       icon: "error",
       title: "Error",
@@ -293,13 +306,13 @@ function* updateEnquiryStatus(actions) {
 }
 
 function* updateAstrologerData(actions) {
+  const { payload } = actions;
   try {
-    const { payload } = actions;
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_astrologer,
-      header: "application/json",
+      header: "",
       data: payload,
     });
 
@@ -331,13 +344,17 @@ function* verifyUnverifyAstrologer(actions) {
   try {
     const { payload } = actions;
     const result = yield Swal.fire({
-      title: `Are you sure to ${payload?.isVerified === 'false' ? 'Unverify' : 'Verify'} this Astrologer`,
+      title: `Are you sure to ${
+        payload?.isVerified === "false" ? "Unverify" : "Verify"
+      } this Astrologer`,
       text: "This Astrologer will be verified for active in App",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: Colors.primaryLight,
       cancelButtonColor: Colors.red_a,
-      confirmButtonText: `${payload?.isVerified === 'false' ? 'Unverify' : 'Verify'}`,
+      confirmButtonText: `${
+        payload?.isVerified === "false" ? "Unverify" : "Verify"
+      }`,
     });
 
     if (result?.isConfirmed) {
@@ -518,21 +535,119 @@ function* updateAstrologerExpertiesData(actions) {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   }
 }
+function* updateAstrologerAlllowedCountriesData(actions) {
+  try {
+    const { payload } = actions;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
+    const response = yield call(ApiRequest.postRequest, {
+      url: api_url + update_astrologer_allowed_countries,
+      header: "application/json",
+      data: payload,
+    });
+
+    if (response.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Allowed Countries Data Updated Successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Failed to update Data",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  } finally {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+  }
+}
+function* updateAstrologerPreferredDaysData(actions) {
+  try {
+    const { payload } = actions;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
+    const response = yield call(ApiRequest.postRequest, {
+      url: api_url + update_astrologer_preferred_days,
+      header: "application/json",
+      data: payload,
+    });
+
+    if (response.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Data Updated Successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Failed to update Data",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  } finally {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+  }
+}
 
 export default function* astrologerSaga() {
   yield takeLeading(actionTypes.GET_ALL_ASTROLOGER, getAstrologers);
-  yield takeLeading(actionTypes.GET_ALL_ACTIVE_ASTROLOGER, getActiveAstrologers);
+  yield takeLeading(
+    actionTypes.GET_ALL_ACTIVE_ASTROLOGER,
+    getActiveAstrologers
+  );
   yield takeLeading(actionTypes.GET_ASTROLOGER, getAstrologer);
   yield takeLeading(actionTypes.GET_ENQUIRY_ASTROLOGERS, getEnquiryAstrologers);
-  yield takeLeading(actionTypes.UPDATE_ASTROLOGER_CHAT_STATUS, updateAstrologerChatStatus);
-  yield takeLeading(actionTypes.UPDATE_ASTROLOER_CALL_STATUS, updateAstrologerCallStatus);
+  yield takeLeading(
+    actionTypes.UPDATE_ASTROLOGER_CHAT_STATUS,
+    updateAstrologerChatStatus
+  );
+  yield takeLeading(
+    actionTypes.UPDATE_ASTROLOER_CALL_STATUS,
+    updateAstrologerCallStatus
+  );
   yield takeLeading(actionTypes.UPDATE_ENQUIRY_STATUS, updateEnquiryStatus);
   yield takeLeading(actionTypes.UPDATE_ASTROLOGER_DATA, updateAstrologerData);
-  yield takeLeading(actionTypes.UPDATE_ASTROLOGER_STATUS, updateAstrologerStatus);
+  yield takeLeading(
+    actionTypes.UPDATE_ASTROLOGER_STATUS,
+    updateAstrologerStatus
+  );
   yield takeLeading(actionTypes.ADD_ASTROLOGER, addAstrologer);
-  yield takeLeading(actionTypes.VERIFY_UNVERIFY_ASTROLOGER, verifyUnverifyAstrologer);
+  yield takeLeading(
+    actionTypes.VERIFY_UNVERIFY_ASTROLOGER,
+    verifyUnverifyAstrologer
+  );
   yield takeLeading(actionTypes.DELETE_ASTROLOGER, deleteAstrologer);
-  yield takeLeading(actionTypes.UPDATE_ASTROLOGER_SKILL, updateAstrologerSkillData);
-  yield takeLeading(actionTypes.UPDATE_ASTROLOGER_REMEDIES, updateAstrologerRemediesData);
-  yield takeLeading(actionTypes.UPDATE_ASTROLOGER_EXPERTIES, updateAstrologerExpertiesData);
+  yield takeLeading(
+    actionTypes.UPDATE_ASTROLOGER_SKILL,
+    updateAstrologerSkillData
+  );
+  yield takeLeading(
+    actionTypes.UPDATE_ASTROLOGER_REMEDIES,
+    updateAstrologerRemediesData
+  );
+  yield takeLeading(
+    actionTypes.UPDATE_ASTROLOGER_EXPERTIES,
+    updateAstrologerExpertiesData
+  );
+  yield takeLeading(
+    actionTypes.UPDATE_ASTROLOGER_ALLOWED_COUNTRIES,
+    updateAstrologerAlllowedCountriesData
+  );
+  yield takeLeading(
+    actionTypes.UPDATE_ASTROLOGER_PREFERRED_DAYS,
+    updateAstrologerPreferredDaysData
+  );
 }

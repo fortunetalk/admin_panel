@@ -75,3 +75,11 @@ export const updateAstrologerExperties = payload =>({
   type: actionTypes.UPDATE_ASTROLOGER_EXPERTIES, 
   payload
 })
+export const updateAstrologerAllowedCountry = payload =>({
+  type: actionTypes.UPDATE_ASTROLOGER_ALLOWED_COUNTRIES, 
+  payload
+})
+export const updateAstrologerPreferredDays = payload =>({
+  type: actionTypes.UPDATE_ASTROLOGER_PREFERRED_DAYS, 
+  payload
+})

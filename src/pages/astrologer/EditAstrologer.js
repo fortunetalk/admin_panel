@@ -99,12 +99,15 @@ export const EditAstrologer = ({
 }) => {
   var classes = useStyles();
   const { astrologerId } = useParams();
+
   const dispatch = useDispatch();
 
   const [galleryImages, setGalleryImages] = useState([]);
   const [open, setOpen] = useState(false);
   const [openExpertise, setOpenExpertise] = useState(false);
   const [openRemedies, setOpenRemedies] = useState(false);
+  const [openCountry, setOpenCountry] = useState(false);
+  const [openDays, setOpenDays] = useState(false);
 
   const backendGalleryImages = astrologerData?.galleryImage || [];
 
@@ -198,6 +201,9 @@ export const EditAstrologer = ({
     }
     if (astrologerData?.remediesId) {
       updateState({ remedies: astrologerData.remediesId });
+    }
+    if (astrologerData?.preferredDays) {
+      updateState({ preferredDays: astrologerData.preferredDays });
     }
   }, []);
 
@@ -361,377 +367,58 @@ export const EditAstrologer = ({
     updateState({ error: { ...error, [field]: message } });
   };
 
-  const handleValidation = () => {
-    var isValid = true;
-    if (displayName.length == 0) {
-      handleError("display name", "Display Name is required");
-      isValid = false;
-    } else if (realName.length == 0) {
-      handleError("real name", "Real Name is required");
-      isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-    } else if (email.length == 0) {
-      handleError("email", "Email is required");
-      isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      handleError("email", "invalid Email address");
-      isValid = false;
-    } else if (phoneNumber.length == 0) {
-      handleError("phoneNumber", "phoneNumber Number is required");
-      isValid = false;
-    } else if (!/^[0-9]{10}$/.test(phoneNumber)) {
-      handleError("phoneNumber", "Invalid phoneNumber Number");
-      isValid = false;
-    } else if (follower_count.length == 0) {
-      handleError("follower_count", "Alternate phoneNumber Number is required");
-      isValid = false;
-    } else if (follower_count && !/^[0-9]{10}$/.test(follower_count)) {
-      handleError("follower_count", "invalid Alternate phoneNumber Number");
-      isValid = false;
-    } else if (currencyType.length == 0) {
-      handleError("currencyType", "currencyType is required");
-      isValid = false;
-    } else if (gender.length == 0) {
-      handleError("gender", "Gender is required");
-      isValid = false;
-    } else if (password.length == 0) {
-      handleError("password", "Password is required");
-      isValid = false;
-    } else if (dateOfBirth.length == 0) {
-      handleError("dateOfBirth", "Date Of Birth is required");
-      isValid = false;
-    } else if (experience.length == 0) {
-      handleError("experience", "Experience is required");
-      isValid = false;
-    } else if (language.length == 0) {
-      handleError("language", "Language is required");
-      isValid = false;
-    } else if (address.length == 0) {
-      handleError("address", "Address is required");
-      isValid = false;
-    } else if (country.length == 0) {
-      handleError("country", "Country is required");
-      isValid = false;
-    } else if (countryState.length == 0) {
-      handleError("state", "State is required");
-      isValid = false;
-    } else if (city.length == 0) {
-      handleError("city", "City is required");
-      isValid = false;
-    } else if (youtubeLink.length == 0) {
-      handleError("youtubeLink", "youtubeLink is required");
-      isValid = false;
-    } else if (currencyValue.length == 0) {
-      handleError("currencyValue", "currencyValue is required");
-      isValid = false;
-    } else if (zipCode.length == 0) {
-      handleError("zipCode", "Pin Code is required");
-      isValid = false;
-    } else if (phoneCode.length == 0) {
-      handleError("phoneCode", "Country Phone Code is required");
-      isValid = false;
-    } else if (about.length == 0) {
-      handleError("about", "About is required");
-      isValid = false;
-    } else if (startTime.length == 0) {
-      handleError("startTime", "Start Time is required");
-      isValid = false;
-    } else if (endTime.length == 0) {
-      handleError("endTime", "End Time is required");
-      isValid = false;
-    } else if (rating.length == 0) {
-      handleError("rating", "Rating is required");
-      isValid = false;
-    } else if (!preferredDays || preferredDays.length === 0) {
-      handleError("preferredDays", "Preferred Days is required");
-      isValid = false;
-    } else if (working !== "Yes" && working !== "No") {
-      handleError("working", "Working must be either 'Yes' or 'No'");
-      isValid = false;
-    } else if (profilePhoto.bytes.length == 0) {
-      handleError("profilePhoto", "Please Select a Profile Picutre");
-      isValid = false;
-    } else if (bankProof.bytes.length == 0) {
-      handleError("bankProof", "Please Select a Bank Proof");
-      isValid = false;
-    } else if (idProof.bytes.length == 0) {
-      handleError("idProof", "Please Select a Id Proof");
-      isValid = false;
-    } else if (bankAcountNumber.length == 0) {
-      handleError("bankAcountNumber", "Bank Account Number is required");
-      isValid = false;
-    } else if (isNaN(bankAcountNumber) || bankAcountNumber <= 0) {
-      handleError("bankAcountNumber", "Invalid Bank Account Number");
-      isValid = false;
-    } else if (bankName.length == 0) {
-      handleError("bankName", "Bank Name is required");
-      isValid = false;
-    } else if (!accountType || accountType === "-Select Account Type-") {
-      handleError("accountType", "Account type is required");
-      isValid = false;
-    } else if (ifscCode.length == 0) {
-      handleError("ifscCode", "IFSC Code is required");
-      isValid = false;
-    } else if (accountHolderName.length == 0) {
-      handleError("accountHolderName", "Account Holder Name is required");
-      isValid = false;
-    } else if (panNumber.length == 0) {
-      handleError("panNumber", "PAN Number is required");
-      isValid = false;
-    } else if (addharNumber.length == 0) {
-      handleError("addharNumber", "Aadhar Number is required");
-      isValid = false;
-    } else if (consultationPrice.length == 0) {
-      handleError("consultationPrice", "Consultation Price is required");
-      isValid = false;
-    } else if (callPrice.length == 0) {
-      handleError("callPrice", "Call Price is required");
-      isValid = false;
-    } else if (commissionCallPrice.length == 0) {
-      handleError("commissionCallPrice", "Commision Call Price is required");
-      isValid = false;
-    } else if (!chatPrice) {
-      handleError("chatPrice", "Chat Price is required");
-      isValid = false;
-    } else if (!commissionChatPrice) {
-      handleError("commissionChatPrice", "Commission Chat Price is required");
-      isValid = false;
-    } else if (callPrice.length == 0) {
-      handleError("callPrice", "Call Price is required");
-      isValid = false;
-    } else if (shortBio.length == 0) {
-      handleError("shortBio", "Short Bio is required");
-      isValid = false;
-    } else if (longBio.length == 0) {
-      handleError("longBio", "Long Bio is required");
-      isValid = false;
-    } else if (skills.length == 0) {
-      handleError("skills", "Skills is required");
-      isValid = false;
-    } else if (!remedies || remedies.length === 0) {
-      handleError("remedies", "Please Select Remedies");
-      isValid = false;
-    } else if (!skills || skills.length === 0) {
-      handleError("skills", "Please Select skills");
-      isValid = false;
-    } else if (!expertise || expertise.length === 0) {
-      handleError("expertise", "Please Select expertise");
-      isValid = false;
-    } else if (!mainExpertise || mainExpertise.length === 0) {
-      handleError("mainExpertise", "Please Select Main Expertise");
-      isValid = false;
-    } else if (!educationQualification || educationQualification.length === 0) {
-      handleError(
-        "educationQualification",
-        "Please Select educational Qualification"
-      );
-      isValid = false;
-    } else if (!followersValue || followersValue.length === 0) {
-      handleError("followersValue", "Please Select followers Value");
-      isValid = false;
-    } else if (!indiaDisplayPrice || indiaDisplayPrice.length === 0) {
-      handleError("indiaDisplayPrice", "Please Select India Display Price");
-      isValid = false;
-    } else if (
-      !displayPriceInternational ||
-      displayPriceInternational.length === 0
-    ) {
-      handleError(
-        "displayPriceInternational",
-        "Please Select Display Price International"
-      );
-      isValid = false;
-    } else if (!astrologerCallPrice || astrologerCallPrice.length === 0) {
-      handleError("astrologerCallPrice", "Please Select Astrologer Call Price");
-      isValid = false;
-    } else if (!companyCallPrice || companyCallPrice.length === 0) {
-      handleError("companyCallPrice", "Please Select company Call price");
-      isValid = false;
-    } else if (!astrologerChatPrice || astrologerChatPrice.length === 0) {
-      handleError("astrologerChatPrice", "Please Select Astrologer Chat Price");
-      isValid = false;
-    } else if (!companyChatPrice || companyChatPrice.length === 0) {
-      handleError("companyChatPrice", "Please Select Company Chat Price");
-      isValid = false;
-    } else if (!liveVideoPrice || liveVideoPrice.length === 0) {
-      handleError("liveVideoPrice", "Please Select Video Price Live");
-      isValid = false;
-    } else if (!companyLiveVideoPrice || companyLiveVideoPrice.length === 0) {
-      handleError(
-        "companyLiveVideoPrice",
-        "Please Select Company Video Price Live"
-      );
-      isValid = false;
-    } else if (!liveCallPrice || liveCallPrice.length === 0) {
-      handleError("liveCallPrice", "Please Select Voice Price Live");
-      isValid = false;
-    } else if (!companyLiveCallPrice || companyLiveCallPrice.length === 0) {
-      handleError(
-        "companyLiveCallPrice",
-        "Please Select Company Voice Price Live"
-      );
-      isValid = false;
-    } else if (
-      !astrologerCallPriceDollar ||
-      astrologerCallPriceDollar.length === 0
-    ) {
-      handleError(
-        "astrologerCallPriceDollar",
-        "Please Select Astrologer Call Price Dollar"
-      );
-      isValid = false;
-    } else if (
-      !astrologerChatPriceDollar ||
-      astrologerChatPriceDollar.length === 0
-    ) {
-      handleError(
-        "astrologerChatPriceDollar",
-        "Please Select Astrologer Chat Price Dollar"
-      );
-      isValid = false;
-    } else if (!companyCallPriceDollar || companyCallPriceDollar.length === 0) {
-      handleError(
-        "companyCallPriceDollar",
-        "Please Select Company Call Price Dollar"
-      );
-      isValid = false;
-    } else if (!liveVideoPriceDollar || liveVideoPriceDollar.length === 0) {
-      handleError(
-        "liveVideoPriceDollar",
-        "Please Select Video Price Live Dollar"
-      );
-      isValid = false;
-    } else if (!companyChatPriceDollar || companyChatPriceDollar.length === 0) {
-      handleError(
-        "companyChatPriceDollar",
-        "Please Select Company Chat Price Dollar"
-      );
-      isValid = false;
-    } else if (!astrologyQualification || astrologyQualification.length === 0) {
-      handleError(
-        "astrologyQualification",
-        "Please Select Astrological Qualification"
-      );
-      isValid = false;
-    } else if (
-      !companyLiveVideoPriceDollar ||
-      companyLiveVideoPriceDollar.length === 0
-    ) {
-      handleError(
-        "companyLiveVideoPriceDollar",
-        "Please select company Video Price Live Dollar"
-      );
-      isValid = false;
-    } else if (!liveCallPriceDollar || liveCallPriceDollar.length === 0) {
-      handleError(
-        "liveCallPriceDollar",
-        "Please select Voice Price Live Dollar"
-      );
-      isValid = false;
-    } else if (!gallery || gallery.length === 0) {
-      handleError("gallery", "Please select gallery");
-      isValid = false;
-    } else if (!options || options.length === 0) {
-      handleError("options", "Please select options");
-      isValid = false;
-    }
-
-    // Validate if working is either "Yes" or "No"
-
-    // Validate if startTime is before endTime
-    else if (startTime && endTime) {
-      const startDateTime = new Date(startTime);
-      const endDateTime = new Date(endTime);
-
-      if (!startTime) {
-        handleError("startTime", "Start Time is Required");
-      }
-      if (startDateTime >= endDateTime) {
-        handleError("endTime", "End Time must be after Start Time");
-        isValid = false;
-      }
-    }
-    return isValid;
-  };
-
-  const formDataToObject = (formData) => {
-    const obj = {};
-    formData.forEach((value, key) => {
-      if (obj[key] !== undefined) {
-        if (!Array.isArray(obj[key])) {
-          obj[key] = [obj[key]];
-        }
-        obj[key].push(value);
-      } else {
-        obj[key] = value;
-      }
-    });
-    return obj;
-  };
-  
-  const handleSubmit = async (e) => {
-    // e.preventDefault();
+  const handleSubmit = async () => {
     try {
-      // if (handleValidation()) {
-      let formData = new FormData();
-      console.log('astrologerId', astrologerId)
-      formData.append("astrologerId", astrologerId);
-      formData.append("displayName", displayName);
-      formData.append("name", name);
-      formData.append("email", email);
-      formData.append("password", password);
-      formData.append("phoneNumber", phoneNumber);
-      formData.append("phoneCode", phoneCode);
-      formData.append("gender", gender);
-      formData.append("dateOfBirth", dateOfBirth);
-      formData.append("experience", experience);
-      formData.append("address", address);
-      formData.append("currencyType", currencyType);
-      formData.append("currencyValue", currencyValue);
-      formData.append("country", country);
-      formData.append("state", countryState);
-      formData.append("city", city);
-      formData.append("zipCode", zipCode);
-      formData.append("about", about);
-      formData.append("educationQualification", educationQualification);
-      formData.append("astrologyQualification", astrologyQualification);
-      formData.append("follower_count", follower_count);
-      formData.append("rating", rating);
-      formData.append("bankAcountNumber", bankAcountNumber);
-      formData.append("bankName", bankName);
-      formData.append("accountType", accountType);
-      formData.append("ifscCode", ifscCode);
-      formData.append("accountHolderName", accountHolderName);
-      formData.append("addharNumber", addharNumber);
-      formData.append("panNumber", panNumber);
-      formData.append("chatPrice", chatPrice);
-      formData.append("companyChatPrice", companyChatPrice);
-      formData.append("callPrice", callPrice);
-      formData.append("companyCallPrice", companyCallPrice);
-      formData.append("liveVideoPrice", liveVideoPrice);
-      formData.append("companyLiveVideoPrice", companyLiveVideoPrice);
-      formData.append("liveCallPrice", liveCallPrice);
-      formData.append("companyLiveCallPrice", companyLiveCallPrice);
-  
-      for (let i = 0; i < language.length; i++) {
-        formData.append(`language[${i}]`, language[i]);
-      }
-  
-      const plainObject = formDataToObject(formData);
+      const data = {
+        astrologerId,
+        displayName,
+        name,
+        email,
+        password,
+        phoneNumber,
+        phoneCode,
+        gender,
+        dateOfBirth,
+        experience,
+        address,
+        currencyType,
+        currencyValue,
+        country,
+        state: countryState,
+        city,
+        zipCode,
+        about,
+        educationQualification,
+        astrologyQualification,
+        follower_count,
+        rating,
+        bankAcountNumber,
+        bankName,
+        accountType,
+        ifscCode,
+        accountHolderName,
+        addharNumber,
+        panNumber,
+        chatPrice,
+        companyChatPrice,
+        callPrice,
+        companyCallPrice,
+        liveVideoPrice,
+        companyLiveVideoPrice,
+        liveCallPrice,
+        companyLiveCallPrice,
+        languages: language 
+      };
   
       dispatch(
-        AstrologerActions.updateAstrologerData({
-          payload: plainObject
-        })
+        AstrologerActions.updateAstrologerData(data)
       );
-      console.log('plainObject', plainObject)
-      console.log("data submitted");
-      // }
-    } catch (e) {
-      console.log("error submitting data", e);
+  
+      console.log("Data submitted");
+    } catch (error) {
+      console.error("Error submitting data:", error);
     }
   };
-  
 
   const handleReset = () => {
     updateState({
@@ -859,6 +546,26 @@ export const EditAstrologer = ({
     }
   };
 
+  const handleClickOpenCountry = () => {
+    setOpenCountry(true);
+  };
+
+  const handleCloseCountry = (event, reason) => {
+    if (reason !== "backdropClick") {
+      setOpenCountry(false);
+    }
+  };
+
+  const handleUpdateCountry = () => {
+    var formData = new FormData();
+    formData.append("astrologerId", astrologerId);
+    for (let i = 0; i < countryValue.length; i++) {
+      formData.append(`allowedCountry[${i}]`, countryValue[i]);
+    }
+    dispatch(AstrologerActions.updateAstrologerAllowedCountry(formData));
+    handleCloseCountry();
+  };
+
   const handleUpdateSkills = () => {
     var formData = new FormData();
     formData.append("astrologerId", astrologerId);
@@ -887,6 +594,28 @@ export const EditAstrologer = ({
     }
     dispatch(AstrologerActions.updateAstrologerRemedies(formData));
     handleCloseRemediesDialog();
+  };
+
+  const handleClickOpenDays = () => {
+    setOpenDays(true);
+  };
+
+  const handleCloseDays = (event, reason) => {
+    if (reason !== "backdropClick") {
+      setOpenDays(false);
+    }
+    
+  };
+
+  const handleUpdateDays = () => {
+
+    var formData = new FormData();
+    formData.append("astrologerId", astrologerId);
+    for (let i = 0; i < preferredDays.length; i++) {
+      formData.append(`preferredDays[${i}]`, preferredDays[i]);
+    }
+    dispatch(AstrologerActions.updateAstrologerPreferredDays(formData));
+    setOpenDays(false);
   };
 
   const {
@@ -981,37 +710,76 @@ export const EditAstrologer = ({
         <Grid container spacing={2}>
           {astrologerInputsInfo()}
           <Grid item lg={4} sm={12} md={12} xs={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Preferred Days</FormLabel>
-              <FormGroup aria-label="position" row>
-                {preferredDaysList &&
-                  preferredDaysList.map((item) => {
-                    return (
-                      <div className={classes.chips}>
-                        <FormControlLabel
-                          defaultValue={item}
-                          className={classes.checkbox}
-                          control={
-                            <Checkbox
-                              checked={
-                                preferredDays && preferredDays.includes(item)
-                              }
-                              onChange={() => handlePreferredDays(item)}
-                            />
-                          }
-                          label={item}
-                          // style={{margin: 30}}
-                          labelPlacement="end"
-                        />
-                      </div>
-                    );
-                  })}
-              </FormGroup>
-            </FormControl>
-            {error.preferredDays && (
-              <div className={classes.errorstyles}>{error.preferredDays}</div>
-            )}
-          </Grid>
+      <FormControl component="fieldset">
+        <FormLabel component="legend">Preferred Days</FormLabel>
+        <FormGroup aria-label="position" row>
+          {preferredDaysList &&
+            preferredDaysList.map((item) => (
+              <div className={classes.chips} key={item}>
+                <FormControlLabel
+                  value={item}
+                  className={classes.checkbox}
+                  control={
+                    <Checkbox
+                      checked={preferredDays && preferredDays.includes(item)}
+                      onChange={() => handlePreferredDays(item)}
+                    />
+                  }
+                  label={item}
+                  labelPlacement="end"
+                />
+              </div>
+            ))}
+        </FormGroup>
+      </FormControl>
+      {error.preferredDays && (
+        <div className={classes.errorstyles}>{error.preferredDays}</div>
+      )}
+      <Button
+        variant="outlined"
+        color="primary"
+        className={classes.updateButton}
+        onClick={handleClickOpenDays}
+      >
+        Update Preferred Days
+      </Button>
+
+      <Dialog open={openDays} onClose={handleCloseDays}>
+        <DialogTitle>Update Preferred Days</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please update the preferred days below:
+          </DialogContentText>
+          <FormGroup aria-label="position" row>
+            {preferredDaysList &&
+              preferredDaysList.map((item) => (
+                <div className={classes.chips} key={item}>
+                  <FormControlLabel
+                    value={item}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        checked={preferredDays && preferredDays.includes(item)}
+                        onChange={() => handlePreferredDays(item)}
+                      />
+                    }
+                    label={item}
+                    labelPlacement="end"
+                  />
+                </div>
+              ))}
+          </FormGroup>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDays} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleUpdateDays} color="primary">
+            Update
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Grid>
 
           <Grid item lg={4} sm={12} md={12} xs={12}>
             <FormControl component="fieldset">
@@ -1047,38 +815,80 @@ export const EditAstrologer = ({
           </Grid>
           {/* days & working */}
 
-          <Grid item lg={12} sm={12} md={12} xs={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Available Countries</FormLabel>
-              <FormGroup aria-label="position" row>
-                {countryValueData &&
-                  countryValueData.map((item) => {
-                    return (
-                      <div className={classes.chips}>
-                        <FormControlLabel
-                          value={item.title}
-                          className={classes.checkbox}
-                          control={
-                            <Checkbox
-                              checked={
-                                countryValue && countryValue.includes(item._id)
-                              }
-                              onChange={() => handleCountryValue(item)}
-                            />
-                          }
-                          label={item.title + " " + item.countryValue + "X"}
-                          labelPlacement="end"
-                        />
-                      </div>
-                    );
-                  })}
-              </FormGroup>
-            </FormControl>
-            {error.countryValue && (
-              <div className={classes.errorstyles}>{error.countryValue}</div>
-            )}
-          </Grid>
+      <Grid item lg={12} sm={12} md={12} xs={12}>
+      <FormControl component="fieldset">
+        <FormLabel component="legend">Available Countries</FormLabel>
+        <FormGroup aria-label="position" row>
+          {countryValueData &&
+            countryValueData.map((item) => (
+              <div className={classes.chips} key={item._id}>
+                <FormControlLabel
+                  value={item.title}
+                  className={classes.checkbox}
+                  control={
+                    <Checkbox
+                      checked={countryValue && countryValue.includes(item._id)}
+                      onChange={() => handleCountryValue(item)}
+                    />
+                  }
+                  label={`${item.title} ${item.countryValue}X`}
+                  labelPlacement="end"
+                />
+              </div>
+            ))}
+        </FormGroup>
+      </FormControl>
+      {error.countryValue && (
+        <div className={classes.errorstyles}>{error.countryValue}</div>
+      )}
+      
 
+      <Dialog open={openCountry} onClose={handleCloseCountry}>
+        <DialogTitle>Update Available Countries</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please update the available countries below:
+          </DialogContentText>
+          <FormGroup aria-label="position" row>
+            {countryValueData &&
+              countryValueData.map((item) => (
+                <div className={classes.chips} key={item._id}>
+                  <FormControlLabel
+                    value={item.title}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        checked={countryValue && countryValue.includes(item._id)}
+                        onChange={() => handleCountryValue(item)}
+                      />
+                    }
+                    label={`${item.title} ${item.countryValue}X`}
+                    labelPlacement="end"
+                  />
+                </div>
+              ))}
+          </FormGroup>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseCountry} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleUpdateCountry} color="primary">
+            Update
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Grid>
+    <Grid item lg={12} sm={12} md={12} xs={12}>
+    <Button
+        variant="outlined"
+        color="primary"
+        className={classes.updateButton}
+        onClick={handleClickOpenCountry}
+      >
+        Update Available Countries
+      </Button>
+    </Grid>
           <Grid
             item
             lg={3}
@@ -1812,19 +1622,21 @@ export const EditAstrologer = ({
             <div className={classes.heading}>Edit Astrologer</div>
           </div>
         </Grid>
+
         <Grid item lg={4} sm={12} md={12} xs={12}>
           <TextField
             label="Display Name"
-            value={astrologerData?.displayName}
+            defaultValue={astrologerData?.displayName || ""}
             variant="outlined"
             fullWidth
-            error={!!error.displayName ? true : false}
-            onFocus={() => handleError("display name", null)}
+            error={!!error.displayName}
+            onFocus={() => handleError("displayName", null)}
             onChange={(e) => updateState({ displayName: e.target.value })}
             helperText={error.displayName}
             InputLabelProps={{ shrink: true }}
           />
         </Grid>
+
         <Grid item lg={4} sm={12} md={12} xs={12}>
           <TextField
             label="Name"

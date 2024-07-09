@@ -19,18 +19,18 @@ class _ApiRequest {
   post_header = "multipart/form-data";
   get_header = "application/json";
 
-  postRequest = async ({ url = null, data = null, header = "form" }) => {
+  postRequest = async ({ url = null, data = null, header = "form", token = null, }) => {
+
     try {
       console.log("header", header);
-      const headers = {
-        "Content-Type":
-          header === "form" ? "multipart/form-data" : "application/json",
-      };
-
+      
       const response = await axios({
         method: "post",
         url: url,
-        headers: headers,
+        headers: {
+          "Content-Type": header === "form" ? this.post_header : this.get_header,
+          'Authorization': `Bearer ${token}`
+        },
         data: data,
       });
       return response.data;

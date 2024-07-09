@@ -131,8 +131,10 @@ const Country = ({  countryData }) => {
                 title: "S.No",
                 editable: "never",
                 render: (rowData) => countryData.indexOf(rowData) + 1,
+                sorting:true
               },
-              { title: "Country", field: "title",  
+              { title: "Country", field: "title", 
+                sorting:true, 
               render: rowData => (
                 <span style={{cursor:'pointer'}} onClick={() => handleShowCountry( rowData)}>
                   {rowData.title}
@@ -142,10 +144,12 @@ const Country = ({  countryData }) => {
               {
                 title: "Code",
                 field: "code",
+                sorting:true,
               },
               {
                 title: "Value",
                 field: "countryValue",
+                sorting:true
               },
               {title: "State Count", field: "stateCount"},
               { title: "Status", field: "status", render: rowData => (
@@ -157,7 +161,10 @@ const Country = ({  countryData }) => {
               )},
 
             ]}
-            options={propStyles.tableStyles}
+            options={{
+              ...propStyles.tableStyles,
+              sorting: true,
+            }}
             style={{ fontSize: "1.4rem" }}
             actions={[
               {

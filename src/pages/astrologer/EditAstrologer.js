@@ -16,14 +16,12 @@ import {
   FormControlLabel,
   FormLabel,
   Button,
-  Modal,
-  Box,
-  Typography,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  ListItemText,
 } from "@mui/material";
 
 import { useNavigate, useParams } from "react-router-dom";
@@ -39,20 +37,65 @@ import {
 import * as ExpertiesActions from "../../redux/Actions/expertiesActions.js";
 import * as SkillActions from "../../redux/Actions/skillsActions.js";
 import * as RemedyActions from "../../redux/Actions/remediesActions.js";
-import * as LanguageActions from "../../redux/Actions/languageActions.js";
+import * as SettingActions from "../../redux/Actions/settingActions.js";
 import Loader from "../../Components/loading/Loader.js";
 
 const preferredDaysList = ["Mon", "Tues", "Wed", "Thu", "Fri", "Sat", "Sun"];
 // const languageData = ["Hindi", "English"];
 
 const optionsList = ["Consultation", "Teaching", "Pandit at Home", "All"];
+const languages = [
+  "Hindi",
+  "English",
+  "Assamese",
+  "Bengali",
+  "Bodo",
+  "Dogri",
+  "Gujarati",
+  "Kannada",
+  "Kashmiri",
+  "Konkani",
+  "Malayalam",
+  "Meithei",
+  "Marathi",
+  "Nepali",
+  "Oriya",
+  "Punjabi",
+  "Sanskrit",
+  "Santali",
+  "Sindhi",
+  "Tamil",
+  "Telugu",
+  "Urdu",
+  "Kokborok",
+  "Mizo",
+  "Khasi",
+  "Garo",
+  "Angika",
+  "Bhojpuri",
+  "Magadhi",
+  "Rajasthani",
+  "Marwari",
+  "Mewari",
+  "Shekhavati",
+  "Bhili",
+  "Gondi",
+  "Kodava",
+  "Kutchi",
+  "Tulu",
+  "Sankethi",
+  "Mahl",
+];
 
 export const EditAstrologer = ({
   activeSkillsData,
   activeExpertiseData,
   activeRemediesData,
-  languageData,
   astrologerData,
+  countryData,
+  countryStateData,
+  stateCityData,
+  countryValueData,
 }) => {
   var classes = useStyles();
   const { astrologerId } = useParams();
@@ -137,6 +180,7 @@ export const EditAstrologer = ({
     companyVoicepriceDollar: "",
     gallery: "",
     options: [],
+    countryValue: [],
   });
 
   useEffect(() => {
@@ -144,7 +188,8 @@ export const EditAstrologer = ({
     dispatch(getAstrologer(astrologerId));
     dispatch(ExpertiesActions.getActiveExpertiesData());
     dispatch(RemedyActions.getActiveRemediesData());
-    dispatch(LanguageActions.getAllLanguage());
+    dispatch(SettingActions.getCountries());
+    dispatch(SettingActions.getCountryValue());
     if (astrologerData?.skillId) {
       updateState({ skills: astrologerData.skillId });
     }
@@ -155,7 +200,6 @@ export const EditAstrologer = ({
       updateState({ remedies: astrologerData.remediesId });
     }
   }, []);
-
 
   const [profilePhoto, setprofilePhoto] = useState({
     // file: logo_icon,
@@ -172,6 +216,18 @@ export const EditAstrologer = ({
     file: astrologerData?.idProofImage,
     bytes: "",
   });
+
+  const handleCountryValue = (item) => {
+    if (countryValue.some((selectedItem) => selectedItem === item._id)) {
+      let skilData = countryValue.filter(
+        (countryValue) => countryValue !== item?._id
+      );
+      updateState({ countryValue: skilData });
+    } else {
+      updateState({ countryValue: [...countryValue, item?._id] });
+    }
+    handleError("countryValue", null);
+  };
 
   const handleChange = (field) => (event) => {
     const { value } = event.target;
@@ -598,102 +654,84 @@ export const EditAstrologer = ({
     return isValid;
   };
 
-  const handleSubmit = async () => {
-    try {
-      if (handleValidation()) {
-        // setIsLoading(true)
-        let formData = new FormData();
-        formData.append("displayName", displayName);
-        formData.append("name", realName);
-        formData.append("email", email);
-        formData.append("phoneNumber", phoneNumber);
-        formData.append("alternateNumber", follower_count);
-        formData.append("currencyType", currencyType);
-        formData.append("gender", gender);
-        formData.append("password", password);
-        formData.append("dateOfBirth", dateOfBirth);
-        formData.append("experience", experience);
-        formData.append("address", address);
-        formData.append("country", country);
-        formData.append("state", countryState);
-        formData.append("city", city);
-        formData.append("free_min", currencyValue);
-        formData.append("workingOnOtherApps", working);
-        formData.append("profileImage", profilePhoto.bytes);
-        formData.append("bank_proof_image", bankProof.bytes);
-        formData.append("id_proof_image", idProof.bytes);
-        formData.append("account_name", bankName);
-        formData.append("account_number", bankAcountNumber);
-        formData.append("account_type", accountType);
-        formData.append("IFSC_code", ifscCode);
-        formData.append("account_holder_name", accountHolderName);
-        formData.append("panCard", panNumber);
-        formData.append("addharNumber", addharNumber);
-        formData.append("commission_remark", astrologerType);
-        formData.append("short_bio", shortBio);
-        formData.append("long_bio", longBio);
-        formData.append("startTime", startTime);
-        formData.append("endTime", endTime);
-        formData.append("zipCode", zipCode);
-        formData.append("about", about);
-        formData.append("country_phone_code", phoneCode);
-        formData.append("rating", rating);
-        formData.append("educationQualification", educationQualification);
-        formData.append("followersValue", followersValue);
-        formData.append("indiaDisplayPrice", indiaDisplayPrice);
-        formData.append("displayPriceInternational", displayPriceInternational);
-        formData.append("astrologerCallPrice", astrologerCallPrice);
-        formData.append("companyCallPrice", companyCallPrice);
-        formData.append("astrologerChatPrice", astrologerChatPrice);
-        formData.append("companyChatPrice", companyChatPrice);
-        formData.append("liveVideoPrice", liveVideoPrice);
-        formData.append("companyLiveVideoPrice", companyLiveVideoPrice);
-        formData.append("liveCallPrice", liveCallPrice);
-        formData.append("companyLiveCallPrice", companyLiveCallPrice);
-        formData.append("astrologerCallPriceDollar", astrologerCallPriceDollar);
-        formData.append("astrologerChatPriceDollar", astrologerChatPriceDollar);
-        formData.append("companyCallPriceDollar", companyCallPriceDollar);
-        formData.append("liveVideoPriceDollar", liveVideoPriceDollar);
-        formData.append("companyChatPriceDollar", companyChatPriceDollar);
-        formData.append("astrologyQualification", astrologyQualification);
-        formData.append(
-          "companyLiveVideoPriceDollar",
-          companyLiveVideoPriceDollar
-        );
-        formData.append("liveCallPriceDollar", liveCallPriceDollar);
-        formData.append("gallery", gallery);
-        formData.append("options", options);
-
-        for (let i = 0; i < preferredDays.length; i++) {
-          formData.append(`preferredDays[${i}]`, preferredDays[i]);
+  const formDataToObject = (formData) => {
+    const obj = {};
+    formData.forEach((value, key) => {
+      if (obj[key] !== undefined) {
+        if (!Array.isArray(obj[key])) {
+          obj[key] = [obj[key]];
         }
-        for (let i = 0; i < language.length; i++) {
-          formData.append(`language[${i}]`, language[i]);
-        }
-        for (let i = 0; i < skills.length; i++) {
-          formData.append(`skill[${i}]`, skills[i]);
-        }
-        for (let i = 0; i < remedies.length; i++) {
-          formData.append(`remedies[${i}]`, remedies[i]);
-        }
-        for (let i = 0; i < expertise.length; i++) {
-          formData.append(`expertise[${i}]`, expertise[i]);
-        }
-        for (let i = 0; i < mainExpertise.length; i++) {
-          formData.append(`mainExpertise[${i}]`, mainExpertise[i]);
-        }
-
-        dispatch(
-          AstrologerActions.addAstrologer({
-            data: formData,
-            reset: handleReset,
-          })
-        );
+        obj[key].push(value);
+      } else {
+        obj[key] = value;
       }
+    });
+    return obj;
+  };
+  
+  const handleSubmit = async (e) => {
+    // e.preventDefault();
+    try {
+      // if (handleValidation()) {
+      let formData = new FormData();
+      console.log('astrologerId', astrologerId)
+      formData.append("astrologerId", astrologerId);
+      formData.append("displayName", displayName);
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("phoneNumber", phoneNumber);
+      formData.append("phoneCode", phoneCode);
+      formData.append("gender", gender);
+      formData.append("dateOfBirth", dateOfBirth);
+      formData.append("experience", experience);
+      formData.append("address", address);
+      formData.append("currencyType", currencyType);
+      formData.append("currencyValue", currencyValue);
+      formData.append("country", country);
+      formData.append("state", countryState);
+      formData.append("city", city);
+      formData.append("zipCode", zipCode);
+      formData.append("about", about);
+      formData.append("educationQualification", educationQualification);
+      formData.append("astrologyQualification", astrologyQualification);
+      formData.append("follower_count", follower_count);
+      formData.append("rating", rating);
+      formData.append("bankAcountNumber", bankAcountNumber);
+      formData.append("bankName", bankName);
+      formData.append("accountType", accountType);
+      formData.append("ifscCode", ifscCode);
+      formData.append("accountHolderName", accountHolderName);
+      formData.append("addharNumber", addharNumber);
+      formData.append("panNumber", panNumber);
+      formData.append("chatPrice", chatPrice);
+      formData.append("companyChatPrice", companyChatPrice);
+      formData.append("callPrice", callPrice);
+      formData.append("companyCallPrice", companyCallPrice);
+      formData.append("liveVideoPrice", liveVideoPrice);
+      formData.append("companyLiveVideoPrice", companyLiveVideoPrice);
+      formData.append("liveCallPrice", liveCallPrice);
+      formData.append("companyLiveCallPrice", companyLiveCallPrice);
+  
+      for (let i = 0; i < language.length; i++) {
+        formData.append(`language[${i}]`, language[i]);
+      }
+  
+      const plainObject = formDataToObject(formData);
+  
+      dispatch(
+        AstrologerActions.updateAstrologerData({
+          payload: plainObject
+        })
+      );
+      console.log('plainObject', plainObject)
+      console.log("data submitted");
+      // }
     } catch (e) {
-      console.log(e);
+      console.log("error submitting data", e);
     }
   };
+  
 
   const handleReset = () => {
     updateState({
@@ -921,7 +959,20 @@ export const EditAstrologer = ({
     liveCallPriceDollar,
     gallery,
     options,
+    countryValue,
   } = state;
+
+  useEffect(() => {
+    if (country) {
+      dispatch(SettingActions.countryStateList({ countryId: country }));
+    }
+  }, [country]);
+
+  useEffect(() => {
+    if (countryState) {
+      dispatch(SettingActions.stateCityList({ stateId: countryState }));
+    }
+  }, [countryState]);
 
   return (
     <div className={classes.container}>
@@ -995,6 +1046,38 @@ export const EditAstrologer = ({
             </FormControl>
           </Grid>
           {/* days & working */}
+
+          <Grid item lg={12} sm={12} md={12} xs={12}>
+            <FormControl component="fieldset">
+              <FormLabel component="legend">Available Countries</FormLabel>
+              <FormGroup aria-label="position" row>
+                {countryValueData &&
+                  countryValueData.map((item) => {
+                    return (
+                      <div className={classes.chips}>
+                        <FormControlLabel
+                          value={item.title}
+                          className={classes.checkbox}
+                          control={
+                            <Checkbox
+                              checked={
+                                countryValue && countryValue.includes(item._id)
+                              }
+                              onChange={() => handleCountryValue(item)}
+                            />
+                          }
+                          label={item.title + " " + item.countryValue + "X"}
+                          labelPlacement="end"
+                        />
+                      </div>
+                    );
+                  })}
+              </FormGroup>
+            </FormControl>
+            {error.countryValue && (
+              <div className={classes.errorstyles}>{error.countryValue}</div>
+            )}
+          </Grid>
 
           <Grid
             item
@@ -1547,149 +1630,150 @@ export const EditAstrologer = ({
             </Dialog>
           </Grid>
           <Grid item lg={6} sm={12} md={12} xs={12}>
-      <FormControl component="fieldset">
-        <FormLabel component="legend">Remedies</FormLabel>
-        <FormGroup aria-label="position" row>
-          {activeRemediesData &&
-            activeRemediesData.map((item) => (
-              <div key={item._id} className={classes.chips}>
-                <FormControlLabel
-                  value={item.title}
-                  className={classes.checkbox}
-                  control={
-                    <Checkbox
-                      checked={remedies && remedies.includes(item._id)}
-                      onChange={() => handleRemedies(item)}
-                    />
-                  }
-                  label={item.title}
-                  labelPlacement="end"
-                />
-              </div>
-            ))}
-        </FormGroup>
-      </FormControl>
-      {error.remedies && (
-        <div className={classes.errorstyles}>{error.remedies}</div>
-      )}
-      <Button
-        variant="outlined"
-        color="primary"
-        className={classes.updateButton}
-        onClick={handleClickOpenRemedies}
-      >
-        Update Remedies
-      </Button>
-
-      <Dialog open={openRemedies} onClose={handleCloseRemediesDialog}>
-        <DialogTitle>Update Remedies</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Please update the remedies below:
-          </DialogContentText>
-          <FormGroup aria-label="position" row>
-            {activeRemediesData &&
-              activeRemediesData.map((item) => (
-                <div key={item._id} className={classes.chips}>
-                  <FormControlLabel
-                    value={item.title}
-                    className={classes.checkbox}
-                    control={
-                      <Checkbox
-                        checked={remedies && remedies.includes(item._id)}
-                        onChange={() => handleRemedies(item)}
+            <FormControl component="fieldset">
+              <FormLabel component="legend">Remedies</FormLabel>
+              <FormGroup aria-label="position" row>
+                {activeRemediesData &&
+                  activeRemediesData.map((item) => (
+                    <div key={item._id} className={classes.chips}>
+                      <FormControlLabel
+                        value={item.title}
+                        className={classes.checkbox}
+                        control={
+                          <Checkbox
+                            checked={remedies && remedies.includes(item._id)}
+                            onChange={() => handleRemedies(item)}
+                          />
+                        }
+                        label={item.title}
+                        labelPlacement="end"
                       />
-                    }
-                    label={item.title}
-                    labelPlacement="end"
-                  />
-                </div>
-              ))}
-          </FormGroup>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseRemediesDialog} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleUpdateRemedies} color="primary">
-            Update
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Grid>
+                    </div>
+                  ))}
+              </FormGroup>
+            </FormControl>
+            {error.remedies && (
+              <div className={classes.errorstyles}>{error.remedies}</div>
+            )}
+            <Button
+              variant="outlined"
+              color="primary"
+              className={classes.updateButton}
+              onClick={handleClickOpenRemedies}
+            >
+              Update Remedies
+            </Button>
+
+            <Dialog open={openRemedies} onClose={handleCloseRemediesDialog}>
+              <DialogTitle>Update Remedies</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Please update the remedies below:
+                </DialogContentText>
+                <FormGroup aria-label="position" row>
+                  {activeRemediesData &&
+                    activeRemediesData.map((item) => (
+                      <div key={item._id} className={classes.chips}>
+                        <FormControlLabel
+                          value={item.title}
+                          className={classes.checkbox}
+                          control={
+                            <Checkbox
+                              checked={remedies && remedies.includes(item._id)}
+                              onChange={() => handleRemedies(item)}
+                            />
+                          }
+                          label={item.title}
+                          labelPlacement="end"
+                        />
+                      </div>
+                    ))}
+                </FormGroup>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseRemediesDialog} color="primary">
+                  Cancel
+                </Button>
+                <Button onClick={handleUpdateRemedies} color="primary">
+                  Update
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Grid>
           <Grid item lg={12} sm={12} md={12} xs={12}>
-  <FormControl component="fieldset">
-    <FormLabel component="legend">Expertise</FormLabel>
-    <FormGroup aria-label="position" row>
-      {activeExpertiseData &&
-        activeExpertiseData.map((item) => (
-          <div className={classes.chips} key={item._id}>
-            <FormControlLabel
-              value={item.title}
-              className={classes.checkbox}
-              control={
-                <Checkbox
-                  checked={expertise && expertise.includes(item._id)}
-                  onChange={() => handleExpertise(item)}
-                />
-              }
-              label={item.title}
-              labelPlacement="end"
-            />
-          </div>
-        ))}
-    </FormGroup>
-  </FormControl>
-  {error.expertise && (
-    <div className={classes.errorstyles}>{error.expertise}</div>
-  )}
-  <Button
-    variant="outlined"
-    color="primary"
-    className={classes.updateButton}
-    onClick={handleClickOpenExpertise}
-  >
-    Update Expertise
-  </Button>
+            <FormControl component="fieldset">
+              <FormLabel component="legend">Expertise</FormLabel>
+              <FormGroup aria-label="position" row>
+                {activeExpertiseData &&
+                  activeExpertiseData.map((item) => (
+                    <div className={classes.chips} key={item._id}>
+                      <FormControlLabel
+                        value={item.title}
+                        className={classes.checkbox}
+                        control={
+                          <Checkbox
+                            checked={expertise && expertise.includes(item._id)}
+                            onChange={() => handleExpertise(item)}
+                          />
+                        }
+                        label={item.title}
+                        labelPlacement="end"
+                      />
+                    </div>
+                  ))}
+              </FormGroup>
+            </FormControl>
+            {error.expertise && (
+              <div className={classes.errorstyles}>{error.expertise}</div>
+            )}
+            <Button
+              variant="outlined"
+              color="primary"
+              className={classes.updateButton}
+              onClick={handleClickOpenExpertise}
+            >
+              Update Expertise
+            </Button>
 
-  <Dialog open={openExpertise} onClose={handleClose}>
-    <DialogTitle>Update Expertise</DialogTitle>
-    <DialogContent>
-      <DialogContentText>
-        Please update the expertise below:
-      </DialogContentText>
-      <FormGroup aria-label="position" row>
-        {activeExpertiseData &&
-          activeExpertiseData.map((item) => (
-            <div className={classes.chips} key={item._id}>
-              <FormControlLabel
-                value={item._id}
-                className={classes.checkbox}
-                control={
-                  <Checkbox
-                    checked={expertise && expertise.includes(item._id)}
-                    onChange={() => handleExpertise(item)}
-                  />
-                }
-                label={item.title}
-                labelPlacement="end"
-              />
-            </div>
-          ))}
-      </FormGroup>
-    </DialogContent>
-    <DialogActions>
-      <Button onClick={handleCloseExpertiseDialog} color="primary">
-        Cancel
-      </Button>
-      <Button onClick={handleUpdateExperties} color="primary">
-        Update
-      </Button>
-    </DialogActions>
-  </Dialog>
-</Grid>
+            <Dialog open={openExpertise} onClose={handleClose}>
+              <DialogTitle>Update Expertise</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Please update the expertise below:
+                </DialogContentText>
+                <FormGroup aria-label="position" row>
+                  {activeExpertiseData &&
+                    activeExpertiseData.map((item) => (
+                      <div className={classes.chips} key={item._id}>
+                        <FormControlLabel
+                          value={item._id}
+                          className={classes.checkbox}
+                          control={
+                            <Checkbox
+                              checked={
+                                expertise && expertise.includes(item._id)
+                              }
+                              onChange={() => handleExpertise(item)}
+                            />
+                          }
+                          label={item.title}
+                          labelPlacement="end"
+                        />
+                      </div>
+                    ))}
+                </FormGroup>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseExpertiseDialog} color="primary">
+                  Cancel
+                </Button>
+                <Button onClick={handleUpdateExperties} color="primary">
+                  Update
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Grid>
 
-        
           <Grid item lg={6} sm={6} md={6} xs={6}>
             <div
               onClick={() => handleSubmit()}
@@ -1731,7 +1815,7 @@ export const EditAstrologer = ({
         <Grid item lg={4} sm={12} md={12} xs={12}>
           <TextField
             label="Display Name"
-            defaultValue={astrologerData?.displayName}
+            value={astrologerData?.displayName}
             variant="outlined"
             fullWidth
             error={!!error.displayName ? true : false}
@@ -1790,11 +1874,14 @@ export const EditAstrologer = ({
               id="demo-simple-select"
               label="Currency Type"
               value={currencyType}
+              defaultValue={astrologerData?.currencyType}
               error={error.currencyType ? true : false}
               onFocus={() => handleError("currencyType", null)}
               onChange={(e) => updateState({ currencyType: e.target.value })}
             >
-              <MenuItem value="">-Select currencyType-</MenuItem>
+              <MenuItem value="" disabled>
+                -Select currencyType-
+              </MenuItem>
               <MenuItem value="INR">INR</MenuItem>
               <MenuItem value="USD">USD</MenuItem>
             </Select>
@@ -1814,8 +1901,11 @@ export const EditAstrologer = ({
               error={!!state.error.gender}
               onFocus={() => handleError("gender", null)}
               onChange={handleChange("gender")}
+              defaultValue={astrologerData?.gender}
             >
-              <MenuItem value="">-Select Gender-</MenuItem>
+              <MenuItem value="" disabled>
+                -Select Gender-
+              </MenuItem>
               <MenuItem value="Male">Male</MenuItem>
               <MenuItem value="Female">Female</MenuItem>
               <MenuItem value="Other">Other</MenuItem>
@@ -1856,64 +1946,41 @@ export const EditAstrologer = ({
             InputLabelProps={{ shrink: true }}
           />
         </Grid>
-        <Grid item lg={4} md={12} sm={12} xs={12}>
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">
-              Experience in Years
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="Experience in years"
-              value={experience}
-              type="text"
-              onFocus={() => handleError("experience", null)}
-              onChange={(e) => updateState({ experience: e.target.value })}
-              error={error.experience ? true : false} // Highlight the field if there's an error
-              InputLabelProps={{ shrink: true }}
-            >
-              <MenuItem value="">-Experience in Years-</MenuItem>
-              <MenuItem value="1">1</MenuItem>
-              <MenuItem value="2">2</MenuItem>
-              <MenuItem value="3">3</MenuItem>
-              <MenuItem value="4">4</MenuItem>
-              <MenuItem value="5">5</MenuItem>
-              <MenuItem value="6">6</MenuItem>
-              <MenuItem value="7">7</MenuItem>
-              <MenuItem value="8">8</MenuItem>
-              <MenuItem value="9">9</MenuItem>
-              <MenuItem value="10">10</MenuItem>
-            </Select>
-            {error.experience && (
-              <div className={classes.errorstyles}>{error.experience}</div>
-            )}
-          </FormControl>
+        <Grid item lg={4} sm={12} md={12} xs={12}>
+          <TextField
+            label="Experience"
+            defaultValue={astrologerData?.experience}
+            variant="outlined"
+            fullWidth
+            onFocus={() => handleError("experience", null)}
+            onChange={(e) => updateState({ experience: e.target.value })}
+            helperText={error.experience}
+            error={error.experience ? true : false}
+            InputLabelProps={{ shrink: true }}
+          />
         </Grid>
         <Grid item lg={4} sm={12} md={12} xs={12}>
           <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Language</InputLabel>
+            <InputLabel id="demo-multiple-checkbox-label">Language</InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="language"
-              value={language}
+              labelId="demo-multiple-checkbox-label"
+              id="demo-multiple-checkbox"
               multiple
-              error={error.language ? true : false}
-              onFocus={() => handleError("language", null)}
+              value={language}
               onChange={(e) => updateState({ language: e.target.value })}
-              InputLabelProps={{ shrink: true }}
+              onFocus={() => handleError("language", null)}
+              renderValue={(selected) => selected.join(", ")}
+              error={!!error.language}
             >
-              <MenuItem disabled defaultValue={null}>
+              <MenuItem disabled value="">
                 -Select Language-
               </MenuItem>
-              {languageData &&
-                languageData.map((item) => {
-                  return (
-                    <MenuItem key={item?._id} value={item?.languageName}>
-                      {item?.languageName}
-                    </MenuItem>
-                  );
-                })}
+              {languages.map((item) => (
+                <MenuItem key={item} value={item}>
+                  <Checkbox checked={language.indexOf(item) > -1} />
+                  <ListItemText primary={item} />
+                </MenuItem>
+              ))}
             </Select>
             {error.language && (
               <div className={classes.errorstyles}>{error.language}</div>
@@ -1941,37 +2008,51 @@ export const EditAstrologer = ({
               id="demo-simple-select"
               label="Country"
               value={country}
-              error={error.country ? true : false}
-              onFocus={() => handleError("country", null)}
+              onFocus={(e) => handleError("country", null)}
               onChange={(e) => updateState({ country: e.target.value })}
-              InputLabelProps={{ shrink: true }}
+              error={error.country ? true : false}
             >
-              <MenuItem value="">-Select Country-</MenuItem>
-              <MenuItem value="India">India</MenuItem>
-              <MenuItem value="Brazil">Brazil</MenuItem>
+              <MenuItem disabled value={null}>
+                -Select your Country-
+              </MenuItem>
+              {countryData?.map((item) => (
+                <MenuItem key={item.id} value={item._id}>
+                  {item.title}
+                </MenuItem>
+              ))}
             </Select>
-            {error.gender && (
-              <div className={classes.errorstyles}>{error.gender}</div>
+            {error.country && (
+              <div className={classes.errorstyles}>{error.country}</div>
             )}
           </FormControl>
         </Grid>
         <Grid item lg={4} md={12} sm={12} xs={12}>
           <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">State</InputLabel>
+            <InputLabel id="state-select-label">State</InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="State"
+              labelId="state-select-label"
+              id="state-select"
               value={countryState}
-              onFocus={() => handleError("state", null)}
+              onFocus={() =>
+                setState((prevState) => ({
+                  ...prevState,
+                  error: { ...prevState.error, countryState: null },
+                }))
+              }
               onChange={(e) => updateState({ countryState: e.target.value })}
-              error={error.state ? true : false}
-              InputLabelProps={{ shrink: true }}
+              error={!!error.countryState}
+              disabled={!country}
             >
-              <MenuItem>-Select your State-</MenuItem>
-              <MenuItem value="Jammu & Kashmir">Jammu & Kashmir</MenuItem>
-              <MenuItem value="Uttar Pradesh">Uttar Pradesh</MenuItem>
-              <MenuItem value="UttraKhand">UttraKhand</MenuItem>
+              <MenuItem disabled value="">
+                -Select your State-
+              </MenuItem>
+              {countryStateData &&
+                countryStateData.length > 0 &&
+                countryStateData?.map((item) => (
+                  <MenuItem key={item.id} value={item._id}>
+                    {item.title}
+                  </MenuItem>
+                ))}
             </Select>
             {error.state && (
               <div className={classes.errorstyles}>{error.state}</div>
@@ -1989,13 +2070,18 @@ export const EditAstrologer = ({
               onFocus={() => handleError("city", null)}
               onChange={(e) => updateState({ city: e.target.value })}
               error={error.city ? true : false}
-              InputLabelProps={{ shrink: true }}
+              disabled={!countryState}
             >
-              <MenuItem value="">-Select your City-</MenuItem>
-              <MenuItem value="Meerut">Meerut</MenuItem>
-              <MenuItem value="Delhi">Delhi</MenuItem>
-              <MenuItem value="Noida">Noida</MenuItem>
-              {/* Add more cities as needed */}
+              <MenuItem disabled value={null}>
+                -Select your City-
+              </MenuItem>
+              {stateCityData &&
+                stateCityData.length > 0 &&
+                stateCityData?.map((item) => (
+                  <MenuItem key={item.id} value={item._id}>
+                    {item.title}
+                  </MenuItem>
+                ))}
             </Select>
             {error.city && (
               <div className={classes.errorstyles}>{error.city}</div>
@@ -2080,8 +2166,11 @@ const mapStateToProps = (state) => ({
   activeSkillsData: state.skills.activeSkillsData,
   activeExpertiseData: state.experites.activeExpertiseData,
   activeRemediesData: state.remedies.activeRemediesData,
-  languageData: state.language.languageData,
   astrologerData: state.astrologer.astrologerData,
+  countryData: state.setting.countryData,
+  countryStateData: state.setting.countryStateData,
+  stateCityData: state.setting.stateCityData,
+  countryValueData: state.setting.countryValueData,
 });
 
 // const mapDispatchToProps = (dispatch) => ({ dispatch });

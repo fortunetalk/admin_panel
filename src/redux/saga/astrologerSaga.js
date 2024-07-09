@@ -299,7 +299,7 @@ function* updateAstrologerData(actions) {
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_astrologer,
-      header: "form",
+      header: "application/json",
       data: payload,
     });
 
@@ -310,6 +310,7 @@ function* updateAstrologerData(actions) {
         showConfirmButton: false,
         timer: 2000,
       });
+      yield put({ type: actionTypes.GET_ALL_ASTROLOGER, payload: response });
     } else {
       Swal.fire({
         icon: "error",

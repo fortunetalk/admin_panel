@@ -15,19 +15,22 @@ function extractErrorMessage(html) {
   return errorMessage.trim();
 }
 
-
 class _ApiRequest {
   post_header = "multipart/form-data";
   get_header = "application/json";
 
   postRequest = async ({ url = null, data = null, header = "form" }) => {
     try {
+      console.log("header", header);
+      const headers = {
+        "Content-Type":
+          header === "form" ? "multipart/form-data" : "application/json",
+      };
+
       const response = await axios({
         method: "post",
         url: url,
-        headers: {
-          "Content-Type": header === "form" ? this.post_header : this.get_header,
-        },
+        headers: headers,
         data: data,
       });
       return response.data;

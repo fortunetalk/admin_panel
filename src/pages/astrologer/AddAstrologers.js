@@ -678,7 +678,6 @@ export const AddAstrologers = ({
     panNumber,
     preferredDays,
     skills,
-    mainExpertise,
     expertise,
     remedies,
     callPrice,

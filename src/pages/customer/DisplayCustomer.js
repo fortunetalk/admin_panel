@@ -96,9 +96,8 @@ const DisplayCustomer = ({ customerListData, dispatch }) => {
           fetchAllCustomers();
         } else {
           Swal.fire({
-            title: `Failed to ${
-              rowData.banned_status ? "Unban" : "Ban"
-            } Customer`,
+            title: `Failed to ${rowData.banned_status ? "Unban" : "Ban"
+              } Customer`,
             text: response.message,
             icon: "success",
           });
@@ -134,9 +133,8 @@ const DisplayCustomer = ({ customerListData, dispatch }) => {
           fetchAllCustomers();
         } else {
           Swal.fire({
-            title: `Failed to ${
-              rowData.banned_status ? "Unban" : "Ban"
-            } Customer`,
+            title: `Failed to ${rowData.banned_status ? "Unban" : "Ban"
+              } Customer`,
             text: response.message,
             icon: "success",
           });
@@ -207,8 +205,8 @@ const DisplayCustomer = ({ customerListData, dispatch }) => {
       formData.append("email", email);
       formData.append("image", profilePicture.bytes);
       setOpen(false)
-      dispatch(CustomerActions.updateCustomer({data: formData, onSuccess: setOpen}))
-    
+      dispatch(CustomerActions.updateCustomer({ data: formData, onSuccess: setOpen }))
+
     }
   };
 
@@ -366,7 +364,7 @@ const DisplayCustomer = ({ customerListData, dispatch }) => {
                     </div>
                      */}
                     <div
-                      onClick={() => dispatch(CustomerActions.banCustomer({customerId: rowData?._id, customerName: rowData?.customerName, status: rowData?.banned_status}))}
+                      onClick={() => dispatch(CustomerActions.banCustomer({ customerId: rowData?._id, customerName: rowData?.customerName, status: rowData?.banned_status }))}
                       style={{
                         backgroundColor: rowData.banned_status
                           ? Colors.red_a
@@ -419,7 +417,7 @@ const DisplayCustomer = ({ customerListData, dispatch }) => {
                 ),
               },
             ]}
-            options={{...propStyles.tableStyles, filtering: false}}
+            options={{ ...propStyles.tableStyles, filtering: false }}
             actions={[
               {
                 icon: () => (

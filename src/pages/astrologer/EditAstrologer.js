@@ -3,6 +3,7 @@ import { useStyles } from "../../assets/styles.js";
 import Radio from "@material-ui/core/Radio";
 import moment from "moment";
 import RadioGroup from "@material-ui/core/RadioGroup";
+
 import {
   Grid,
   TextField,
@@ -57,6 +58,7 @@ export const EditAstrologer = ({
   var classes = useStyles();
   const { astrologerId } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [galleryImages, setGalleryImages] = useState([]);
   const [open, setOpen] = useState(false);
@@ -932,6 +934,7 @@ export const EditAstrologer = ({
           <Grid item lg={4} sm={12} md={12} xs={12}>
             <FormControl component="fieldset">
               <FormLabel component="legend">Preferred Days</FormLabel>
+
               <FormGroup aria-label="position" row>
                 {preferredDaysList &&
                   preferredDaysList.map((item) => {
@@ -1547,149 +1550,149 @@ export const EditAstrologer = ({
             </Dialog>
           </Grid>
           <Grid item lg={6} sm={12} md={12} xs={12}>
-      <FormControl component="fieldset">
-        <FormLabel component="legend">Remedies</FormLabel>
-        <FormGroup aria-label="position" row>
-          {activeRemediesData &&
-            activeRemediesData.map((item) => (
-              <div key={item._id} className={classes.chips}>
-                <FormControlLabel
-                  value={item.title}
-                  className={classes.checkbox}
-                  control={
-                    <Checkbox
-                      checked={remedies && remedies.includes(item._id)}
-                      onChange={() => handleRemedies(item)}
-                    />
-                  }
-                  label={item.title}
-                  labelPlacement="end"
-                />
-              </div>
-            ))}
-        </FormGroup>
-      </FormControl>
-      {error.remedies && (
-        <div className={classes.errorstyles}>{error.remedies}</div>
-      )}
-      <Button
-        variant="outlined"
-        color="primary"
-        className={classes.updateButton}
-        onClick={handleClickOpenRemedies}
-      >
-        Update Remedies
-      </Button>
-
-      <Dialog open={openRemedies} onClose={handleCloseRemediesDialog}>
-        <DialogTitle>Update Remedies</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Please update the remedies below:
-          </DialogContentText>
-          <FormGroup aria-label="position" row>
-            {activeRemediesData &&
-              activeRemediesData.map((item) => (
-                <div key={item._id} className={classes.chips}>
-                  <FormControlLabel
-                    value={item.title}
-                    className={classes.checkbox}
-                    control={
-                      <Checkbox
-                        checked={remedies && remedies.includes(item._id)}
-                        onChange={() => handleRemedies(item)}
+            <FormControl component="fieldset">
+              <FormLabel component="legend">Remedies</FormLabel>
+              <FormGroup aria-label="position" row>
+                {activeRemediesData &&
+                  activeRemediesData.map((item) => (
+                    <div key={item._id} className={classes.chips}>
+                      <FormControlLabel
+                        value={item.title}
+                        className={classes.checkbox}
+                        control={
+                          <Checkbox
+                            checked={remedies && remedies.includes(item._id)}
+                            onChange={() => handleRemedies(item)}
+                          />
+                        }
+                        label={item.title}
+                        labelPlacement="end"
                       />
-                    }
-                    label={item.title}
-                    labelPlacement="end"
-                  />
-                </div>
-              ))}
-          </FormGroup>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseRemediesDialog} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleUpdateRemedies} color="primary">
-            Update
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Grid>
+                    </div>
+                  ))}
+              </FormGroup>
+            </FormControl>
+            {error.remedies && (
+              <div className={classes.errorstyles}>{error.remedies}</div>
+            )}
+            <Button
+              variant="outlined"
+              color="primary"
+              className={classes.updateButton}
+              onClick={handleClickOpenRemedies}
+            >
+              Update Remedies
+            </Button>
+
+            <Dialog open={openRemedies} onClose={handleCloseRemediesDialog}>
+              <DialogTitle>Update Remedies</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Please update the remedies below:
+                </DialogContentText>
+                <FormGroup aria-label="position" row>
+                  {activeRemediesData &&
+                    activeRemediesData.map((item) => (
+                      <div key={item._id} className={classes.chips}>
+                        <FormControlLabel
+                          value={item.title}
+                          className={classes.checkbox}
+                          control={
+                            <Checkbox
+                              checked={remedies && remedies.includes(item._id)}
+                              onChange={() => handleRemedies(item)}
+                            />
+                          }
+                          label={item.title}
+                          labelPlacement="end"
+                        />
+                      </div>
+                    ))}
+                </FormGroup>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseRemediesDialog} color="primary">
+                  Cancel
+                </Button>
+                <Button onClick={handleUpdateRemedies} color="primary">
+                  Update
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Grid>
           <Grid item lg={12} sm={12} md={12} xs={12}>
-  <FormControl component="fieldset">
-    <FormLabel component="legend">Expertise</FormLabel>
-    <FormGroup aria-label="position" row>
-      {activeExpertiseData &&
-        activeExpertiseData.map((item) => (
-          <div className={classes.chips} key={item._id}>
-            <FormControlLabel
-              value={item.title}
-              className={classes.checkbox}
-              control={
-                <Checkbox
-                  checked={expertise && expertise.includes(item._id)}
-                  onChange={() => handleExpertise(item)}
-                />
-              }
-              label={item.title}
-              labelPlacement="end"
-            />
-          </div>
-        ))}
-    </FormGroup>
-  </FormControl>
-  {error.expertise && (
-    <div className={classes.errorstyles}>{error.expertise}</div>
-  )}
-  <Button
-    variant="outlined"
-    color="primary"
-    className={classes.updateButton}
-    onClick={handleClickOpenExpertise}
-  >
-    Update Expertise
-  </Button>
+            <FormControl component="fieldset">
+              <FormLabel component="legend">Expertise</FormLabel>
+              <FormGroup aria-label="position" row>
+                {activeExpertiseData &&
+                  activeExpertiseData.map((item) => (
+                    <div className={classes.chips} key={item._id}>
+                      <FormControlLabel
+                        value={item.title}
+                        className={classes.checkbox}
+                        control={
+                          <Checkbox
+                            checked={expertise && expertise.includes(item._id)}
+                            onChange={() => handleExpertise(item)}
+                          />
+                        }
+                        label={item.title}
+                        labelPlacement="end"
+                      />
+                    </div>
+                  ))}
+              </FormGroup>
+            </FormControl>
+            {error.expertise && (
+              <div className={classes.errorstyles}>{error.expertise}</div>
+            )}
+            <Button
+              variant="outlined"
+              color="primary"
+              className={classes.updateButton}
+              onClick={handleClickOpenExpertise}
+            >
+              Update Expertise
+            </Button>
 
-  <Dialog open={openExpertise} onClose={handleClose}>
-    <DialogTitle>Update Expertise</DialogTitle>
-    <DialogContent>
-      <DialogContentText>
-        Please update the expertise below:
-      </DialogContentText>
-      <FormGroup aria-label="position" row>
-        {activeExpertiseData &&
-          activeExpertiseData.map((item) => (
-            <div className={classes.chips} key={item._id}>
-              <FormControlLabel
-                value={item._id}
-                className={classes.checkbox}
-                control={
-                  <Checkbox
-                    checked={expertise && expertise.includes(item._id)}
-                    onChange={() => handleExpertise(item)}
-                  />
-                }
-                label={item.title}
-                labelPlacement="end"
-              />
-            </div>
-          ))}
-      </FormGroup>
-    </DialogContent>
-    <DialogActions>
-      <Button onClick={handleCloseExpertiseDialog} color="primary">
-        Cancel
-      </Button>
-      <Button onClick={handleUpdateExperties} color="primary">
-        Update
-      </Button>
-    </DialogActions>
-  </Dialog>
-</Grid>
+            <Dialog open={openExpertise} onClose={handleClose}>
+              <DialogTitle>Update Expertise</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Please update the expertise below:
+                </DialogContentText>
+                <FormGroup aria-label="position" row>
+                  {activeExpertiseData &&
+                    activeExpertiseData.map((item) => (
+                      <div className={classes.chips} key={item._id}>
+                        <FormControlLabel
+                          value={item._id}
+                          className={classes.checkbox}
+                          control={
+                            <Checkbox
+                              checked={expertise && expertise.includes(item._id)}
+                              onChange={() => handleExpertise(item)}
+                            />
+                          }
+                          label={item.title}
+                          labelPlacement="end"
+                        />
+                      </div>
+                    ))}
+                </FormGroup>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseExpertiseDialog} color="primary">
+                  Cancel
+                </Button>
+                <Button onClick={handleUpdateExperties} color="primary">
+                  Update
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Grid>
 
-        
+
           <Grid item lg={6} sm={6} md={6} xs={6}>
             <div
               onClick={() => handleSubmit()}

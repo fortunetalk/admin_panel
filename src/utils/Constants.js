@@ -1,8 +1,8 @@
 // export const base_url = "http://165.232.182.110:4000/";
 // export const api_url = "http://165.232.182.110:4000/api/";
 
-export const base_url = "http://localhost:8000/";
-export const api_url = "http://localhost:8000/api/";
+export const base_url = "https://node-backend-live.onrender.com/";
+export const api_url = "https://node-backend-live.onrender.com/api/";
 
 
 // admin login 
@@ -66,6 +66,10 @@ export const update_astrologer_remedies = "admin/astrologer_update_remedies";
 export const update_astrologer_experties = "admin/astrologer_update_expertise";
 export const update_astrologer_allowed_countries = "admin/astrologer_update_allowedCountry";
 export const update_astrologer_preferred_days = "admin/astrologer_update_prefer_days";
+export const update_astrologer_profile_image = "admin/astrologer-update-profile-image";
+export const update_astrologer_bank_image = "admin/astrologer_update_bank_proof";
+export const update_astrologer_id_image = "admin/astrologer_update_id_proof";
+export const update_astrologer_gallery_image = "admin/astrologer-update-gallery-image";
 
 
 export const create_recharge_plan = "admin/create_recharge_plan";

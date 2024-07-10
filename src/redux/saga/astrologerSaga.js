@@ -19,7 +19,11 @@ import {
   update_astrologer_remedies,
   update_astrologer_experties,
   update_astrologer_allowed_countries,
-  update_astrologer_preferred_days
+  update_astrologer_preferred_days,
+  update_astrologer_profile_image,
+  update_astrologer_bank_image,
+  update_astrologer_id_image,
+  update_astrologer_gallery_image
 } from "../../utils/Constants";
 import Swal from "sweetalert2";
 import { Colors } from "../../assets/styles";
@@ -601,6 +605,105 @@ function* updateAstrologerPreferredDaysData(actions) {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   }
 }
+function* updateAstrologerProfileImage(actions) {
+  try {
+    const { payload } = actions;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
+    const response = yield call(ApiRequest.postRequest, {
+      url: api_url + update_astrologer_profile_image,
+      headers: { 'Content-Type': 'multipart/form-data' },
+      data: payload,
+    });
+
+    if (response.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Image Updated Successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Failed to update Image",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  } finally {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+  }
+}
+function* updateAstrologerBankImage(actions) {
+  try {
+    const { payload } = actions;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
+    const response = yield call(ApiRequest.postRequest, {
+      url: api_url + update_astrologer_bank_image,
+      headers: { 'Content-Type': 'multipart/form-data' },
+      data: payload,
+    });
+
+    if (response.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Image Updated Successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Failed to update Image",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  } finally {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+  }
+}
+function* updateAstrologerGalleryImage(actions) {
+  try {
+    const { payload } = actions;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
+    const response = yield call(ApiRequest.postRequest, {
+      url: api_url + update_astrologer_gallery_image,
+      headers: { 'Content-Type': 'multipart/form-data' },
+      data: payload,
+    });
+
+    if (response.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Image Updated Successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Failed to update Image",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  } finally {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+  }
+}
 
 export default function* astrologerSaga() {
   yield takeLeading(actionTypes.GET_ALL_ASTROLOGER, getAstrologers);
@@ -649,5 +752,17 @@ export default function* astrologerSaga() {
   yield takeLeading(
     actionTypes.UPDATE_ASTROLOGER_PREFERRED_DAYS,
     updateAstrologerPreferredDaysData
+  );
+  yield takeLeading(
+    actionTypes.UPDATE_ASTROLOGER_PROFILE_IMAGE,
+    updateAstrologerProfileImage
+  );
+  yield takeLeading(
+    actionTypes.UPDATE_ASTROLOGER_BANK_PROOF_IMAGE,
+    updateAstrologerBankImage
+  );
+  yield takeLeading(
+    actionTypes.UPDATE_ASTROLOGER_GALLERY_IMAGE,
+    updateAstrologerGalleryImage
   );
 }

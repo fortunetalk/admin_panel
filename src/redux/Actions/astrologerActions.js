@@ -79,7 +79,28 @@ export const updateAstrologerAllowedCountry = payload =>({
   type: actionTypes.UPDATE_ASTROLOGER_ALLOWED_COUNTRIES, 
   payload
 })
+
 export const updateAstrologerPreferredDays = payload =>({
   type: actionTypes.UPDATE_ASTROLOGER_PREFERRED_DAYS, 
+  payload
+})
+
+export const updateAstrologerProfileImage = payload =>({
+  type: actionTypes.UPDATE_ASTROLOGER_PROFILE_IMAGE, 
+  payload
+})
+
+export const updateAstrologerBankProofImage = payload =>({
+  type: actionTypes.UPDATE_ASTROLOGER_BANK_PROOF_IMAGE, 
+  payload
+})
+
+export const updateAstrologerIdProofImage = payload =>({
+  type: actionTypes.UPDATE_ASTROLOGER_ID_PROOF_IMAGE, 
+  payload
+})
+
+export const updateAstrologerGalleryImage = payload =>({
+  type: actionTypes.UPDATE_ASTROLOGER_GALLERY_IMAGE, 
   payload
 })

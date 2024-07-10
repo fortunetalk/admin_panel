@@ -11,6 +11,10 @@ const initialState = {
   updateAstrologerExpertiesData:null,
   updateAstrologerAllowedCountriesData:null,
   updateAstrologerPreferredDaysData:null,
+  updateAstrologerProfileImage:null,
+  updateAstrologerBankImage:null,
+  updateAstrologerIdImage:null,
+  updateAstrologerGalleryImage:null,
   isLoading: false,
 };
 
@@ -126,6 +130,30 @@ const astrologer = (state = initialState, actions) => {
       return {
         ...state,
         updateAstrologerPreferredDaysData: payload,
+      };
+    }
+    case actionTypes.UPDATE_ASTROLOGER_PROFILE_IMAGE: {
+      return {
+        ...state,
+        updateAstrologerProfileImage: payload,
+      };
+    }
+    case actionTypes.UPDATE_ASTROLOGER_BANK_PROOF_IMAGE: {
+      return {
+        ...state,
+        updateAstrologerBankImage: payload,
+      };
+    }
+    case actionTypes.UPDATE_ASTROLOGER_ID_PROOF_IMAGE: {
+      return {
+        ...state,
+        updateAstrologerIdImage: payload,
+      };
+    }
+    case actionTypes.UPDATE_ASTROLOGER_GALLERY_IMAGE: {
+      return {
+        ...state,
+        updateAstrologerGalleryImage: payload,
       };
     }
 

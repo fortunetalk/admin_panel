@@ -531,7 +531,7 @@ export const AddAstrologers = ({
       });
 
       for (let i = 0; i < countryValue.length; i++) {
-        formData.append(`allowedCountry[${i}]`, countryValue[i]);
+        formData.append(`allowedCountryId[${i}]`, countryValue[i]);
       }
       for (let i = 0; i < preferredDays.length; i++) {
         formData.append(`preferredDays[${i}]`, preferredDays[i]);
@@ -678,7 +678,6 @@ export const AddAstrologers = ({
     panNumber,
     preferredDays,
     skills,
-    mainExpertise,
     expertise,
     remedies,
     callPrice,

@@ -120,6 +120,10 @@ import AddMCQ from "./pages/courses/AddMCQ";
 import AddCustomerNotification from "./pages/notification/AddCustomerNotification";
 import AddAstrologerNotification from "./pages/notification/AddAstrologerNotification";
 import AddPrivacyPolicy from "./pages/pages/AddPrivacyPolicy";
+import ProfileRequest from "./pages/request/ProfileRequest";
+import PhoneRequest from "./pages/request/PhoneRequest";
+import BankRequest from "./pages/request/BankRequest";
+import GalleryRequest from "./pages/request/GalleryRequest";
 
 function App() {
   return (
@@ -313,6 +317,12 @@ function App() {
             path="/astrologerNotification"
             element={<AstrologerNotification />}
           />
+
+          {/* Request */}
+          <Route path="/profileRequest" element={<ProfileRequest/>} />
+          <Route path="/phoneRequest" element={<PhoneRequest/>} />
+          <Route path="/bankRequest" element={<BankRequest/>} />
+          <Route path="/galleryRequest" element={<GalleryRequest/>} />
         
           <Route path="chatSummary" element={<ChatSummary />} />
         </Route>

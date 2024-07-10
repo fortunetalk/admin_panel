@@ -121,11 +121,13 @@ const DisplayCity = ({  cityData, stateData }) => {
                 title: "S.No",
                 editable: "never",
                 render: (rowData) => cityData.indexOf(rowData) + 1,
+                sorting: true,
               },
-              { title: "City", field: "title" },
+              { title: "City", field: "title", sorting: true },
               {
                 title: "State",
                 field: "stateId.title",
+                sorting: true,
               },
               { title: "Status", field: "status", render: rowData => (
                 <div className={classes.statusButton}
@@ -136,7 +138,10 @@ const DisplayCity = ({  cityData, stateData }) => {
               )},
 
             ]}
-            options={propStyles.tableStyles}
+            options={{
+              ...propStyles.tableStyles,
+              sorting: true,
+            }}
             style={{ fontSize: "1.4rem" }}
             actions={[
               {

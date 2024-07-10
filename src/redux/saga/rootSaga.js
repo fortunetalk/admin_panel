@@ -35,6 +35,7 @@ import giftSaga from "./giftSaga";
 import privacyPolicySaga from "./privacyPolicySaga";
 
 import adminLogin from './adminSaga';
+import requestSaga from "./requestSaga";
 export default function* rootSaga() {
   yield all([
     reviewSaga(),
@@ -71,6 +72,7 @@ export default function* rootSaga() {
     mcqSaga(),
     giftSaga(),
     privacyPolicySaga(),
-    adminLogin()
+    adminLogin(),
+    requestSaga(),
   ]);
 }

@@ -333,6 +333,33 @@ const routes = [
     ],
   },
   {
+    path: "/request",
+    name: "Request",
+    icon: <BiAbacus />,
+    subRoutes: [
+      {
+        path: "/profileRequest",
+        name: "Profile Reques",
+        icon: <BiAbacus />,
+      },
+      {
+        path: "/phoneRequest",
+        name: "Phone Number Request",
+        icon: <BiAbacus />,
+      },
+      {
+        path: "/bankRequest",
+        name: "Bank Request",
+        icon: <BiAbacus />,
+      },
+      {
+        path: "/galleryRequest",
+        name: "Gallery Image Request",
+        icon: <BiAbacus />,
+      },
+    ],
+  },
+  {
     path: "/askAstrologer",
     name: "Ask Astrologer",
     icon: <BiAbacus />,

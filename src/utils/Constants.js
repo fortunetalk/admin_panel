@@ -57,13 +57,15 @@ export const verify_review = 'admin/verify-review'
 
 //Astrologer
 export const add_astrologer = "admin/add-astrologers";
-export const update_astrologer = "admin/update-astrologer";
+export const update_astrologer = "admin/astrologer_update";
 export const update_astrologer_status = "admin/astrologer-change-status";
 export const update_astrologer_call_status = "admin/astrologer-change-call-status";
 export const update_astrologer_chat_status = "admin/astrologer-change-chat-status";
 export const update_astrologer_skill = "admin//astrologer_update_skill";
-export const update_astrologer_remedies = "admin//astrologer_update_remedies";
-export const update_astrologer_experties = "admin//astrologer_update_expertise";
+export const update_astrologer_remedies = "admin/astrologer_update_remedies";
+export const update_astrologer_experties = "admin/astrologer_update_expertise";
+export const update_astrologer_allowed_countries = "admin/astrologer_update_allowedCountry";
+export const update_astrologer_preferred_days = "admin/astrologer_update_prefer_days";
 
 
 export const create_recharge_plan = "admin/create_recharge_plan";
@@ -303,5 +305,15 @@ export const privacy_policy_list='admin/privacy-policy'
 export const update_privacy_policy = 'admin/privacy-policy/update'
 export const change_privacy_policy_status = 'admin/privacy-policy/change-status'
 export const delete_privacy_policy = 'admin/privacy-policy/delete'
+
+//request
+export const get_profile_request = 'admin/request/profile';
+export const update_profile_request = 'admin/verify/request/profile'
+export const get_phone_request = 'admin/request/phoneNumber';
+export const update_phone_request = 'admin/verify/request/phoneNumber'
+export const get_bank_request = 'admin/request/bank';
+export const update_bank_request = 'admin/verify/request/bank'
+export const get_gallery_request = 'admin/request/gallery';
+export const update_gallery_request = 'admin/verify/request/gallery'
 
 export const get_all_country = 'https://api.countrystatecity.in/v1/countries'

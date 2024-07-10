@@ -35,6 +35,7 @@ import mcq from "./mcq";
 import gift from "./gift";
 import privacyPolicy from "./privacyPolicy";
 import admin from './admin';
+import request from "./request";
 
 const rootReducer = combineReducers({
   admin,
@@ -72,6 +73,7 @@ const rootReducer = combineReducers({
   mcq,
   gift,
   privacyPolicy,
+  request,
 });
 
 // const appReducer = (state, action) => {

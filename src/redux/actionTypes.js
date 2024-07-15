@@ -1,7 +1,7 @@
 // Common or dashboard
 export const SET_IS_LOADING = "SET_IS_LOADING";
+export const UNSET_IS_LOADING = "UNSET_IS_LOADING";
 export const SET_IS_SIDEBAR_OPEN = "SET_IS_SIDEBAR_OPEN";
-
 // Admin Login
 export const ADMIN_LOGIN_REQUEST = 'ADMIN_LOGIN_REQUEST';
 export const ADMIN_LOGIN_SUCCESS = 'ADMIN_LOGIN_SUCCESS';

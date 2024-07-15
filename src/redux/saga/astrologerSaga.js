@@ -38,7 +38,7 @@ function extractErrorMessage(html) {
 function* addAstrologer(actions) {
   try {
     const { payload } = actions;
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + add_astrologer,
@@ -58,7 +58,7 @@ function* addAstrologer(actions) {
     );
 
 
-      yield put({ type: actionTypes.GET_ALL_ASTROLOGER, payload: response });
+      yield put({ type: actionTypes.GET_ALL_ASTROLOGER, payload: null });
       yield call(payload.callback);
     } else {
       const errorMessage = extractErrorMessage(
@@ -74,14 +74,16 @@ function* addAstrologer(actions) {
     }
   } catch (e) {
     console.log("error", e);
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
+
   }
 }
 
 function* getAstrologers() {
   try {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
     const response = yield call(ApiRequest.getRequest, {
       url: api_url + get_all_astrologers,
     });
@@ -95,7 +97,7 @@ function* getAstrologers() {
   } catch (e) {
     console.log(e);
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   }
 }
 
@@ -115,7 +117,7 @@ function* getActiveAstrologers() {
   } catch (e) {
     console.log(e);
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   }
 }
 
@@ -136,7 +138,7 @@ function* getAstrologer(action) {
   } catch (e) {
     console.log(e);
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   }
 }
 
@@ -156,14 +158,14 @@ function* getEnquiryAstrologers() {
   } catch (e) {
     console.log(e);
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   }
 }
 
 function* updateAstrologerStatus(action) {
   try {
     const { payload } = action;
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_astrologer_status,
@@ -201,14 +203,14 @@ function* updateAstrologerStatus(action) {
       timer: 2000,
     });
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
   }
 }
 
 function* updateAstrologerCallStatus(action) {
   try {
     const { payload } = action;
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_astrologer_call_status,
@@ -246,14 +248,14 @@ function* updateAstrologerCallStatus(action) {
       timer: 2000,
     });
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
   }
 }
 
 function* updateAstrologerChatStatus(action) {
   try {
     const { payload } = action;
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_astrologer_chat_status,
@@ -291,14 +293,14 @@ function* updateAstrologerChatStatus(action) {
       timer: 2000,
     });
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
   }
 }
 
 function* updateEnquiryStatus(actions) {
   try {
     const { payload } = actions;
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + change_enquiry_status,
@@ -310,14 +312,14 @@ function* updateEnquiryStatus(actions) {
   } catch (e) {
     console.log(e);
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
   }
 }
 
 function* updateAstrologerData(actions) {
   const { payload } = actions;
   try {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_astrologer,
@@ -345,7 +347,7 @@ function* updateAstrologerData(actions) {
   } catch (e) {
     console.log(e);
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
   }
 }
 
@@ -367,7 +369,7 @@ function* verifyUnverifyAstrologer(actions) {
     });
 
     if (result?.isConfirmed) {
-      yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+      // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
       const response = yield call(ApiRequest.postRequest, {
         url: api_url + verify_astrologer,
@@ -396,7 +398,7 @@ function* verifyUnverifyAstrologer(actions) {
   } catch (e) {
     console.log(e);
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
   }
 }
 
@@ -415,7 +417,7 @@ function* deleteAstrologer(actions) {
     });
 
     if (result?.isConfirmed) {
-      yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+      // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
       const response = yield call(ApiRequest.postRequest, {
         url: api_url + delete_astrologer,
@@ -441,14 +443,14 @@ function* deleteAstrologer(actions) {
   } catch (e) {
     console.log(e);
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
   }
 }
 
 function* updateAstrologerSkillData(actions) {
   try {
     const { payload } = actions;
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_astrologer_skill,
@@ -475,13 +477,13 @@ function* updateAstrologerSkillData(actions) {
   } catch (e) {
     console.log(e);
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
   }
 }
 function* updateAstrologerRemediesData(actions) {
   try {
     const { payload } = actions;
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_astrologer_remedies,
@@ -508,13 +510,13 @@ function* updateAstrologerRemediesData(actions) {
   } catch (e) {
     console.log(e);
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
   }
 }
 function* updateAstrologerExpertiesData(actions) {
   try {
     const { payload } = actions;
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_astrologer_experties,
@@ -541,13 +543,13 @@ function* updateAstrologerExpertiesData(actions) {
   } catch (e) {
     console.log(e);
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
   }
 }
 function* updateAstrologerAlllowedCountriesData(actions) {
   try {
     const { payload } = actions;
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_astrologer_allowed_countries,
@@ -574,13 +576,13 @@ function* updateAstrologerAlllowedCountriesData(actions) {
   } catch (e) {
     console.log(e);
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
   }
 }
 function* updateAstrologerPreferredDaysData(actions) {
   try {
     const { payload } = actions;
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_astrologer_preferred_days,
@@ -607,13 +609,13 @@ function* updateAstrologerPreferredDaysData(actions) {
   } catch (e) {
     console.log(e);
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
   }
 }
 function* updateAstrologerProfileImage(actions) {
   try {
     const { payload } = actions;
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_astrologer_profile_image,
@@ -640,13 +642,13 @@ function* updateAstrologerProfileImage(actions) {
   } catch (e) {
     console.log(e);
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
   }
 }
 function* updateAstrologerBankImage(actions) {
   try {
     const { payload } = actions;
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_astrologer_bank_image,
@@ -673,13 +675,13 @@ function* updateAstrologerBankImage(actions) {
   } catch (e) {
     console.log(e);
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
   }
 }
 function* updateAstrologerGalleryImage(actions) {
   try {
     const { payload } = actions;
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_astrologer_gallery_image,
@@ -706,7 +708,7 @@ function* updateAstrologerGalleryImage(actions) {
   } catch (e) {
     console.log(e);
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
   }
 }
 

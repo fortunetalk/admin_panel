@@ -6,16 +6,16 @@ const initialState = {
   astrologerData: null,
   setAstrologerData: null,
   updateAstrologerStatus: null,
-  updateAstrologerSkillData:null,
-  updateAstrologerRemediesData:null,
-  updateAstrologerExpertiesData:null,
-  updateAstrologerAllowedCountriesData:null,
-  updateAstrologerPreferredDaysData:null,
-  updateAstrologerProfileImage:null,
-  updateAstrologerBankImage:null,
-  updateAstrologerIdImage:null,
-  updateAstrologerGalleryImage:null,
-  setAstrologer:null,
+  updateAstrologerSkillData: null,
+  updateAstrologerRemediesData: null,
+  updateAstrologerExpertiesData: null,
+  updateAstrologerAllowedCountriesData: null,
+  updateAstrologerPreferredDaysData: null,
+  updateAstrologerProfileImage: null,
+  updateAstrologerBankImage: null,
+  updateAstrologerIdImage: null,
+  updateAstrologerGalleryImage: null,
+  setAstrologer: null,
   isLoading: false,
 };
 
@@ -26,13 +26,19 @@ const astrologer = (state = initialState, actions) => {
     case actionTypes.SET_IS_LOADING: {
       return {
         ...state,
-        setAstrologerData: payload,
+        isLoading: true,
+      };
+    }
+    case actionTypes.UNSET_IS_LOADING:{
+      return {
+        ...state,
+        isLoading: false,
       };
     }
     case actionTypes.SET_ASTROLOGER: {
       return {
         ...state,
-        isLoading: payload,
+        setAstrologerData: payload,
       };
     }
     case actionTypes.ADD_ASTROLOGER: {

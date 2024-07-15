@@ -43,6 +43,8 @@ function* createCountry(actions) {
         timer: 2000,
       });
       yield put({ type: actionTypes.GET_ALL_COUNTRY, payload: response.data });
+      yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+
     } else if (response.error) {
       // Check if the error is a validation error and display appropriate message
       const errorMessage = response.error.message || "Server Error";
@@ -53,11 +55,10 @@ function* createCountry(actions) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.SET_IS_LOADING, payload: response.error });
+      yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     }
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
     console.log(e);
     Swal.fire({
       icon: "error",
@@ -66,13 +67,13 @@ function* createCountry(actions) {
       showConfirmButton: false,
       timer: 2000,
     });
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: e });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   }
 }
 
 function* getCountries() {
   try {
-    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
     const response = yield ApiRequest.getRequest({
       url: api_url + get_country,
     });
@@ -84,15 +85,15 @@ function* getCountries() {
       });
     }
 
-    // yield put({ type: actionTypes.SET_IS_LOADING, payload: response.data });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   } catch (e) {
-    // yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     console.log(e);
   }
 }
 function* getCountryValue() {
   try {
-    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
     const response = yield ApiRequest.getRequest({
       url: api_url + get_country_value,
     });
@@ -104,9 +105,9 @@ function* getCountryValue() {
       });
     }
 
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: response.data });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   } catch (e) {
-    // yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     console.log(e);
   }
 }
@@ -139,9 +140,9 @@ function* updateCountry(actions) {
         timer: 2000,
       });
     }
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     console.log(e);
   }
 }
@@ -181,14 +182,16 @@ function* updateCountryStatus(action) {
       showConfirmButton: false,
       timer: 2000,
     });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   }
 }
 
 function* deleteCountry(actions) {
   try {
     const { payload } = actions;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const result = yield Swal.fire({
       title: `Are you sure to Delete ${payload?.title}`,
@@ -201,7 +204,6 @@ function* deleteCountry(actions) {
     });
 
     if (result.isConfirmed) {
-      yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
       const response = yield ApiRequest.postRequest({
         url: api_url + delete_country,
@@ -231,16 +233,16 @@ function* deleteCountry(actions) {
       }
     }
 
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     console.log(e);
   }
 }
 function* getCountryStateList(actions) {
   try {
     const { countryId } = actions.payload;
-    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const response = yield ApiRequest.postRequest({
       url: api_url + country_state_list,
@@ -249,16 +251,17 @@ function* getCountryStateList(actions) {
     });
     if (response?.success) {
       yield put({ type: actionTypes.COUNTRY_STATE_LIST, payload: response?.data });
+      yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     }
   } catch (e) {
-    // yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     console.log(e);
   }
 }
 function* getStateCityList(actions) {
   try {
     const { stateId } = actions.payload;
-    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const response = yield ApiRequest.postRequest({
       url: api_url + state_city_list,
@@ -267,9 +270,10 @@ function* getStateCityList(actions) {
     });
     if (response?.success) {
       yield put({ type: actionTypes.STATE_CITY_LIST, payload: response?.data });
+      yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     }
   } catch (e) {
-    // yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     console.log(e);
   }
 }
@@ -291,7 +295,7 @@ function* createState(actions) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.SET_IS_LOADING, payload: response.data });
+      yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     } else if (response.error) {
       // Check if the error is a validation error and display appropriate message
       const errorMessage = response.error.message || "Server Error";
@@ -302,11 +306,11 @@ function* createState(actions) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.SET_IS_LOADING, payload: response.error });
+      yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     }
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     console.log(e);
     Swal.fire({
       icon: "error",
@@ -315,13 +319,13 @@ function* createState(actions) {
       showConfirmButton: false,
       timer: 2000,
     });
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: e });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: e });
   }
 }
 
 function* getStates() {
   try {
-    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
     const response = yield ApiRequest.getRequest({
       url: api_url + get_state,
     });
@@ -333,9 +337,9 @@ function* getStates() {
       });
     }
 
-    // yield put({ type: actionTypes.SET_IS_LOADING, payload: response.data });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   } catch (e) {
-    // yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     console.log(e);
   }
 }
@@ -368,9 +372,9 @@ function* updateState(actions) {
         timer: 2000,
       });
     }
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     console.log(e);
   }
 }
@@ -390,7 +394,7 @@ function* updateStateStatus(action) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.UPDATE_STATE_STATUS, payload: response });
+      yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     } else {
       Swal.fire({
         icon: "error",
@@ -410,7 +414,7 @@ function* updateStateStatus(action) {
       timer: 2000,
     });
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   }
 }
 
@@ -459,9 +463,9 @@ function* deleteState(actions) {
       }
     }
 
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     console.log(e);
   }
 }
@@ -513,7 +517,7 @@ function* createCity(actions) {
 
 function* getCities() {
   try {
-    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
     const response = yield ApiRequest.getRequest({
       url: api_url + get_city,
     });
@@ -525,9 +529,9 @@ function* getCities() {
       });
     }
 
-    // yield put({ type: actionTypes.SET_IS_LOADING, payload: response.data });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   } catch (e) {
-    // yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     console.log(e);
   }
 }
@@ -568,7 +572,7 @@ function* updateCityStatus(action) {
       timer: 2000,
     });
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   }
 }
 function* updateCity(actions) {
@@ -599,9 +603,9 @@ function* updateCity(actions) {
         timer: 2000,
       });
     }
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     console.log(e);
   }
 }
@@ -650,9 +654,9 @@ function* deleteCity(actions) {
       }
     }
 
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     console.log(e);
   }
 }

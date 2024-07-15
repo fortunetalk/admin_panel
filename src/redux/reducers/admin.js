@@ -2,7 +2,7 @@ import * as actionTypes from "../actionTypes";
 
 const initialState = {
     adminData: null,
-    loading: false,
+    isLoading: false,
     error: null
 };
 
@@ -10,6 +10,18 @@ const admin = (state = initialState, action) => {
     const { payload, type, error } = action;
 
     switch (type) {
+        case actionTypes.SET_IS_LOADING: {
+            return {
+              ...state,
+              isLoading: true,
+            };
+          }
+          case actionTypes.UNSET_IS_LOADING:{
+            return {
+              ...state,
+              isLoading: false,
+            };
+          }
         case actionTypes.ADMIN_LOGIN_REQUEST:
         case actionTypes.ADMIN_LOGOUT_REQUEST:
         case actionTypes.ADMIN_CHANGE_PASSWORD_REQUEST:

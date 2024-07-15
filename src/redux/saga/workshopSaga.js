@@ -36,8 +36,8 @@ function* addWorkshop(actions) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.SET_IS_LOADING, payload: response.error });
     }
+
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   } catch (e) {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });

@@ -12,15 +12,21 @@ const liveClass = (state = initialState, actions) => {
     case actionTypes.SET_IS_LOADING: {
       return {
         ...state,
-        isLoading: payload,
+        isLoading: true,
       };
-    } 
+    }
+    case actionTypes.UNSET_IS_LOADING: {
+      return {
+        ...state,
+        isLoading: false,
+      };
+    }
     case actionTypes.CREATE_LIVE_CLASS: {
       return {
         ...state,
         liveClassData: payload,
       };
-    } 
+    }
 
     case actionTypes.LIVE_CLASS_LIST: {
       return {
@@ -30,32 +36,32 @@ const liveClass = (state = initialState, actions) => {
     }
 
     case actionTypes.UPDATE_LIVE_CLASS: {
-      
+
       return {
-          ...state,
-          liveClassData: payload,
+        ...state,
+        liveClassData: payload,
       };
-  }
-  case actionTypes.UPDATE_LIVE_CLASS_STATUS: {
-   
-    return {
+    }
+    case actionTypes.UPDATE_LIVE_CLASS_STATUS: {
+
+      return {
         ...state,
         liveClassData: payload,
-    };
-}
-  case actionTypes.UPDATE_LIVE_CLASS_ADMIN_STATUS: {
-   
-    return {
+      };
+    }
+    case actionTypes.UPDATE_LIVE_CLASS_ADMIN_STATUS: {
+
+      return {
         ...state,
         liveClassData: payload,
-    };
-}
-  case actionTypes.DELETE_LIVE_CLASS: {
-    return {
-      ...state,
-      liveClassData: payload,
-    };
-  }
+      };
+    }
+    case actionTypes.DELETE_LIVE_CLASS: {
+      return {
+        ...state,
+        liveClassData: payload,
+      };
+    }
 
     default: {
       return state;

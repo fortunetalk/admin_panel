@@ -36,6 +36,7 @@ import gift from "./gift";
 import privacyPolicy from "./privacyPolicy";
 import admin from './admin';
 import request from "./request";
+import astrologerBanner from "./astrologerBanner";
 
 const rootReducer = combineReducers({
   admin,
@@ -65,6 +66,7 @@ const rootReducer = combineReducers({
   productBanner,
   poojaBanner,
   callChatBanner,
+  astrologerBanner,
   testimonial,
   demoClass,
   liveClass,

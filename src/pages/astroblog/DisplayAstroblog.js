@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useStyles } from "../../assets/styles.js";
+import {propStyles, useStyles } from "../../assets/styles.js";
 import {
   Avatar,
   Grid,
@@ -21,14 +21,13 @@ import {
   getBlogs,
   updateBlog,
   deleteBlog,
-  deleteMultipleBlog
+  deleteMultipleBlog,
+  updateBlogStatus
 } from "../../redux/Actions/blogActions.js";
 
 const DisplayAstroblog = ({
   appBlogData,
   getBlogs,
-  updateBlog,
-  deleteBlog,
   deleteMultipleBlog
 }) => {
   const classes = useStyles();
@@ -155,123 +154,83 @@ const DisplayAstroblog = ({
     }
   };
 
-  const handleDeleteSelected = async () => {
-    const idsToDelete = selectedRows.map((row) => row._id);
+  // const handleDeleteSelected = async () => {
+  //   const idsToDelete = selectedRows.map((row) => row._id);
+  //   Swal.fire({
+  //     title: "Are you sure?",
+  //     text: "You won't be able to revert this!",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#3085d6",
+  //     cancelButtonColor: "#d33",
+  //     confirmButtonText: "Yes, delete it!",
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       dispatch(deleteMultipleBlog(idsToDelete));
+  //       setSelectedRows([]);
+  //       setIsAllSelected(false);
+  //     }
+  //   });
+  // };
+
+  const handleClickOpen = (rowData) => {
+
     Swal.fire({
-      title: "Are you sure?",
+      title: 'Are you sure to Change the Status?',
       text: "You won't be able to revert this!",
-      icon: "warning",
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Change it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(deleteMultipleBlog(idsToDelete));
-        setSelectedRows([]);
-        setIsAllSelected(false);
+        const newStatus = rowData.status === 'Active' ? 'InActive' : 'Active';
+        dispatch(updateBlogStatus({ blogId: rowData._id, status: newStatus }));
       }
     });
   };
 
-  const displayTable = () => {
+  function displayTable() {
     return (
       <Grid container spacing={1}>
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
-            title={
-              <>
-                
-                <Button variant="outlined" color="error" onClick={handleDeleteSelected} disabled={selectedRows.length === 0}>
-                  Delete Selected
-                </Button>
-              </>
-            }
-            data={appBlogData || []}
+            title="Blog List"
+            data={appBlogData}
             columns={[
-              {
-                title: (
-                  <input
-                    type="checkbox"
-                    checked={isAllSelected}
-                    onChange={handleSelectAll}
-                  />
-                ),
-                render: (rowData) => (
-                  <input
-                    type="checkbox"
-                    checked={selectedRows.includes(rowData)}
-                    onChange={() => {
-                      const isSelected = selectedRows.includes(rowData);
-                      if (isSelected) {
-                        setSelectedRows(
-                          selectedRows.filter((row) => row !== rowData)
-                        );
-                      } else {
-                        setSelectedRows([...selectedRows, rowData]);
-                      }
-                    }}
-                  />
-                ),
-                editable: "never",
-              },
               {
                 title: "S.No",
                 editable: "never",
-                render: (rowData) => appBlogData.indexOf(rowData) + 1,
+                render: rowData => Array.isArray(appBlogData) ? appBlogData.indexOf(rowData) + 1 : 'N/A'
               },
-              {
-                title: "Title",
-                field: "title",
-              },
-              {
-                title: "Description",
-                field: "description",
-              },
+              { title: "Title", field: "title" },
               {
                 title: "Image",
                 field: "image",
                 render: (rowData) => (
-                  <img
-                    src={`/${rowData.image}`}
-                    alt="Blog"
-                    style={{ width: 50, borderRadius: "50%" }}
+                  <Avatar
+                    src={rowData.image}
+                    style={{ width: 50, height: 50 }}
+                    variant="rounded"
                   />
                 ),
               },
+
               {
-                title: "Status",
-                field: "status",
-                render: (rowData) =>
-                  rowData.status === "InActive" ? "InActive" : "Active",
+                title: "Description",
+                field: "description",
               },
-              {
-                title: "Created By",
-                field: "created_by",
-              },
-              {
-                title: "Created At",
-                field: "createdAt",
-                render: (rowData) =>
-                  new Date(rowData.createdAt).toLocaleString(),
-              },
+              { title: "Status", field: "status", render: rowData => (
+                <div className={classes.statusButton}
+                style={{ backgroundColor: rowData.status === 'Active' ? '#90EE90' : '#FF7F7F '}}
+                onClick={() => handleClickOpen(rowData)}>
+                  {rowData.status}
+                </div>
+              )},
             ]}
-            options={{
-              sorting: true,
-              search: true,
-              searchFieldAlignment: "right",
-              filtering: true,
-              paging: true,
-              pageSize: 5,
-              paginationType: "stepped",
-              showFirstLastPageButtons: true,
-              paginationPosition: "bottom",
-              exportButton: false,
-              addRowPosition: "first",
-              actionsColumnIndex: -1,
-              selection: false,
-              showSelectAllCheckbox: false,
-            }}
+            options={propStyles.tableStyles}
+            style={{ fontSize: "1.4rem" }}
             actions={[
               {
                 icon: "edit",
@@ -281,7 +240,13 @@ const DisplayAstroblog = ({
               {
                 icon: "delete",
                 tooltip: "Delete Blog",
-                onClick: (event, rowData) => handleDelete(rowData._id),
+                onClick: (event, rowData) =>
+                  dispatch(
+                    deleteBlog({
+                      blogId: rowData?._id,
+                      title: rowData?.title,
+                    })
+                  ),
               },
               {
                 icon: () => (
@@ -290,16 +255,16 @@ const DisplayAstroblog = ({
                     <div className={classes.addButtontext}>Add New</div>
                   </div>
                 ),
-                tooltip: "Add Blog",
+                tooltip: "Add Gift",
                 isFreeAction: true,
-                onClick: () => navigate("/AddAstroblog"),
+                onClick: () => navigate("/addGift"),
               },
             ]}
           />
         </Grid>
       </Grid>
     );
-  };
+  }
 
   const editModal = () => {
     return (

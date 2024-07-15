@@ -46,13 +46,18 @@ function* addAstrologer(actions) {
       data: payload?.data,
     });
 
-    if (response) {
+    if (response?.success) {
       Swal.fire({
         icon: "success",
         title: "Astrologer Added Successfully",
         showConfirmButton: false,
         timer: 2000,
-      });
+      },
+
+      // window.location.href = "#/astrologers/displayAstrologer"
+    );
+
+
       yield put({ type: actionTypes.GET_ALL_ASTROLOGER, payload: response });
       yield call(payload.callback);
     } else {

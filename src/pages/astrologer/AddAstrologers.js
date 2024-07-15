@@ -89,7 +89,7 @@ export const AddAstrologers = ({
   countryStateData,
   stateCityData,
   countryValueData,
-  // isLoading,
+  isLoading,
 }) => {
   var classes = useStyles();
   const dispatch = useDispatch();
@@ -526,9 +526,9 @@ export const AddAstrologers = ({
       formData.append("profileImage", profilePhoto.bytes);
       formData.append("bankProofImage", bankProof.bytes);
       formData.append("idProofImage", idProof.bytes);
-      galleryFiles.forEach((imgFile) => {
-        formData.append("galleryImage", imgFile);
-      });
+      // galleryFiles.forEach((imgFile) => {
+      //   formData.append("galleryImage", imgFile);
+      // });
 
       for (let i = 0; i < countryValue.length; i++) {
         formData.append(`allowedCountryId[${i}]`, countryValue[i]);
@@ -558,7 +558,7 @@ export const AddAstrologers = ({
           reset: handleReset,
         })
       );
-      navigate('/astrologers/displayAstrologer')
+      // navigate('/astrologers/displayAstrologer')
       console.log("data submitted");
       // }
     } catch (e) {
@@ -1691,8 +1691,8 @@ export const AddAstrologers = ({
             </Grid>
             <Grid item lg={6} sm={6} md={6} xs={6}>
               <div onClick={handleSubmit} className={classes.submitbutton}>
-                {/* {isLoading ? <CircularProgress size={24} /> : ""}
-                 */}
+                    {isLoading ? <CircularProgress size={24} /> : ""}
+
                 Submit
               </div>
             </Grid>

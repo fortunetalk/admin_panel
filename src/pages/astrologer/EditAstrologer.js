@@ -32,7 +32,6 @@ import { connect, useDispatch } from "react-redux";
 import * as AstrologerActions from "../../redux/Actions/astrologerActions.js";
 import {
   getAstrologer,
-  setAllAstrologer,
 } from "../../redux/Actions/astrologerActions.js";
 import * as ExpertiesActions from "../../redux/Actions/expertiesActions.js";
 import * as SkillActions from "../../redux/Actions/skillsActions.js";
@@ -44,7 +43,7 @@ const preferredDaysList = ["Mon", "Tues", "Wed", "Thu", "Fri", "Sat", "Sun"];
 // const languageData = ["Hindi", "English"];
 
 const optionsList = ["Consultation", "Teaching", "Pandit at Home", "All"];
-const languageData = [
+const languages = [
   "Hindi",
   "English",
   "Assamese",
@@ -244,8 +243,6 @@ export const EditAstrologer = ({
     }
   }, [astrologerData]); 
   
-  
-console.log(state)
 
 
   useEffect(() => {
@@ -254,16 +251,6 @@ console.log(state)
     dispatch(ExpertiesActions.getActiveExpertiesData());
     dispatch(RemedyActions.getActiveRemediesData());
     dispatch(SettingActions.getCountries());
-
-    if (astrologerData?.skillId) {
-      updateState({ skills: astrologerData.skillId });
-    }
-    if (astrologerData?.expertiseId) {
-      updateState({ expertise: astrologerData.expertiseId });
-    }
-    if (astrologerData?.remediesId) {
-      updateState({ remedies: astrologerData.remediesId });
-    }
   }, []);
 
   const [profilePhoto, setProfilePhoto] = useState({
@@ -284,11 +271,23 @@ console.log(state)
 
   useEffect(() => {
     dispatch(SettingActions.getCountryValue());
+    if (astrologerData?.skillId) {
+      updateState({ skills: astrologerData.skillId });
+    }
+    if (astrologerData?.expertiseId) {
+      updateState({ expertise: astrologerData.expertiseId });
+    }
+    if (astrologerData?.remediesId) {
+      updateState({ remedies: astrologerData.remediesId });
+    }
     if (astrologerData?.preferredDays) {
       updateState({ preferredDays: astrologerData.preferredDays });
     }
     if (astrologerData?.allowedCountryId) {
       updateState({ countryValue: astrologerData.allowedCountryId });
+    }
+    if (astrologerData?.language) {
+      updateState({ language: astrologerData.language });
     }
     if (astrologerData?.profileImage) {
       setProfilePhoto({
@@ -729,11 +728,14 @@ console.log(state)
     setOpenDays(false);
   };
 
+
+  
+
+
   const {
     error,
     name,
     displayName,
-    realName,
     email,
     phoneNumber,
     follower_count,
@@ -759,7 +761,6 @@ console.log(state)
     accountType,
     addharNumber,
     about,
-    youtubeLink,
     address,
     working,
     panNumber,
@@ -1865,37 +1866,36 @@ console.log(state)
         </Grid>
 
         {/* <Grid item lg={4} sm={12} md={12} xs={12}>
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Language</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="language"
-              value={language}
-              multiple
-              error={error?.language ? true : false}
-              onFocus={() => handleError("language", null)}
-              onChange={(e) => updateState({ language: e.target.value })}
-              InputLabelProps={{ shrink: true }}
-
-            >
-              <MenuItem disabled defaultValue={null}>
-                -Select Language-
-              </MenuItem>
-              {languageData &&
-                languageData.map((item,index) => {
-                  return (
-                    <MenuItem key={index} value={item}>
-                      {item}
+              <FormControl fullWidth>
+                <InputLabel id="demo-multiple-checkbox-label">
+                  Language
+                </InputLabel>
+                <Select
+                  labelId="demo-multiple-checkbox-label"
+                  id="demo-multiple-checkbox"
+                  multiple
+                  value={language}
+                  onChange={(e) => updateState({ language: e.target.value })}
+                  onFocus={() => handleError("language", null)}
+                  renderValue={(selected) => selected.join(", ")}
+                  error={!!error.language}
+                >
+                  <MenuItem disabled value="">
+                    -Select Language-
+                  </MenuItem>
+                  {languages.map((item) => (
+                    <MenuItem key={item} value={item}>
+                      <Checkbox checked={language.indexOf(item) > -1} />
+                      <ListItemText primary={item} />
                     </MenuItem>
-                  );
-                })}
-            </Select>
-          
-          </FormControl>
-        
-        </Grid> */}
-  
+                  ))}
+                </Select>
+                {error.language && (
+                  <div className={classes.errorstyles}>{error.language}</div>
+                )}
+              </FormControl>
+            </Grid> */}
+
         <Grid item lg={4} sm={12} md={12} xs={12}>
           <TextField
             label="Address"
@@ -2072,6 +2072,7 @@ const mapStateToProps = (state) => ({
   countryStateData: state.setting.countryStateData,
   stateCityData: state.setting.stateCityData,
   countryValueData: state.setting.countryValueData,
+
 });
 
 // const mapDispatchToProps = (dispatch) => ({ dispatch });

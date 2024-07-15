@@ -101,12 +101,11 @@ const AddMCQ = ({ dispatch, isLoading }) => {
         choices: choices,
         liveClassId: liveClassId,
       };
-  
+
       dispatch(MCQActions.addMCQ(formData));
       handleReset();
     }
   };
-  
 
   const handleReset = useCallback(() => {
     setQuestion("");
@@ -196,7 +195,7 @@ const AddMCQ = ({ dispatch, isLoading }) => {
             </Grid>
           ))}
 
-<Grid item lg={6} sm={6} md={6} xs={6}>
+          <Grid item lg={6} sm={6} md={6} xs={6}>
             <div onClick={handleSubmit} className={classes.submitbutton}>
               {isLoading ? <CircularProgress size={24} /> : "Submit"}
             </div>
@@ -213,11 +212,9 @@ const AddMCQ = ({ dispatch, isLoading }) => {
 };
 
 const mapStateToProps = (state) => ({
+  isLoading: state.mcq.isLoading,
+});
 
-    isLoading: state.mcq.isLoading,
-  
-  });
-  
-  const mapDispatchToProps = (dispatch) => ({ dispatch });
+const mapDispatchToProps = (dispatch) => ({ dispatch });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddMCQ);

@@ -36,6 +36,7 @@ import privacyPolicySaga from "./privacyPolicySaga";
 
 import adminLogin from './adminSaga';
 import requestSaga from "./requestSaga";
+import astrologerBannerSaga from "./astrologerBannerSaga";
 export default function* rootSaga() {
   yield all([
     reviewSaga(),
@@ -74,5 +75,6 @@ export default function* rootSaga() {
     privacyPolicySaga(),
     adminLogin(),
     requestSaga(),
+    astrologerBannerSaga(),
   ]);
 }

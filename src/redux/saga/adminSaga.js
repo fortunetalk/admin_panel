@@ -45,8 +45,6 @@ function* adminLogin(action) {
   }
 }
 
-
-
 function* adminLogout() {
   try {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });

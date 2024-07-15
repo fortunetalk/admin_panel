@@ -244,7 +244,7 @@ const routes = [
   },
   {
     path: "/displayAstroblog",
-    name: "AstroBlog",
+    name: "Blog",
     icon: <BiAbacus />,
   },
   {
@@ -257,6 +257,11 @@ const routes = [
     name: "Banner",
     icon: <BiAbacus />,
     subRoutes: [
+      {
+        path: "/displayAstrologerBanner",
+        name: "Astrologer Banner",
+        icon: <BiAbacus />,
+      },
       {
         path: "/displayCourseBanner",
         name: "Course Banner",

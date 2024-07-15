@@ -1,8 +1,8 @@
 // export const base_url = "http://165.232.182.110:4000/";
 // export const api_url = "http://165.232.182.110:4000/api/";
 
-export const base_url = "https://node-backend-live.onrender.com/";
-export const api_url = "https://node-backend-live.onrender.com/api/";
+export const base_url = "http://localhost:8000/";
+export const api_url = "http://localhost:8000/api/";
 
 
 // admin login 
@@ -97,10 +97,11 @@ export const get_all_users = "admin/get-all-user"
 export const add_notifications = "admin/add-notifications"
 export const get_all_notifications = "admin/get-all-notifications"
 
-export const get_all_customers = "admin/get-all-customers"
-export const ban_customer = "admin/change-banned-status"
+export const add_customer = "admin/customer/add"
+export const get_all_customers = "admin/customer"
+export const change_customer_status = "admin/customer/change_status"
 export const online_offline_customer = "admin/set-customer-online"
-export const update_customer = "admin/update-customer-data"
+export const update_customer = "admin/customer/update"
 export const delete_customer = "admin/delete-customer"
 export const customer_chat_history = "customers/customers-chat-history"
 export const customer_call_history = "customers/customers-call-history"
@@ -172,15 +173,16 @@ export const change_pooja_status = 'admin/pooja/change-status'
 //BLOG CATEGORY
 export const create_blog_category='admin/add-blog-category'
 export const blog_category_list='admin/blog-category-list'
-export const update_blog_category='admin/blog-category/update/'
-export const delete_blog_category='admin/blog-category/delete/'
+export const update_blog_category='admin/blog-category/update'
+export const delete_blog_category='admin/blog-category/delete'
 export const active_blog_category='admin/active-blog-category'
 
 //BLOG
-export const create_blog='admin/add-blog'
-export const blog_list='admin/blog-list'
-export const update_blog='admin/update-blog/'
-export const delete_blog='admin/delete-blog'
+export const create_blog='admin/add'
+export const blog_list='admin/blog'
+export const update_blog='admin/update'
+export const update_blog_status='admin/blog/change_status'
+export const delete_blog='admin/blog/delete'
 export const delete_multiple_blog='admin/delete-multiple-blog'
 
 //country
@@ -267,6 +269,13 @@ export const ecommerce_banner_list='admin/ecommerce-banner'
 export const update_ecommerce_banner = 'admin/ecommerce-banner/update'
 export const change_ecommerce_banner_status = 'admin/ecommerce-banner/change-status'
 export const delete_ecommerce_banner = 'admin/ecommerce-banner/delete'
+
+//ASTROLOGER BANNER
+export const create_astrologer_banner='admin/astrologer-banner/add'
+export const astrologer_banner_list='admin/astrologer-banner'
+export const update_astrologer_banner = 'admin/astrologer-banner/update'
+export const change_astrologer_banner_status = 'admin/astrologer-banner/change-status'
+export const delete_astrologer_banner = 'admin/astrologer-banner/delete'
 
 //PRODUCT BANNER
 export const create_product_banner='admin/product-banner/add'

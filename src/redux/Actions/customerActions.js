@@ -5,6 +5,10 @@ export const getAllCustomer = payload =>({
     payload
 })
 
+export const addCustomer = payload =>({
+    type: actionTypes.ADD_CUSTOMER,
+    payload
+})
 export const setAllCustomer = payload =>({
     type: actionTypes.SET_ALL_CUSTOMER,
     payload

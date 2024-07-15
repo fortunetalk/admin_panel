@@ -15,6 +15,7 @@ const initialState = {
   updateAstrologerBankImage:null,
   updateAstrologerIdImage:null,
   updateAstrologerGalleryImage:null,
+  setAstrologer:null,
   isLoading: false,
 };
 
@@ -23,6 +24,12 @@ const astrologer = (state = initialState, actions) => {
 
   switch (type) {
     case actionTypes.SET_IS_LOADING: {
+      return {
+        ...state,
+        setAstrologerData: payload,
+      };
+    }
+    case actionTypes.SET_ASTROLOGER: {
       return {
         ...state,
         isLoading: payload,

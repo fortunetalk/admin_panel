@@ -124,6 +124,8 @@ import ProfileRequest from "./pages/request/ProfileRequest";
 import PhoneRequest from "./pages/request/PhoneRequest";
 import BankRequest from "./pages/request/BankRequest";
 import GalleryRequest from "./pages/request/GalleryRequest";
+import AddAstrologerBanner from "./pages/banner/AddAstrologerBanner";
+import DisplayAstrologerBanner from "./pages/banner/DisplayAstrologerBanner";
 
 function App() {
   return (
@@ -282,6 +284,8 @@ function App() {
           <Route path="/displayProductBanner" element={<DisplayProductBanner/>} />
           <Route path="/addPoojaCategoryBanner" element={<AddPoojaCategoryBanner/>} />
           <Route path="/displayPoojaBanner" element={<DisplayPoojaBanner/>} />
+          <Route path="/addAstrologerBanner" element={<AddAstrologerBanner/>} />
+          <Route path="/displayAstrologerBanner" element={<DisplayAstrologerBanner/>} />
 
           <Route path="/displayTestimonial" element={<DisplayTestimonial/>} />
           <Route path="/addTestimonial" element={<AddTestimonial/>} />

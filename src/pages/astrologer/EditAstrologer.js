@@ -47,6 +47,48 @@ const preferredDaysList = ["Mon", "Tues", "Wed", "Thu", "Fri", "Sat", "Sun"];
 // const languageData = ["Hindi", "English"];
 
 const optionsList = ["Consultation", "Teaching", "Pandit at Home", "All"];
+const languages = [
+  "Hindi",
+  "English",
+  "Assamese",
+  "Bengali",
+  "Bodo",
+  "Dogri",
+  "Gujarati",
+  "Kannada",
+  "Kashmiri",
+  "Konkani",
+  "Malayalam",
+  "Meithei",
+  "Marathi",
+  "Nepali",
+  "Oriya",
+  "Punjabi",
+  "Sanskrit",
+  "Santali",
+  "Sindhi",
+  "Tamil",
+  "Telugu",
+  "Urdu",
+  "Kokborok",
+  "Mizo",
+  "Khasi",
+  "Garo",
+  "Angika",
+  "Bhojpuri",
+  "Magadhi",
+  "Rajasthani",
+  "Marwari",
+  "Mewari",
+  "Shekhavati",
+  "Bhili",
+  "Gondi",
+  "Kodava",
+  "Kutchi",
+  "Tulu",
+  "Sankethi",
+  "Mahl",
+];
 
 export const EditAstrologer = ({
   activeSkillsData,
@@ -54,9 +96,14 @@ export const EditAstrologer = ({
   activeRemediesData,
   languageData,
   astrologerData,
+  countryData,
+  countryStateData,
+  stateCityData,
+  countryValueData,
 }) => {
   var classes = useStyles();
   const { astrologerId } = useParams();
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -64,6 +111,8 @@ export const EditAstrologer = ({
   const [open, setOpen] = useState(false);
   const [openExpertise, setOpenExpertise] = useState(false);
   const [openRemedies, setOpenRemedies] = useState(false);
+  const [openCountry, setOpenCountry] = useState(false);
+  const [openDays, setOpenDays] = useState(false);
 
   const backendGalleryImages = astrologerData?.galleryImage || [];
 
@@ -104,7 +153,7 @@ export const EditAstrologer = ({
     commissionCallPrice: "",
     chatPrice: "",
     commissionChatPrice: "",
-    astrologerType: "",
+    astrologerType: [],
     skills: [],
     remedies: [],
     offers: [],
@@ -127,26 +176,86 @@ export const EditAstrologer = ({
     companyLiveVideoPrice: "",
     liveCallPrice: "",
     companyLiveCallPrice: "",
-    astrologerCallPriceDollar: "",
-    astrologerChatPriceDollar: "",
-    companyCallPriceDollar: "",
-    liveVideoPriceDollar: "",
-    companyChatPriceDollar: "",
 
     astrologyQualification: "",
-    companyLiveVideoPriceDollar: "",
-    liveCallPriceDollar: "",
-    companyVoicepriceDollar: "",
     gallery: "",
     options: [],
   });
 
   useEffect(() => {
+    if (astrologerId) {
+      getAstrologer(astrologerId); 
+
+    }
+  }, [astrologerId]);
+
+
+
+  useEffect(() => {
+    if (astrologerData) {
+
+      setState({
+        ...astrologerData, 
+        displayName:astrologerData?.displayName,
+        name: astrologerData?.name,
+        email: astrologerData?.email,
+        phoneNumber: astrologerData?.phoneNumber,
+        follower_count: astrologerData?.follower_count,
+        currencyType: astrologerData?.currencyType,
+        gender: astrologerData?.gender,
+        password: astrologerData?.password,
+        dateOfBirth: astrologerData?.dateOfBirth,
+        experience: astrologerData?.experience,
+        phoneCode: astrologerData?.phoneCode,
+        zipCode: astrologerData?.zipCode,
+        startTime: astrologerData?.startTime,
+        endTime: astrologerData?.endTime,
+        rating: astrologerData?.rating,
+        language: astrologerData?.language,
+        address: astrologerData?.address,
+        country: astrologerData?.country,
+        countryState: astrologerData?.countryState,
+        city: astrologerData?.city,
+        currencyValue: astrologerData?.currencyValue,
+        bankName: astrologerData?.bankName,
+        bankAcountNumber: astrologerData?.bankAcountNumber,
+        accountType: astrologerData?.accountType,
+        ifscCode: astrologerData?.ifscCode,
+        accountHolderName: astrologerData?.accountHolderName,
+        panNumber: astrologerData?.panNumber,
+        addharNumber: astrologerData?.addharNumber,
+        callPrice: astrologerData?.callPrice,
+        chatPrice: astrologerData?.chatPrice,
+        astrologerType: astrologerData?.astrologerType,
+        about: astrologerData?.about,
+        working: astrologerData?.working,
+        educationQualification: astrologerData?.educationQualification,
+        followersValue: astrologerData?.followersValue,
+        astrologerCallPrice: astrologerData?.astrologerCallPrice,
+        companyCallPrice: astrologerData?.companyCallPrice,
+        astrologerChatPrice: astrologerData?.astrologerChatPrice,
+        companyChatPrice: astrologerData?.companyChatPrice,
+        liveVideoPrice: astrologerData?.liveVideoPrice,
+        companyLiveVideoPrice: astrologerData?.companyLiveVideoPrice,
+        liveCallPrice: astrologerData?.liveCallPrice,
+        companyLiveCallPrice: astrologerData?.companyLiveCallPrice,
+        astrologyQualification: astrologerData?.astrologyQualification,
+
+      });
+    }
+  }, [astrologerData]); 
+  
+  
+console.log(state)
+
+
+  useEffect(() => {
     dispatch(SkillActions.getActiveSkillData());
-    dispatch(getAstrologer(astrologerId));
+
     dispatch(ExpertiesActions.getActiveExpertiesData());
     dispatch(RemedyActions.getActiveRemediesData());
-    dispatch(LanguageActions.getAllLanguage());
+    dispatch(SettingActions.getCountries());
+    dispatch(SettingActions.getCountryValue());
     if (astrologerData?.skillId) {
       updateState({ skills: astrologerData.skillId });
     }
@@ -159,7 +268,7 @@ export const EditAstrologer = ({
   }, []);
 
 
-  const [profilePhoto, setprofilePhoto] = useState({
+  const [profilePhoto, setProfilePhoto] = useState({
     // file: logo_icon,
     file: astrologerData?.profileImage,
     bytes: "",
@@ -174,6 +283,18 @@ export const EditAstrologer = ({
     file: astrologerData?.idProofImage,
     bytes: "",
   });
+
+  const handleCountryValue = (item) => {
+    if (countryValue.some((selectedItem) => selectedItem === item._id)) {
+      let skilData = countryValue.filter(
+        (countryValue) => countryValue !== item?._id
+      );
+      updateState({ countryValue: skilData });
+    } else {
+      updateState({ countryValue: [...countryValue, item?._id] });
+    }
+    handleError("countryValue", null);
+  };
 
   const handleChange = (field) => (event) => {
     const { value } = event.target;
@@ -246,6 +367,7 @@ export const EditAstrologer = ({
     }
     handleError("preferredDays", null);
   };
+
   const handleOptions = (item) => {
     if (options.some((selectedItem) => selectedItem === item)) {
       const option = preferredDays.filter(
@@ -260,12 +382,11 @@ export const EditAstrologer = ({
 
   const handleProfile = (e) => {
     if (e.target.files && e.target.files.length > 0) {
-      setprofilePhoto({
+      setProfilePhoto({
         file: URL.createObjectURL(e.target.files[0]),
         bytes: e.target.files[0],
       });
       handleError("profilePhoto", null);
-      handleError("bankProof", null);
     }
   };
 
@@ -602,98 +723,54 @@ export const EditAstrologer = ({
 
   const handleSubmit = async () => {
     try {
-      if (handleValidation()) {
-        // setIsLoading(true)
-        let formData = new FormData();
-        formData.append("displayName", displayName);
-        formData.append("name", realName);
-        formData.append("email", email);
-        formData.append("phoneNumber", phoneNumber);
-        formData.append("alternateNumber", follower_count);
-        formData.append("currencyType", currencyType);
-        formData.append("gender", gender);
-        formData.append("password", password);
-        formData.append("dateOfBirth", dateOfBirth);
-        formData.append("experience", experience);
-        formData.append("address", address);
-        formData.append("country", country);
-        formData.append("state", countryState);
-        formData.append("city", city);
-        formData.append("free_min", currencyValue);
-        formData.append("workingOnOtherApps", working);
-        formData.append("profileImage", profilePhoto.bytes);
-        formData.append("bank_proof_image", bankProof.bytes);
-        formData.append("id_proof_image", idProof.bytes);
-        formData.append("account_name", bankName);
-        formData.append("account_number", bankAcountNumber);
-        formData.append("account_type", accountType);
-        formData.append("IFSC_code", ifscCode);
-        formData.append("account_holder_name", accountHolderName);
-        formData.append("panCard", panNumber);
-        formData.append("addharNumber", addharNumber);
-        formData.append("commission_remark", astrologerType);
-        formData.append("short_bio", shortBio);
-        formData.append("long_bio", longBio);
-        formData.append("startTime", startTime);
-        formData.append("endTime", endTime);
-        formData.append("zipCode", zipCode);
-        formData.append("about", about);
-        formData.append("country_phone_code", phoneCode);
-        formData.append("rating", rating);
-        formData.append("educationQualification", educationQualification);
-        formData.append("followersValue", followersValue);
-        formData.append("indiaDisplayPrice", indiaDisplayPrice);
-        formData.append("displayPriceInternational", displayPriceInternational);
-        formData.append("astrologerCallPrice", astrologerCallPrice);
-        formData.append("companyCallPrice", companyCallPrice);
-        formData.append("astrologerChatPrice", astrologerChatPrice);
-        formData.append("companyChatPrice", companyChatPrice);
-        formData.append("liveVideoPrice", liveVideoPrice);
-        formData.append("companyLiveVideoPrice", companyLiveVideoPrice);
-        formData.append("liveCallPrice", liveCallPrice);
-        formData.append("companyLiveCallPrice", companyLiveCallPrice);
-        formData.append("astrologerCallPriceDollar", astrologerCallPriceDollar);
-        formData.append("astrologerChatPriceDollar", astrologerChatPriceDollar);
-        formData.append("companyCallPriceDollar", companyCallPriceDollar);
-        formData.append("liveVideoPriceDollar", liveVideoPriceDollar);
-        formData.append("companyChatPriceDollar", companyChatPriceDollar);
-        formData.append("astrologyQualification", astrologyQualification);
-        formData.append(
-          "companyLiveVideoPriceDollar",
-          companyLiveVideoPriceDollar
-        );
-        formData.append("liveCallPriceDollar", liveCallPriceDollar);
-        formData.append("gallery", gallery);
-        formData.append("options", options);
-
-        for (let i = 0; i < preferredDays.length; i++) {
-          formData.append(`preferredDays[${i}]`, preferredDays[i]);
-        }
-        for (let i = 0; i < language.length; i++) {
-          formData.append(`language[${i}]`, language[i]);
-        }
-        for (let i = 0; i < skills.length; i++) {
-          formData.append(`skill[${i}]`, skills[i]);
-        }
-        for (let i = 0; i < remedies.length; i++) {
-          formData.append(`remedies[${i}]`, remedies[i]);
-        }
-        for (let i = 0; i < expertise.length; i++) {
-          formData.append(`expertise[${i}]`, expertise[i]);
-        }
-        for (let i = 0; i < mainExpertise.length; i++) {
-          formData.append(`mainExpertise[${i}]`, mainExpertise[i]);
-        }
-
-        dispatch(
-          AstrologerActions.addAstrologer({
-            data: formData,
-            reset: handleReset,
-          })
-        );
-      }
-    } catch (e) {
-      console.log(e);
+      const data = {
+        astrologerId,
+        displayName,
+        name,
+        email,
+        password,
+        phoneNumber,
+        phoneCode,
+        gender,
+        dateOfBirth,
+        experience,
+        address,
+        currencyType,
+        currencyValue,
+        country,
+        state: countryState,
+        city,
+        zipCode,
+        about,
+        educationQualification,
+        astrologyQualification,
+        follower_count,
+        rating,
+        bankAcountNumber,
+        bankName,
+        accountType,
+        ifscCode,
+        accountHolderName,
+        addharNumber,
+        panNumber,
+        chatPrice,
+        companyChatPrice,
+        callPrice,
+        companyCallPrice,
+        liveVideoPrice,
+        companyLiveVideoPrice,
+        liveCallPrice,
+        companyLiveCallPrice,
+        languages: language 
+      };
+  
+      dispatch(
+        AstrologerActions.updateAstrologerData(data)
+      );
+  
+      console.log("Data submitted");
+    } catch (error) {
+      console.error("Error submitting data:", error);
     }
   };
 
@@ -772,7 +849,7 @@ export const EditAstrologer = ({
       options: [],
     });
 
-    setprofilePhoto({
+    setProfilePhoto({
       file: logo_icon,
       bytes: "",
     });
@@ -823,6 +900,26 @@ export const EditAstrologer = ({
     }
   };
 
+  const handleClickOpenCountry = () => {
+    setOpenCountry(true);
+  };
+
+  const handleCloseCountry = (event, reason) => {
+    if (reason !== "backdropClick") {
+      setOpenCountry(false);
+    }
+  };
+
+  const handleUpdateCountry = () => {
+    var formData = new FormData();
+    formData.append("astrologerId", astrologerId);
+    for (let i = 0; i < countryValue.length; i++) {
+      formData.append(`allowedCountry[${i}]`, countryValue[i]);
+    }
+    dispatch(AstrologerActions.updateAstrologerAllowedCountry(formData));
+    handleCloseCountry();
+  };
+
   const handleUpdateSkills = () => {
     var formData = new FormData();
     formData.append("astrologerId", astrologerId);
@@ -851,6 +948,28 @@ export const EditAstrologer = ({
     }
     dispatch(AstrologerActions.updateAstrologerRemedies(formData));
     handleCloseRemediesDialog();
+  };
+
+  const handleClickOpenDays = () => {
+    setOpenDays(true);
+  };
+
+  const handleCloseDays = (event, reason) => {
+    if (reason !== "backdropClick") {
+      setOpenDays(false);
+    }
+    
+  };
+
+  const handleUpdateDays = () => {
+
+    var formData = new FormData();
+    formData.append("astrologerId", astrologerId);
+    for (let i = 0; i < preferredDays.length; i++) {
+      formData.append(`preferredDays[${i}]`, preferredDays[i]);
+    }
+    dispatch(AstrologerActions.updateAstrologerPreferredDays(formData));
+    setOpenDays(false);
   };
 
   const {
@@ -888,40 +1007,22 @@ export const EditAstrologer = ({
     working,
     panNumber,
     preferredDays,
-    longBio,
-    shortBio,
+
     skills,
-    mainExpertise,
     expertise,
     remedies,
     callPrice,
     chatPrice,
-    commissionCallPrice,
-    commissionChatPrice,
-    astrologerType,
-    consultationPrice,
     educationQualification,
-    followersValue,
-    indiaDisplayPrice,
-    displayPriceInternational,
-    astrologerCallPrice,
+
     companyCallPrice,
-    astrologerChatPrice,
     companyChatPrice,
     liveVideoPrice,
     companyLiveVideoPrice,
     liveCallPrice,
     companyLiveCallPrice,
-    astrologerCallPriceDollar,
-    astrologerChatPriceDollar,
-    companyCallPriceDollar,
-    liveVideoPriceDollar,
-    companyChatPriceDollar,
 
     astrologyQualification,
-    companyLiveVideoPriceDollar,
-    liveCallPriceDollar,
-    gallery,
     options,
   } = state;
 
@@ -932,38 +1033,76 @@ export const EditAstrologer = ({
         <Grid container spacing={2}>
           {astrologerInputsInfo()}
           <Grid item lg={4} sm={12} md={12} xs={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Preferred Days</FormLabel>
+      <FormControl component="fieldset">
+        <FormLabel component="legend">Preferred Days</FormLabel>
+        <FormGroup aria-label="position" row>
+          {preferredDaysList &&
+            preferredDaysList.map((item) => (
+              <div className={classes.chips} key={item}>
+                <FormControlLabel
+                  value={item}
+                  className={classes.checkbox}
+                  control={
+                    <Checkbox
+                      checked={preferredDays && preferredDays.includes(item)}
+                      onChange={() => handlePreferredDays(item)}
+                    />
+                  }
+                  label={item}
+                  labelPlacement="end"
+                />
+              </div>
+            ))}
+        </FormGroup>
+      </FormControl>
+      {error.preferredDays && (
+        <div className={classes.errorstyles}>{error.preferredDays}</div>
+      )}
+      <Button
+        variant="outlined"
+        color="primary"
+        className={classes.updateButton}
+        onClick={handleClickOpenDays}
+      >
+        Update Preferred Days
+      </Button>
 
-              <FormGroup aria-label="position" row>
-                {preferredDaysList &&
-                  preferredDaysList.map((item) => {
-                    return (
-                      <div className={classes.chips}>
-                        <FormControlLabel
-                          defaultValue={item}
-                          className={classes.checkbox}
-                          control={
-                            <Checkbox
-                              checked={
-                                preferredDays && preferredDays.includes(item)
-                              }
-                              onChange={() => handlePreferredDays(item)}
-                            />
-                          }
-                          label={item}
-                          // style={{margin: 30}}
-                          labelPlacement="end"
-                        />
-                      </div>
-                    );
-                  })}
-              </FormGroup>
-            </FormControl>
-            {error.preferredDays && (
-              <div className={classes.errorstyles}>{error.preferredDays}</div>
-            )}
-          </Grid>
+      <Dialog open={openDays} onClose={handleCloseDays}>
+        <DialogTitle>Update Preferred Days</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please update the preferred days below:
+          </DialogContentText>
+          <FormGroup aria-label="position" row>
+            {preferredDaysList &&
+              preferredDaysList.map((item) => (
+                <div className={classes.chips} key={item}>
+                  <FormControlLabel
+                    value={item}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        checked={preferredDays && preferredDays.includes(item)}
+                        onChange={() => handlePreferredDays(item)}
+                      />
+                    }
+                    label={item}
+                    labelPlacement="end"
+                  />
+                </div>
+              ))}
+          </FormGroup>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDays} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleUpdateDays} color="primary">
+            Update
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Grid>
 
           <Grid item lg={4} sm={12} md={12} xs={12}>
             <FormControl component="fieldset">
@@ -981,30 +1120,105 @@ export const EditAstrologer = ({
                 row
                 aria-label="position"
                 name="position"
-                defaultValue={working}
+                value={working}
                 onChange={(e) => updateState({ working: e.target.value })}
               >
                 <FormControlLabel
-                  defaultValue={"No"}
+                  value={"No"}
                   control={<Radio color="primary" />}
                   label="No"
                 />
                 <FormControlLabel
-                  defaultValue={"Yes"}
+                  value={"Yes"}
                   control={<Radio color="primary" />}
                   label="Yes"
                 />
               </RadioGroup>
             </FormControl>
           </Grid>
-          {/* days & working */}
 
+
+
+      <Grid item lg={12} sm={12} md={12} xs={12}>
+      <FormControl component="fieldset">
+        <FormLabel component="legend">Available Countries</FormLabel>
+        <FormGroup aria-label="position" row>
+          {countryValueData &&
+            countryValueData.map((item) => (
+              <div className={classes.chips} key={item._id}>
+                <FormControlLabel
+                  value={item.title}
+                  className={classes.checkbox}
+                  control={
+                    <Checkbox
+                      checked={countryValue && countryValue.includes(item._id)}
+                      onChange={() => handleCountryValue(item)}
+                    />
+                  }
+                  label={`${item.title} ${item.countryValue}X`}
+                  labelPlacement="end"
+                />
+              </div>
+            ))}
+        </FormGroup>
+      </FormControl>
+      {error.countryValue && (
+        <div className={classes.errorstyles}>{error.countryValue}</div>
+      )}
+      
+
+      <Dialog open={openCountry} onClose={handleCloseCountry}>
+        <DialogTitle>Update Available Countries</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please update the available countries below:
+          </DialogContentText>
+          <FormGroup aria-label="position" row>
+            {countryValueData &&
+              countryValueData.map((item) => (
+                <div className={classes.chips} key={item._id}>
+                  <FormControlLabel
+                    value={item.title}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        checked={countryValue && countryValue.includes(item._id)}
+                        onChange={() => handleCountryValue(item)}
+                      />
+                    }
+                    label={`${item.title} ${item.countryValue}X`}
+                    labelPlacement="end"
+                  />
+                </div>
+              ))}
+          </FormGroup>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseCountry} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleUpdateCountry} color="primary">
+            Update
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Grid>
+    <Grid item lg={12} sm={12} md={12} xs={12}>
+    <Button
+        variant="outlined"
+        color="primary"
+        className={classes.updateButton}
+        onClick={handleClickOpenCountry}
+      >
+        Update Available Countries
+      </Button>
+    </Grid>
           <Grid
             item
-            lg={3}
-            sm={3}
-            md={3}
-            xs={3}
+            lg={2}
+            sm={2}
+            md={2}
+            xs={2}
             className={classes.uploadContainer}
           >
             <Grid
@@ -1020,7 +1234,15 @@ export const EditAstrologer = ({
                 type="file"
               />
             </Grid>
-            <div className={classes.errorstyles}>{error.profilePhoto}</div>
+          </Grid>
+          <Grid item lg={1} sm={1} md={1} xs={1}>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleUploadProfileImage}
+            >
+              Update Image
+            </Button>
           </Grid>
           <Grid item lg={1} sm={1} md={1} xs={1}>
             <Avatar
@@ -1031,10 +1253,10 @@ export const EditAstrologer = ({
           </Grid>
           <Grid
             item
-            lg={3}
-            sm={3}
-            md={3}
-            xs={3}
+            lg={2}
+            sm={2}
+            md={2}
+            xs={2}
             className={classes.uploadContainer}
           >
             <Grid
@@ -1050,8 +1272,17 @@ export const EditAstrologer = ({
                 type="file"
               />
             </Grid>
-            <div className={classes.errorstyles}>{error.bankProof}</div>
           </Grid>
+          <Grid item lg={1} sm={1} md={1} xs={1}>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleUploadBankProofImage}
+            >
+              Update Image
+            </Button>
+          </Grid>
+
           <Grid item lg={1} sm={1} md={1} xs={1}>
             <Avatar
               color={Colors.primaryDark}
@@ -1080,7 +1311,6 @@ export const EditAstrologer = ({
                 type="file"
               />
             </Grid>
-            <div className={classes.errorstyles}>{error.idProof}</div>
           </Grid>
           <Grid item lg={1} sm={1} md={1} xs={1}>
             <Avatar
@@ -1093,7 +1323,7 @@ export const EditAstrologer = ({
           <Grid item lg={3} sm={12} md={12} xs={12}>
             <TextField
               label="Bank Account Number"
-              defaultValue={astrologerData?.bankAcountNumber || ""}
+              value={bankAcountNumber}
               variant="outlined"
               fullWidth
               type="number"
@@ -1101,20 +1331,20 @@ export const EditAstrologer = ({
               onChange={(e) =>
                 updateState({ bankAcountNumber: e.target.value })
               }
-              helperText={error.bankAcountNumber}
-              error={error.bankAcountNumber ? true : false}
+              helperText={error?.bankAcountNumber}
+              error={error?.bankAcountNumber ? true : false}
               InputLabelProps={{ shrink: true }}
             />
           </Grid>
           <Grid item lg={3} sm={12} md={12} xs={12}>
             <TextField
               label="Enter Bank Name"
-              defaultValue={astrologerData?.bankName || ""}
+              value={bankName}
               variant="outlined"
               fullWidth
               onChange={(e) => updateState({ bankName: e.target.value })}
-              helperText={error.bankName}
-              error={!!error.bankName ? true : false}
+              helperText={error?.bankName}
+              error={!!error?.bankName ? true : false}
               InputLabelProps={{ shrink: true }}
             />
           </Grid>
@@ -1130,11 +1360,11 @@ export const EditAstrologer = ({
                 value={accountType}
                 onFocus={() => handleError("accountType", null)}
                 onChange={(e) => updateState({ accountType: e.target.value })}
-                helperText={error.accountType}
-                error={error.accountType ? true : false}
+                helperText={error?.accountType}
+                error={error?.accountType ? true : false}
                 InputLabelProps={{ shrink: true }}
               >
-                <div className={classes.errorstyles}>{error.accountType}</div>
+                <div className={classes.errorstyles}>{error?.accountType}</div>
                 <MenuItem value="">-Select Account type-</MenuItem>
                 <MenuItem value="saving">Saving</MenuItem>
                 <MenuItem value="current">Current</MenuItem>
@@ -1144,12 +1374,12 @@ export const EditAstrologer = ({
           <Grid item lg={3} sm={12} md={12} xs={12}>
             <TextField
               label="Enter IFSC Code"
-              defaultValue={astrologerData?.ifscCode}
+              value={ifscCode}
               variant="outlined"
               fullWidth
               onChange={(e) => updateState({ ifscCode: e.target.value })}
-              helperText={error.ifscCode}
-              error={error.ifscCode ? true : false}
+              helperText={error?.ifscCode}
+              error={error?.ifscCode ? true : false}
               InputLabelProps={{ shrink: true }}
             />
           </Grid>
@@ -1157,26 +1387,26 @@ export const EditAstrologer = ({
           <Grid item lg={4} sm={12} md={12} xs={12}>
             <TextField
               label="Account Holder Name"
-              defaultValue={astrologerData?.accountHolderName || ""}
+              value={accountHolderName}
               variant="outlined"
               fullWidth
               onChange={(e) =>
                 updateState({ accountHolderName: e.target.value })
               }
-              helperText={error.accountHolderName}
-              error={error.accountHolderName ? true : false}
+              helperText={error?.accountHolderName}
+              error={error?.accountHolderName ? true : false}
               InputLabelProps={{ shrink: true }}
             />
           </Grid>
           <Grid item lg={4} sm={12} md={12} xs={12}>
             <TextField
               label="PAN card Number"
-              defaultValue={astrologerData?.panNumber}
+              value={panNumber}
               variant="outlined"
               fullWidth
               onChange={(e) => updateState({ panNumber: e.target.value })}
-              helperText={error.panNumber}
-              error={error.panNumber ? true : false}
+              helperText={error?.panNumber}
+              error={error?.panNumber ? true : false}
               InputLabelProps={{ shrink: true }}
             />
           </Grid>
@@ -1185,12 +1415,12 @@ export const EditAstrologer = ({
               type="number"
               label="Adhar card Number"
               inputMode="numeric"
-              defaultValue={astrologerData?.addharNumber || ""}
+              value={addharNumber}
               variant="outlined"
               fullWidth
               onChange={(e) => updateState({ addharNumber: e.target.value })}
-              helperText={error.addharNumber}
-              error={error.addharNumber ? true : false}
+              helperText={error?.addharNumber}
+              error={error?.addharNumber ? true : false}
               InputLabelProps={{ shrink: true }}
             />
           </Grid>
@@ -1198,14 +1428,14 @@ export const EditAstrologer = ({
             <TextField
               type="text"
               label="Educational Qualification"
-              defaultValue={astrologerData?.educationQualification}
+              value={educationQualification}
               variant="outlined"
               fullWidth
               onChange={(e) =>
                 updateState({ educationQualification: e.target.value })
               }
-              helperText={error.educationQualification}
-              error={error.educationQualification ? true : false}
+              helperText={error?.educationQualification}
+              error={error?.educationQualification ? true : false}
               InputLabelProps={{ shrink: true }}
             />
           </Grid>
@@ -1213,42 +1443,42 @@ export const EditAstrologer = ({
             <TextField
               type="text"
               label="Astrological Qualification"
-              defaultValue={astrologerData?.astrologyQualification || ""}
+              value={astrologyQualification}
               variant="outlined"
               fullWidth
               onChange={(e) =>
                 updateState({ astrologyQualification: e.target.value })
               }
-              helperText={error.astrologyQualification}
-              error={error.astrologyQualification ? true : false}
+              helperText={error?.astrologyQualification}
+              error={error?.astrologyQualification ? true : false}
               InputLabelProps={{ shrink: true }}
             />
           </Grid>
-          <Grid item lg={4} sm={12} md={12} xs={12}>
+          {/* <Grid item lg={4} sm={12} md={12} xs={12}>
             <TextField
               label="Astrologer Type"
-              defaultValue={astrologerData?.astrologerType}
+              value={astrologerType}
               variant="outlined"
               fullWidth
               onFocus={() => handleError("astrologerType", null)}
               onChange={(e) => updateState({ astrologerType: e.target.value })}
-              helperText={error.astrologerType}
-              error={error.astrologerType ? true : false}
+              helperText={error?.astrologerType}
+              error={error?.astrologerType ? true : false}
               InputLabelProps={{ shrink: true }}
             />
-          </Grid>
+          </Grid> */}
 
           <Grid item lg={4} sm={12} md={12} xs={12}>
             <TextField
               type="number"
               label="Call Price"
               inputMode="numeric"
-              defaultValue={astrologerData?.callPrice}
+              value={callPrice}
               variant="outlined"
               fullWidth
               onChange={(e) => updateState({ callPrice: e.target.value })}
-              helperText={error.callPrice}
-              error={error.callPrice ? true : false}
+              helperText={error?.callPrice}
+              error={error?.callPrice ? true : false}
               InputLabelProps={{ shrink: true }}
             />
           </Grid>
@@ -1257,14 +1487,14 @@ export const EditAstrologer = ({
               type="number"
               label="Company Call Price"
               inputMode="numeric"
-              defaultValue={astrologerData?.companyCallPrice}
+              value={companyCallPrice}
               variant="outlined"
               fullWidth
               onChange={(e) =>
                 updateState({ companyCallPrice: e.target.value })
               }
-              helperText={error.companyCallPrice}
-              error={error.companyCallPrice ? true : false}
+              helperText={error?.companyCallPrice}
+              error={error?.companyCallPrice ? true : false}
               InputLabelProps={{ shrink: true }}
             />
           </Grid>
@@ -1273,12 +1503,12 @@ export const EditAstrologer = ({
               type="number"
               label="Chat Price"
               inputMode="numeric"
-              defaultValue={astrologerData?.chatPrice}
+              value={chatPrice}
               variant="outlined"
               fullWidth
               onChange={(e) => updateState({ chatPrice: e.target.value })}
-              helperText={error.chatPrice}
-              error={error.chatPrice ? true : false}
+              helperText={error?.chatPrice}
+              error={error?.chatPrice ? true : false}
               InputLabelProps={{ shrink: true }}
             />
           </Grid>
@@ -1287,14 +1517,14 @@ export const EditAstrologer = ({
               type="number"
               label="Company Chat Price"
               inputMode="numeric"
-              defaultValue={astrologerData?.companyChatPrice}
+              value={companyChatPrice}
               variant="outlined"
               fullWidth
               onChange={(e) =>
                 updateState({ companyChatPrice: e.target.value })
               }
-              helperText={error.companyChatPrice}
-              error={error.companyChatPrice ? true : false}
+              helperText={error?.companyChatPrice}
+              error={error?.companyChatPrice ? true : false}
               InputLabelProps={{ shrink: true }}
             />
           </Grid>
@@ -1303,12 +1533,12 @@ export const EditAstrologer = ({
               type="number"
               label="Live Video Price"
               inputMode="numeric"
-              defaultValue={astrologerData?.liveVideoPrice}
+              value={liveVideoPrice}
               variant="outlined"
               fullWidth
               onChange={(e) => updateState({ liveVideoPrice: e.target.value })}
-              helperText={error.liveVideoPrice}
-              error={error.liveVideoPrice ? true : false}
+              helperText={error?.liveVideoPrice}
+              error={error?.liveVideoPrice ? true : false}
               InputLabelProps={{ shrink: true }}
             />
           </Grid>
@@ -1317,14 +1547,14 @@ export const EditAstrologer = ({
               type="number"
               label="Company Live Video Price"
               inputMode="numeric"
-              defaultValue={astrologerData?.companyLiveVideoPrice}
+              value={companyLiveVideoPrice}
               variant="outlined"
               fullWidth
               onChange={(e) =>
                 updateState({ companyLiveVideoPrice: e.target.value })
               }
-              helperText={error.companyLiveVideoPrice}
-              error={error.companyLiveVideoPrice ? true : false}
+              helperText={error?.companyLiveVideoPrice}
+              error={error?.companyLiveVideoPrice ? true : false}
               InputLabelProps={{ shrink: true }}
             />
           </Grid>
@@ -1333,12 +1563,12 @@ export const EditAstrologer = ({
               type="number"
               label="Live Call Price"
               inputMode="numeric"
-              defaultValue={astrologerData?.liveCallPrice}
+              value={liveCallPrice}
               variant="outlined"
               fullWidth
               onChange={(e) => updateState({ liveCallPrice: e.target.value })}
-              helperText={error.liveCallPrice}
-              error={error.liveCallPrice ? true : false}
+              helperText={error?.liveCallPrice}
+              error={error?.liveCallPrice ? true : false}
               InputLabelProps={{ shrink: true }}
             />
           </Grid>
@@ -1347,14 +1577,14 @@ export const EditAstrologer = ({
               type="number"
               label="Company Live Call Price"
               inputMode="numeric"
-              defaultValue={astrologerData?.companyLiveCallPrice}
+              value={companyLiveCallPrice}
               variant="outlined"
               fullWidth
               onChange={(e) =>
                 updateState({ companyLiveCallPrice: e.target.value })
               }
-              helperText={error.companyLiveCallPrice}
-              error={error.companyLiveCallPrice ? true : false}
+              helperText={error?.companyLiveCallPrice}
+              error={error?.companyLiveCallPrice ? true : false}
               InputLabelProps={{ shrink: true }}
             />
           </Grid>
@@ -1377,7 +1607,6 @@ export const EditAstrologer = ({
                             />
                           }
                           label={item}
-                          // style={{margin: 30}}
                           labelPlacement="end"
                         />
                       </div>
@@ -1385,9 +1614,7 @@ export const EditAstrologer = ({
                   })}
               </FormGroup>
             </FormControl>
-            {error.options && (
-              <div className={classes.errorstyles}>{error.options}</div>
-            )}
+         
           </Grid>
           <Grid
             item
@@ -1397,82 +1624,81 @@ export const EditAstrologer = ({
             xs={12}
             className={classes.uploadContainer}
           >
-            {galleryImages.length === 0 ? (
-              <Grid component="label" className={classes.uploadImageButton}>
-                Change Gallery Images
-                <input
-                  onChange={handleGallery}
-                  hidden
-                  accept="image/*"
-                  type="file"
-                  multiple
+            <Grid component="label" className={classes.uploadImageButton}>
+              Change Gallery Images
+              <input
+                onChange={handleGallery}
+                hidden
+                accept="image/*"
+                type="file"
+                multiple
+              />
+            </Grid>
+            <div
+              className={classes.imagePreviewContainer}
+              style={{ display: "flex" }}
+            >
+              {galleryImages.map((image, index) => (
+                <img
+                  key={index}
+                  src={image.file}
+                  alt={`Gallery ${index}`}
+                  className={classes.previewImage}
+                  style={{
+                    height: "50px",
+                    width: "50px",
+                    objectFit: "cover",
+                    margin: "5px",
+                  }}
                 />
-              </Grid>
-            ) : (
+              ))}
+            </div>
+          </Grid>
+          <Grid item lg={12} sm={12} md={12} xs={12}>
+            {galleryImages.length === 0 && (
               <div
                 className={classes.imagePreviewContainer}
-                style={{
-                  display: "flex",
-                  height: "50px",
-                  width: "50px",
-                  objectFit: "cover",
-                }}
+                style={{ display: "flex", flexWrap: "wrap" }}
               >
-                {galleryImages.map((image, index) => (
+                {backendGalleryImages.map((image, index) => (
                   <img
+                    style={{
+                      padding: "1rem",
+                      height: "100px",
+                      width: "100px",
+                      objectFit: "cover",
+                    }}
                     key={index}
-                    src={image.file}
+                    src={image}
                     alt={`Gallery ${index}`}
                     className={classes.previewImage}
                   />
                 ))}
               </div>
             )}
-
-            <div className={classes.errorStyle}>{error.gallery}</div>
           </Grid>
           <Grid item lg={12} sm={12} md={12} xs={12}>
-            {galleryImages.length === 0 ? (
-              <div
-                className={classes.imagePreviewContainer}
-                style={{
-                  display: "flex",
-                  height: "100px",
-                  width: "100px",
-                  objectFit: "cover",
-                }}
-              >
-                Gallery Images
-                {backendGalleryImages.map((image, index) => (
-                  <>
-                    <img
-                      style={{ padding: "1rem" }}
-                      key={index}
-                      src={image}
-                      alt={`Gallery ${index}`}
-                      className={classes.previewImage}
-                    />
-                  </>
-                ))}
-              </div>
-            ) : (
-              <> </>
-            )}
+            {/* <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleUploadGalleryImages}
+            >
+              Update Gallery Image
+            </Button> */}
           </Grid>
-
           <Grid item lg={12} sm={12} md={12} xs={12}>
             <TextField
               id="outlined-multiline-static"
               multiline
               rows={4}
               label="About"
-              defaultValue={astrologerData?.about || ""}
+              value={about}
               variant="outlined"
               fullWidth
               onFocus={() => handleError("about", null)}
               onChange={(e) => updateState({ about: e.target.value })}
-              helperText={error.about}
-              error={error.about ? true : false}
+              helperText={error?.about}
+              error={error?.about ? true : false}
               InputLabelProps={{ shrink: true }}
             />
           </Grid>
@@ -1501,9 +1727,7 @@ export const EditAstrologer = ({
                   })}
               </FormGroup>
             </FormControl>
-            {error.skills && (
-              <div className={classes.errorstyles}>{error.skills}</div>
-            )}
+          
             <Button
               variant="outlined"
               color="primary"
@@ -1572,9 +1796,7 @@ export const EditAstrologer = ({
                   ))}
               </FormGroup>
             </FormControl>
-            {error.remedies && (
-              <div className={classes.errorstyles}>{error.remedies}</div>
-            )}
+            
             <Button
               variant="outlined"
               color="primary"
@@ -1643,9 +1865,7 @@ export const EditAstrologer = ({
                   ))}
               </FormGroup>
             </FormControl>
-            {error.expertise && (
-              <div className={classes.errorstyles}>{error.expertise}</div>
-            )}
+          
             <Button
               variant="outlined"
               color="primary"
@@ -1734,51 +1954,50 @@ export const EditAstrologer = ({
         <Grid item lg={4} sm={12} md={12} xs={12}>
           <TextField
             label="Display Name"
-            defaultValue={astrologerData?.displayName}
+            defaultValue={astrologerData?.displayName || ""}
             variant="outlined"
             fullWidth
-            error={!!error.displayName ? true : false}
-            onFocus={() => handleError("display name", null)}
+            error={!!error.displayName}
+            onFocus={() => handleError("displayName", null)}
             onChange={(e) => updateState({ displayName: e.target.value })}
-            helperText={error.displayName}
+
+            helperText={error?.displayName}
             InputLabelProps={{ shrink: true }}
+            value={displayName}
           />
         </Grid>
         <Grid item lg={4} sm={12} md={12} xs={12}>
           <TextField
             label="Name"
-            defaultValue={astrologerData?.name}
+            value={name}
             variant="outlined"
             fullWidth
-            error={!!error.name ? true : false}
             onFocus={() => handleError("name", null)}
             onChange={(e) => updateState({ name: e.target.value })}
-            helperText={error.name}
+            helperText={error?.name}
             InputLabelProps={{ shrink: true }}
           />
         </Grid>
         <Grid item lg={4} sm={12} md={12} xs={12}>
           <TextField
             label="Enter Email"
-            defaultValue={astrologerData?.email}
+            value={email}
             variant="outlined"
             fullWidth
-            error={!!error.email ? true : false}
             onFocus={() => handleError("email", null)}
             onChange={(e) => updateState({ email: e.target.value })}
-            helperText={error.email}
+            helperText={error?.email}
             InputLabelProps={{ shrink: true }}
           />
         </Grid>
         <Grid item lg={4} sm={12} md={12} xs={12}>
           <TextField
             label="Enter Phone Number"
-            defaultValue={astrologerData?.phoneNumber}
+            value={phoneNumber}
             variant="outlined"
             fullWidth
             type="number"
-            helperText={error.phoneNumber}
-            error={error.phoneNumber ? true : false}
+            helperText={error?.phoneNumber}
             onFocus={() => handleError("phoneNumber", null)}
             onChange={(e) => updateState({ phoneNumber: e.target.value })}
             InputLabelProps={{ shrink: true }}
@@ -1793,6 +2012,7 @@ export const EditAstrologer = ({
               id="demo-simple-select"
               label="Currency Type"
               value={currencyType}
+              defaultValue={astrologerData?.currencyType}
               error={error.currencyType ? true : false}
               onFocus={() => handleError("currencyType", null)}
               onChange={(e) => updateState({ currencyType: e.target.value })}
@@ -1801,9 +2021,7 @@ export const EditAstrologer = ({
               <MenuItem value="INR">INR</MenuItem>
               <MenuItem value="USD">USD</MenuItem>
             </Select>
-            {error.currencyType && (
-              <div className={classes.errorstyles}>{error.currencyType}</div>
-            )}
+         
           </FormControl>
         </Grid>
         <Grid item lg={4} md={12} sm={12} xs={12}>
@@ -1814,7 +2032,6 @@ export const EditAstrologer = ({
               id="gender-select"
               label="Gender"
               value={state.gender}
-              error={!!state.error.gender}
               onFocus={() => handleError("gender", null)}
               onChange={handleChange("gender")}
             >
@@ -1823,29 +2040,26 @@ export const EditAstrologer = ({
               <MenuItem value="Female">Female</MenuItem>
               <MenuItem value="Other">Other</MenuItem>
             </Select>
-            {state.error.gender && (
-              <div className={classes.errorstyles}>{state.error.gender}</div>
-            )}
+          
           </FormControl>
         </Grid>
         <Grid item lg={4} sm={12} md={12} xs={12}>
           <TextField
             label="Password"
             type="password"
-            defaultValue={astrologerData?.password}
+            value={password}
             variant="outlined"
             fullWidth
             onFocus={() => handleError("password", null)}
             onChange={(e) => updateState({ password: e.target.value })}
-            helperText={error.password}
-            error={error.password ? true : false}
+            helperText={error?.password}
             InputLabelProps={{ shrink: true }}
           />
         </Grid>
         <Grid item lg={4} sm={12} md={12} xs={12}>
           <TextField
             type="date"
-            defaultValue={astrologerData?.dateOfBirth}
+            value={dateOfBirth}
             variant="outlined"
             // inputProps={{ max: "2020-05-31" }}
             inputProps={{
@@ -1854,45 +2068,26 @@ export const EditAstrologer = ({
             fullWidth
             onFocus={() => handleError("dateOfBirth", null)}
             onChange={(e) => updateState({ dateOfBirth: e.target.value })}
-            helperText={error.dateOfBirth}
-            error={error.dateOfBirth ? true : false}
+            helperText={error?.dateOfBirth}
+            error={error?.dateOfBirth ? true : false}
             InputLabelProps={{ shrink: true }}
           />
         </Grid>
-        <Grid item lg={4} md={12} sm={12} xs={12}>
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">
-              Experience in Years
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="Experience in years"
-              value={experience}
-              type="text"
-              onFocus={() => handleError("experience", null)}
-              onChange={(e) => updateState({ experience: e.target.value })}
-              error={error.experience ? true : false} // Highlight the field if there's an error
-              InputLabelProps={{ shrink: true }}
-            >
-              <MenuItem value="">-Experience in Years-</MenuItem>
-              <MenuItem value="1">1</MenuItem>
-              <MenuItem value="2">2</MenuItem>
-              <MenuItem value="3">3</MenuItem>
-              <MenuItem value="4">4</MenuItem>
-              <MenuItem value="5">5</MenuItem>
-              <MenuItem value="6">6</MenuItem>
-              <MenuItem value="7">7</MenuItem>
-              <MenuItem value="8">8</MenuItem>
-              <MenuItem value="9">9</MenuItem>
-              <MenuItem value="10">10</MenuItem>
-            </Select>
-            {error.experience && (
-              <div className={classes.errorstyles}>{error.experience}</div>
-            )}
-          </FormControl>
-        </Grid>
         <Grid item lg={4} sm={12} md={12} xs={12}>
+          <TextField
+            label="Experience"
+            defaultValue={astrologerData?.experience}
+            variant="outlined"
+            fullWidth
+            onFocus={() => handleError("experience", null)}
+            onChange={(e) => updateState({ experience: e.target.value })}
+            helperText={error.experience}
+            error={error.experience ? true : false}
+            InputLabelProps={{ shrink: true }}
+          />
+        </Grid>
+
+        {/* <Grid item lg={4} sm={12} md={12} xs={12}>
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Language</InputLabel>
             <Select
@@ -1900,39 +2095,35 @@ export const EditAstrologer = ({
               id="demo-simple-select"
               label="language"
               value={language}
-              multiple
-              error={error.language ? true : false}
-              onFocus={() => handleError("language", null)}
               onChange={(e) => updateState({ language: e.target.value })}
-              InputLabelProps={{ shrink: true }}
+              onFocus={() => handleError("language", null)}
+              renderValue={(selected) => selected.join(", ")}
+              error={!!error.language}
             >
               <MenuItem disabled defaultValue={null}>
                 -Select Language-
               </MenuItem>
-              {languageData &&
-                languageData.map((item) => {
-                  return (
-                    <MenuItem key={item?._id} value={item?.languageName}>
-                      {item?.languageName}
-                    </MenuItem>
-                  );
-                })}
+              {languages.map((item) => (
+                <MenuItem key={item} value={item}>
+                  <Checkbox checked={language.indexOf(item) > -1} />
+                  <ListItemText primary={item} />
+                </MenuItem>
+              ))}
             </Select>
-            {error.language && (
-              <div className={classes.errorstyles}>{error.language}</div>
-            )}
+          
           </FormControl>
-        </Grid>
+        
+        </Grid> */}
+  
         <Grid item lg={4} sm={12} md={12} xs={12}>
           <TextField
             label="Address"
-            defaultValue={astrologerData?.address}
+            value={address}
             variant="outlined"
             fullWidth
             onFocus={() => handleError("address", null)}
             onChange={(e) => updateState({ address: e.target.value })}
-            helperText={error.address}
-            error={error.address ? true : false}
+            helperText={error?.address}
             InputLabelProps={{ shrink: true }}
           />
         </Grid>
@@ -1944,17 +2135,21 @@ export const EditAstrologer = ({
               id="demo-simple-select"
               label="Country"
               value={country}
-              error={error.country ? true : false}
-              onFocus={() => handleError("country", null)}
+              onFocus={(e) => handleError("country", null)}
               onChange={(e) => updateState({ country: e.target.value })}
-              InputLabelProps={{ shrink: true }}
+              error={error.country ? true : false}
             >
-              <MenuItem value="">-Select Country-</MenuItem>
-              <MenuItem value="India">India</MenuItem>
-              <MenuItem value="Brazil">Brazil</MenuItem>
+              <MenuItem disabled value={null}>
+                -Select your Country-
+              </MenuItem>
+              {countryData?.map((item) => (
+                <MenuItem key={item.id} value={item._id}>
+                  {item.title}
+                </MenuItem>
+              ))}
             </Select>
-            {error.gender && (
-              <div className={classes.errorstyles}>{error.gender}</div>
+            {error.country && (
+              <div className={classes.errorstyles}>{error.country}</div>
             )}
           </FormControl>
         </Grid>
@@ -1968,17 +2163,15 @@ export const EditAstrologer = ({
               value={countryState}
               onFocus={() => handleError("state", null)}
               onChange={(e) => updateState({ countryState: e.target.value })}
-              error={error.state ? true : false}
-              InputLabelProps={{ shrink: true }}
+              error={!!error.countryState}
+              disabled={!country}
             >
               <MenuItem>-Select your State-</MenuItem>
               <MenuItem value="Jammu & Kashmir">Jammu & Kashmir</MenuItem>
               <MenuItem value="Uttar Pradesh">Uttar Pradesh</MenuItem>
               <MenuItem value="UttraKhand">UttraKhand</MenuItem>
             </Select>
-            {error.state && (
-              <div className={classes.errorstyles}>{error.state}</div>
-            )}
+            
           </FormControl>
         </Grid>
         <Grid item lg={4} md={12} sm={12} xs={12}>
@@ -1992,7 +2185,7 @@ export const EditAstrologer = ({
               onFocus={() => handleError("city", null)}
               onChange={(e) => updateState({ city: e.target.value })}
               error={error.city ? true : false}
-              InputLabelProps={{ shrink: true }}
+              disabled={!countryState}
             >
               <MenuItem value="">-Select your City-</MenuItem>
               <MenuItem value="Meerut">Meerut</MenuItem>
@@ -2000,49 +2193,47 @@ export const EditAstrologer = ({
               <MenuItem value="Noida">Noida</MenuItem>
               {/* Add more cities as needed */}
             </Select>
-            {error.city && (
-              <div className={classes.errorstyles}>{error.city}</div>
-            )}
+          
           </FormControl>
         </Grid>
 
         <Grid item lg={4} sm={12} md={12} xs={12}>
           <TextField
             label="Currency Value"
-            defaultValue={astrologerData?.currencyValue || ""}
+            value={currencyValue}
             variant="outlined"
             type="text"
             fullWidth
             onChange={(e) => updateState({ currencyValue: e.target.value })}
-            helperText={error.currencyValue}
-            error={error.currencyValue ? true : false}
+            helperText={error?.currencyValue}
+            error={error?.currencyValue ? true : false}
             InputLabelProps={{ shrink: true }}
           />
         </Grid>
         <Grid item lg={4} sm={12} md={12} xs={12}>
           <TextField
             label="Pin Code"
-            defaultValue={astrologerData?.zipCode || ""}
+            value={zipCode}
             variant="outlined"
             type="text"
             fullWidth
             onFocus={() => handleError("zipCode", null)}
             onChange={(e) => updateState({ zipCode: e.target.value })}
-            helperText={error.zipCode}
-            error={error.zipCode ? true : false}
+            helperText={error?.zipCode}
+            error={error?.zipCode ? true : false}
             InputLabelProps={{ shrink: true }}
           />
         </Grid>
         <Grid item lg={4} sm={12} md={12} xs={12}>
           <TextField
             label="Country Phone Code"
-            defaultValue={astrologerData?.phoneCode || ""}
+            value={phoneCode}
             variant="outlined"
             fullWidth
             onFocus={() => handleError("phoneCode", null)}
             onChange={(e) => updateState({ phoneCode: e.target.value })}
-            helperText={error.phoneCode}
-            error={error.phoneCode ? true : false}
+            helperText={error?.phoneCode}
+            error={error?.phoneCode ? true : false}
             InputLabelProps={{ shrink: true }}
           />
         </Grid>
@@ -2051,24 +2242,24 @@ export const EditAstrologer = ({
           <TextField
             type="number"
             label="Rating"
-            defaultValue={astrologerData?.rating || ""}
+            value={rating}
             variant="outlined"
             fullWidth
             onFocus={() => handleError("rating", null)}
             onChange={handleRatingChange}
-            helperText={error.rating}
-            error={error.rating ? true : false}
+            helperText={error?.rating}
+            error={error?.rating ? true : false}
             InputLabelProps={{ shrink: true }}
           />
         </Grid>
         <Grid item lg={4} sm={12} md={12} xs={12}>
           <TextField
             label="Followers Count"
-            defaultValue={astrologerData?.follower_count || ""}
+            value={follower_count}
             variant="outlined"
             fullWidth
-            helperText={error.follower_count}
-            error={error.follower_count ? true : false}
+            helperText={error?.follower_count}
+            error={error?.follower_count ? true : false}
             onFocus={() => handleError("follower_count", null)}
             onChange={(e) => updateState({ follower_count: e.target.value })}
             InputLabelProps={{ shrink: true }}
@@ -2090,7 +2281,11 @@ const mapStateToProps = (state) => ({
 // const mapDispatchToProps = (dispatch) => ({ dispatch });
 
 const mapDispatchToProps = (dispatch) => ({
-  getAstrologer: () => dispatch(getAstrologer()),
+  getAstrologer: (astrologerId) => dispatch(getAstrologer(astrologerId)),
 });
+
+// const mapDispatchToProps = (dispatch) => ({
+//   getAstrologer: () => dispatch(getAstrologer()),
+// });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditAstrologer);

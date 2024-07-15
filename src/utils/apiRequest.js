@@ -25,10 +25,11 @@ class _ApiRequest {
     header = "form",
     token = null,
   }) => {
-    // try {
-    console.log("header", header);
-    console.log("data======>", data);
-    console.log("url======>", url);
+    try {
+
+      console.log('header',header)
+      console.log('data',data)
+
     const response = await axios({
       method: "post",
       url: url,
@@ -39,21 +40,21 @@ class _ApiRequest {
       data: data,
     });
     return response.data;
-    // } catch (e) {
-    //   if (e.response && e.response.data) {
-    //     const errorMessage = extractErrorMessage(e.response.data);
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "Server Error",
-    //       text: errorMessage,
-    //       showConfirmButton: false,
-    //       timer: 5000,
-    //     });
-    //     throw new Error(errorMessage);
-    //   } else {
-    //     throw new Error(e.message);
-    //   }
-    // }
+    } catch (e) {
+      if (e.response && e.response.data) {
+        const errorMessage = extractErrorMessage(e.response.data);
+        Swal.fire({
+          icon: "error",
+          title: "Server Error",
+          text: errorMessage,
+          showConfirmButton: false,
+          timer: 5000,
+        });
+        throw new Error(errorMessage);
+      } else {
+        throw new Error(e.message);
+      }
+    }
   };
 
   getRequest = async ({ url = null }) => {

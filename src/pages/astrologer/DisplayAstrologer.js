@@ -45,8 +45,6 @@ const ListAstrology = ({ astrologerListData }) => {
   }, []);
 
   const handleEdit = (astrologerId) => {
-    // const selectedAstro = astrologerListData.find(astro => astro._id === astrologerId);
-    // updateState({ editModalOpen: true, selectedAstro });
     navigate(`/editAstrologer/${astrologerId}`);
   };
 

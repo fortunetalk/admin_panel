@@ -4,13 +4,28 @@ const initialState = {
   chatHistoryData: null,
   chatSummaryData: [],
   callHistoryData: null,
-  customerFirebaseID: null
+  customerFirebaseID: null,
+  rechargeHistoryData: null,
+  isLoading: false,
+
 };
 
 const history = (state = initialState, actions) => {
   const { payload, type } = actions;
 
   switch (type) {
+    case actionTypes.SET_IS_LOADING: {
+      return {
+        ...state,
+        isLoading: true,
+      };
+    }
+    case actionTypes.UNSET_IS_LOADING: {
+      return {
+        ...state,
+        isLoading: false,
+      };
+    }
     case actionTypes.SET_CHAT_HISTORY: {
       return {
         ...state,
@@ -29,6 +44,12 @@ const history = (state = initialState, actions) => {
       return {
         ...state,
         callHistoryData: payload,
+      };
+    }
+    case actionTypes.SET_RECHARGE_HISTORY: {
+      return {
+        ...state,
+        rechargeHistoryData: payload,
       };
     }
 

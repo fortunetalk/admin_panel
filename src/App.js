@@ -30,6 +30,7 @@ import AddEnquiry from "./pages/astrologer/AddEnquiry";
 import ChatHistory from "./pages/history/ChatHistory";
 import CallHistory from "./pages/history/CallHistory";
 import UsersGiftHistory from "./pages/history/UsersGiftHistory";
+import RechargeHistory from "./pages/history/RechargeHistory";
 import LiveStream from "./pages/livestream/DisplayLiveStream";
 import DisplayUser from "./pages/user/DisplayUser";
 import AddUser from "./pages/user/AddUser";
@@ -191,10 +192,8 @@ function App() {
           <Route path="/AddEnquiry" element={<AddEnquiry />} />
           <Route path="/history/ChatHistory" element={<ChatHistory />} />
           <Route path="/history/CallHistory" element={<CallHistory />} />
-          <Route
-            path="/history/UsersGiftHistory"
-            element={<UsersGiftHistory />}
-          />
+          <Route path="/history/UsersGiftHistory" element={<UsersGiftHistory />} />
+          <Route path="/history/RechargeHistory" element={<RechargeHistory />} />
           <Route path="/liveStream" element={<LiveStream />} />
           <Route path="/displayUser" element={<DisplayUser />} />
           <Route path="/AddUser" element={<AddUser />} />

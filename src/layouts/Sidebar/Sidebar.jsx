@@ -40,7 +40,7 @@ const routes = [
       {
         path: "/astrologers/topAstrologers",
         name: "Top Astrologers",
-        icon: <BiUser />, 
+        icon: <BiUser />,
       },
       {
         path: "/displayEnquiry",
@@ -167,6 +167,11 @@ const routes = [
         name: "User's Gift History",
         icon: <BiAbacus />,
       },
+      {
+        path: "/history/RechargeHistory",
+        name: "Recharge History",
+        icon: <BiAbacus />,
+      },
     ],
   },
   {
@@ -192,7 +197,6 @@ const routes = [
     name: "Live Stream",
     icon: <BiAbacus />,
   },
-  // babita
   {
     path: "/displayRemedise",
     name: "Remedies",
@@ -202,7 +206,7 @@ const routes = [
     path: "/displayExpertise",
     name: "Expertise",
     icon: <BiAbacus />,
-    
+
   },
   {
     path: "/displayReview",
@@ -240,7 +244,7 @@ const routes = [
     path: "/displayBlogCategory",
     name: "Blog Category",
     icon: <BiAbacus />,
-    
+
   },
   {
     path: "/displayAstroblog",
@@ -292,7 +296,7 @@ const routes = [
         name: "Pooja Banner",
         icon: <BiAbacus />,
       },
-      
+
     ],
   },
   {
@@ -421,10 +425,10 @@ const routes = [
       {
         path: "/setting/city",
         name: "City",
-        icon: <BiUser />, 
+        icon: <BiUser />,
       },
-     
-      
+
+
     ],
   },
   // {
@@ -478,19 +482,38 @@ const SideBar = ({ children, dispatch, isSidebarOpen }) => {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth > 991) setHiddenSidebarWidth(45);
-      else setHiddenSidebarWidth(0);
+      if (window.innerWidth > 991) {
+        setHiddenSidebarWidth(45);
+      } else {
+        setHiddenSidebarWidth(0);
+      }
     };
 
-    // Attach the event listener
+    handleResize();
+
     window.addEventListener("resize", handleResize);
 
-    // Clean up the event listener on component unmount
-    handleResize();
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     if (window.innerWidth > 991) setHiddenSidebarWidth(45);
+  //     else setHiddenSidebarWidth(0);
+  //   };
+
+  //   // Attach the event listener
+  //   window.addEventListener("resize", handleResize);
+
+  //   // Clean up the event listener on component unmount
+  //   handleResize();
+  //   return () => {
+  //     window.removeEventListener("resize", handleResize);
+  //   };
+  // }, []);
+
   return (
     <>
       <motion.div
@@ -508,7 +531,7 @@ const SideBar = ({ children, dispatch, isSidebarOpen }) => {
           <div className="top_section">Fortune Talk</div>
         ) : (
           <div className="top_section">
-            <img src={logo_icon} style={{ width: 30, height: 30 }} />
+            <img src={logo_icon} style={{ width: 30, height: 30 }} alt="logo" />
           </div>
         )}
         <section className="routes">
@@ -554,10 +577,10 @@ const SideBar = ({ children, dispatch, isSidebarOpen }) => {
   );
 };
 
-const mapStateToProps = state =>({
+const mapStateToProps = state => ({
   isSidebarOpen: state.dashboard.isSidebarOpen
 })
 
-const mapDispatchToProps = dispatch =>({dispatch})
+const mapDispatchToProps = dispatch => ({ dispatch })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SideBar);

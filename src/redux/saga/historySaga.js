@@ -5,6 +5,7 @@ import {
   api_url,
   get_call_history,
   get_chat_history,
+  get_recharge_history,
   get_expertise,
   get_main_expertise,
 } from "../../utils/Constants";
@@ -28,9 +29,9 @@ function* getChatHistory() {
       });
     }
 
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     console.log(e);
   }
 }
@@ -38,6 +39,7 @@ function* getChatHistory() {
 async function fetchCustomerFirebaseID(firebaseID) {
   try {
     // Assuming you have a function to fetch customerFirebaseID from Firebase
+
     const customerFirebaseID = await get(ref(database, 'UserId/' + firebaseID));
     return customerFirebaseID?.val();
   } catch (error) {
@@ -117,9 +119,9 @@ function* getChatSummary(actions) {
       yield put({ type: actionTypes.SET_CUSTOMER_FIREBASE_ID, payload: customerFirebaseID.toLocaleLowerCase() })
       yield put({ type: actionTypes.SET_CHAT_SUMMARY, payload: chatData.reverse() })
     }
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     console.log(e);
   }
 }
@@ -138,9 +140,29 @@ function* getCallHistory() {
       });
     }
 
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+    console.log(e);
+  }
+}
+function* getRechargeHistory() {
+  try {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    const response = yield ApiRequest.getRequest({
+      url: api_url + get_recharge_history,
+    });
+
+    if (response?.success) {
+      yield put({
+        type: actionTypes.SET_RECHARGE_HISTORY,
+        payload: response?.data,
+      });
+    }
+
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+  } catch (e) {
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     console.log(e);
   }
 }
@@ -150,4 +172,5 @@ export default function* historySaga() {
   yield takeLeading(actionTypes.GET_CHAT_HISTORY, getChatHistory);
   yield takeLeading(actionTypes.GET_CHAT_SUMMARY, getChatSummary)
   yield takeLeading(actionTypes.GET_CALL_HISTORY, getCallHistory)
+  yield takeLeading(actionTypes.GET_RECHARGE_HISTORY, getRechargeHistory)
 }

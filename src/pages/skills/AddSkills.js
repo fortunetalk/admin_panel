@@ -21,9 +21,9 @@ const AddSkills = ({ dispatch, isLoading }) => {
   const classes = useStyles();
   const [skill, setSkill] = useState("");
   const [icon, setIcon] = useState({ file: logo_icon, bytes: null });
+  const [file, setFile] = useState(null);
   const [error, setError] = useState({});
   const [status, setStatus] = useState("");
-  const [file, setFile] = useState(null);
 
   const handleError = (input, value) => {
     setError((prev) => ({ ...prev, [input]: value }));

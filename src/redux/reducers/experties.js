@@ -4,12 +4,25 @@ const initialState = {
   expertiesData: null,
   activeExpertiseData: null,
   mainExpertiesData: null,
+  isLoading: false,
 };
  
 const experites = (state = initialState, actions) => {
   const { payload, type } = actions;
 
   switch (type) {
+    case actionTypes.SET_IS_LOADING: {
+      return {
+        ...state,
+        isLoading: true,
+      };
+    }
+    case actionTypes.UNSET_IS_LOADING:{
+      return {
+        ...state,
+        isLoading: false,
+      };
+    }
     case actionTypes.CREATE_EXPERTIES: {
       return {
         ...state, 

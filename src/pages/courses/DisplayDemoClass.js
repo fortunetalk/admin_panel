@@ -241,6 +241,7 @@ const DisplayDemoClass = ({
     const date = new Date(dateString);
     return date.toISOString().split("T")[0] + " " + timeString;
   };
+  
 
   return (
     <div className={classes.container}>

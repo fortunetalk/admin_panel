@@ -115,8 +115,7 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
                 title: "Start Time",
                 render: (rowData) => (
                   <div>
-                    {rowData?.startTime &&
-                      moment(rowData?.startTime).format("HH:mm:ss A")}
+                    {rowData?.startTime ? rowData?.startTime && moment(rowData?.startTime).format("HH:mm:ss A"): "N/A"}
                   </div>
                 ),
               },
@@ -124,20 +123,21 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
                 title: "End time",
                 render: (rowData) => (
                   <div>
-                    {rowData?.endTime &&
-                      moment(rowData?.endTime).format("HH:mm:ss A")}
+                    {rowData?.endTime? rowData?.endTime &&
+                      moment(rowData?.endTime).format("HH:mm:ss A")
+                    : "N/A"}
                   </div>
                 ),
               },
-              {
-                title: "Date",
-                render: (rowData) => (
-                  <div>
-                    {rowData?.endTime &&
-                      moment(rowData?.createdAt).format("DD-MM-YYYY")}
-                  </div>
-                ),
-              },
+              // {
+              //   title: "Date",
+              //   render: (rowData) => (
+              //     <div>
+              //       {rowData?.endTime &&
+              //         moment(rowData?.createdAt).format("DD-MM-YYYY")}
+              //     </div>
+              //   ),
+              // },
               { title: "Status", field: "status" },
             ]}
             options={{ ...propStyles.tableStyles, filtering: false }}

@@ -178,7 +178,7 @@ export const delete_blog_category='admin/blog-category/delete'
 export const active_blog_category='admin/active-blog-category'
 
 //BLOG
-export const create_blog='admin/add'
+export const create_blog='admin/blog/add'
 export const blog_list='admin/blog'
 export const update_blog='admin/update'
 export const update_blog_status='admin/blog/change_status'

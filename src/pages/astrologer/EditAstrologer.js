@@ -1772,7 +1772,7 @@ export const EditAstrologer = ({
             value={phoneNumber}
             variant="outlined"
             fullWidth
-            type="number"
+            type="text"
             helperText={error?.phoneNumber}
             onFocus={() => handleError("phoneNumber", null)}
             onChange={(e) => updateState({ phoneNumber: e.target.value })}

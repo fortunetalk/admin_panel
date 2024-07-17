@@ -8,6 +8,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  CircularProgress
 } from "@mui/material";
 import { Colors } from "../../assets/styles.js";
 import DvrIcon from "@mui/icons-material/Dvr";
@@ -16,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import * as RemedyActions from "../../redux/Actions/remediesActions.js";
 
-const AddRemedies = ({ dispatch }) => {
+const AddRemedies = ({ dispatch, isLoading }) => {
   const classes = useStyles();
   const navigate = useNavigate();
   const [remedy, setRemedy] = useState("");
@@ -57,7 +58,6 @@ const AddRemedies = ({ dispatch }) => {
         RemedyActions.createRemedy(formData)
       );
       handleReset();
-      navigate('/displayRemedise')
     }
   };
 
@@ -129,9 +129,9 @@ const AddRemedies = ({ dispatch }) => {
           </Grid>
 
           <Grid item lg={6} sm={6} md={6} xs={6}>
-            <div onClick={handleSubmit} className={classes.submitbutton}>
-              Submit
-            </div>
+          <div onClick={handleSubmit} className={classes.submitbutton}>
+                {isLoading ? <CircularProgress size={24} /> : " Submit"}
+              </div>
           </Grid>
           <Grid item lg={6} sm={6} md={6} xs={6}>
             <div onClick={handleReset} className={classes.denyButton}>
@@ -144,6 +144,10 @@ const AddRemedies = ({ dispatch }) => {
   );
 };
 
+const mapStateToProps = (state) => ({
+  isLoading: state.remedies.isLoading,
+});
+
 const mapDispatchToProps = (dispatch) => ({ dispatch });
 
-export default connect(null, mapDispatchToProps)(AddRemedies);
+export default connect(mapStateToProps, mapDispatchToProps)(AddRemedies);

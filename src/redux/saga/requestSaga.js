@@ -34,7 +34,7 @@ function* verifyProfileRequest(action) {
       yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
       const response = yield ApiRequest.postRequest({
           url: api_url + update_profile_request,
-          header: "json",
+          header: "application/json",
           data: payload,
       });
       if (response && response.success) {

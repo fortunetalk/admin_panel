@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useStyles } from '../../assets/styles.js';
-import {  Grid, TextField, InputLabel, Select, MenuItem, FormControl } from "@mui/material";
+import {  Grid, TextField, InputLabel, Select, MenuItem, FormControl, CircularProgress } from "@mui/material";
 import DvrIcon from '@mui/icons-material/Dvr';
 import { useNavigate } from "react-router-dom";
 import { add_expertise, } from "../../utils/Constants.js";
@@ -10,7 +10,7 @@ import { connect } from "react-redux";
 import * as ExpertiesActions from '../../redux/Actions/expertiesActions.js'
 
 
-const AddExpertise = ({dispatch}) => {
+const AddExpertise = ({dispatch, isLoading}) => {
     var classes = useStyles();
     const navigate = useNavigate();
     const [expertise, setExpertise] = useState("");
@@ -41,7 +41,6 @@ const AddExpertise = ({dispatch}) => {
 
           dispatch(ExpertiesActions.createExperties({title: expertise, status: status}))
           handleReset();
-          navigate('/DisplayExpertise')
         }
     }
 
@@ -98,8 +97,8 @@ const AddExpertise = ({dispatch}) => {
               </FormControl>
             </Grid>
             <Grid item lg={6} sm={6} md={6} xs={6}>
-              <div onClick={handleSubmit} className={classes.submitbutton}>
-                Submit
+            <div onClick={handleSubmit} className={classes.submitbutton}>
+                {isLoading ? <CircularProgress size={24} /> : " Submit"}
               </div>
             </Grid>
             <Grid item lg={6} sm={6} md={6} xs={6}>
@@ -113,10 +112,10 @@ const AddExpertise = ({dispatch}) => {
     );
 };
 
-const mapStateToProps = state =>({
+const mapStateToProps = (state) => ({
+  isLoading: state.experites.isLoading,
+});
 
-})
-
-const mapDispatchToProps = dispatch =>({dispatch})
+const mapDispatchToProps = (dispatch) => ({ dispatch });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddExpertise);

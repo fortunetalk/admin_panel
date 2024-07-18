@@ -37,6 +37,7 @@ import privacyPolicy from "./privacyPolicy";
 import admin from './admin';
 import request from "./request";
 import astrologerBanner from "./astrologerBanner";
+import termsAndCondition from "./termsAndCondition";
 
 const rootReducer = combineReducers({
   admin,
@@ -76,6 +77,7 @@ const rootReducer = combineReducers({
   gift,
   privacyPolicy,
   request,
+  termsAndCondition,
 });
 
 // const appReducer = (state, action) => {

@@ -215,10 +215,10 @@ function App() {
 
           <Route path="/displayFaq" element={<DisplayFaq />} />
           <Route path="/AddFaq" element={<AddFaq />} />
-          <Route
+          {/* <Route
             path="/displayTermsAndConditions"
             element={<TermsAndConditions />}
-          />
+          /> */}
           <Route path="/displayPrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/addPrivacyPolicy" element={<AddPrivacyPolicy/>} />
           <Route

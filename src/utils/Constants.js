@@ -319,6 +319,13 @@ export const update_privacy_policy = 'admin/privacy-policy/update'
 export const change_privacy_policy_status = 'admin/privacy-policy/change-status'
 export const delete_privacy_policy = 'admin/privacy-policy/delete'
 
+//Terms and Condition
+export const create_term_condition='admin/term-condition/add'
+export const term_condition_list='admin/term-condition'
+export const update_term_condition = 'admin/term-condition/update'
+export const change_term_condition_status = 'admin/term-condition/change-status'
+export const delete_term_condition = 'admin/term-condition/delete'
+
 //request
 export const get_profile_request = 'admin/request/profile';
 export const update_profile_request = 'admin/verify/request/profile'

@@ -124,6 +124,7 @@ import BankRequest from "./pages/request/BankRequest";
 import GalleryRequest from "./pages/request/GalleryRequest";
 import AddAstrologerBanner from "./pages/banner/AddAstrologerBanner";
 import DisplayAstrologerBanner from "./pages/banner/DisplayAstrologerBanner";
+import AddTermsAndCondition from "./pages/pages/AddTermsAndCondition";
 
 function App() {
   return (
@@ -215,10 +216,11 @@ function App() {
 
           <Route path="/displayFaq" element={<DisplayFaq />} />
           <Route path="/AddFaq" element={<AddFaq />} />
-          {/* <Route
+          <Route
             path="/displayTermsAndConditions"
             element={<TermsAndConditions />}
-          /> */}
+          />
+          <Route path="/addTermsAndCondition" element={<AddTermsAndCondition/>} />
           <Route path="/displayPrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/addPrivacyPolicy" element={<AddPrivacyPolicy/>} />
           <Route

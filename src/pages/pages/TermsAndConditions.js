@@ -20,14 +20,12 @@ const TermsAndConditions = ({ dispatch, termsAndConditionData, isLoading }) => {
   const [open, setOpen] = useState(false);
   const [viewData, setViewData] = useState(false);
 
-  const [privacyId, setprivacyId] = useState("");
+  const [termId, settermId] = useState("");
   const [page, setpage] = useState("");
   const [name, setname] = useState("");
   const [error, setError] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("");
-  const [icon, setIcon] = useState({ file: logo_icon, bytes: null });
-  const [file, setFile] = useState(null);
 
 
   useEffect(function () {
@@ -36,7 +34,7 @@ const TermsAndConditions = ({ dispatch, termsAndConditionData, isLoading }) => {
 
   const handleOpen = (rowData) => {
     setOpen(true);
-    setprivacyId(rowData?._id);
+    settermId(rowData?._id);
     setname(rowData?.title);
     setDescription(rowData?.description);
     setpage(rowData?.page)
@@ -49,7 +47,6 @@ const TermsAndConditions = ({ dispatch, termsAndConditionData, isLoading }) => {
     setDescription(rowData?.description);
     setStatus(rowData?.status);
     setpage(rowData?.page)
-    setIcon(rowData?.image);
 
   };
 
@@ -62,16 +59,6 @@ const TermsAndConditions = ({ dispatch, termsAndConditionData, isLoading }) => {
     setStatus(e.target.value);
   };
 
-  const handleIcon = (e) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setIcon({
-        file: URL.createObjectURL(e.target.files[0]),
-        bytes: e.target.files[0],
-      });
-      handleError("icon", null);
-      setFile(e.target.files[0]);
-    }
-  };
 
   const validation = () => {
     var isValid = true;
@@ -84,10 +71,7 @@ const TermsAndConditions = ({ dispatch, termsAndConditionData, isLoading }) => {
       handleError("description", "Please input Description");
       isValid = false;
     }
-    if (!icon.file) {
-      handleError("icon", "Please Select Image");
-      isValid = false;
-    }
+   
     return isValid;
   };
 
@@ -97,8 +81,7 @@ const TermsAndConditions = ({ dispatch, termsAndConditionData, isLoading }) => {
       formData.append("status", status);
       formData.append("title", name);
       formData.append("description", description);
-      formData.append("image", file);
-      formData.append("privacyId", privacyId);
+      formData.append("termId", termId);
       formData.append("page", page);
 
       dispatch(
@@ -160,17 +143,7 @@ const TermsAndConditions = ({ dispatch, termsAndConditionData, isLoading }) => {
                 },
                 { title: "Name", field: "title" },
                 { title: "Page", field: "page" },
-                {
-                  title: "Image",
-                  field: "image",
-                  render: (rowData) => (
-                    <Avatar
-                      src={rowData.image}
-                      style={{ width: 50, height: 50 }}
-                      variant="rounded"
-                    />
-                  ),
-                },
+              
                 { title: "Status", field: "status", render: rowData => (
                   <div className={classes.statusButton}
                   style={{ backgroundColor: rowData.status === 'Active' ? '#90EE90' : '#FF7F7F '}}
@@ -210,9 +183,9 @@ const TermsAndConditions = ({ dispatch, termsAndConditionData, isLoading }) => {
                       <div className={classes.addButtontext}>Add New</div>
                     </div>
                   ),
-                  tooltip: "Add Privacy Policy",
+                  tooltip: "Add Terms And Condition",
                   isFreeAction: true,
-                  onClick: () => navigate("/addPrivacyPolicy"),
+                  onClick: () => navigate("/addTermsAndCondition"),
                 },
               ]}
             />
@@ -277,29 +250,7 @@ const TermsAndConditions = ({ dispatch, termsAndConditionData, isLoading }) => {
               <div className={classes.errorstyles}>{error.status}</div>
             </FormControl>
           </Grid>
-            <Grid
-            item
-            lg={4}
-            sm={6}
-            md={6}
-            xs={6}
-            className={classes.uploadContainer}
-          >
-            <label className={classes.uploadImageButton}>
-              Upload Picture
-              <input
-                onChange={handleIcon}
-                hidden
-                accept="image/*"
-                type="file"
-              />
-            </label>
-            <div className={classes.errorstyles}>{error.icon}</div>
-          </Grid>
-          <Grid item lg={2} sm={6} md={2} xs={6}>
-            <Avatar src={icon.file} style={{ width: 56, height: 56 }} />
-          </Grid>
-
+           
 <Grid item lg={12} sm={12} md={12} xs={12}>
             <TextEditor
               description={description}
@@ -336,7 +287,7 @@ const TermsAndConditions = ({ dispatch, termsAndConditionData, isLoading }) => {
         <Grid container spacing={2}>
           <Grid item lg={12} sm={12} md={12} xs={12}>
             <div className={classes.headingContainer}>
-              <div className={classes.heading}>Privacy Policy Data</div>
+              <div className={classes.heading}>Terms & Condition Data</div>
               <div onClick={handleClose} className={classes.closeButton}>
                 <CloseRounded />
               </div>
@@ -379,18 +330,7 @@ const TermsAndConditions = ({ dispatch, termsAndConditionData, isLoading }) => {
               }}
             />
           </Grid>
-          <Grid item lg={12} md={12} sm={12} xs={12}>
-            <label htmlFor="">Image</label>
-            <Avatar
-              src={icon}
-              variant="square"
-              style={{
-                width: "100%",
-                height: "200px",
-                objectFit: "cover",
-              }}
-            />
-          </Grid>
+       
           <Grid item lg={12} md={12} sm={12} xs={12}>
             <TextField
               fullWidth
@@ -422,8 +362,8 @@ const TermsAndConditions = ({ dispatch, termsAndConditionData, isLoading }) => {
 };
 
 const mapStateToProps = (state) => ({
-  termsAndConditionData: state.termsAndcondition.termsAndConditionData,
-  isLoading: state.termsAndcondition.isLoading,
+  termsAndConditionData: state.termsAndCondition.termsAndConditionData,
+  isLoading: state.termsAndCondition.isLoading,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

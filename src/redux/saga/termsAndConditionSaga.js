@@ -20,7 +20,6 @@ function* addTermsAndCondition(actions) {
         header: "application/json",
       data: payload,
     });
-
     if (response?.success) {
       Swal.fire({
         icon: "success",
@@ -62,7 +61,7 @@ function* getAllTermsAndCondition() {
       url: api_url + term_condition_list,
     });
 
-    if (response) {
+    if (response?.success) {
       yield put({
         type: actionTypes.TERMS_AND_CONDITION_LIST,
         payload: response?.data,
@@ -127,7 +126,7 @@ function* updateTermsAndCondition(actions) {
     if (response.success) {
       Swal.fire({
         icon: "success",
-        title: "PTerms & Condition Updated Successfully",
+        title: "Terms & Condition Updated Successfully",
         showConfirmButton: false,
         timer: 2000,
       });

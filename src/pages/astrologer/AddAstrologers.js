@@ -99,6 +99,9 @@ export const AddAstrologers = ({
   const [galleryImage, setGalleryImage] = useState([]);
   const [galleryFiles, setGalleryFiles] = useState([]);
 
+  const [displayCallPrice, setDisplayCallPrice] = useState();
+  const [displayChatPrice, setDisplayChatPrice] = useState(); 
+
   const [states, setState] = useState({
     error: {},
     name: "",

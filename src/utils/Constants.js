@@ -1,8 +1,8 @@
 // export const base_url = "http://165.232.182.110:4000/";
 // export const api_url = "http://165.232.182.110:4000/api/";
 
-export const base_url = "http://97.74.83.200/backend/";
-export const api_url = "http://97.74.83.200/backend/";
+export const base_url = "http://localhost:8000/";
+export const api_url = "http://localhost:8000/api/";
 
 
 // admin login 

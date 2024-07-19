@@ -17,6 +17,7 @@ function* addTermsAndCondition(actions) {
     const { payload } = actions;
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
     const response = yield ApiRequest.postRequest({
+        url: api_url + create_term_condition,
         header: "application/json",
       data: payload,
     });

@@ -67,7 +67,7 @@ export const AddTermsAndCondition = ({ isLoading }) => {
       formData.append("page", page);
 
       dispatch(Actions.addTermCondtion(formData));
-    //   handleReset();
+      handleReset();
     }
   };
 

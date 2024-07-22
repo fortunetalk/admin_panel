@@ -23,7 +23,8 @@ import {
   update_astrologer_profile_image,
   update_astrologer_bank_image,
   update_astrologer_id_image,
-  update_astrologer_gallery_image
+  update_astrologer_gallery_image,
+  update_astrologer_astrologer_type
 } from "../../utils/Constants";
 import Swal from "sweetalert2";
 import { Colors } from "../../assets/styles";
@@ -712,6 +713,40 @@ function* updateAstrologerGalleryImage(actions) {
   }
 }
 
+function* updateAstrologerAstrologerType(actions) {
+  try {
+    const { payload } = actions;
+    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
+    const response = yield call(ApiRequest.postRequest, {
+      url: api_url + update_astrologer_astrologer_type,
+      header: "application/json",
+      data: payload,
+    });
+
+    if (response.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Data Updated Successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Failed to update Data",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  } finally {
+    // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
+  }
+}
+
 export default function* astrologerSaga() {
   yield takeLeading(actionTypes.GET_ALL_ASTROLOGER, getAstrologers);
   yield takeLeading(
@@ -771,5 +806,9 @@ export default function* astrologerSaga() {
   yield takeLeading(
     actionTypes.UPDATE_ASTROLOGER_GALLERY_IMAGE,
     updateAstrologerGalleryImage
+  );
+  yield takeLeading(
+    actionTypes.UPDATE_ASTROLOGER_ASTROLOGER_TYPE,
+    updateAstrologerAstrologerType
   );
 }

@@ -98,9 +98,7 @@ export const AddAstrologers = ({
 
   const [galleryImage, setGalleryImage] = useState([]);
   const [galleryFiles, setGalleryFiles] = useState([]);
-
-  const [displayCallPrice, setDisplayCallPrice] = useState();
-  const [displayChatPrice, setDisplayChatPrice] = useState(); 
+ 
 
   const [states, setState] = useState({
     error: {},
@@ -507,7 +505,7 @@ export const AddAstrologers = ({
       formData.append("zipCode", zipCode);
       formData.append("about", about);
       formData.append("educationQualification", educationQualification);
-      formData.append("astrologyQualification", "12th");
+      formData.append("astrologyQualification", astrologyQualification);
       formData.append("follower_count", follower_count);
       formData.append("rating", rating);
       formData.append("bankAcountNumber", bankAccountNumber);

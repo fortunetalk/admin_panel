@@ -136,6 +136,11 @@ const routes = [
     icon: <BiAbacus />,
     subRoutes: [
       {
+        path: "/rechargePlan",
+        name: "Recharge Plan",
+        icon: <BiAbacus />,
+      },
+      {
         path: "/displayRechargePlan",
         name: "List of Recharge",
         icon: <BiAbacus />,

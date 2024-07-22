@@ -114,3 +114,8 @@ export const updateAstrologerGalleryImage = payload =>({
   type: actionTypes.UPDATE_ASTROLOGER_GALLERY_IMAGE, 
   payload
 })
+
+export const updateAstrologerAstrologerType = payload =>({
+  type: actionTypes.UPDATE_ASTROLOGER_ASTROLOGER_TYPE, 
+  payload
+})

@@ -126,6 +126,7 @@ import GalleryRequest from "./pages/request/GalleryRequest";
 import AddAstrologerBanner from "./pages/banner/AddAstrologerBanner";
 import DisplayAstrologerBanner from "./pages/banner/DisplayAstrologerBanner";
 import AddTermsAndCondition from "./pages/pages/AddTermsAndCondition";
+import RechargePlan from "./pages/recharge/RechargePlan";
 
 function App() {
   return (
@@ -138,6 +139,7 @@ function App() {
           <Route path="/displaySkills" element={<DisplaySkills />} />
           <Route path="/addSubSkills" element={<AddSubSkills />} />
           <Route path="/displaySubSkills" element={<DisplaySubSkills />} />
+          <Route path="/rechargePlan" element={<RechargePlan/>} />
           <Route path="/addRechargePlan" element={<AddRechargePlans />} />
           <Route
             path="/displayRechargePlan"

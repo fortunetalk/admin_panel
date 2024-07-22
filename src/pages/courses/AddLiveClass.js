@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import DvrIcon from "@mui/icons-material/Dvr";
 import { useNavigate } from "react-router-dom";
-import logo_icon from "../../assets/images/logo_icon.png";
 import { connect } from "react-redux";
 import * as LiveActions from "../../redux/Actions/liveClassActions.js";
 import * as CourseActions from "../../redux/Actions/courseActions.js";

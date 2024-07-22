@@ -3,14 +3,11 @@ import * as actionTypes from "../actionTypes";
 import { ApiRequest } from "../../utils/apiRequest";
 import {
   api_url,
-  create_language,
-  delete_language, 
   update_language,
-  get_expertise,
-  get_language,
   create_recharge_plan,
   get_recharge_plans,
   delete_recharge_plans,
+  update_recharge_plans,
   update_recharge_plan_status,
   add_first_recharge_offer,
   get_first_recharge_offer,
@@ -51,6 +48,8 @@ function* createRechargePlan(actions) {
   } catch (e) {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
     console.log(e);
+  } finally {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   }
 }
 
@@ -64,7 +63,7 @@ function* getRechargePlan() {
       if (response?.success) {
         yield put({
           type: actionTypes.SET_RECHARGE_PLAN,
-          payload: response?.allRechargePlan,
+          payload: response?.data,
         });
       }
   
@@ -106,6 +105,41 @@ function* updateLanguage(actions) {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   } catch (e) {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    console.log(e);
+  }
+}
+
+function* updateRechargePlan(actions) {
+  try {
+    const { payload } = actions;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
+    const response = yield ApiRequest.postRequest({
+      url: api_url + update_recharge_plans,
+      header: "json",
+      data: payload,
+    });
+
+    if (response.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Recharge Updated Successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      yield put({ type: actionTypes.GET_RECHARGE_PLAN, payload: null });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Recharge Update Failed",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
+  } catch (e) {
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     console.log(e);
   }
 }
@@ -340,6 +374,7 @@ export default function* rechargeSaga() {
   yield takeLeading(actionTypes.CREATE_RECHARGE_PLAN, createRechargePlan);
   yield takeLeading(actionTypes.GET_RECHARGE_PLAN, getRechargePlan);
   yield takeLeading(actionTypes.DELETE_RECHARGE_PLAN, deleteRechargePlan);
+  yield takeLeading(actionTypes.UPDATE_RECHARGE_PLAN, updateRechargePlan)
   yield takeLeading(actionTypes.UPDATE_RECHARGE_PLAN_STATUS, updateRechargePlanStatus)
   yield takeLeading(actionTypes.CREATE_FIRST_RECHARGE_OFFER, createFirstRechargeOffer)
   yield takeLeading(actionTypes.GET_FIRST_RECHARGE_OFFER, getFirstRechargeOffer)

@@ -15,6 +15,7 @@ const initialState = {
   updateAstrologerBankImage: null,
   updateAstrologerIdImage: null,
   updateAstrologerGalleryImage: null,
+  updateAstrologerAstrologerType: null,
   setAstrologer: null,
   isLoading: false,
 };
@@ -167,6 +168,12 @@ const astrologer = (state = initialState, actions) => {
       return {
         ...state,
         updateAstrologerGalleryImage: payload,
+      };
+    }
+    case actionTypes.UPDATE_ASTROLOGER_ASTROLOGER_TYPE: {
+      return {
+        ...state,
+        updateAstrologerAstrologerType: payload,
       };
     }
 

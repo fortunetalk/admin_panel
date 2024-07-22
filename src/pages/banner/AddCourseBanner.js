@@ -185,6 +185,7 @@ const AddCourseBanner = ({ dispatch, courseData }) => {
 
 const mapStateToProps = (state) => ({
   courseData: state.course.courseData,
+  isLoading: state.courseBanner.isLoading,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

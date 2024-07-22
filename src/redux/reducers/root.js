@@ -38,6 +38,8 @@ import admin from './admin';
 import request from "./request";
 import astrologerBanner from "./astrologerBanner";
 import termsAndCondition from "./termsAndCondition";
+import liveStream from "./liveStream";
+import rechargeHistory from "./rechargeHistory";
 
 const rootReducer = combineReducers({
   admin,
@@ -78,6 +80,8 @@ const rootReducer = combineReducers({
   privacyPolicy,
   request,
   termsAndCondition,
+  liveStream,
+  rechargeHistory,
 });
 
 // const appReducer = (state, action) => {

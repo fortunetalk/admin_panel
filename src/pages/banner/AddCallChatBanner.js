@@ -8,13 +8,14 @@ import {
   Select,
   InputLabel,
   MenuItem,
+  CircularProgress
 } from "@mui/material";
 import DvrIcon from "@mui/icons-material/Dvr";
 import { useNavigate } from "react-router-dom";
 import logo_icon from "../../assets/images/logo_icon.png";
 import { connect } from "react-redux";
 import * as Actions from "../../redux/Actions/callChatBannerActions.js.js";
-const AddCallChatBanner = ({ dispatch }) => {
+const AddCallChatBanner = ({ dispatch, isLoading }) => {
   const navigate = useNavigate();
   const classes = useStyles();
   const [title, settitle] = useState("");
@@ -169,8 +170,8 @@ const AddCallChatBanner = ({ dispatch }) => {
             <Avatar src={icon.file} style={{ width: 56, height: 56 }} />
           </Grid>
           <Grid item lg={6} sm={6} md={6} xs={6}>
-            <div onClick={handleSubmit} className={classes.submitbutton}>
-              Submit
+          <div onClick={handleSubmit} className={classes.submitbutton}>
+              {isLoading ? <CircularProgress size={24} /> : "Submit"}
             </div>
           </Grid>
           <Grid item lg={6} sm={6} md={6} xs={6}>
@@ -184,6 +185,10 @@ const AddCallChatBanner = ({ dispatch }) => {
   );
 };
 
+const mapStateToProps = (state) => ({
+  isLoading: state.callChatBanner.isLoading,
+});
+
 const mapDispatchToProps = (dispatch) => ({ dispatch });
 
-export default connect(null, mapDispatchToProps)(AddCallChatBanner);
+export default connect(mapStateToProps, mapDispatchToProps)(AddCallChatBanner);

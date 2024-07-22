@@ -27,15 +27,15 @@ function* getRemedies() {
       });
     }
 
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: response.data });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     console.log(e);
   }
 }
 function* getActiveRemedies() {
   try {
-    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
     const response = yield ApiRequest.getRequest({ 
       url: api_url + get_active_remedy,
     });
@@ -47,9 +47,9 @@ function* getActiveRemedies() {
       });
     }
 
-    // yield put({ type: actionTypes.SET_IS_LOADING, payload: response.data });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   } catch (e) {
-    // yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     console.log(e);
   }
 }
@@ -72,6 +72,7 @@ function* createRemedies(actions) {
         timer: 2000,
       });
       yield put({ type: actionTypes.GET_ALL_REMEDIES, payload: response });
+      yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     } else if (response.error) {
       const errorMessage = response.error.message || "Server Error";
       Swal.fire({
@@ -81,11 +82,10 @@ function* createRemedies(actions) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.SET_IS_LOADING, payload: response.error });
     }
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     console.log(e);
     Swal.fire({
       icon: "error",
@@ -94,7 +94,7 @@ function* createRemedies(actions) {
       showConfirmButton: false,
       timer: 2000,
     });
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: e });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   }
 }
 
@@ -116,7 +116,7 @@ function* updateRemedies(actions) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.GET_ALL_REMEDIES, payload: null });
+      yield put({ type: actionTypes.GET_ALL_REMEDIES, payload: response });
     } else {
       Swal.fire({
         icon: "error",
@@ -126,9 +126,9 @@ function* updateRemedies(actions) {
         timer: 2000,
       });
     }
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     console.log(e);
   }
 }
@@ -158,6 +158,7 @@ function* updateRemediesStatus(action) {
         timer: 2000,
       });
     }
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   } catch (error) {
     console.error("Error Updating Remedy Status:", error);
     Swal.fire({
@@ -167,8 +168,9 @@ function* updateRemediesStatus(action) {
       showConfirmButton: false,
       timer: 2000,
     });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   }
 }
 function* deleteRemedies(actions) {
@@ -215,9 +217,9 @@ function* deleteRemedies(actions) {
       }
     }
 
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     console.log(e);
   }
 }

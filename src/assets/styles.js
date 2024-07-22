@@ -195,10 +195,10 @@ export const useStyles = makeStyles({
 
 export const propStyles = {
   tableStyles: {
-    sorting: false,
+    sorting: true,
     search: true,
     searchFieldAlignment: "right",
-    filtering: true,
+    filtering: false,
     paging: true,
     pageSize: 5,
     paginationType: "stepped",

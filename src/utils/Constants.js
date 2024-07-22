@@ -1,8 +1,11 @@
 // export const base_url = "http://165.232.182.110:4000/";
 // export const api_url = "http://165.232.182.110:4000/api/";
 
-export const base_url = "http://localhost:8000/";
-export const api_url = "http://localhost:8000/api/";
+// export const base_url = "http://localhost:8000/";
+// export const api_url = "http://localhost:8000/api/";
+
+export const base_url = "http://97.74.83.200:8000/";
+export const api_url = "http://97.74.83.200:8000/api/";
 
 
 // admin login 
@@ -179,7 +182,7 @@ export const delete_blog_category='admin/blog-category/delete'
 export const active_blog_category='admin/active-blog-category'
 
 //BLOG
-export const create_blog='admin/add'
+export const create_blog='admin/blog/add'
 export const blog_list='admin/blog'
 export const update_blog='admin/update'
 export const update_blog_status='admin/blog/change_status'
@@ -319,6 +322,13 @@ export const privacy_policy_list='admin/privacy-policy'
 export const update_privacy_policy = 'admin/privacy-policy/update'
 export const change_privacy_policy_status = 'admin/privacy-policy/change-status'
 export const delete_privacy_policy = 'admin/privacy-policy/delete'
+
+//Terms and Condition
+export const create_term_condition='admin/term-condition/add'
+export const term_condition_list='admin/term-condition'
+export const update_term_condition = 'admin/term-condition/update'
+export const change_term_condition_status = 'admin/term-condition/change-status'
+export const delete_term_condition = 'admin/term-condition/delete'
 
 //request
 export const get_profile_request = 'admin/request/profile';

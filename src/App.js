@@ -71,8 +71,6 @@ import CustomerNotification from "./pages/notification/CustomerNotification";
 import AstrologerNotification from "./pages/notification/AstrologerNotification";
 import ChatSummary from "./pages/history/ChatSummary";
 import TopAstrologers from "./pages/astrologer/TopAstrologers";
-import DisplayLanguage from "./pages/languages/DisplayLanguage";
-import AddLanguage from "./pages/languages/AddLanguage";
 
 import DisplayBlogCategory from "./pages/blogCategory/DisplayBlogCategory";
 import AddBlogCategory from "./pages/blogCategory/AddBlogCategory";
@@ -127,6 +125,7 @@ import BankRequest from "./pages/request/BankRequest";
 import GalleryRequest from "./pages/request/GalleryRequest";
 import AddAstrologerBanner from "./pages/banner/AddAstrologerBanner";
 import DisplayAstrologerBanner from "./pages/banner/DisplayAstrologerBanner";
+import AddTermsAndCondition from "./pages/pages/AddTermsAndCondition";
 
 function App() {
   return (
@@ -158,8 +157,7 @@ function App() {
           <Route path="/AddRemedies" element={<AddRemedies />} />
           <Route path="/displayExpertise" element={<DisplayExpertise />} />
           <Route path="/AddExpertise" element={<AddExpertise />} />
-          <Route path="/displayLanguage" element={<DisplayLanguage />} />
-          <Route path="/addLanguage" element={<AddLanguage />} />
+
           <Route path="/displayCustomer" element={<DisplayCustomer />} />
           <Route
             path="/displayCustomerOrderHistory"
@@ -221,6 +219,7 @@ function App() {
             path="/displayTermsAndConditions"
             element={<TermsAndConditions />}
           />
+          <Route path="/addTermsAndCondition" element={<AddTermsAndCondition/>} />
           <Route path="/displayPrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/addPrivacyPolicy" element={<AddPrivacyPolicy/>} />
           <Route

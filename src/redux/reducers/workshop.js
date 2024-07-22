@@ -54,7 +54,13 @@ const workshop = (state = initialState, actions) => {
   case actionTypes.SET_IS_LOADING: {
     return {
       ...state,
-      isLoading: payload,
+      isLoading: true,
+    };
+  }
+  case actionTypes.UNSET_IS_LOADING:{
+    return {
+      ...state,
+      isLoading: false,
     };
   }
 

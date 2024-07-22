@@ -230,16 +230,7 @@ const routes = [
     name: "Gift",
     icon: <BiAbacus />,
   },
-  {
-    path: "/displayLanguage",
-    name: "Language",
-    icon: <BiAbacus />,
-  },
-  {
-    path: "/test",
-    name: "Test",
-    icon: <BiAbacus />,
-  },
+
   {
     path: "/displayBlogCategory",
     name: "Blog Category",
@@ -304,11 +295,7 @@ const routes = [
     name: "Pages",
     icon: <BiAbacus />,
     subRoutes: [
-      {
-        path: "/displayFaq",
-        name: "FAQs",
-        icon: <BiAbacus />,
-      },
+     
       {
         path: "/displayTermsAndConditions",
         name: "Terms And Conditions",
@@ -319,26 +306,8 @@ const routes = [
         name: "Privacy Policy",
         icon: <BiAbacus />,
       },
-      {
-        path: "/displayHowToUse",
-        name: "How to use- ScreenShots",
-        icon: <BiAbacus />,
-      },
-      {
-        path: "/displayTestimonials",
-        name: "Home Page Testimonials",
-        icon: <BiAbacus />,
-      },
-      {
-        path: "/displayOurAstrologers",
-        name: "Home Page Our Astrologers",
-        icon: <BiAbacus />,
-      },
-      {
-        path: "/displayHowToUseVideos",
-        name: "How to use - Videos",
-        icon: <BiAbacus />,
-      },
+    
+    
     ],
   },
   {

@@ -255,9 +255,9 @@ const DisplayAstroblog = ({
                     <div className={classes.addButtontext}>Add New</div>
                   </div>
                 ),
-                tooltip: "Add Gift",
+                tooltip: "Add Blog",
                 isFreeAction: true,
-                onClick: () => navigate("/addGift"),
+                onClick: () => navigate("/AddAstroblog"),
               },
             ]}
           />

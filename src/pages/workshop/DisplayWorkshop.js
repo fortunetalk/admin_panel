@@ -199,7 +199,7 @@ const DisplayWorkshop = ({
 
   const handleAdminStatusChange = (rowData, newStatus) => {
     Swal.fire({
-      title: "Are you sure you want to change the Admin Status?",
+      title: "Are you sure you want to change the Status?",
       text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,

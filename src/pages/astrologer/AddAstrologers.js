@@ -99,6 +99,9 @@ export const AddAstrologers = ({
   const [galleryImage, setGalleryImage] = useState([]);
   const [galleryFiles, setGalleryFiles] = useState([]);
 
+  const [displayCallPrice, setDisplayCallPrice] = useState();
+  const [displayChatPrice, setDisplayChatPrice] = useState(); 
+
   const [states, setState] = useState({
     error: {},
     name: "",
@@ -1693,8 +1696,6 @@ export const AddAstrologers = ({
             <Grid item lg={6} sm={6} md={6} xs={6}>
               <div onClick={handleSubmit} className={classes.submitbutton}>
                 {isLoading ? <CircularProgress size={24} /> : " Submit"}
-
-
               </div>
 
             </Grid>

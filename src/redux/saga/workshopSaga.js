@@ -27,6 +27,7 @@ function* addWorkshop(actions) {
         timer: 2000,
       });
       yield put({ type: actionTypes.WORKSHOP_LIST, payload: response});
+      yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     } else if (response.error) {
       const errorMessage = response.error.message || "Server Error";
       Swal.fire({
@@ -37,10 +38,14 @@ function* addWorkshop(actions) {
         timer: 2000,
       });
     }
+<<<<<<< HEAD
 
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+=======
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
+>>>>>>> 8b5f96bcd7977a3db75e6f6e9d4dd03a5c9ea68b
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     console.log(e);
     Swal.fire({
       icon: "error",
@@ -49,7 +54,7 @@ function* addWorkshop(actions) {
       showConfirmButton: false,
       timer: 2000,
     });
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: e });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   }
 }
 
@@ -67,9 +72,9 @@ function* getAllWorkshop() {
         payload: response?.data,
       });
     }
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+        yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     console.log(e);
   }
 }
@@ -90,6 +95,7 @@ function* updateWorkshopStatus(action) {
           timer: 2000,
         });
         yield put({ type: actionTypes.WORKSHOP_LIST, payload: response });
+        yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
       } else {
         Swal.fire({
           icon: "error",
@@ -109,7 +115,7 @@ function* updateWorkshopStatus(action) {
         timer: 2000,
       });
     } finally {
-      yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+      yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     }
 }
 function* updateWorkshopAdminStatus(action) {
@@ -124,11 +130,12 @@ function* updateWorkshopAdminStatus(action) {
       if (response && response.success) {
         Swal.fire({
           icon: "success",
-          title: "Admin Status Updated Successfully",
+          title: "Status Updated Successfully",
           showConfirmButton: false,
           timer: 2000,
         });
         yield put({ type: actionTypes.WORKSHOP_LIST, payload: response });
+        
       } else {
         Swal.fire({
           icon: "error",
@@ -138,17 +145,19 @@ function* updateWorkshopAdminStatus(action) {
           timer: 2000,
         });
       }
+      yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     } catch (error) {
-      console.error('Error Updating Admin Status:', error);
+      console.error('Error Updating Status:', error);
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Failed to Change Admin Status",
+        text: "Failed to Change Status",
         showConfirmButton: false,
         timer: 2000,
       });
+      yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     } finally {
-      yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+      yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     }
 }
 function* updateWorkshop(actions) {
@@ -171,7 +180,7 @@ function* updateWorkshop(actions) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.WORKSHOP_LIST, payload: null });
+      yield put({ type: actionTypes.WORKSHOP_LIST, payload: response });
     } else {
       Swal.fire({
         icon: "error",
@@ -181,9 +190,9 @@ function* updateWorkshop(actions) {
         timer: 2000,
       });
     }
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     console.log(e);
   }
 }
@@ -219,8 +228,7 @@ function* deleteWorkshop(actions) {
           showConfirmButton: false,
           timer: 2000,
         });
-
-        yield put({type: actionTypes.WORKSHOP_LIST, payload: null})
+        yield put({ type: actionTypes.WORKSHOP_LIST, payload: response });
 
       } else {
         Swal.fire({
@@ -234,9 +242,9 @@ function* deleteWorkshop(actions) {
     }
 
   
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     console.log(e);
   }
 }

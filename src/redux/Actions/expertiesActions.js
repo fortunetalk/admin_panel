@@ -1,5 +1,15 @@
 import * as actionTypes from "../actionTypes";
 
+
+export const setIsLoading = () => ({
+  type: actionTypes.SET_IS_LOADING,
+  payload: true,
+});
+
+export const unsetIsLoading = () => ({
+  type: actionTypes.UNSET_IS_LOADING,
+  payload: false,
+});
 export const setExpertiesData = (payload) => ({
   type: actionTypes.SET_ALL_EXPERTIES,
   payload,

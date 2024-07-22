@@ -10,11 +10,12 @@ function* createBlog(actions) {
 
   try {
     const { payload } = actions;
-    console.log('saga payload',payload)
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
     const response = yield ApiRequest.postRequest({
       url: api_url + create_blog,
-      header: "json",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
       data: payload,
     });
 
@@ -35,12 +36,12 @@ function* createBlog(actions) {
         timer: 2000,
       });
     }
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     console.log(e);
   }finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
 
   }
 }
@@ -55,9 +56,9 @@ function* getBlogs() {
       yield put({ type: actionTypes.BLOG_LIST, payload: response?.data })
     }
 
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     console.log(e);
   }
 }
@@ -68,7 +69,9 @@ function* updateBlog(actions) {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
     const response = yield ApiRequest.postRequest({
       url: api_url + update_blog,
-      header: "json",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
       data: payload,
     });
 
@@ -89,7 +92,7 @@ function* updateBlog(actions) {
         timer: 2000,
       });
     }
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   } catch (e) {
     Swal.fire({
       icon: "error",
@@ -100,7 +103,7 @@ function* updateBlog(actions) {
     });
     console.log(e);
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   }
 }
 
@@ -140,7 +143,7 @@ function* updateBlogStatus(action) {
       timer: 2000,
     });
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   }
 }
 function* deleteBlog(actions) {
@@ -187,9 +190,9 @@ function* deleteBlog(actions) {
       }
     }
 
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     console.log(e);
   }
 }

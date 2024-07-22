@@ -1,17 +1,16 @@
 import { call, put, race, takeEvery, takeLeading } from "redux-saga/effects";
 import * as actionTypes from "../actionTypes";
 import { ApiRequest } from "../../utils/apiRequest";
-import { api_url, blog_list, create_blog, update_blog, delete_blog, delete_multiple_blog, update_blog_status} from "../../utils/Constants";
+import { api_url, blog_list, create_blog, update_blog, delete_blog, delete_multiple_blog, update_blog_status } from "../../utils/Constants";
 import Swal from "sweetalert2";
 import { Colors } from "../../assets/styles";
 
 
 function* createBlog(actions) {
-
   try {
     const { payload } = actions;
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
-    const response = yield ApiRequest.postRequest({
+    const response = yield call(ApiRequest.postRequest, {
       url: api_url + create_blog,
       headers: {
         "Content-Type": "multipart/form-data",
@@ -22,11 +21,11 @@ function* createBlog(actions) {
     if (response.success) {
       Swal.fire({
         icon: "success",
-        title: "Blog Added Successfull",
+        title: "Blog Added Successfully",
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({type: actionTypes.CREATE_BLOG, payload: response.data})
+      yield put({ type: actionTypes.CREATE_BLOG, payload: response.data });
     } else {
       Swal.fire({
         icon: "error",
@@ -36,30 +35,27 @@ function* createBlog(actions) {
         timer: 2000,
       });
     }
-    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     console.log(e);
-  }finally {
-    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
-
+  } finally {
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   }
 }
+
 function* getBlogs() {
   try {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
-    const response = yield ApiRequest.getRequest({
-      url: api_url + blog_list
-    })
+    const response = yield call(ApiRequest.getRequest, {
+      url: api_url + blog_list,
+    });
 
     if (response?.success) {
-      yield put({ type: actionTypes.BLOG_LIST, payload: response?.data })
+      yield put({ type: actionTypes.BLOG_LIST, payload: response?.data });
     }
-
-    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     console.log(e);
+  } finally {
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   }
 }
 
@@ -67,7 +63,7 @@ function* updateBlog(actions) {
   try {
     const { payload } = actions;
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
-    const response = yield ApiRequest.postRequest({
+    const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_blog,
       headers: {
         "Content-Type": "multipart/form-data",
@@ -78,11 +74,11 @@ function* updateBlog(actions) {
     if (response.success) {
       Swal.fire({
         icon: "success",
-        title: "Blog Updated Successfull",
+        title: "Blog Updated Successfully",
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({type: actionTypes.UPDATE_BLOG, payload: response})
+      yield put({ type: actionTypes.UPDATE_BLOG, payload: response.data });
     } else {
       Swal.fire({
         icon: "error",
@@ -92,7 +88,6 @@ function* updateBlog(actions) {
         timer: 2000,
       });
     }
-    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   } catch (e) {
     Swal.fire({
       icon: "error",
@@ -103,7 +98,7 @@ function* updateBlog(actions) {
     });
     console.log(e);
   } finally {
-    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   }
 }
 
@@ -111,11 +106,12 @@ function* updateBlogStatus(action) {
   try {
     const { payload } = action;
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
-    const response = yield ApiRequest.postRequest({
+    const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_blog_status,
       header: "json",
       data: payload,
     });
+
     if (response && response.success) {
       Swal.fire({
         icon: "success",
@@ -123,7 +119,7 @@ function* updateBlogStatus(action) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.BLOG_LIST, payload: response });
+      yield put({ type: actionTypes.BLOG_LIST, payload: response.data });
     } else {
       Swal.fire({
         icon: "error",
@@ -143,13 +139,15 @@ function* updateBlogStatus(action) {
       timer: 2000,
     });
   } finally {
-    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   }
 }
+
+
 function* deleteBlog(actions) {
   try {
     const { payload } = actions;
-    const result = yield Swal.fire({
+    const result = yield call(Swal.fire, {
       title: `Are you sure to Delete`,
       text: "You won't be able to revert this!",
       icon: "warning",
@@ -162,7 +160,7 @@ function* deleteBlog(actions) {
     if (result.isConfirmed) {
       yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
-      const response = yield ApiRequest.postRequest({
+      const response = yield call(ApiRequest.postRequest, {
         url: api_url + delete_blog,
         header: "json",
         data: {
@@ -173,7 +171,7 @@ function* deleteBlog(actions) {
       if (response.success) {
         Swal.fire({
           icon: "success",
-          title: "Blog Deleted Successfull",
+          title: "Blog Deleted Successfully",
           showConfirmButton: false,
           timer: 2000,
         });
@@ -189,13 +187,13 @@ function* deleteBlog(actions) {
         });
       }
     }
-
-    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     console.log(e);
+  } finally {
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   }
 }
+
 function* deleteMultipleBlog(actions) {
   try {
     const { ids } = actions.payload;
@@ -206,10 +204,10 @@ function* deleteMultipleBlog(actions) {
       data: { ids },
     });
 
-    if (response) {
+    if (response.success) {
       Swal.fire({
         icon: "success",
-        title: "Blog Deleted Successfully",
+        title: "Blogs Deleted Successfully",
         showConfirmButton: false,
         timer: 2000,
       });
@@ -228,12 +226,12 @@ function* deleteMultipleBlog(actions) {
     Swal.fire({
       icon: "error",
       title: "Error",
-      text: "Failed to delete Blogs ",
+      text: "Failed to delete Blogs",
       showConfirmButton: false,
       timer: 2000,
     });
   } finally {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   }
 }
 

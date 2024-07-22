@@ -3,15 +3,29 @@ import * as actionTypes from "../actionTypes";
 const initialState = {
   appBlogCategoryData: null,
   setBlogCategoryData: null,
-  updateBlogCategoryData:null,
+  updateBlogCategoryData: null,
   deleteBlogCategoryData: null,
   activeBlogCategoryData: null,
+  isLoading: false,
+
 };
 
 const blogCategory = (state = initialState, actions) => {
   const { payload, type } = actions;
 
   switch (type) {
+    case actionTypes.SET_IS_LOADING: {
+      return {
+        ...state,
+        isLoading: true,
+      };
+    }
+    case actionTypes.UNSET_IS_LOADING: {
+      return {
+        ...state,
+        isLoading: false,
+      };
+    }
     case actionTypes.CREATE_BLOG_CATEGORY: {
       return {
         ...state,

@@ -661,11 +661,11 @@ const ListAstrology = ({ astrologerListData }) => {
                       value={
                         selectedAstro?.skillId.length > 1
                           ? selectedAstro.skillId
-                              .map((skill) => skill.title)
-                              .join(", ")
+                            .map((skill) => skill.title)
+                            .join(", ")
                           : selectedAstro.skillId.length === 1
-                          ? selectedAstro.skillId[0].title
-                          : ""
+                            ? selectedAstro.skillId[0].title
+                            : ""
                       }
                       InputProps={{
                         readOnly: true,
@@ -679,11 +679,11 @@ const ListAstrology = ({ astrologerListData }) => {
                       value={
                         selectedAstro?.remediesId.length > 1
                           ? selectedAstro.remediesId
-                              .map((remedy) => remedy.title)
-                              .join(", ")
+                            .map((remedy) => remedy.title)
+                            .join(", ")
                           : selectedAstro.remediesId.length === 1
-                          ? selectedAstro.remediesId[0].title
-                          : ""
+                            ? selectedAstro.remediesId[0].title
+                            : ""
                       }
                       InputProps={{
                         readOnly: true,
@@ -691,17 +691,17 @@ const ListAstrology = ({ astrologerListData }) => {
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                  <TextField
+                    <TextField
                       fullWidth
                       label="Expertise"
                       value={
                         selectedAstro?.expertiseId.length > 1
                           ? selectedAstro.expertiseId
-                              .map((expertise) => expertise.title)
-                              .join(", ")
+                            .map((expertise) => expertise.title)
+                            .join(", ")
                           : selectedAstro.expertiseId.length === 1
-                          ? selectedAstro.expertiseId[0].title
-                          : ""
+                            ? selectedAstro.expertiseId[0].title
+                            : ""
                       }
                       InputProps={{
                         readOnly: true,

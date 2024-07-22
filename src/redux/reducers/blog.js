@@ -15,7 +15,7 @@ const blog = (state = initialState, actions) => {
         isLoading: true,
       };
     }
-    case actionTypes.UNSET_IS_LOADING:{
+    case actionTypes.UNSET_IS_LOADING: {
       return {
         ...state,
         isLoading: false,

@@ -3,7 +3,7 @@ import { put, call, takeLeading } from 'redux-saga/effects';
 import * as actionTypes from '../actionTypes';
 import { ApiRequest } from '../../utils/apiRequest';
 import Swal from "sweetalert2";
-import { api_url,live_class_list, create_live_class, change_live_class_status,change_live_class_admin_status, delete_live_class, update_live_class } from '../../utils/Constants';
+import { api_url, live_class_list, create_live_class, change_live_class_status, change_live_class_admin_status, delete_live_class, update_live_class } from '../../utils/Constants';
 import { Colors } from "../../assets/styles";
 
 
@@ -26,7 +26,9 @@ function* addLiveClass(actions) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.LIVE_CLASS_LIST, payload: response});
+      yield put({ type: actionTypes.LIVE_CLASS_LIST, payload: response });
+      yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+
     } else if (response.error) {
       const errorMessage = response.error.message || "Server Error";
       Swal.fire({
@@ -36,22 +38,21 @@ function* addLiveClass(actions) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.SET_IS_LOADING, payload: response.error });
+      yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+
     }
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
     console.log(e);
     Swal.fire({
       icon: "error",
       title: "Unexpected Error Occured",
-      text: e.message ,
+      text: e.message,
       showConfirmButton: false,
       timer: 2000,
     });
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: e });
-  }finally{
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+  } finally {
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   }
 }
 
@@ -62,104 +63,117 @@ function* getAllLiveClass() {
       url: api_url + live_class_list,
     });
 
-
     if (response) {
       yield put({
         type: actionTypes.LIVE_CLASS_LIST,
         payload: response?.data,
       });
     }
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     console.log(e);
   }
 }
 function* updateLiveClassStatus(action) {
   try {
-      const { payload } = action;
-      yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
-      const response = yield ApiRequest.postRequest({
-          url: api_url + change_live_class_status,
-          header: "json",
-          data: payload,
-      });
-      if (response && response.success) {
-        Swal.fire({
-          icon: "success",
-          title: "Live Class Status Updated Successfully",
-          showConfirmButton: false,
-          timer: 2000,
-        });
-        yield put({ type: actionTypes.LIVE_CLASS_LIST, payload: response });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Server Error",
-          text: "Status Updation Failed",
-          showConfirmButton: false,
-          timer: 2000,
-        });
-      }
-    } catch (error) {
-      console.error('Error Updating Live Class Status:', error);
+    const { payload } = action;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    const response = yield ApiRequest.postRequest({
+      url: api_url + change_live_class_status,
+      header: "json",
+      data: payload,
+    });
+    if (response && response.success) {
       Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Failed to Change Live Class Status",
+        icon: "success",
+        title: "Live Class Status Updated Successfully",
         showConfirmButton: false,
         timer: 2000,
       });
-    } finally {
-      yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+      yield put({ type: actionTypes.LIVE_CLASS_LIST, payload: response });
+      yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Status Updation Failed",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+
     }
+  } catch (error) {
+    console.error('Error Updating Live Class Status:', error);
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Failed to Change Live Class Status",
+      showConfirmButton: false,
+      timer: 2000,
+    });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+
+  } finally {
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+  }
 }
 function* updateLiveClassAdminStatus(action) {
   try {
-      const { payload } = action;
-      yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
-      const response = yield ApiRequest.postRequest({
-          url: api_url + change_live_class_admin_status,
-          header: "json",
-          data: payload,
-      });
-      if (response && response.success) {
-        Swal.fire({
-          icon: "success",
-          title: "Live Class Status Updated Successfully",
-          showConfirmButton: false,
-          timer: 2000,
-        });
-        yield put({ type: actionTypes.LIVE_CLASS_LIST, payload: response });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Server Error",
-          text: "Status Updation Failed",
-          showConfirmButton: false,
-          timer: 2000,
-        });
-      }
-    } catch (error) {
-      console.error('Error Updating Live Class Status:', error);
+    const { payload } = action;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    const response = yield ApiRequest.postRequest({
+      url: api_url + change_live_class_admin_status,
+      header: "json",
+      data: payload,
+    });
+    if (response && response.success) {
       Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Failed to Change Live Class Status",
+        icon: "success",
+        title: "Live Class Status Updated Successfully",
         showConfirmButton: false,
         timer: 2000,
       });
-    } finally {
-      yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+      yield put({ type: actionTypes.LIVE_CLASS_LIST, payload: response });
+      yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Status Updation Failed",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+
     }
+  } catch (error) {
+    console.error('Error Updating Live Class Status:', error);
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Failed to Change Live Class Status",
+      showConfirmButton: false,
+      timer: 2000,
+    });
+
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+
+  } finally {
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+  }
 }
+
 function* updateLiveClass(actions) {
   try {
     const { payload } = actions;
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
-    
+
     const response = yield ApiRequest.postRequest({
-      url: api_url+update_live_class,
+      url: api_url + update_live_class,
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -173,7 +187,11 @@ function* updateLiveClass(actions) {
         showConfirmButton: false,
         timer: 2000,
       });
+
       yield put({ type: actionTypes.LIVE_CLASS_LIST, payload: null });
+
+      yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+
     } else {
       Swal.fire({
         icon: "error",
@@ -182,13 +200,17 @@ function* updateLiveClass(actions) {
         showConfirmButton: false,
         timer: 2000,
       });
+
+      yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+
     }
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     console.log(e);
   }
 }
+
 function* deleteLiveClass(actions) {
   try {
     const { payload } = actions;
@@ -200,8 +222,8 @@ function* deleteLiveClass(actions) {
       confirmButtonColor: Colors.primaryLight,
       cancelButtonColor: Colors.red,
       confirmButtonText: "Delete",
-    })
-    
+    });
+
     if (result.isConfirmed) {
       yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
@@ -210,10 +232,9 @@ function* deleteLiveClass(actions) {
         header: "json",
         data: {
           liveClassId: payload?.liveClassId
-
         },
       });
-  
+
       if (response.success) {
         Swal.fire({
           icon: "success",
@@ -222,7 +243,8 @@ function* deleteLiveClass(actions) {
           timer: 2000,
         });
 
-        yield put({type: actionTypes.LIVE_CLASS_LIST, payload: null})
+        yield put({ type: actionTypes.LIVE_CLASS_LIST, payload: null })
+        yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
 
       } else {
         Swal.fire({
@@ -232,16 +254,19 @@ function* deleteLiveClass(actions) {
           showConfirmButton: false,
           timer: 2000,
         });
+        yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
       }
     }
 
-  
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
     console.log(e);
   }
+
 }
+
 export default function* liveClassSaga() {
   yield takeLeading(actionTypes.CREATE_LIVE_CLASS, addLiveClass);
   yield takeLeading(actionTypes.LIVE_CLASS_LIST, getAllLiveClass);

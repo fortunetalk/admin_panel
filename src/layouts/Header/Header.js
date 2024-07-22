@@ -76,7 +76,7 @@ const Header = ({ isSidebarOpen }) => {
           </div>
 
           <div className="header_icon_name">
-            <img src={logo_icon} style={{ width: 40, height: 40 }} />
+            <img src={logo_icon} style={{ width: 40, height: 40 }} alt="logo" />
             <h3 style={{ marginLeft: 10 }}>Fortune Talk </h3>
           </div>
           <div>

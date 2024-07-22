@@ -8,6 +8,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  CircularProgress,
+
 } from "@mui/material";
 import DvrIcon from "@mui/icons-material/Dvr";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +20,7 @@ import * as CourseActions from "../../redux/Actions/courseActions.js";
 import * as AstrologerActions from "../../redux/Actions/astrologerActions.js";
 import Loader from "../../Components/loading/Loader.js";
 
-const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
+const AddDemoClass = ({ isLoading, dispatch, activeAstrologerData, activeCourseData }) => {
   const navigate = useNavigate();
   const classes = useStyles();
   const [courseId, setcourseId] = useState("");
@@ -157,8 +159,8 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
       formData.append("pdf", pdf.bytes, pdf.file);
 
       dispatch(DemoActions.addDemoClass(formData));
-      handleReset();
-      navigate("/displayDemoClass");
+      // handleReset();
+      // navigate("/displayDemoClass");
     }
   };
 
@@ -354,7 +356,7 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
               error={error.description ? true : false}
             />
           </Grid>
-          
+
           <Grid item lg={12} md={12} sm={12} xs={12}>
             <TextField
               fullWidth
@@ -380,20 +382,20 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
           >
             <label className={classes.uploadImageButton}>
               {
-                icon.file ? 
-                icon.file:
-                'Upload Image'
+                icon.file ?
+                  icon.file :
+                  'Upload Image'
               }
               <input
-            onChange={handleIcon}
-            hidden
-            accept="image/*"
-            type="file"
-          />
-        </label>
-        <div className={classes.errorStyles}>{error.icon}</div>
+                onChange={handleIcon}
+                hidden
+                accept="image/*"
+                type="file"
+              />
+            </label>
+            <div className={classes.errorStyles}>{error.icon}</div>
           </Grid>
-          
+
           <Grid
             item
             lg={4}
@@ -404,51 +406,54 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
           >
             <label className={classes.uploadImageButton}>
               Upload Video
-               <input
-            onChange={handleVideo}
-            hidden
-            accept="video/*"
-            type="file"
-          />
+              <input
+                onChange={handleVideo}
+                hidden
+                accept="video/*"
+                type="file"
+              />
             </label>
             <div className={classes.errorstyles}>{error.video}</div>
           </Grid>
           <Grid item lg={2} sm={6} md={2} xs={6}>
-          {video.file && (
-          <video
-            src={video.file}
-            style={{ width: 150 }}
-            controls
-          />
-        )}
+            {video.file && (
+              <video
+                src={video.file}
+                style={{ width: 150 }}
+                controls
+              />
+            )}
           </Grid>
 
           <Grid
-        item
-        lg={2}
-        sm={6}
-        md={2}
-        xs={6}
-        className={classes.uploadContainer}
-      >
-        <label className={classes.uploadImageButton}>
-          {
-            pdf.file ? pdf.file : 'Upload PDF'
-          }
-          <input
-            onChange={handlePdf}
-            hidden
-            accept="application/pdf"
-            type="file"
-          />
-        </label>
-        <div className={classes.errorStyles}>{error.pdf}</div>
-      </Grid>
+            item
+            lg={2}
+            sm={6}
+            md={2}
+            xs={6}
+            className={classes.uploadContainer}
+          >
+            <label className={classes.uploadImageButton}>
+              {
+                pdf.file ? pdf.file : 'Upload PDF'
+              }
+              <input
+                onChange={handlePdf}
+                hidden
+                accept="application/pdf"
+                type="file"
+              />
+            </label>
+            <div className={classes.errorStyles}>{error.pdf}</div>
+          </Grid>
 
           <Grid item lg={6} sm={6} md={6} xs={6}>
+           
             <div onClick={handleSubmit} className={classes.submitbutton}>
-              Submit
+              {isLoading ? <CircularProgress size={24} /> : " Submit"}
+
             </div>
+
           </Grid>
           <Grid item lg={6} sm={6} md={6} xs={6}>
             <div onClick={handleReset} className={classes.denyButton}>
@@ -471,10 +476,12 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
     });
   }
 };
-
+console.log("state======");
 const mapStateToProps = (state) => ({
   activeCourseData: state.course.activeCourseData,
   activeAstrologerData: state.astrologer.activeAstrologerData,
+  isLoading: state.demoClass.isLoading,
+
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

@@ -136,6 +136,7 @@ export const delete_astrologer_notification = 'admin/astrologer/notification/del
 export const get_chat_history = 'admin/chat_history'
 export const get_admin_earnig_history = 'admin/get_admin_earnig_history'
 export const get_call_history = 'admin/call_history'
+export const get_recharge_history = 'admin/recharge/history'
 export const get_wallet_payments = 'admin/get_wallet_payments'
 
 export const create_language = 'admin/create_language'

@@ -38,7 +38,8 @@ function* addWorkshop(actions) {
         timer: 2000,
       });
     }
-    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
+
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   } catch (e) {
     yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     console.log(e);

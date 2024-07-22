@@ -1,11 +1,11 @@
 // export const base_url = "http://165.232.182.110:4000/";
 // export const api_url = "http://165.232.182.110:4000/api/";
 
-// export const base_url = "http://localhost:8000/";
-// export const api_url = "http://localhost:8000/api/";
+export const base_url = "http://localhost:8000/";
+export const api_url = "http://localhost:8000/api/";
 
-export const base_url = "http://97.74.83.200:8000/";
-export const api_url = "http://97.74.83.200:8000/api/";
+// export const base_url = "http://97.74.83.200:8000/";
+// export const api_url = "http://97.74.83.200:8000/api/";
 
 
 // admin login 
@@ -339,5 +339,13 @@ export const get_bank_request = 'admin/request/bank';
 export const update_bank_request = 'admin/verify/request/bank'
 export const get_gallery_request = 'admin/request/gallery';
 export const update_gallery_request = 'admin/verify/request/gallery'
+
+//live stream
+export const get_live_stream_list= 'admin/live_stream'
+export const update_live_stream_status= 'admin/live_stream/change_status'
+export const delete_live_stream= 'admin/live_stream/delete'
+
+//recharge
+export const recharge_history_list= 'admin/recharge/history'
 
 export const get_all_country = 'https://api.countrystatecity.in/v1/countries'

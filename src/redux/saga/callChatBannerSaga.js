@@ -25,7 +25,8 @@ function* addCallChatBanner(actions) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.GET_ALL_CALL_CHAT_BANNER, payload: response});
+      yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
+      yield put({ type: actionTypes.GET_ALL_CALL_CHAT_BANNER, payload: null});
     } else if (response.error) {
       const errorMessage = response.error.message || "Server Error";
       Swal.fire({
@@ -35,11 +36,11 @@ function* addCallChatBanner(actions) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.SET_IS_LOADING, payload: response.error });
+      yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
+
     }
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
     console.log(e);
     Swal.fire({
       icon: "error",
@@ -48,7 +49,9 @@ function* addCallChatBanner(actions) {
       showConfirmButton: false,
       timer: 2000,
     });
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: e });
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
+  }finally{
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
   }
 }
 

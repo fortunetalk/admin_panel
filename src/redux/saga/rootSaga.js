@@ -38,6 +38,8 @@ import adminLogin from './adminSaga';
 import requestSaga from "./requestSaga";
 import astrologerBannerSaga from "./astrologerBannerSaga";
 import termsAndConditionSaga from "./termsAndConditionSaga";
+import liveStreamSaga from "./liveStreamSaga";
+import rechargeHistorySaga from "./rechargeHistorySaga";
 export default function* rootSaga() {
   yield all([
     reviewSaga(),
@@ -78,5 +80,7 @@ export default function* rootSaga() {
     requestSaga(),
     astrologerBannerSaga(),
     termsAndConditionSaga(),
+    liveStreamSaga(),
+    rechargeHistorySaga(),
   ]);
 }

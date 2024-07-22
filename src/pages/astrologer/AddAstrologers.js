@@ -727,6 +727,13 @@ export const AddAstrologers = ({
     }
   }, [state]);
 
+
+  const callPriceInt = parseInt(callPrice, 10);
+  const companyCallPriceInt = parseInt(companyCallPrice, 10);
+
+  const chatPriceInt = parseInt(chatPrice, 10);
+  const companyChatPriceInt = parseInt(companyChatPrice, 10);
+
   return (
     <>
       {/* <Loader isLoading={isLoading}/> */}
@@ -1513,7 +1520,26 @@ export const AddAstrologers = ({
                 error={error.companyLiveCallPrice ? true : false}
               />
             </Grid>
-            <Grid item lg={4} sm={12} md={12} xs={12}></Grid>
+            <Grid item lg={4} sm={12} md={12} xs={12}>
+                    <TextField
+                      fullWidth
+                      label="Display Call Price"
+                      value={callPriceInt + companyCallPriceInt}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </Grid>
+            <Grid item lg={4} sm={12} md={12} xs={12}>
+                    <TextField
+                      fullWidth
+                      label="Display Chat Price"
+                      value={chatPriceInt + companyChatPriceInt}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </Grid>
 
             <Grid
               item

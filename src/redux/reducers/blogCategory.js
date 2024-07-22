@@ -1,7 +1,7 @@
 import * as actionTypes from "../actionTypes";
 
 const initialState = {
-  appBlogCategoryData: null,
+  appBlogCategoryData: [],
   setBlogCategoryData: null,
   updateBlogCategoryData: null,
   deleteBlogCategoryData: null,
@@ -30,14 +30,17 @@ const blogCategory = (state = initialState, actions) => {
       return {
         ...state,
         setBlogCategoryData: payload,
+        isLoading: false,
       };
     }
     case actionTypes.BLOG_CATEGORY_LIST: {
       return {
         ...state,
         appBlogCategoryData: payload,
+        isLoading: false,
       };
     }
+    
     case actionTypes.UPDATE_BLOG_CATEGORY: {
       const updatedData = state.appBlogCategoryData.map(category =>
         category._id === payload._id ? payload : category
@@ -58,6 +61,7 @@ const blogCategory = (state = initialState, actions) => {
       return {
         ...state,
         activeBlogCategoryData: payload,
+        isLoading: false,
       };
     }
 

@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { connect, useDispatch } from "react-redux";
 import { getBlogCategory } from "../../redux/Actions/blogCategoryActions.js";
 import { addBlog } from "../../redux/Actions/blogActions.js";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 export const AddAstroblog = ({ appBlogCategoryData, addBlog, isLoading }) => {
   const dispatch = useDispatch();
@@ -240,18 +242,13 @@ export const AddAstroblog = ({ appBlogCategoryData, addBlog, isLoading }) => {
           </Grid>
 
           <Grid item lg={12} sm={12} md={12} xs={12}>
-            <TextField
-              id="outlined-multiline-static"
-              multiline
-              rows={4}
-              label="Description"
+            <ReactQuill
+              theme="snow"
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              variant="outlined"
-              fullWidth
-              error={!!error.description}
-              helperText={error.description}
+              onChange={setDescription}
+              placeholder="Enter description..."
             />
+            <div className={classes.errorstyles}>{error.description}</div>
           </Grid>
 
           <Grid item lg={6} sm={6} md={6} xs={6}>

@@ -19,6 +19,7 @@ export const addBlogCategory = payload => ({
 export const getBlogCategory = () => ({
     type: actionTypes.BLOG_CATEGORY_LIST
 });
+
 export const updateBlogCategory = (category) => ({
     type: actionTypes.UPDATE_BLOG_CATEGORY,
     payload: category,

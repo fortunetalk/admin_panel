@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {propStyles, useStyles } from "../../assets/styles.js";
+import { propStyles, useStyles } from "../../assets/styles.js";
 import {
   Avatar,
   Grid,
@@ -10,7 +10,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Button,
+  Button
 } from "@mui/material";
 import { AddCircleRounded, CloseRounded } from "@mui/icons-material";
 import MaterialTable from "material-table";
@@ -24,11 +24,16 @@ import {
   deleteMultipleBlog,
   updateBlogStatus
 } from "../../redux/Actions/blogActions.js";
+import { getBlogCategory } from "../../redux/Actions/blogCategoryActions.js";
 
 const DisplayAstroblog = ({
   appBlogData,
   getBlogs,
-  deleteMultipleBlog
+  updateBlog,
+  deleteBlog,
+  deleteMultipleBlog,
+  updateBlogStatus,
+  appBlogCategoryData
 }) => {
   const classes = useStyles();
   const navigate = useNavigate();
@@ -36,16 +41,16 @@ const DisplayAstroblog = ({
 
   const [selectedRows, setSelectedRows] = useState([]);
   const [isAllSelected, setIsAllSelected] = useState(false);
-
   const [open, setOpen] = useState(false);
   const [blogData, setBlogData] = useState({
     _id: "",
     title: "",
     description: "",
     image: { file: "", bytes: "" },
+    galleryImages: [],
     status: "",
-    created_by: "",
     oldImage: "",
+    categoryId: ""
   });
   const [error, setError] = useState({});
 
@@ -55,6 +60,17 @@ const DisplayAstroblog = ({
     }
   }, [dispatch, appBlogData]);
 
+  useEffect(() => {
+    if (!appBlogCategoryData) {
+      dispatch(getBlogCategory());
+    }
+  }, [dispatch, appBlogCategoryData]);
+
+  useEffect(() => {
+    console.log("Blog Categories Data:", appBlogCategoryData);
+  }, [appBlogCategoryData]);
+
+
   const handleOpen = (rowData) => {
     setOpen(true);
     setBlogData({
@@ -62,9 +78,10 @@ const DisplayAstroblog = ({
       title: rowData.title,
       description: rowData.description,
       image: { file: `/${rowData.image}`, bytes: "" },
+      galleryImages: rowData.galleryImages || [],
       status: rowData.status,
-      created_by: rowData.created_by,
       oldImage: rowData.image,
+      categoryId: rowData.categoryId || ""
     });
   };
 
@@ -73,31 +90,48 @@ const DisplayAstroblog = ({
   };
 
   const handleImageChange = (e) => {
-    setBlogData({
-      ...blogData,
-      image: {
-        file: URL.createObjectURL(e.target.files[0]),
-        bytes: e.target.files[0],
-      },
-    });
+    if (e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setBlogData((prev) => ({
+        ...prev,
+        image: {
+          file: URL.createObjectURL(file),
+          bytes: file
+        }
+      }));
+    }
+  };
+
+  const handleGalleryChange = (e) => {
+    const files = Array.from(e.target.files);
+    const newGalleryImages = files.map(file => ({
+      file: URL.createObjectURL(file),
+      bytes: file
+    }));
+    setBlogData((prev) => ({
+      ...prev,
+      galleryImages: [...prev.galleryImages, ...newGalleryImages]
+    }));
   };
 
   const handleUpdate = () => {
-    const { _id, title, description, image, status, created_by } = blogData;
+    const { _id, title, description, image, status, galleryImages, categoryId } = blogData;
 
-    if (title && description && image && status && created_by) {
-      dispatch(
-        updateBlog({
-          id: _id,
-          title: title,
-          description: description,
-          image: image,
-          status: status,
-          created_by: created_by,
-        })
-      );
+    if (title && description && image && status && categoryId) {
+      const formData = new FormData();
+      formData.append('id', _id);
+      formData.append('title', title);
+      formData.append('description', description);
+      formData.append('image', image.bytes);
+      formData.append('status', status);
+      formData.append('categoryId', categoryId);
+
+      galleryImages.forEach((img) => {
+        formData.append('galleryImages', img.bytes);
+      });
+
+      dispatch(updateBlog(formData));
       handleClose();
-      //   window.location.reload();
     } else {
       Swal.fire({
         icon: "error",
@@ -113,9 +147,10 @@ const DisplayAstroblog = ({
       title: "",
       description: "",
       image: { file: "", bytes: "" },
+      galleryImages: [],
       status: "",
-      created_by: "",
       oldImage: "",
+      categoryId: ""
     });
     setOpen(false);
   };
@@ -140,7 +175,7 @@ const DisplayAstroblog = ({
     const { name, value } = e.target;
     setBlogData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: value
     }));
   };
 
@@ -154,27 +189,7 @@ const DisplayAstroblog = ({
     }
   };
 
-  // const handleDeleteSelected = async () => {
-  //   const idsToDelete = selectedRows.map((row) => row._id);
-  //   Swal.fire({
-  //     title: "Are you sure?",
-  //     text: "You won't be able to revert this!",
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#3085d6",
-  //     cancelButtonColor: "#d33",
-  //     confirmButtonText: "Yes, delete it!",
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       dispatch(deleteMultipleBlog(idsToDelete));
-  //       setSelectedRows([]);
-  //       setIsAllSelected(false);
-  //     }
-  //   });
-  // };
-
   const handleClickOpen = (rowData) => {
-
     Swal.fire({
       title: 'Are you sure to Change the Status?',
       text: "You won't be able to revert this!",
@@ -216,18 +231,17 @@ const DisplayAstroblog = ({
                   />
                 ),
               },
-
               {
-                title: "Description",
-                field: "description",
+                title: "Status",
+                field: "status",
+                render: rowData => (
+                  <div className={classes.statusButton}
+                    style={{ backgroundColor: rowData.status === 'Active' ? '#90EE90' : '#FF7F7F ' }}
+                    onClick={() => handleClickOpen(rowData)}>
+                    {rowData.status}
+                  </div>
+                )
               },
-              { title: "Status", field: "status", render: rowData => (
-                <div className={classes.statusButton}
-                style={{ backgroundColor: rowData.status === 'Active' ? '#90EE90' : '#FF7F7F '}}
-                onClick={() => handleClickOpen(rowData)}>
-                  {rowData.status}
-                </div>
-              )},
             ]}
             options={propStyles.tableStyles}
             style={{ fontSize: "1.4rem" }}
@@ -240,13 +254,7 @@ const DisplayAstroblog = ({
               {
                 icon: "delete",
                 tooltip: "Delete Blog",
-                onClick: (event, rowData) =>
-                  dispatch(
-                    deleteBlog({
-                      blogId: rowData?._id,
-                      title: rowData?.title,
-                    })
-                  ),
+                onClick: (event, rowData) => handleDelete(rowData?._id),
               },
               {
                 icon: () => (
@@ -268,7 +276,7 @@ const DisplayAstroblog = ({
 
   const editModal = () => {
     return (
-      <Dialog open={open}>
+      <Dialog open={open} onClose={handleClose}>
         <DialogContent>
           <Grid container spacing={2}>
             <Grid item lg={12} sm={12} md={12} xs={12}>
@@ -279,7 +287,45 @@ const DisplayAstroblog = ({
                 </div>
               </div>
             </Grid>
-            <Grid item lg={12} md={12} sm={12} xs={12}>
+            <Grid item lg={6} sm={12} md={12} xs={12}>
+              <FormControl fullWidth>
+                <InputLabel id="blog-category-select-label">Select Blog Category</InputLabel>
+                <Select
+                  labelId="blog-category-select-label"
+                  id="blog-category-select"
+                  name="categoryId"
+                  value={blogData.categoryId}
+                  onChange={handleChange}
+                  error={!!error.categoryId}
+                >
+                  {appBlogCategoryData?.map(category => (
+                    <MenuItem key={category._id} value={category._id}>
+                      {category.title}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <div className={classes.errorstyles}>{error.categoryId}</div>
+              </FormControl>
+            </Grid>
+
+            <Grid item lg={6} sm={12} md={6} xs={12}>
+              <FormControl fullWidth>
+                <InputLabel id="status-select-label">Select Status</InputLabel>
+                <Select
+                  labelId="status-select-label"
+                  id="status-select"
+                  name="status"
+                  value={blogData.status}
+                  onChange={handleChange}
+                  error={!!error.status}
+                >
+                  <MenuItem value="Active">Active</MenuItem>
+                  <MenuItem value="InActive">InActive</MenuItem>
+                </Select>
+                <div className={classes.errorstyles}>{error.status}</div>
+              </FormControl>
+            </Grid>
+            <Grid item lg={6} md={6} sm={6} xs={6}>
               <TextField
                 label="Title"
                 name="title"
@@ -292,7 +338,7 @@ const DisplayAstroblog = ({
                 fullWidth
               />
             </Grid>
-            <Grid item lg={12} md={12} sm={12} xs={12}>
+            <Grid item lg={6} md={6} sm={6} xs={6}>
               <TextField
                 label="Description"
                 name="description"
@@ -305,14 +351,7 @@ const DisplayAstroblog = ({
                 fullWidth
               />
             </Grid>
-            <Grid
-              item
-              lg={6}
-              sm={6}
-              md={6}
-              xs={6}
-              className={classes.uploadContainer}
-            >
+            <Grid item lg={6} sm={6} md={6} xs={6} className={classes.uploadContainer}>
               <Grid component="label" className={classes.uploadImageButton}>
                 Upload Picture
                 <input
@@ -329,41 +368,53 @@ const DisplayAstroblog = ({
                 style={{ width: 56, height: 56 }}
               />
             </Grid>
-            <Grid item lg={6} sm={6} md={6} xs={6}>
-              <FormControl fullWidth>
-                <InputLabel id="status-label">Status</InputLabel>
-                <Select
-                  labelId="status-label"
-                  id="status-select"
-                  name="status"
-                  value={blogData.status}
-                  onChange={handleChange}
-                >
-                  <MenuItem value="Active">Active</MenuItem>
-                  <MenuItem value="InActive">Inactive</MenuItem>
-                </Select>
-              </FormControl>
+            <Grid item lg={6} md={6} sm={6} xs={6}>
+              <Grid component="label" className={classes.uploadImageButton}>
+                Upload Gallery Images
+                <input
+                  onChange={handleGalleryChange}
+                  hidden
+                  accept="image/*"
+                  type="file"
+                  multiple
+                />
+              </Grid>
             </Grid>
-            <Grid item lg={6} sm={6} md={6} xs={6}>
+            <Grid item lg={12} md={12} sm={12} xs={12}>
+              <Grid container spacing={1}>
+                {blogData.galleryImages.map((img, index) => (
+                  <Grid item lg={2} md={3} sm={4} xs={6} key={index}>
+                    <Avatar
+                      src={img.file}
+                      style={{ width: 56, height: 56, margin: 4 }}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            </Grid>
+            <Grid item lg={12} sm={12} md={12} xs={12}>
               <TextField
-                label="Created By"
-                name="created_by"
-                value={blogData.created_by}
-                onChange={handleChange}
+                id="outlined-multiline-static"
+                multiline
+                rows={4}
+                label="Description"
                 variant="outlined"
                 fullWidth
+                error={!!error.description}
+                helperText={error.description}
               />
             </Grid>
-            <Grid item lg={6} sm={6} md={6} xs={6}>
-              <div onClick={handleUpdate} className={classes.submitbutton}>
+
+            <Grid item lg={12} sm={12} md={12} xs={12} container justifyContent="center" alignItems="center">
+              <Button onClick={handleUpdate} variant="contained" color="primary" style={{ marginRight: "10px" }}>
                 Submit
-              </div>
-            </Grid>
-            <Grid item lg={6} sm={6} md={6} xs={6}>
-              <div onClick={handleClose} className={classes.denyButton}>
+              </Button>
+              <Button onClick={handleClose} variant="outlined" color="secondary">
                 Reset
-              </div>
+              </Button>
             </Grid>
+
+
           </Grid>
         </DialogContent>
       </Dialog>
@@ -382,13 +433,17 @@ const DisplayAstroblog = ({
 
 const mapStateToProps = (state) => ({
   appBlogData: state.blog?.appBlogData,
+  appBlogCategoryData: state.blog?.appBlogCategoryData
 });
 
-const mapDispatchToProps = {
-  getBlogs,
-  updateBlog,
-  deleteBlog,
-  deleteMultipleBlog
-};
+const mapDispatchToProps = (dispatch) => ({
+  getBlogs: () => dispatch(getBlogs()),
+  updateBlog: (formData) => dispatch(updateBlog(formData)),
+  deleteBlog: (id) => dispatch(deleteBlog(id)),
+  deleteMultipleBlog: (ids) => dispatch(deleteMultipleBlog(ids)),
+  updateBlogStatus: (statusData) => dispatch(updateBlogStatus(statusData)),
+  getBlogCategory: () => dispatch(getBlogCategory()),
+});
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(DisplayAstroblog);

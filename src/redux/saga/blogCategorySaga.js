@@ -8,7 +8,7 @@ function* createBlogCategory(actions) {
   try {
     const { payload } = actions;
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
-    
+
     const response = yield ApiRequest.postRequest({
       url: api_url + create_blog_category,
       header: "json",
@@ -49,7 +49,7 @@ function* createBlogCategory(actions) {
 function* getBlogCategories() {
   try {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
-    
+
     const response = yield ApiRequest.getRequest({
       url: api_url + blog_category_list,
     });
@@ -85,7 +85,7 @@ function* updateBlogCategory(actions) {
     const { title, id, status } = payload;
 
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
-    
+
     const response = yield ApiRequest.postRequest({
       url: api_url + update_blog_category + `${id}`,
       header: "json",
@@ -126,9 +126,9 @@ function* updateBlogCategory(actions) {
 function* deleteBlogCategory(actions) {
   try {
     const { blogCategoryId } = actions.payload;
-    
+
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
-    
+
     const response = yield ApiRequest.postRequest({
       url: api_url + delete_blog_category,
       header: 'json',
@@ -169,7 +169,7 @@ function* deleteBlogCategory(actions) {
 function* activeBlogCategories() {
   try {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
-    
+
     const response = yield ApiRequest.getRequest({
       url: api_url + active_blog_category,
     });

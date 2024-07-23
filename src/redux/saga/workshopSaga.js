@@ -38,8 +38,12 @@ function* addWorkshop(actions) {
         timer: 2000,
       });
     }
+<<<<<<< HEAD
 
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+=======
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
+>>>>>>> 9ecb6d1b75bf0f3cd77ff4a97198edb13b26b700
   } catch (e) {
     yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     console.log(e);

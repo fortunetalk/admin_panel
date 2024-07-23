@@ -8,13 +8,6 @@ import MaterialTable from "material-table";
 import { useNavigate } from "react-router-dom";
 import { CloseRounded } from "@mui/icons-material";
 import Swal from "sweetalert2";
-import {
-  get_remedy,
-  delete_remedy,
-  update_remedy,
-  base_url,
-} from "../../utils/Constants.js";
-import { deleteData, getData } from "../../utils/FetchNodeServices.js";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import { connect } from "react-redux";

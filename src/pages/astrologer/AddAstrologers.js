@@ -99,8 +99,6 @@ export const AddAstrologers = ({
   const [galleryImage, setGalleryImage] = useState([]);
   const [galleryFiles, setGalleryFiles] = useState([]);
 
-  const [displayCallPrice, setDisplayCallPrice] = useState();
-  const [displayChatPrice, setDisplayChatPrice] = useState(); 
 
   const [states, setState] = useState({
     error: {},
@@ -507,7 +505,7 @@ export const AddAstrologers = ({
       formData.append("zipCode", zipCode);
       formData.append("about", about);
       formData.append("educationQualification", educationQualification);
-      formData.append("astrologyQualification", "12th");
+      formData.append("astrologyQualification", astrologyQualification);
       formData.append("follower_count", follower_count);
       formData.append("rating", rating);
       formData.append("bankAcountNumber", bankAccountNumber);
@@ -1521,25 +1519,25 @@ export const AddAstrologers = ({
               />
             </Grid>
             <Grid item lg={4} sm={12} md={12} xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Display Call Price"
-                      value={callPriceInt + companyCallPriceInt}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                  </Grid>
+              <TextField
+                fullWidth
+                label="Display Call Price"
+                value={callPriceInt + companyCallPriceInt}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </Grid>
             <Grid item lg={4} sm={12} md={12} xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Display Chat Price"
-                      value={chatPriceInt + companyChatPriceInt}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                  </Grid>
+              <TextField
+                fullWidth
+                label="Display Chat Price"
+                value={chatPriceInt + companyChatPriceInt}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </Grid>
 
             <Grid
               item

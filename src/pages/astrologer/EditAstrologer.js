@@ -109,6 +109,7 @@ export const EditAstrologer = ({
   const [openRemedies, setOpenRemedies] = useState(false);
   const [openCountry, setOpenCountry] = useState(false);
   const [openDays, setOpenDays] = useState(false);
+  const [openAstrologerType, setOpenAstrologerType] = useState(false);
 
 
   const backendGalleryImages = astrologerData?.galleryImage || [];
@@ -182,7 +183,7 @@ export const EditAstrologer = ({
 
   useEffect(() => {
     if (astrologerId) {
-      getAstrologer(astrologerId); 
+      getAstrologer(astrologerId);
 
     }
   }, [astrologerId]);
@@ -193,8 +194,8 @@ export const EditAstrologer = ({
     if (astrologerData) {
 
       setState({
-        ...astrologerData, 
-        displayName:astrologerData?.displayName,
+        ...astrologerData,
+        displayName: astrologerData?.displayName,
         name: astrologerData?.name,
         email: astrologerData?.email,
         phoneNumber: astrologerData?.phoneNumber,
@@ -225,6 +226,7 @@ export const EditAstrologer = ({
         callPrice: astrologerData?.callPrice,
         chatPrice: astrologerData?.chatPrice,
         astrologerType: astrologerData?.astrologerType,
+        options: astrologerData?.astrologerType,
         about: astrologerData?.about,
         working: astrologerData?.working,
         educationQualification: astrologerData?.educationQualification,
@@ -241,8 +243,8 @@ export const EditAstrologer = ({
 
       });
     }
-  }, [astrologerData]); 
-  
+  }, [astrologerData]);
+
 
 
   useEffect(() => {
@@ -282,6 +284,9 @@ export const EditAstrologer = ({
     }
     if (astrologerData?.preferredDays) {
       updateState({ preferredDays: astrologerData.preferredDays });
+    }
+    if (astrologerData?.astrologerType) {
+      updateState({ options: astrologerData.astrologerType });
     }
     if (astrologerData?.allowedCountryId) {
       updateState({ countryValue: astrologerData.allowedCountryId });
@@ -393,9 +398,10 @@ export const EditAstrologer = ({
     handleError("preferredDays", null);
   };
 
+
   const handleOptions = (item) => {
     if (options.some((selectedItem) => selectedItem === item)) {
-      const option = preferredDays.filter(
+      const option = options.filter(
         (selectedItem) => selectedItem !== item
       );
       updateState({ options: option });
@@ -712,9 +718,19 @@ export const EditAstrologer = ({
     setOpenDays(true);
   };
 
+  const handleClickAstrologerType = () => {
+    setOpenAstrologerType(true);
+  };
+
   const handleCloseDays = (event, reason) => {
     if (reason !== "backdropClick") {
       setOpenDays(false);
+    }
+  };
+
+  const handleCloseAstrologerType = (event, reason) => {
+    if (reason !== "backdropClick") {
+      setOpenAstrologerType(false);
     }
   };
 
@@ -727,10 +743,15 @@ export const EditAstrologer = ({
     dispatch(AstrologerActions.updateAstrologerPreferredDays(formData));
     setOpenDays(false);
   };
-
-
-  
-
+  const handleUpdateOptions = () => {
+    var formData = new FormData();
+    formData.append("astrologerId", astrologerId);
+    for (let i = 0; i < options.length; i++) {
+      formData.append(`astrologerType[${i}]`, options[i]);
+    }
+    dispatch(AstrologerActions.updateAstrologerAstrologerType(formData));
+    setOpenAstrologerType(false);
+  };
 
   const {
     error,
@@ -828,7 +849,7 @@ export const EditAstrologer = ({
                   ))}
               </FormGroup>
             </FormControl>
-          
+
             <Button
               variant="outlined"
               color="primary"
@@ -878,39 +899,8 @@ export const EditAstrologer = ({
           </Grid>
 
           <Grid item lg={4} sm={12} md={12} xs={12}>
-            <FormControl component="fieldset">
-              <FormLabel
-                component="legend"
-                style={{
-                  fontFamily: "Philospher",
-                  color: Colors.black,
-                  fontSize: "1.2rem",
-                }}
-              >
-                Are you working on any other online portal?
-              </FormLabel>
-              <RadioGroup
-                row
-                aria-label="position"
-                name="position"
-                value={working}
-                onChange={(e) => updateState({ working: e.target.value })}
-              >
-                <FormControlLabel
-                  value={"No"}
-                  control={<Radio color="primary" />}
-                  label="No"
-                />
-                <FormControlLabel
-                  value={"Yes"}
-                  control={<Radio color="primary" />}
-                  label="Yes"
-                />
-              </RadioGroup>
-            </FormControl>
+
           </Grid>
-
-
 
           <Grid item lg={12} sm={12} md={12} xs={12}>
             <FormControl component="fieldset">
@@ -937,7 +927,7 @@ export const EditAstrologer = ({
                   ))}
               </FormGroup>
             </FormControl>
-           
+
 
             <Dialog open={openCountry} onClose={handleCloseCountry}>
               <DialogTitle>Update Available Countries</DialogTitle>
@@ -1388,7 +1378,7 @@ export const EditAstrologer = ({
                   })}
               </FormGroup>
             </FormControl>
-         
+
           </Grid>
           <Grid
             item
@@ -1501,7 +1491,7 @@ export const EditAstrologer = ({
                   })}
               </FormGroup>
             </FormControl>
-          
+
             <Button
               variant="outlined"
               color="primary"
@@ -1570,7 +1560,7 @@ export const EditAstrologer = ({
                   ))}
               </FormGroup>
             </FormControl>
-            
+
             <Button
               variant="outlined"
               color="primary"
@@ -1639,7 +1629,7 @@ export const EditAstrologer = ({
                   ))}
               </FormGroup>
             </FormControl>
-          
+
             <Button
               variant="outlined"
               color="primary"
@@ -1797,7 +1787,7 @@ export const EditAstrologer = ({
               <MenuItem value="INR">INR</MenuItem>
               <MenuItem value="USD">USD</MenuItem>
             </Select>
-         
+
           </FormControl>
         </Grid>
         <Grid item lg={4} md={12} sm={12} xs={12}>
@@ -1818,7 +1808,7 @@ export const EditAstrologer = ({
               <MenuItem value="Female">Female</MenuItem>
               <MenuItem value="Other">Other</MenuItem>
             </Select>
-          
+
           </FormControl>
         </Grid>
         <Grid item lg={4} sm={12} md={12} xs={12}>
@@ -1928,7 +1918,7 @@ export const EditAstrologer = ({
                 </MenuItem>
               ))}
             </Select>
-         
+
           </FormControl>
         </Grid>
         <Grid item lg={4} md={12} sm={12} xs={12}>
@@ -1959,7 +1949,7 @@ export const EditAstrologer = ({
                   </MenuItem>
                 ))}
             </Select>
-            
+
           </FormControl>
         </Grid>
         <Grid item lg={4} md={12} sm={12} xs={12}>
@@ -1986,7 +1976,7 @@ export const EditAstrologer = ({
                   </MenuItem>
                 ))}
             </Select>
-          
+
           </FormControl>
         </Grid>
 

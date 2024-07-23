@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import DvrIcon from "@mui/icons-material/Dvr";
 import { useNavigate } from "react-router-dom";
-import logo_icon from "../../assets/images/logo_icon.png";
 import { connect } from "react-redux";
 import * as LiveActions from "../../redux/Actions/liveClassActions.js";
 import * as CourseActions from "../../redux/Actions/courseActions.js";
@@ -148,7 +147,7 @@ const AddLiveClass = ({ dispatch, activeAstrologerData, activeCourseData, isLoad
       formData.append("price", price);
       formData.append("discount", discount);
       formData.append("image", file);
-      formData.append("video",  video.bytes);
+      formData.append("video", video.bytes);
       formData.append("pdf", pdf.file);
 
       dispatch(LiveActions.addLiveClass(formData));
@@ -333,7 +332,7 @@ const AddLiveClass = ({ dispatch, activeAstrologerData, activeCourseData, isLoad
               error={error.description ? true : false}
             />
           </Grid>
-          
+
           <Grid item lg={12} md={12} sm={12} xs={12}>
             <TextField
               fullWidth
@@ -359,20 +358,20 @@ const AddLiveClass = ({ dispatch, activeAstrologerData, activeCourseData, isLoad
           >
             <label className={classes.uploadImageButton}>
               {
-                icon.file ? 
-                icon.file:
-                'Upload Image'
+                icon.file ?
+                  icon.file :
+                  'Upload Image'
               }
               <input
-            onChange={handleIcon}
-            hidden
-            accept="image/*"
-            type="file"
-          />
-        </label>
-        <div className={classes.errorStyles}>{error.icon}</div>
+                onChange={handleIcon}
+                hidden
+                accept="image/*"
+                type="file"
+              />
+            </label>
+            <div className={classes.errorStyles}>{error.icon}</div>
           </Grid>
-          
+
           <Grid
             item
             lg={4}
@@ -383,48 +382,48 @@ const AddLiveClass = ({ dispatch, activeAstrologerData, activeCourseData, isLoad
           >
             <label className={classes.uploadImageButton}>
               Upload Video
-               <input
-            onChange={handleVideo}
-            hidden
-            accept="video/*"
-            type="file"
-          />
+              <input
+                onChange={handleVideo}
+                hidden
+                accept="video/*"
+                type="file"
+              />
             </label>
             <div className={classes.errorstyles}>{error.video}</div>
           </Grid>
           <Grid item lg={2} sm={6} md={2} xs={6}>
-          {video.file && (
-          <video
-            src={video.file}
-            style={{ width: 150 }}
-            controls
-          />
-        )}
+            {video.file && (
+              <video
+                src={video.file}
+                style={{ width: 150 }}
+                controls
+              />
+            )}
           </Grid>
 
           <Grid
-        item
-        lg={2}
-        sm={6}
-        md={2}
-        xs={6}
-        className={classes.uploadContainer}
-      >
-        <label className={classes.uploadImageButton}>
-          {
-            pdf.file ? pdf.file : 'Upload PDF'
-          }
-          <input
-            onChange={handlePdf}
-            hidden
-            accept="application/pdf"
-            type="file"
-          />
-        </label>
-        <div className={classes.errorStyles}>{error.pdf}</div>
-      </Grid>
+            item
+            lg={2}
+            sm={6}
+            md={2}
+            xs={6}
+            className={classes.uploadContainer}
+          >
+            <label className={classes.uploadImageButton}>
+              {
+                pdf.file ? pdf.file : 'Upload PDF'
+              }
+              <input
+                onChange={handlePdf}
+                hidden
+                accept="application/pdf"
+                type="file"
+              />
+            </label>
+            <div className={classes.errorStyles}>{error.pdf}</div>
+          </Grid>
 
-      <Grid item lg={6} sm={6} md={6} xs={6}>
+          <Grid item lg={6} sm={6} md={6} xs={6}>
             <div onClick={handleSubmit} className={classes.submitbutton}>
               {isLoading ? <CircularProgress size={24} /> : "Submit"}
             </div>

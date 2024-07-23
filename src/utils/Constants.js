@@ -73,13 +73,14 @@ export const update_astrologer_profile_image = "admin/astrologer-update-profile-
 export const update_astrologer_bank_image = "admin/astrologer_update_bank_proof";
 export const update_astrologer_id_image = "admin/astrologer_update_id_proof";
 export const update_astrologer_gallery_image = "admin/astrologer-update-gallery-image";
+export const update_astrologer_astrologer_type = "admin/astrologer_update_astrologer_type";
 
 
-export const create_recharge_plan = "admin/create_recharge_plan";
-export const get_recharge_plans = "admin/get-all-recharge-plans";
-export const update_recharge_plans = "admin/update-recharge-plan"
-export const delete_recharge_plans = "admin/delete-recharge-plan"
-export const update_recharge_plan_status = "admin/update-recharge-plan-status"
+export const create_recharge_plan = "admin/recharge_plan/add";
+export const get_recharge_plans = "admin/recharge_plan";
+export const update_recharge_plans = "admin/recharge_plan/update"
+export const delete_recharge_plans = "admin/recharge_plan/delete"
+export const update_recharge_plan_status = "admin/recharge_plan/change_status"
 
 export const add_first_recharge_offer = "admin/add-first-recharge";
 export const get_first_recharge_offer = "admin/get-first-recharge"

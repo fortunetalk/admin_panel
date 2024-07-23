@@ -10,6 +10,7 @@ import {
   Select,
   InputLabel,
   MenuItem,
+  CircularProgress
 } from "@mui/material";
 import DvrIcon from "@mui/icons-material/Dvr";
 import { Colors } from "../../assets/styles.js";
@@ -25,6 +26,7 @@ const AddRedirectBanner = ({
   astrologerListData,
   productCategoryData,
   poojaCategoryData,
+  isLoading
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -125,6 +127,7 @@ const AddRedirectBanner = ({
       }
 
       dispatch(addRedirectionBanner(formData));
+      handleReset();
     }
   };
 
@@ -299,10 +302,12 @@ const AddRedirectBanner = ({
               <div className={classes.errorstyles}>{error.status}</div>
             </FormControl>
           </Grid>
-
           <Grid item lg={6} sm={6} md={6} xs={6}>
-            <div onClick={handleSubmit} className={classes.submitbutton}>
-              Submit
+          {/* <div onClick={handleSubmit} className={classes.submitbutton}>
+              {isLoading ? <CircularProgress size={24} /> : "Submit"}
+            </div> */}
+          <div onClick={handleSubmit} className={classes.submitbutton}>
+             Submit
             </div>
           </Grid>
           <Grid item lg={6} sm={6} md={6} xs={6}>
@@ -320,6 +325,7 @@ const mapStateToProps = (state) => ({
   astrologerListData: state.astrologer.astrologerListData,
   productCategoryData: state.productCategory.productCategoryData,
   poojaCategoryData: state.poojaCategory.poojaCategoryData,
+  isLoading: state.redirectBanner.isLoading,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

@@ -127,6 +127,10 @@ import AddAstrologerBanner from "./pages/banner/AddAstrologerBanner";
 import DisplayAstrologerBanner from "./pages/banner/DisplayAstrologerBanner";
 import AddTermsAndCondition from "./pages/pages/AddTermsAndCondition";
 import RechargePlan from "./pages/recharge/RechargePlan";
+import AddAstrologerTrainingBanner from "./pages/banner/AddAstrologerTrainingBanner";
+import DisplayAstrologerTrainingBanner from "./pages/banner/DisplayAstrologerTrainingBanner";
+import DemoClassHistory from "./pages/history/DemoClassHistory";
+import LiveClassHistory from "./pages/history/LiveClassHistory";
 
 function App() {
   return (
@@ -192,6 +196,8 @@ function App() {
           <Route path="/AddEnquiry" element={<AddEnquiry />} />
           <Route path="/history/ChatHistory" element={<ChatHistory />} />
           <Route path="/history/CallHistory" element={<CallHistory />} />
+          <Route path="/history/demoClassHistory" element={<DemoClassHistory/>} />
+          <Route path="/history/liveClassHistory" element={<LiveClassHistory/>} />
           <Route path="/history/UsersGiftHistory" element={<UsersGiftHistory />} />
           <Route path="/history/RechargeHistory" element={<RechargeHistory />} />
           <Route path="/liveStream" element={<LiveStream />} />
@@ -286,6 +292,8 @@ function App() {
           <Route path="/displayPoojaBanner" element={<DisplayPoojaBanner/>} />
           <Route path="/addAstrologerBanner" element={<AddAstrologerBanner/>} />
           <Route path="/displayAstrologerBanner" element={<DisplayAstrologerBanner/>} />
+          <Route path="/addAstrologerTrainingBanner" element={<AddAstrologerTrainingBanner/>} />
+          <Route path="/displayAstrologerTrainingBanner" element={<DisplayAstrologerTrainingBanner/>} />
 
           <Route path="/displayTestimonial" element={<DisplayTestimonial/>} />
           <Route path="/addTestimonial" element={<AddTestimonial/>} />

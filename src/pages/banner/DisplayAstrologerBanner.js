@@ -22,6 +22,10 @@ const DisplayAstrologerBanner = ({ dispatch, astrologerBannerData }) => {
   const [file, setFile] = useState(null);
   const [icon, setIcon] = useState({ file: "", bytes: null });
 
+  useEffect(function () {
+    dispatch(Actions.getAstrologerBannerData());
+  }, []);
+
 
   // Open modal with specific row data
   const handleOpen = (rowData) => {

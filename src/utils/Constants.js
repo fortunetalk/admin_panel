@@ -268,6 +268,13 @@ export const update_course_banner = 'admin/course-banner/update'
 export const change_course_banner_status = 'admin/course-banner/change-status'
 export const delete_course_banner = 'admin/course-banner/delete'
 
+//ASTROLOGER TRAINING BANNER
+export const create_astrologer_training_banner='admin/astrologer-training-banner/add'
+export const astrologer_training_banner_list='admin/astrologer-training-banner'
+export const update_astrologer_training_banner = 'admin/astrologer-training-banner/update'
+export const change_astrologer_training_banner_status = 'admin/astrologer-training-banner/change-status'
+export const delete_astrologer_training_banner = 'admin/astrologer-training-banner/delete'
+
 //ECOMMERCE BANNER
 export const create_ecommerce_banner='admin/ecommerce-banner/add'
 export const ecommerce_banner_list='admin/ecommerce-banner'

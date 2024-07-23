@@ -168,6 +168,16 @@ const routes = [
         icon: <BiAbacus />,
       },
       {
+        path: "/history/demoClassHistory",
+        name: "Demo Class History",
+        icon: <BiAbacus />,
+      },
+      {
+        path: "/history/liveClassHistory",
+        name: "Live Class History",
+        icon: <BiAbacus />,
+      },
+      {
         path: "/history/UsersGiftHistory",
         name: "User's Gift History",
         icon: <BiAbacus />,
@@ -257,6 +267,11 @@ const routes = [
     name: "Banner",
     icon: <BiAbacus />,
     subRoutes: [
+      {
+        path: "/displayAstrologerTrainingBanner",
+        name: "Astrologer Training Banner",
+        icon: <BiAbacus />,
+      },
       {
         path: "/displayAstrologerBanner",
         name: "Astrologer Banner",

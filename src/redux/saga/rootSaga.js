@@ -40,6 +40,7 @@ import astrologerBannerSaga from "./astrologerBannerSaga";
 import termsAndConditionSaga from "./termsAndConditionSaga";
 import liveStreamSaga from "./liveStreamSaga";
 import rechargeHistorySaga from "./rechargeHistorySaga";
+import astrologerTrainingBannerSaga from "./astrologerTrainingBannerSaga";
 export default function* rootSaga() {
   yield all([
     reviewSaga(),
@@ -82,5 +83,6 @@ export default function* rootSaga() {
     termsAndConditionSaga(),
     liveStreamSaga(),
     rechargeHistorySaga(),
+    astrologerTrainingBannerSaga(),
   ]);
 }

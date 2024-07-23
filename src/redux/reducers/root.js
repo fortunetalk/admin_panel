@@ -40,6 +40,7 @@ import astrologerBanner from "./astrologerBanner";
 import termsAndCondition from "./termsAndCondition";
 import liveStream from "./liveStream";
 import rechargeHistory from "./rechargeHistory";
+import astrologerTrainingBanner from "./astrologerTrainingBanner";
 
 const rootReducer = combineReducers({
   admin,
@@ -82,6 +83,7 @@ const rootReducer = combineReducers({
   termsAndCondition,
   liveStream,
   rechargeHistory,
+  astrologerTrainingBanner,
 });
 
 // const appReducer = (state, action) => {

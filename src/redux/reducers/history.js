@@ -6,6 +6,8 @@ const initialState = {
   callHistoryData: null,
   customerFirebaseID: null,
   rechargeHistoryData: null,
+  demoClassHistoryData: null,
+  liveClassHistoryData: null,
   isLoading: false,
 
 };
@@ -44,6 +46,45 @@ const history = (state = initialState, actions) => {
       return {
         ...state,
         callHistoryData: payload,
+      };
+    }
+    case actionTypes.GET_DEMO_CLASS_HISTORY: {
+      return {
+        ...state,
+        demoClassHistoryData: payload,
+      };
+    }
+    case actionTypes.UPDATE_DEMO_CLASS_HISTORY_STATUS: {
+      return {
+        ...state,
+        demoClassHistoryData: payload,
+      };
+    }
+    case actionTypes.DELETE_DEMO_CLASS_HISTORY: {
+      return {
+        ...state,
+        demoClassHistoryData: payload,
+      };
+    }
+
+
+
+    case actionTypes.GET_LIVE_CLASS_HISTORY: {
+      return {
+        ...state,
+        liveClassHistoryData: payload,
+      };
+    }
+    case actionTypes.UPDATE_LIVE_CLASS_HISTORY_STATUS: {
+      return {
+        ...state,
+        liveClassHistoryData: payload,
+      };
+    }
+    case actionTypes.DELETE_LIVE_CLASS_HISTORY: {
+      return {
+        ...state,
+        liveClassHistoryData: payload,
       };
     }
     case actionTypes.SET_RECHARGE_HISTORY: {

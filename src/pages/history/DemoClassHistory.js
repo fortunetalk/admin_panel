@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useStyles, propStyles } from "../../assets/styles.js";
-import {
-  Grid,
-  TextField,
-} from "@mui/material";
+import { Grid, TextField, InputLabel, Select,FormControl, MenuItem, Avatar } from "@mui/material";
 import MaterialTable from "material-table";
-import { useNavigate } from "react-router-dom";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import { CloseRounded } from "@mui/icons-material";
@@ -16,68 +12,88 @@ import { connect } from "react-redux";
 import { secondsToHMS } from "../../utils/services.js";
 import moment from "moment";
 
-const DemoClassHistory = ({ dispatch, callHistoryData }) => {
+const DemoClassHistory = ({ dispatch, demoClassHistoryData }) => {
   const classes = useStyles();
-  const navigate = useNavigate();
 
   const [viewData, setViewData] = useState(false);
-  const [data, setData] = useState({
-    transactionId: "",
-    customerId: "",
-    astrologerId: "",
-    customerName: "",
-    customerEmail: "",
-    astrologerName: "",
-    astrologerDisplayName: "",
-    astrologerEmail: "",
-    startTime: "",
-    endTime: "",
-    durationInSeconds: "",
-    callPrice: "",
-    commissionPrice: "",
-    status: "",
-    deductedAmount: "",
-    callType: "",
-    callId: "",
-  });
+  const [demoClassId, setDemoClassId] = useState("");
+  const [courseId, setcourseId] = useState("");
+  const [astrologerId, setAstrologerId] = useState("");
+  const [className, setclassName] = useState("");
+  const [error, setError] = useState({});
+  const [status, setStatus] = useState("");
+  const [description, setDescription] = useState("");
+  const [learn, setLearn] = useState("");
+  const [courseContent, setCourseContent] = useState("");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [sessionTime, setSessionTime] = useState("");
+  const [googleMeet, setGoogleMeet] = useState("");
+  const [customerName, setCustomerName] = useState('');
+  const [mobileNumber, setMobileNumber] = useState('')
+  const [classStatus, setClassStatus] = useState('');
+  const [adminStatus, setAdminStatus] = useState('');
+  const [icon, setIcon] = useState({ file: "", bytes: null });
+  const [video, setVideo] = useState({ file: '', bytes: null });
 
   useEffect(function () {
-    dispatch(HistoryActions.getCallHistory());
+    dispatch(HistoryActions.getDemoClassHistory());
   }, []);
 
   const handleView = (rowData) => {
     setViewData(true);
-    setData({
-      transactionId: rowData?.transactionId || "",
-      customerId: rowData?.customerId?._id || "",
-      astrologerId: rowData?.astrologerId?._id || "",
-      customerName: rowData?.customerId?.firstName || "",
-      customerEmail: rowData?.customerId?.email || "",
-      astrologerName: rowData?.astrologerId?.name || "",
-      astrologerDisplayName: rowData?.astrologerId?.displayName || "",
-      astrologerEmail: rowData?.astrologerId?.email || "",
-
-      startTime: new Date(rowData?.startTime).toLocaleString() || "",
-      endTime: new Date(rowData?.endTime).toLocaleString() || "",
-      durationInSeconds: rowData?.durationInSeconds || "",
-      callPrice: rowData?.callPrice || "",
-      commissionPrice: rowData?.commissionPrice || "",
-      status: rowData?.status || "",
-      deductedAmount: rowData?.deductedAmount || "",
-      callType: rowData?.callType || "",
-      callId: rowData?.callId || "",
-    });
+    const formattedDate = new Date(rowData?.date).toISOString().split("T")[0];
+    setDate(formattedDate);
+    setDemoClassId(rowData?._id)
+    setcourseId(rowData?.courseId?.title);
+    setAstrologerId(rowData?.astrologerId?.displayName);
+    setclassName(rowData?.demoClassId.className);
+    setStatus(rowData?.demoClassId.status);
+    setDescription(rowData?.demoClassId.description);
+    setLearn(rowData?.demoClassId.learn);
+    setCourseContent(rowData?.demoClassId.courseContent);
+    setTime(rowData?.demoClassId.time);
+    setSessionTime(rowData?.demoClassId.sessionTime);
+    setGoogleMeet(rowData?.demoClassId.googleMeet);
+    setClassStatus(rowData?.demoClassId.classStatus);
+    setAdminStatus(rowData?.demoClassId.adminStatus);
+    setCustomerName(rowData?.customerName);
+    setMobileNumber(rowData?.mobileNumber);
+    setIcon(rowData?.demoClassId.image);
+    setVideo(rowData?.demoClassId.video);
+   
   };
 
   const handleClose = () => {
     setViewData(false);
+  };
+  const handleOptionChange = (e) => {
+    setStatus(e.target.value);
+  };
+
+  const handleClickOpen = (rowData) => {
+
+    Swal.fire({
+      title: 'Are you sure to Change the Status?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Change it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const newStatus = rowData.status === 'Active' ? 'InActive' : 'Active';
+        dispatch(HistoryActions.updateDemoClassHistoryStatus({ id: rowData._id, status: newStatus }));
+      }
+    });
   };
 
   return (
     <div className={classes.container}>
       <Loader />
       <div className={classes.box}>
-        {callHistoryData && displayTable()}
+        {demoClassHistoryData && displayTable()}
         {editModal()}
       </div>
     </div>
@@ -88,64 +104,55 @@ const DemoClassHistory = ({ dispatch, callHistoryData }) => {
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
             title="Demo Class History"
-            data={callHistoryData}
+            data={demoClassHistoryData}
             columns={[
               {
                 title: "S.No",
                 editable: "never",
-                render: (rowData) => callHistoryData.indexOf(rowData) + 1,
+                render: rowData => Array.isArray(demoClassHistoryData) ? demoClassHistoryData.indexOf(rowData) + 1 : 'N/A'
               },
-
-            //   { title: "Call ID", field: "_id" },
+              {
+                title: "Course Name",
+                field: "courseId.title",
+              },
+              { title: "Class Name", field: "demoClassId.className" },
               {
                 title: "Astrologer Display Name",
                 field: "astrologerId.displayName",
               },
-              { title: "Customer Name", field: "customerId.firstName" },
               {
-                title: "Duration",
-                render: (rowData) => (
-                  <div>
-                    {rowData?.durationInSeconds &&
-                      secondsToHMS(rowData?.durationInSeconds)}
-                  </div>
-                ),
+                title: "Customer Name",
+                field: "customerName",
               },
               {
-                title: "Start Time",
-                render: (rowData) => (
-                  <div>
-                    {rowData?.startTime &&
-                      moment(rowData?.startTime).format("HH:mm:ss A")}
-                  </div>
-                ),
+                title: "Mobile Number",
+                field: "mobileNumber",
               },
-              {
-                title: "End time",
-                render: (rowData) => (
-                  <div>
-                    {rowData?.endTime &&
-                      moment(rowData?.endTime).format("HH:mm:ss A")}
-                  </div>
-                ),
-              },
-              {
-                title: "Date",
-                render: (rowData) => (
-                  <div>
-                    {rowData?.endTime &&
-                      moment(rowData?.createdAt).format("DD-MM-YYYY")}
-                  </div>
-                ),
-              },
-              { title: "Status", field: "status" },
+
+              { title: "Status", field: "status", render: rowData => (
+                <div className={classes.statusButton}
+                style={{ backgroundColor: rowData.status === 'Active' ? '#90EE90' : '#FF7F7F '}}
+                onClick={() => handleClickOpen(rowData)}>
+                  {rowData.status}
+                </div>
+              )},
             ]}
             options={{ ...propStyles.tableStyles, filtering: false }}
             actions={[
               {
                 icon: "visibility",
-                tooltip: "View Chat History",
+                tooltip: "View Data",
                 onClick: (event, rowData) => handleView(rowData),
+              },
+              {
+                icon: "delete",
+                tooltip: "Delete Gift",
+                onClick: (event, rowData) =>
+                  dispatch(
+                    HistoryActions.deleteDemoClassHistory({
+                      id: rowData?._id,
+                    })
+                  ),
               },
             ]}
           />
@@ -156,210 +163,215 @@ const DemoClassHistory = ({ dispatch, callHistoryData }) => {
 
   function editModal() {
     const showEditForm = () => {
-      return (
-        <Grid container spacing={2}>
-          <Grid item lg={12} sm={12} md={12} xs={12}>
-            <div className={classes.headingContainer}>
-              <div className={classes.heading}>Demo Class History Data</div>
-              <div onClick={handleClose} className={classes.closeButton}>
-                <CloseRounded />
-              </div>
-            </div>
-          </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Call ID"
-              value={data.callId}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Transaction ID"
-              value={data.transactionId}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Customer ID"
-              value={data.customerId}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Astrologer ID"
-              value={data.astrologerId}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Customer Name"
-              value={data.customerName}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Customer Email"
-              value={data.customerEmail}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Astrologer Name"
-              value={data.astrologerName}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Astrologer Display Name"
-              value={data.astrologerDisplayName}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Astrologer Email"
-              value={data.astrologerEmail}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Start Time"
-              value={data.startTime}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="End Time"
-              value={data.endTime}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Duration (seconds)"
-              value={data.durationInSeconds}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Call Price"
-              value={data.callPrice}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Commission Price"
-              value={data.commissionPrice}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Status"
-              value={data.status}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Deducted Amount"
-              value={data.deductedAmount}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Call Type"
-              value={data.callType}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-        </Grid>
-      );
+        return (
+            <Grid container spacing={2}>
+              <Grid item lg={12} sm={12} md={12} xs={12}>
+                <div className={classes.headingContainer}>
+                  <div className={classes.heading}>Demo Class History Data</div>
+                  <div onClick={handleClose} className={classes.closeButton}>
+                    <CloseRounded />
+                  </div>
+                </div>
+              </Grid>
+              <Grid item lg={6} md={6} sm={12} xs={12}>
+                <TextField
+                  label="Course Name"
+                  value={courseId}
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+              <Grid item lg={6} md={6} sm={12} xs={12}>
+                <TextField
+                  label="Astrologer Display Name"
+                  value={astrologerId}
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+              <Grid item lg={6} md={6} sm={12} xs={12}>
+                <TextField
+                  label="Class Name"
+                  value={className}
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+              <Grid item lg={6} md={6} sm={12} xs={12}>
+                <TextField
+                  label="Customer Name"
+                  value={customerName}
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+              <Grid item lg={6} md={6} sm={12} xs={12}>
+                <TextField
+                  label="Mobile Number"
+                  value={mobileNumber}
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+              <Grid item lg={6} md={6} sm={12} xs={12}>
+                <TextField
+                  label="Status"
+                  value={status}
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+              <Grid item lg={6} md={6} sm={12} xs={12}>
+                <TextField
+                  label="Class Status"
+                  value={classStatus}
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+              <Grid item lg={6} md={6} sm={12} xs={12}>
+                <TextField
+                  label="Admin Status"
+                  value={adminStatus}
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+    
+    
+              <Grid item lg={6} md={6} sm={12} xs={12}>
+                <TextField
+                  label="Date"
+                  value={date}
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+              <Grid item lg={6} md={6} sm={12} xs={12}>
+                <TextField
+                  label="Time"
+                  value={time}
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+              <Grid item lg={6} md={6} sm={12} xs={12}>
+                <TextField
+                  label="Session Time"
+                  value={sessionTime}
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+              <Grid item lg={6} md={6} sm={12} xs={12}>
+                <TextField
+                  label="Google Meet"
+                  value={googleMeet}
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+              <Grid item lg={12} md={12} sm={12} xs={12}>
+                <TextField
+                  fullWidth
+                  label="Description"
+                  id="fullWidth"
+                  value={description}
+                  multiline
+                  rows={2}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+              <Grid item lg={12} md={12} sm={12} xs={12}>
+                <TextField
+                  fullWidth
+                  label="Learn"
+                  id="fullWidth"
+                  value={learn}
+                  multiline
+                  rows={2}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+              <Grid item lg={12} md={12} sm={12} xs={12}>
+                <TextField
+                  fullWidth
+                  label="Course Content"
+                  id="fullWidth"
+                  value={courseContent}
+                  multiline
+                  rows={2}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+              <Grid item lg={6} md={6} sm={12} xs={12}>
+                <label htmlFor="">Image</label>
+                <Avatar
+                  src={icon}
+                  variant="square"
+                  style={{
+                    width: "100%",
+                    height: "150px",
+                    objectFit: "cover",
+                  }}
+                />
+              </Grid>
+              <Grid item lg={6} md={6} sm={12} xs={12}>
+                <label htmlFor="">Video</label>
+                <video
+                  src={video}
+                  style={{
+                    width: "100%",
+                    height: "150px",
+                    objectFit: "cover",
+                  }}
+                  controls
+                />
+              </Grid>
+            </Grid>
+          );
     };
 
     return (
@@ -373,7 +385,7 @@ const DemoClassHistory = ({ dispatch, callHistoryData }) => {
 };
 
 const mapStateToProps = (state) => ({
-  callHistoryData: state.history.callHistoryData,
+  demoClassHistoryData: state.history.demoClassHistoryData,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

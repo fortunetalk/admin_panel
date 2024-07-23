@@ -11,6 +11,7 @@ import { addBlog } from "../../redux/Actions/blogActions.js";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
+
 export const AddAstroblog = ({ appBlogCategoryData, addBlog, isLoading }) => {
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -36,7 +37,7 @@ export const AddAstroblog = ({ appBlogCategoryData, addBlog, isLoading }) => {
     if (!appBlogCategoryData) {
       dispatch(getBlogCategory());
     }
-  }, [dispatch, appBlogCategoryData]);
+  }, []);
 
   const handleIcon = (e) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -47,6 +48,9 @@ export const AddAstroblog = ({ appBlogCategoryData, addBlog, isLoading }) => {
       setFile(e.target.files[0]);
     }
   };
+
+
+
 
   const handleGallery = (event) => {
     const files = Array.from(event.target.files);
@@ -92,6 +96,34 @@ export const AddAstroblog = ({ appBlogCategoryData, addBlog, isLoading }) => {
       setError({ ...error.response?.data, gallery: "Failed to upload gallery images" });
     }
   };
+
+
+
+
+  const modules = {
+    toolbar: [
+      [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'align': [] }],
+      ['link', 'image', 'video'],
+      ['clean']
+    ],
+    clipboard: {
+      matchVisual: false,
+    }
+  };
+  
+  const formats = [
+    'header', 'font',
+    'list', 'bullet',
+    'bold', 'italic', 'underline', 'strike', 'blockquote',
+    'color', 'background',
+    'align',
+    'link', 'image', 'video'
+  ];
+
 
   const handleReset = () => {
     setError({
@@ -246,6 +278,8 @@ export const AddAstroblog = ({ appBlogCategoryData, addBlog, isLoading }) => {
               theme="snow"
               value={description}
               onChange={setDescription}
+              modules={modules}
+              formats={formats}
               placeholder="Enter description..."
             />
             <div className={classes.errorstyles}>{error.description}</div>

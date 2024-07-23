@@ -25,6 +25,8 @@ import {
   updateBlogStatus
 } from "../../redux/Actions/blogActions.js";
 import { getBlogCategory } from "../../redux/Actions/blogCategoryActions.js";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const DisplayAstroblog = ({
   appBlogData,
@@ -33,15 +35,20 @@ const DisplayAstroblog = ({
   deleteBlog,
   deleteMultipleBlog,
   updateBlogStatus,
-  appBlogCategoryData
+  appBlogCategoryData,
+  getBlogCategory
 }) => {
+
   const classes = useStyles();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const [description, setDescription] = useState("");
+  const [galleryImages, setGalleryImages] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [isAllSelected, setIsAllSelected] = useState(false);
   const [open, setOpen] = useState(false);
+  const [file, setFile] = useState(null);
+
   const [blogData, setBlogData] = useState({
     _id: "",
     title: "",
@@ -70,15 +77,13 @@ const DisplayAstroblog = ({
     console.log("Blog Categories Data:", appBlogCategoryData);
   }, [appBlogCategoryData]);
 
-
   const handleOpen = (rowData) => {
     setOpen(true);
     setBlogData({
       _id: rowData._id,
       title: rowData.title,
       description: rowData.description,
-      image: { file: `/${rowData.image}`, bytes: "" },
-      galleryImages: rowData.galleryImages || [],
+      galleryImages: rowData.galleryImage || [],
       status: rowData.status,
       oldImage: rowData.image,
       categoryId: rowData.categoryId || ""
@@ -90,44 +95,34 @@ const DisplayAstroblog = ({
   };
 
   const handleImageChange = (e) => {
-    if (e.target.files.length > 0) {
-      const file = e.target.files[0];
-      setBlogData((prev) => ({
-        ...prev,
-        image: {
-          file: URL.createObjectURL(file),
-          bytes: file
-        }
-      }));
+    if (e.target.files && e.target.files.length > 0) {
+      setFile(e.target.files[0]);
     }
   };
 
-  const handleGalleryChange = (e) => {
-    const files = Array.from(e.target.files);
-    const newGalleryImages = files.map(file => ({
-      file: URL.createObjectURL(file),
-      bytes: file
-    }));
-    setBlogData((prev) => ({
-      ...prev,
-      galleryImages: [...prev.galleryImages, ...newGalleryImages]
-    }));
+  const handleGalleryChange = (event) => {
+    const files = Array.from(event.target.files);
+    setGalleryImages(files);
   };
 
   const handleUpdate = () => {
-    const { _id, title, description, image, status, galleryImages, categoryId } = blogData;
+    const { _id, title, description, image, status, categoryId } = blogData;
 
-    if (title && description && image && status && categoryId) {
+    if (title && description && image.bytes && status && categoryId) {
       const formData = new FormData();
       formData.append('id', _id);
       formData.append('title', title);
       formData.append('description', description);
-      formData.append('image', image.bytes);
+      formData.append('image', image.bytes); // Append image bytes only if selected
       formData.append('status', status);
       formData.append('categoryId', categoryId);
 
+      if (file) {
+        formData.append('image', file);
+      }
+
       galleryImages.forEach((img) => {
-        formData.append('galleryImages', img.bytes);
+        formData.append('galleryImage', img);
       });
 
       dispatch(updateBlog(formData));
@@ -274,6 +269,30 @@ const DisplayAstroblog = ({
     );
   }
 
+  const modules = {
+    toolbar: [
+      [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'align': [] }],
+      ['link', 'image', 'video'],
+      ['clean']
+    ],
+    clipboard: {
+      matchVisual: false,
+    }
+  };
+
+  const formats = [
+    'header', 'font',
+    'list', 'bullet',
+    'bold', 'italic', 'underline', 'strike', 'blockquote',
+    'color', 'background',
+    'align',
+    'link', 'image', 'video'
+  ];
+
   const editModal = () => {
     return (
       <Dialog open={open} onClose={handleClose}>
@@ -338,20 +357,8 @@ const DisplayAstroblog = ({
                 fullWidth
               />
             </Grid>
-            <Grid item lg={6} md={6} sm={6} xs={6}>
-              <TextField
-                label="Description"
-                name="description"
-                error={!!error.description}
-                helperText={error.description}
-                value={blogData.description}
-                onFocus={() => handleError("description", null)}
-                onChange={handleChange}
-                variant="outlined"
-                fullWidth
-              />
-            </Grid>
-            <Grid item lg={6} sm={6} md={6} xs={6} className={classes.uploadContainer}>
+
+            <Grid item lg={4} sm={4} md={4} xs={4} className={classes.uploadContainer}>
               <Grid component="label" className={classes.uploadImageButton}>
                 Upload Picture
                 <input
@@ -362,9 +369,9 @@ const DisplayAstroblog = ({
                 />
               </Grid>
             </Grid>
-            <Grid item lg={6} sm={6} md={6} xs={6}>
+            <Grid item lg={2} sm={2} md={2} xs={2}>
               <Avatar
-                src={blogData.image?.file}
+                src={blogData?.oldImage} // Use image file if available
                 style={{ width: 56, height: 56 }}
               />
             </Grid>
@@ -382,10 +389,10 @@ const DisplayAstroblog = ({
             </Grid>
             <Grid item lg={12} md={12} sm={12} xs={12}>
               <Grid container spacing={1}>
-                {blogData.galleryImages.map((img, index) => (
+                {galleryImages.map((img, index) => (
                   <Grid item lg={2} md={3} sm={4} xs={6} key={index}>
                     <Avatar
-                      src={img.file}
+                      src={img}
                       style={{ width: 56, height: 56, margin: 4 }}
                     />
                   </Grid>
@@ -393,16 +400,18 @@ const DisplayAstroblog = ({
               </Grid>
             </Grid>
             <Grid item lg={12} sm={12} md={12} xs={12}>
-              <TextField
-                id="outlined-multiline-static"
-                multiline
-                rows={4}
-                label="Description"
-                variant="outlined"
-                fullWidth
+              <ReactQuill
+                theme="snow"
                 error={!!error.description}
                 helperText={error.description}
+                value={blogData.description}
+                onFocus={() => handleError("description", null)}
+                onChange={setDescription}
+                modules={modules}
+                formats={formats}
+                placeholder="Enter description..."
               />
+              <div className={classes.errorstyles}>{error.description}</div>
             </Grid>
 
             <Grid item lg={12} sm={12} md={12} xs={12} container justifyContent="center" alignItems="center">
@@ -413,8 +422,6 @@ const DisplayAstroblog = ({
                 Reset
               </Button>
             </Grid>
-
-
           </Grid>
         </DialogContent>
       </Dialog>
@@ -444,6 +451,5 @@ const mapDispatchToProps = (dispatch) => ({
   updateBlogStatus: (statusData) => dispatch(updateBlogStatus(statusData)),
   getBlogCategory: () => dispatch(getBlogCategory()),
 });
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(DisplayAstroblog);

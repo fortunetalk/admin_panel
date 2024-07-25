@@ -9,7 +9,10 @@ import {
   get_recharge_history,
   get_demo_class_history,
   change_demo_class_history_status,
-  delete_demo_class_history
+  delete_demo_class_history,
+  get_live_class_history,
+  change_live_class_history_status,
+  delete_live_class_history,
 
 } from "../../utils/Constants";
 import { database, firestore } from "../../config/firbase";
@@ -280,6 +283,115 @@ function* deleteDemoClassHistory(actions) {
     console.log(e);
   }
 }
+function* getLiveClassHistory() {
+  try {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    const response = yield ApiRequest.getRequest({
+      url: api_url + get_live_class_history,
+    });
+
+    if (response?.success) {
+      yield put({
+        type: actionTypes.GET_LIVE_CLASS_HISTORY,
+        payload: response?.data,
+      });
+    }
+
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+  } catch (e) {
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+    console.log(e);
+  }
+}
+
+function* updateLiveClassStatus(action) {
+  try {
+    const { payload } = action;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    const response = yield ApiRequest.postRequest({
+      url: api_url + change_live_class_history_status,
+      header: "json",
+      data: payload,
+    });
+    if (response && response.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Status Updated Successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      yield put({ type: actionTypes.GET_LIVE_CLASS_HISTORY, payload: null });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Status Updation Failed",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+  } catch (error) {
+    console.error("Error Updating Status:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Failed to Change Status",
+      showConfirmButton: false,
+      timer: 2000,
+    });
+  } finally {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+  }
+}
+
+function* deleteLiveClassHistory(actions) {
+  try {
+    const { payload } = actions;
+    const result = yield Swal.fire({
+      title: `Are you sure to Delete`,
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: Colors.primaryLight,
+      cancelButtonColor: Colors.red,
+      confirmButtonText: "Delete",
+    });
+
+    if (result.isConfirmed) {
+      yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
+      const response = yield ApiRequest.postRequest({
+        url: api_url + delete_live_class_history,
+        header: "json",
+        data: payload,
+      });
+
+      if (response.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Data Deleted Successfull",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+
+        yield put({ type: actionTypes.GET_LIVE_CLASS_HISTORY, payload: null });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Server Error",
+          text: "Data Deletion Failed",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      }
+    }
+
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+  } catch (e) {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    console.log(e);
+  }
+}
 
 
 export default function* historySaga() {
@@ -290,4 +402,7 @@ export default function* historySaga() {
   yield takeLeading(actionTypes.GET_DEMO_CLASS_HISTORY, getDemoClassHistory)
   yield takeLeading(actionTypes.UPDATE_DEMO_CLASS_HISTORY_STATUS, updateDemoClassStatus)
   yield takeLeading(actionTypes.DELETE_DEMO_CLASS_HISTORY, deleteDemoClassHistory)
+  yield takeLeading(actionTypes.GET_LIVE_CLASS_HISTORY, getLiveClassHistory)
+  yield takeLeading(actionTypes.UPDATE_LIVE_CLASS_HISTORY_STATUS, updateLiveClassStatus)
+  yield takeLeading(actionTypes.DELETE_LIVE_CLASS_HISTORY, deleteLiveClassHistory)
 }

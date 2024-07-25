@@ -173,12 +173,10 @@ const DisplayTestimonial = ({ dispatch, testimonialData }) => {
                 ),
               },
               { title: "Rating", field: "rating" },
-
-
-              {
-                title: "Description",
-                field: "description",
-              },
+              // {
+              //   title: "Description",
+              //   field: "description",
+              // },
               { title: "Status", field: "status", render: rowData => (
                 <div className={classes.statusButton}
                 style={{ backgroundColor: rowData.status === 'Active' ? '#90EE90' : '#FF7F7F '}}

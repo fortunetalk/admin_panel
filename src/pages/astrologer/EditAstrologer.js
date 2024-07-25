@@ -42,7 +42,7 @@ import Loader from "../../Components/loading/Loader.js";
 const preferredDaysList = ["Mon", "Tues", "Wed", "Thu", "Fri", "Sat", "Sun"];
 // const languageData = ["Hindi", "English"];
 
-const optionsList = ["Consultation", "Teaching", "Pandit at Home", "All"];
+const optionsList = ["Consultation", "Teaching", "Pandit", "All"];
 const languages = [
   "Hindi",
   "English",
@@ -104,6 +104,7 @@ export const EditAstrologer = ({
   const dispatch = useDispatch();
 
   const [galleryImages, setGalleryImages] = useState([]);
+  const [language, setLanguage] = useState([]);
   const [open, setOpen] = useState(false);
   const [openExpertise, setOpenExpertise] = useState(false);
   const [openRemedies, setOpenRemedies] = useState(false);
@@ -132,7 +133,7 @@ export const EditAstrologer = ({
     startTime: "",
     endTime: "",
     rating: "",
-    language: [],
+    // language: [],
     address: "",
     country: "",
     countryState: "",
@@ -273,6 +274,9 @@ export const EditAstrologer = ({
 
   useEffect(() => {
     dispatch(SettingActions.getCountryValue());
+    if (astrologerData?.language) {
+      setLanguage(astrologerData.language);
+    }
     if (astrologerData?.skillId) {
       updateState({ skills: astrologerData.skillId });
     }
@@ -499,7 +503,7 @@ export const EditAstrologer = ({
         companyLiveVideoPrice,
         liveCallPrice,
         companyLiveCallPrice,
-        languages: language,
+        language,
       };
 
       dispatch(AstrologerActions.updateAstrologerData(data));
@@ -770,7 +774,7 @@ export const EditAstrologer = ({
     startTime,
     endTime,
     rating,
-    language,
+    // language,
     country,
     countryState,
     city,
@@ -1354,32 +1358,74 @@ export const EditAstrologer = ({
           </Grid>
 
           <Grid item lg={6} sm={12} md={12} xs={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Options</FormLabel>
-              <FormGroup aria-label="position" row>
-                {optionsList &&
-                  optionsList.map((item) => {
-                    return (
-                      <div className={classes.chips}>
-                        <FormControlLabel
-                          defaultValue={item}
-                          className={classes.checkbox}
-                          control={
-                            <Checkbox
-                              checked={options && options.includes(item)}
-                              onChange={() => handleOptions(item)}
-                            />
-                          }
-                          label={item}
-                          labelPlacement="end"
-                        />
-                      </div>
-                    );
-                  })}
-              </FormGroup>
-            </FormControl>
-         
-          </Grid>
+      <FormControl component="fieldset">
+        <FormLabel component="legend">Options</FormLabel>
+        <FormGroup aria-label="position" row>
+          {optionsList &&
+            optionsList.map((item) => (
+              <div key={item} className={classes.chips}>
+                <FormControlLabel
+                  value={item}
+                  className={classes.checkbox}
+                  control={
+                    <Checkbox
+                      checked={options && options.includes(item)}
+                      onChange={() => handleOptions(item)}
+                    />
+                  }
+                  label={item}
+                  labelPlacement="end"
+                />
+              </div>
+            ))}
+        </FormGroup>
+      </FormControl>
+
+      <Button
+        variant="outlined"
+        color="primary"
+        className={classes.updateButton}
+        onClick={handleClickAstrologerType}
+      >
+        Update Options
+      </Button>
+
+      <Dialog open={openAstrologerType} onClose={handleCloseAstrologerType}>
+        <DialogTitle>Update Astrologer Type</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please update the Astrologer Type below:
+          </DialogContentText>
+          <FormGroup aria-label="position" row>
+            {optionsList &&
+              optionsList.map((item) => (
+                <div key={item} className={classes.chips}>
+                  <FormControlLabel
+                    value={item}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        checked={options && options.includes(item)}
+                        onChange={() => handleOptions(item)}
+                      />
+                    }
+                    label={item}
+                    labelPlacement="end"
+                  />
+                </div>
+              ))}
+          </FormGroup>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseAstrologerType} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleUpdateOptions} color="primary">
+            Update
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Grid>
           <Grid
             item
             lg={6}
@@ -1855,36 +1901,31 @@ export const EditAstrologer = ({
           />
         </Grid>
 
-        {/* <Grid item lg={4} sm={12} md={12} xs={12}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-multiple-checkbox-label">
-                  Language
-                </InputLabel>
-                <Select
-                  labelId="demo-multiple-checkbox-label"
-                  id="demo-multiple-checkbox"
-                  multiple
-                  value={language}
-                  onChange={(e) => updateState({ language: e.target.value })}
-                  onFocus={() => handleError("language", null)}
-                  renderValue={(selected) => selected.join(", ")}
-                  error={!!error.language}
-                >
-                  <MenuItem disabled value="">
-                    -Select Language-
-                  </MenuItem>
-                  {languages.map((item) => (
-                    <MenuItem key={item} value={item}>
-                      <Checkbox checked={language.indexOf(item) > -1} />
-                      <ListItemText primary={item} />
-                    </MenuItem>
-                  ))}
-                </Select>
-                {error.language && (
-                  <div className={classes.errorstyles}>{error.language}</div>
-                )}
-              </FormControl>
-            </Grid> */}
+        <Grid item lg={4} sm={12} md={12} xs={12}>
+      <FormControl fullWidth>
+        <InputLabel id="demo-multiple-checkbox-label">Language</InputLabel>
+        <Select
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
+          multiple
+          value={language}
+          onChange={(e)=>setLanguage(e.target.value)}
+          onFocus={() => handleError("language", null)}
+          renderValue={(selected) => selected.join(", ")}
+        >
+          <MenuItem disabled value="">
+            -Select Language-
+          </MenuItem>
+          {languages.map((item) => (
+            <MenuItem key={item} value={item}>
+              <Checkbox checked={language?.indexOf(item) > -1} />
+              <ListItemText primary={item} />
+            </MenuItem>
+          ))}
+        </Select>
+    
+      </FormControl>
+    </Grid>
 
         <Grid item lg={4} sm={12} md={12} xs={12}>
           <TextField

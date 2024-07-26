@@ -176,7 +176,12 @@ const ListAstrology = ({ astrologerListData }) => {
               {
                 title: "Wallet",
                 field: "wallet_balance",
+                render: (rowData) => {
+                  const balance = Number(rowData.wallet_balance).toFixed(2);
+                  return balance;
+                }
               },
+              
               {
                 title: "Status",
                 field: "status",

@@ -187,6 +187,13 @@ export const useStyles = makeStyles({
     textAlign: "center",
     fontWeight:'600'
   },
+  imagePreview: {
+    width: '100px',
+    height: '100px',
+    padding:'4px',
+    // borderRadius: theme.shape.borderRadius,
+    objectFit: 'cover',
+  },
 
 });
 

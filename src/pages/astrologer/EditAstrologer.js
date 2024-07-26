@@ -22,6 +22,7 @@ import {
   DialogContentText,
   DialogTitle,
   ListItemText,
+  Box
 } from "@mui/material";
 
 import { useNavigate, useParams } from "react-router-dom";
@@ -246,8 +247,6 @@ export const EditAstrologer = ({
     }
   }, [astrologerData]); 
   
-
-
   useEffect(() => {
     dispatch(SkillActions.getActiveSkillData());
 
@@ -255,6 +254,11 @@ export const EditAstrologer = ({
     dispatch(RemedyActions.getActiveRemediesData());
     dispatch(SettingActions.getCountries());
   }, []);
+  if (astrologerData?.galleryImages) {
+    setGalleryImages(
+      astrologerData.galleryImages.map((image) => ({ file: image, bytes: "" }))
+    );
+  }
 
   const [profilePhoto, setProfilePhoto] = useState({
     // file: logo_icon,
@@ -425,16 +429,13 @@ export const EditAstrologer = ({
     }
   };
 
-  const handleGallery = (e) => {
+  const handleGalleryImages = (e) => {
     if (e.target.files && e.target.files.length > 0) {
-      const filesArray = Array.from(e.target.files);
-      const newImages = filesArray.map((file) => ({
+      const files = Array.from(e.target.files).map((file) => ({
         file: URL.createObjectURL(file),
         bytes: file,
       }));
-      setGalleryImages((prevImages) => [...prevImages, ...newImages]);
-      handleError("gallery", null);
-      handleError("bankProof", null);
+      setGalleryImages((prevImages) => [...files]);
     }
   };
 
@@ -710,10 +711,13 @@ export const EditAstrologer = ({
     const formData = new FormData();
     formData.append("astrologerId", astrologerId);
     galleryImages.forEach((image, index) => {
-      if (image.bytes) {
-        formData.append(`galleryImages[${index}]`, image.bytes);
-      }
+      formData.append(`galleryImages`, image.bytes);
     });
+    // galleryImages.forEach((image, index) => {
+    //   if (image.bytes) {
+    //     formData.append(`galleryImages[${index}]`, image.bytes);
+    //   }
+    // });
 
     dispatch(AstrologerActions.updateAstrologerGalleryImage(formData));
   };
@@ -1426,67 +1430,39 @@ export const EditAstrologer = ({
         </DialogActions>
       </Dialog>
     </Grid>
-          <Grid
-            item
-            lg={6}
-            sm={12}
-            md={12}
-            xs={12}
-            className={classes.uploadContainer}
-          >
-            <Grid component="label" className={classes.uploadImageButton}>
-              Change Gallery Images
-              <input
-                onChange={handleGallery}
-                hidden
-                accept="image/*"
-                type="file"
-                multiple
-              />
-            </Grid>
-            <div
-              className={classes.imagePreviewContainer}
-              style={{ display: "flex" }}
-            >
-              {galleryImages.map((image, index) => (
-                <img
-                  key={index}
-                  src={image.file}
-                  alt={`Gallery ${index}`}
-                  className={classes.previewImage}
-                  style={{
-                    height: "50px",
-                    width: "50px",
-                    objectFit: "cover",
-                    margin: "5px",
-                  }}
-                />
-              ))}
-            </div>
-          </Grid>
-          <Grid item lg={12} sm={12} md={12} xs={12}>
-            {galleryImages.length === 0 && (
-              <div
-                className={classes.imagePreviewContainer}
-                style={{ display: "flex", flexWrap: "wrap" }}
-              >
-                {backendGalleryImages.map((image, index) => (
-                  <img
-                    style={{
-                      padding: "1rem",
-                      height: "100px",
-                      width: "100px",
-                      objectFit: "cover",
-                    }}
-                    key={index}
-                    src={image}
-                    alt={`Gallery ${index}`}
-                    className={classes.previewImage}
-                  />
-                ))}
-              </div>
-            )}
-          </Grid>
+    <Grid item lg={4} sm={2} md={2} xs={2} className={classes.uploadContainer}>
+        <label className={classes.uploadImageButton}>
+          Change Gallery Images
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            hidden
+            onChange={handleGalleryImages}
+          />
+        </label>
+      </Grid>
+      <Grid item lg={1} sm={1} md={1} xs={1}>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={handleUploadGalleryImages}
+        >
+          Update Images
+        </Button>
+      </Grid>
+      <Grid item lg={12} sm={12} md={12} xs={12}>
+      <Box className={classes.imageContainer}>
+          {galleryImages.map((image, index) => (
+            <img
+              key={index}
+              src={image.file}
+              alt={`gallery-${index}`}
+              className={classes.imagePreview}
+            />
+          ))}
+        </Box>
+      </Grid>
           <Grid item lg={12} sm={12} md={12} xs={12}>
             {/* <Button
               variant="outlined"

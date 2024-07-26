@@ -85,12 +85,12 @@ export const AddAstroblog = ({appBlogCategoryData, addBlog, isLoading}) => {
       created_by,
       description,
       blogCategoryId,
-      galleryImage:galleryFiles,
+      // galleryImage:galleryFiles,
       image: file
     };
     
     addBlog(blogData);
-    // handleReset();
+    handleReset();
   };
 
   const handleReset = () => {
@@ -260,8 +260,11 @@ export const AddAstroblog = ({appBlogCategoryData, addBlog, isLoading}) => {
 
           <Grid item lg={6} sm={6} md={6} xs={6}>
           <div onClick={handleSubmit} className={classes.submitbutton}>
-                {isLoading ? <CircularProgress size={24} /> : " Submit"}
+               Submit
               </div>
+          {/* <div onClick={handleSubmit} className={classes.submitbutton}>
+                {isLoading ? <CircularProgress size={24} /> : " Submit"}
+              </div> */}
           </Grid>
           <Grid item lg={6} sm={6} md={6} xs={6}>
             <div onClick={handleReset} className={classes.denyButton}>

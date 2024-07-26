@@ -1,29 +1,46 @@
 import * as actionTypes from "../actionTypes";
 
 const initialState = {
-  appBlogCategoryData: null,
+  appBlogCategoryData: [],
   setBlogCategoryData: null,
-  updateBlogCategoryData:null,
+  updateBlogCategoryData: null,
   deleteBlogCategoryData: null,
   activeBlogCategoryData: null,
+  isLoading: false,
+
 };
 
 const blogCategory = (state = initialState, actions) => {
   const { payload, type } = actions;
 
   switch (type) {
+    case actionTypes.SET_IS_LOADING: {
+      return {
+        ...state,
+        isLoading: true,
+      };
+    }
+    case actionTypes.UNSET_IS_LOADING: {
+      return {
+        ...state,
+        isLoading: false,
+      };
+    }
     case actionTypes.CREATE_BLOG_CATEGORY: {
       return {
         ...state,
         setBlogCategoryData: payload,
+        isLoading: false,
       };
     }
     case actionTypes.BLOG_CATEGORY_LIST: {
       return {
         ...state,
         appBlogCategoryData: payload,
+        isLoading: false,
       };
     }
+    
     case actionTypes.UPDATE_BLOG_CATEGORY: {
       const updatedData = state.appBlogCategoryData.map(category =>
         category._id === payload._id ? payload : category
@@ -44,6 +61,7 @@ const blogCategory = (state = initialState, actions) => {
       return {
         ...state,
         activeBlogCategoryData: payload,
+        isLoading: false,
       };
     }
 

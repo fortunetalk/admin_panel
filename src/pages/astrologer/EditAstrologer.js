@@ -180,7 +180,7 @@ export const EditAstrologer = ({
 
   useEffect(() => {
     if (astrologerId) {
-      getAstrologer(astrologerId); 
+      getAstrologer(astrologerId);
 
     }
   }, [astrologerId]);
@@ -191,8 +191,8 @@ export const EditAstrologer = ({
     if (astrologerData) {
 
       setState({
-        ...astrologerData, 
-        displayName:astrologerData?.displayName,
+        ...astrologerData,
+        displayName: astrologerData?.displayName,
         name: astrologerData?.name,
         email: astrologerData?.email,
         phoneNumber: astrologerData?.phoneNumber,
@@ -240,8 +240,10 @@ export const EditAstrologer = ({
 
       });
     }
-  }, [astrologerData]); 
-  
+  }, [astrologerData]);
+
+
+
   useEffect(() => {
     dispatch(SkillActions.getActiveSkillData());
 
@@ -868,7 +870,7 @@ export const EditAstrologer = ({
                   ))}
               </FormGroup>
             </FormControl>
-          
+
             <Button
               variant="outlined"
               color="primary"
@@ -918,7 +920,7 @@ export const EditAstrologer = ({
           </Grid>
 
           <Grid item lg={4} sm={12} md={12} xs={12}>
-           
+
           </Grid>
 
           <Grid item lg={12} sm={12} md={12} xs={12}>
@@ -946,7 +948,7 @@ export const EditAstrologer = ({
                   ))}
               </FormGroup>
             </FormControl>
-           
+
 
             <Dialog open={openCountry} onClose={handleCloseCountry}>
               <DialogTitle>Update Available Countries</DialogTitle>
@@ -1524,7 +1526,7 @@ export const EditAstrologer = ({
                   })}
               </FormGroup>
             </FormControl>
-          
+
             <Button
               variant="outlined"
               color="primary"
@@ -1593,7 +1595,7 @@ export const EditAstrologer = ({
                   ))}
               </FormGroup>
             </FormControl>
-            
+
             <Button
               variant="outlined"
               color="primary"
@@ -1662,7 +1664,7 @@ export const EditAstrologer = ({
                   ))}
               </FormGroup>
             </FormControl>
-          
+
             <Button
               variant="outlined"
               color="primary"
@@ -1820,7 +1822,7 @@ export const EditAstrologer = ({
               <MenuItem value="INR">INR</MenuItem>
               <MenuItem value="USD">USD</MenuItem>
             </Select>
-         
+
           </FormControl>
         </Grid>
         <Grid item lg={4} md={12} sm={12} xs={12}>
@@ -1841,7 +1843,7 @@ export const EditAstrologer = ({
               <MenuItem value="Female">Female</MenuItem>
               <MenuItem value="Other">Other</MenuItem>
             </Select>
-          
+
           </FormControl>
         </Grid>
         <Grid item lg={4} sm={12} md={12} xs={12}>
@@ -1946,7 +1948,7 @@ export const EditAstrologer = ({
                 </MenuItem>
               ))}
             </Select>
-         
+
           </FormControl>
         </Grid>
         <Grid item lg={4} md={12} sm={12} xs={12}>
@@ -1977,7 +1979,7 @@ export const EditAstrologer = ({
                   </MenuItem>
                 ))}
             </Select>
-            
+
           </FormControl>
         </Grid>
         <Grid item lg={4} md={12} sm={12} xs={12}>
@@ -2004,7 +2006,7 @@ export const EditAstrologer = ({
                   </MenuItem>
                 ))}
             </Select>
-          
+
           </FormControl>
         </Grid>
 

@@ -315,7 +315,7 @@ const routes = [
     name: "Pages",
     icon: <BiAbacus />,
     subRoutes: [
-     
+
       {
         path: "/displayTermsAndConditions",
         name: "Terms And Conditions",
@@ -326,8 +326,8 @@ const routes = [
         name: "Privacy Policy",
         icon: <BiAbacus />,
       },
-    
-    
+
+
     ],
   },
   {

@@ -98,7 +98,7 @@ export const AddAstrologers = ({
 
   const [galleryImage, setGalleryImage] = useState([]);
   const [galleryFiles, setGalleryFiles] = useState([]);
- 
+
 
   const [states, setState] = useState({
     error: {},
@@ -1519,25 +1519,25 @@ export const AddAstrologers = ({
               />
             </Grid>
             <Grid item lg={4} sm={12} md={12} xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Display Call Price"
-                      value={callPriceInt + companyCallPriceInt}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                  </Grid>
+              <TextField
+                fullWidth
+                label="Display Call Price"
+                value={callPriceInt + companyCallPriceInt}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </Grid>
             <Grid item lg={4} sm={12} md={12} xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Display Chat Price"
-                      value={chatPriceInt + companyChatPriceInt}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                  </Grid>
+              <TextField
+                fullWidth
+                label="Display Chat Price"
+                value={chatPriceInt + companyChatPriceInt}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </Grid>
 
             <Grid
               item

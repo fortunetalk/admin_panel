@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef  } from "react";
 import { useStyles } from "../../assets/styles.js";
-import Radio from "@material-ui/core/Radio";
-import moment from "moment";
-import RadioGroup from "@material-ui/core/RadioGroup";
 import {
   Grid,
   TextField,
@@ -103,6 +100,7 @@ export const EditAstrologer = ({
 
 
   const dispatch = useDispatch();
+  const containerRef = useRef(null);
 
   const [galleryImages, setGalleryImages] = useState([]);
   const [language, setLanguage] = useState([]);
@@ -112,9 +110,6 @@ export const EditAstrologer = ({
   const [openCountry, setOpenCountry] = useState(false);
   const [openDays, setOpenDays] = useState(false);
   const [openAstrologerType, setOpenAstrologerType] = useState(false);
-
-
-  const backendGalleryImages = astrologerData?.galleryImage || [];
 
   const [state, setState] = useState({
     error: {},
@@ -825,6 +820,22 @@ export const EditAstrologer = ({
       dispatch(SettingActions.stateCityList({ stateId: countryState }));
     }
   }, [countryState]);
+
+  useEffect(() => {
+    const observer = new ResizeObserver((entries) => {
+      requestAnimationFrame(() => {
+        // Your observer logic here
+      });
+    });
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   return (
     <div className={classes.container}>

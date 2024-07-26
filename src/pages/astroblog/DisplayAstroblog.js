@@ -73,10 +73,6 @@ const DisplayAstroblog = ({
     }
   }, [dispatch, appBlogCategoryData]);
 
-  useEffect(() => {
-    console.log("Blog Categories Data:", appBlogCategoryData);
-  }, [appBlogCategoryData]);
-
   const handleOpen = (rowData) => {
     setOpen(true);
     setBlogData({

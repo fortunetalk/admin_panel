@@ -184,7 +184,7 @@ export const change_pooja_status = 'admin/pooja/change-status'
 //BLOG CATEGORY
 export const create_blog_category='admin/add-blog-category'
 export const blog_category_list='admin/blog-category-list'
-export const update_blog_category='admin/blog-category/update'
+export const update_blog_category='admin/blog-category/update/'
 export const delete_blog_category='admin/blog-category/delete'
 export const active_blog_category='admin/active-blog-category'
 

@@ -89,3 +89,11 @@ export const setLiveClassHistory = payload =>({
     type: actionTypes.SET_LIVE_CLASS_HISTORY,
     payload
 })
+export const getLiveCourseHistory = payload =>({
+    type: actionTypes.GET_LIVE_COURSE_HISTORY,
+    payload
+})
+export const updateLiveCourseHistoryStatus = payload =>({
+    type: actionTypes.CHANGE_LIVE_COURSE_HISTORY_STATUS,
+    payload
+})

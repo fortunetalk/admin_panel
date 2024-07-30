@@ -131,6 +131,7 @@ import AddAstrologerTrainingBanner from "./pages/banner/AddAstrologerTrainingBan
 import DisplayAstrologerTrainingBanner from "./pages/banner/DisplayAstrologerTrainingBanner";
 import DemoClassHistory from "./pages/history/DemoClassHistory";
 import LiveClassHistory from "./pages/history/LiveClassHistory";
+import DisplayLiveCourseHistory from "./pages/history/DisplayLiveCourseHistory";
 
 function App() {
   return (
@@ -198,6 +199,7 @@ function App() {
           <Route path="/history/CallHistory" element={<CallHistory />} />
           <Route path="/history/demoClassHistory" element={<DemoClassHistory/>} />
           <Route path="/history/liveClassHistory" element={<LiveClassHistory/>} />
+          <Route path="/history/liveCourseHistory" element={<DisplayLiveCourseHistory/>} />
           <Route path="/history/UsersGiftHistory" element={<UsersGiftHistory />} />
           <Route path="/history/RechargeHistory" element={<RechargeHistory />} />
           <Route path="/liveStream" element={<LiveStream />} />

@@ -872,7 +872,7 @@ export const EditAstrologer = ({
             </FormControl>
 
             <Button
-              variant="outlined"
+              variant="contained"
               color="primary"
               className={classes.updateButton}
               onClick={handleClickOpenDays}
@@ -990,7 +990,7 @@ export const EditAstrologer = ({
           </Grid>
           <Grid item lg={12} sm={12} md={12} xs={12}>
             <Button
-              variant="outlined"
+              variant="contained"
               color="primary"
               className={classes.updateButton}
               onClick={handleClickOpenCountry}
@@ -1022,7 +1022,7 @@ export const EditAstrologer = ({
           </Grid>
           <Grid item lg={1} sm={1} md={1} xs={1}>
             <Button
-              variant="outlined"
+              variant="contained"
               color="primary"
               onClick={handleUploadProfileImage}
             >
@@ -1060,7 +1060,7 @@ export const EditAstrologer = ({
           </Grid>
           <Grid item lg={1} sm={1} md={1} xs={1}>
             <Button
-              variant="outlined"
+              variant="contained"
               color="primary"
               onClick={handleUploadBankProofImage}
             >
@@ -1399,7 +1399,7 @@ export const EditAstrologer = ({
       </FormControl>
 
       <Button
-        variant="outlined"
+        variant="contained"
         color="primary"
         className={classes.updateButton}
         onClick={handleClickAstrologerType}
@@ -1457,7 +1457,7 @@ export const EditAstrologer = ({
       </Grid>
       <Grid item lg={1} sm={1} md={1} xs={1}>
         <Button
-          variant="outlined"
+          variant="contained"
           color="primary"
           onClick={handleUploadGalleryImages}
         >
@@ -1528,7 +1528,7 @@ export const EditAstrologer = ({
             </FormControl>
 
             <Button
-              variant="outlined"
+              variant="contained"
               color="primary"
               className={classes.updateButton}
               onClick={handleClickOpen}
@@ -1597,7 +1597,7 @@ export const EditAstrologer = ({
             </FormControl>
 
             <Button
-              variant="outlined"
+              variant="contained"
               color="primary"
               className={classes.updateButton}
               onClick={handleClickOpenRemedies}
@@ -1666,7 +1666,7 @@ export const EditAstrologer = ({
             </FormControl>
 
             <Button
-              variant="outlined"
+              variant="contained"
               color="primary"
               className={classes.updateButton}
               onClick={handleClickOpenExpertise}

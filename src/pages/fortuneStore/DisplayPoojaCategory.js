@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useStyles } from "../../assets/styles.js";
+import { useStyles, propStyles } from "../../assets/styles.js";
 import {
   Avatar,
   Grid,
@@ -49,9 +49,10 @@ const DisplayPoojaCategory = ({ poojaCategoryData }) => {
 
   const handleOpen = (rowData) => {
     setOpen(true);
+    console.log('rowData',rowData)
     setpoojaCategory_id(rowData._id);
     setpoojaCategory(rowData.title);
-    setImage({ preview: rowData.image });
+      setImage({ preview: rowData.image });
     setStatus(rowData.status);
   };
 
@@ -67,10 +68,6 @@ const DisplayPoojaCategory = ({ poojaCategoryData }) => {
     }
     if (!status) {
       handleError("status", "Please select status");
-      isValid = false;
-    }
-    if (!image.data) {
-      handleError("image", "Please select an image");
       isValid = false;
     }
     return isValid;
@@ -103,7 +100,7 @@ const DisplayPoojaCategory = ({ poojaCategoryData }) => {
       const formData = new FormData();
       formData.append("title", poojaCategory);
       formData.append("status", status);
-      formData.append("image", file);
+      formData.append("image", file || image.preview);
       formData.append("categoryId", poojaCategory_id);
 
       dispatch(updatePoojaCategory(formData));
@@ -192,25 +189,7 @@ const DisplayPoojaCategory = ({ poojaCategoryData }) => {
                 ),
               },
             ]}
-            options={{
-              sorting: true,
-              search: true,
-              searchFieldAlignment: "right",
-              filtering: true,
-              paging: true,
-              // pageSizeOptions: createArrayWithBreakdowns(editable?.length, 5),
-              pageSize: 5,
-              paginationType: "stepped",
-              showFirstLastPageButtons: true,
-              paginationPosition: "bottom",
-              exportButton: false,
-              exportAllData: false,
-              exportFileName: "Category data",
-              addRowPosition: "first",
-              actionsColumnIndex: -1,
-              selection: false,
-              showSelectAllCheckbox: false,
-            }}
+            options={{ ...propStyles.tableStyles, filtering: false }}
             actions={[
               
               {
@@ -308,7 +287,6 @@ const DisplayPoojaCategory = ({ poojaCategoryData }) => {
                 type="file"
               />
             </Grid>
-            <div className={classes.errorstyles}>{error.image}</div>
           </Grid>
           <Grid item lg={4} sm={6} md={4} xs={6}>
             <Avatar

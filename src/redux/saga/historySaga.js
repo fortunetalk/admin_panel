@@ -13,6 +13,8 @@ import {
   get_live_class_history,
   change_live_class_history_status,
   delete_live_class_history,
+  get_live_course_history,
+  change_live_course_history_status,
 
 } from "../../utils/Constants";
 import { database, firestore } from "../../config/firbase";
@@ -393,6 +395,67 @@ function* deleteLiveClassHistory(actions) {
   }
 }
 
+function* getLiveCourseHistory() {
+  try {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    const response = yield ApiRequest.getRequest({
+      url: api_url + get_live_course_history,
+    });
+
+    if (response?.success) {
+      yield put({
+        type: actionTypes.GET_LIVE_COURSE_HISTORY,
+        payload: response?.data,
+      });
+    }
+
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+  } catch (e) {
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+    console.log(e);
+  }
+}
+
+function* updateLiveCourseHistoryStatus(action) {
+  try {
+    const { payload } = action;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    const response = yield ApiRequest.postRequest({
+      url: api_url + change_live_course_history_status,
+      header: "json",
+      data: payload,
+    });
+    if (response && response.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Status Updated Successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      yield put({ type: actionTypes.GET_LIVE_COURSE_HISTORY, payload: null });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Status Updation Failed",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+  } catch (error) {
+    console.error("Error Updating Status:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Failed to Change Status",
+      showConfirmButton: false,
+      timer: 2000,
+    });
+  } finally {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+  }
+}
+
 
 export default function* historySaga() {
   yield takeLeading(actionTypes.GET_CHAT_HISTORY, getChatHistory);
@@ -405,4 +468,6 @@ export default function* historySaga() {
   yield takeLeading(actionTypes.GET_LIVE_CLASS_HISTORY, getLiveClassHistory)
   yield takeLeading(actionTypes.UPDATE_LIVE_CLASS_HISTORY_STATUS, updateLiveClassStatus)
   yield takeLeading(actionTypes.DELETE_LIVE_CLASS_HISTORY, deleteLiveClassHistory)
+  yield takeLeading(actionTypes.GET_LIVE_COURSE_HISTORY, getLiveCourseHistory)
+  yield takeLeading(actionTypes.CHANGE_LIVE_COURSE_HISTORY_STATUS, updateLiveCourseHistoryStatus)
 }

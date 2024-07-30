@@ -90,6 +90,8 @@ const LiveStream = ({ dispatch, liveStreamData }) => {
     });
   };  
 
+  const reverseData = Array.isArray(liveStreamData) ? liveStreamData.slice().reverse() : [];
+
   return (
     <div className={classes.container}>
       <Loader />
@@ -105,12 +107,12 @@ const LiveStream = ({ dispatch, liveStreamData }) => {
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
             title="Live Stream Data"
-            data={liveStreamData}
+            data={reverseData}
             columns={[
               {
                 title: "S.No",
                 editable: "never",
-                render: rowData => Array.isArray(liveStreamData) ? liveStreamData.indexOf(rowData) + 1 : 'N/A'
+                render: rowData => Array.isArray(reverseData) ? reverseData.indexOf(rowData) + 1 : 'N/A'
               },
               {
                 title: "Astrologer Display Name",

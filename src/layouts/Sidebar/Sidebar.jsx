@@ -178,6 +178,11 @@ const routes = [
         icon: <BiAbacus />,
       },
       {
+        path: "/history/liveCourseHistory",
+        name: "Live Course History",
+        icon: <BiAbacus />,
+      },
+      {
         path: "/history/UsersGiftHistory",
         name: "User's Gift History",
         icon: <BiAbacus />,

@@ -8,6 +8,7 @@ const initialState = {
   rechargeHistoryData: null,
   demoClassHistoryData: null,
   liveClassHistoryData: null,
+  liveCourseHistoryData:null,
   isLoading: false,
 
 };
@@ -98,6 +99,18 @@ const history = (state = initialState, actions) => {
       return {
         ...state,
         customerFirebaseID: payload,
+      };
+    }
+    case actionTypes.GET_LIVE_COURSE_HISTORY: {
+      return {
+        ...state,
+        liveCourseHistoryData: payload,
+      };
+    }
+    case actionTypes.CHANGE_LIVE_COURSE_HISTORY_STATUS: {
+      return {
+        ...state,
+        liveCourseHistoryData: payload,
       };
     }
 

@@ -17,9 +17,6 @@ import {
   FormControlLabel,
   FormLabel,
   ListItemText,
-  Modal,
-  Box,
-  Typography,
   CircularProgress,
 } from "@mui/material";
 
@@ -35,7 +32,7 @@ import * as RemedyActions from "../../redux/Actions/remediesActions.js";
 import * as SettingActions from "../../redux/Actions/settingActions.js";
 import Loader from "../../Components/loading/Loader.js";
 
-const preferredDaysList = ["Mon", "Tues", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const preferredDaysList = ["Mon", "Tues", "Wed", "Thu", "Fri", "Sat", "Sun", "All"];
 const languages = [
   "Hindi",
   "English",
@@ -93,8 +90,6 @@ export const AddAstrologers = ({
 }) => {
   var classes = useStyles();
   const dispatch = useDispatch();
-
-  // console.log("isLOading", isLoading);
 
   const [galleryImage, setGalleryImage] = useState([]);
   const [galleryFiles, setGalleryFiles] = useState([]);
@@ -170,8 +165,6 @@ export const AddAstrologers = ({
     bytes: "",
   });
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     dispatch(SkillActions.getActiveSkillData());
     dispatch(ExpertiesActions.getActiveExpertiesData());
@@ -245,13 +238,18 @@ export const AddAstrologers = ({
   };
 
   const handlePreferredDays = (item) => {
-    if (preferredDays.some((selectedItem) => selectedItem === item)) {
-      const preferdayData = preferredDays.filter(
-        (selectedItem) => selectedItem !== item
-      );
-      updateState({ preferredDays: preferdayData });
+    if (item === "All") {
+      if (preferredDays.length === preferredDaysList.length - 1) {
+        updateState({ preferredDays: [] });
+      } else {
+        updateState({ preferredDays: preferredDaysList.filter(day => day !== "All") });
+      }
     } else {
-      updateState({ preferredDays: [...preferredDays, item] });
+      if (preferredDays.includes(item)) {
+        updateState({ preferredDays: preferredDays.filter(day => day !== item) });
+      } else {
+        updateState({ preferredDays: [...preferredDays, item] });
+      }
     }
     handleError("preferredDays", null);
   };
@@ -732,6 +730,12 @@ export const AddAstrologers = ({
   const chatPriceInt = parseInt(chatPrice, 10);
   const companyChatPriceInt = parseInt(companyChatPrice, 10);
 
+  const liveVideoPriceInt = parseInt(liveVideoPrice, 10);
+  const companyLiveVideoPriceInt = parseInt(companyLiveVideoPrice, 10);
+
+  const liveCallPriceInt = parseInt(liveCallPrice,10);
+  const companyLiveCallPriceInt = parseInt(companyLiveCallPrice,10);
+
   return (
     <>
       {/* <Loader isLoading={isLoading}/> */}
@@ -1086,37 +1090,35 @@ export const AddAstrologers = ({
             {/* astrologer container ends here */}
 
             <Grid item lg={4} sm={12} md={12} xs={12}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend">Preferred Days</FormLabel>
-                <FormGroup aria-label="position" row>
-                  {preferredDaysList &&
-                    preferredDaysList.map((item) => {
-                      return (
-                        <div className={classes.chips}>
-                          <FormControlLabel
-                            value={item}
-                            className={classes.checkbox}
-                            control={
-                              <Checkbox
-                                checked={
-                                  preferredDays && preferredDays.includes(item)
-                                }
-                                onChange={() => handlePreferredDays(item)}
-                              />
-                            }
-                            label={item}
-                            // style={{margin: 30}}
-                            labelPlacement="end"
-                          />
-                        </div>
-                      );
-                    })}
-                </FormGroup>
-              </FormControl>
-              {error.preferredDays && (
-                <div className={classes.errorstyles}>{error.preferredDays}</div>
-              )}
-            </Grid>
+      <FormControl component="fieldset">
+        <FormLabel component="legend">Preferred Days</FormLabel>
+        <FormGroup aria-label="position" row>
+          {preferredDaysList.map((item) => (
+            <div key={item} className={classes.chips}>
+              <FormControlLabel
+                value={item}
+                className={classes.checkbox}
+                control={
+                  <Checkbox
+                    checked={
+                      item === "All"
+                        ? preferredDays.length === preferredDaysList.length - 1
+                        : preferredDays.includes(item)
+                    }
+                    onChange={() => handlePreferredDays(item)}
+                  />
+                }
+                label={item}
+                labelPlacement="end"
+              />
+            </div>
+          ))}
+        </FormGroup>
+      </FormControl>
+      {error.preferredDays && (
+        <div className={classes.errorstyles}>{error.preferredDays}</div>
+      )}
+    </Grid>
 
             <Grid item lg={4} sm={12} md={12} xs={12}>
               <FormControl component="fieldset">
@@ -1506,7 +1508,7 @@ export const AddAstrologers = ({
             <Grid item lg={4} sm={12} md={12} xs={12}>
               <TextField
                 type="number"
-                label="Company Voice Price Live"
+                label="Company Live Call Price"
                 inputMode="numeric"
                 value={companyLiveCallPrice}
                 variant="outlined"
@@ -1533,6 +1535,26 @@ export const AddAstrologers = ({
                 fullWidth
                 label="Display Chat Price"
                 value={chatPriceInt + companyChatPriceInt}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </Grid>
+            <Grid item lg={4} sm={12} md={12} xs={12}>
+              <TextField
+                fullWidth
+                label="Display Live Video Price"
+                value={liveVideoPriceInt + companyLiveVideoPriceInt}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </Grid>
+            <Grid item lg={4} sm={12} md={12} xs={12}>
+              <TextField
+                fullWidth
+                label="Display Live Call Price"
+                value={liveCallPriceInt + companyLiveCallPriceInt}
                 InputProps={{
                   readOnly: true,
                 }}

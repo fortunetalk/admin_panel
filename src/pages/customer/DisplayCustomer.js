@@ -71,8 +71,32 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
     dispatch(CustomerActions.getAllCustomer());
   }, [dispatch]);
 
+  const formatDate = (date) => {
+    if (!date) return '';
+    const d = new Date(date);
+    let month = '' + (d.getMonth() + 1);
+    let day = '' + d.getDate();
+    const year = d.getFullYear();
+  
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+  
+    return [year, month, day].join('-');
+  };
+
+  const formatTime = (time) => {
+    if (!time) return '';
+    const date = new Date(`1970-01-01T${time}Z`);
+    const hours = String(date.getUTCHours()).padStart(2, '0');
+    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+    return `${hours}:${minutes}`;
+  };
+  
+
+
   const handleOpen = (rowData) => {
     setOpen(true);
+    console.log('timeOfBirth',rowData.timeOfBirth)
     setFormData({
       customerId: rowData?._id || '',
       firstName: rowData?.firstName || '',
@@ -81,8 +105,8 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
       email: rowData?.email || '',
       mobileNumber: rowData?.phoneNumber || '',
       gender: rowData?.gender || '',
-      dob: rowData?.dateOfBirth || '',
-      tob: rowData?.timeOfBirth || '',
+      dob: formatDate(rowData?.dateOfBirth),
+      tob: formatTime(rowData?.timeOfBirth),
       birthAddress: {
         birthPlace: rowData?.birthAddress?.birthPlace || '',
         latitude: rowData?.birthAddress?.latitude || '',

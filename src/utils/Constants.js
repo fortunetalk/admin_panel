@@ -145,6 +145,8 @@ export const delete_demo_class_history = 'admin/booked_demo_class/delete'
 export const get_live_class_history = 'admin/register_live_class'
 export const change_live_class_history_status = 'admin/register_live_class/change_status'
 export const delete_live_class_history = 'admin/register_live_class/delete'
+export const get_live_course_history = 'admin/get_live_course_history'
+export const change_live_course_history_status = 'admin/course/change-course-status'
 
 export const create_language = 'admin/create_language'
 export const get_language  = 'admin/get_language'

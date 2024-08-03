@@ -83,9 +83,12 @@ const ProfileRequest = ({
                     : "N/A",
               },
               {
-                title: "Astrologer ID",
-                field: "astrologerId",
-                render: rowData => rowData.astrologerId ? rowData.astrologerId : 'N/A'
+                title: "Astrologer Display Name",
+                field: "astrologerId.displayName",
+              },
+              {
+                title: "Astrologer Name",
+                field: "astrologerId.name",
               },
               {
                 title: "Request Time",

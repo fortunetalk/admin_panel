@@ -262,6 +262,7 @@ export const live_class_list='admin/live_class'
 export const update_live_class = 'admin/live_class/update'
 export const change_live_class_status = 'admin/live_class/change_status'
 export const change_live_class_admin_status = 'admin/live_class/change_admin_status'
+export const change_live_class_ongoing_status = 'admin/live_class/change_class_status'
 export const delete_live_class = 'admin/live_class/delete'
 
 //SCHEDULE CLASS

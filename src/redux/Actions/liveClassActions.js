@@ -34,6 +34,10 @@ export const updateLiveClassAdminStatus = payload =>({
   type: actionTypes.UPDATE_LIVE_CLASS_ADMIN_STATUS,
   payload
 });
+export const updateLiveClassOngoingStatus = payload =>({
+  type: actionTypes.UPDATE_LIVE_CLASS_ONGOING_STATUS,
+  payload
+});
 
 export const deleteLiveClass = payload =>({
   type: actionTypes.DELETE_LIVE_CLASS,

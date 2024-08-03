@@ -1,7 +1,7 @@
 import * as actionTypes from "../actionTypes";
 
 const initialState = {
-  profileRequestData: null,
+  profileRequestData: [],
   phoneNumberRequestData:[],
   bankRequestData:null,
   galleryRequestData:null,

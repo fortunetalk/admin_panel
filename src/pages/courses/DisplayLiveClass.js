@@ -216,6 +216,26 @@ const DisplayLiveClass = ({
       }
     });
   };
+  const handleClassStatusChange = (rowData, newStatus) => {
+    Swal.fire({
+      title: "Are you sure you want to change the Class Status?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, change it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(
+          LiveClassActions.updateLiveClassOngoingStatus({
+            liveClassId: rowData._id,
+            classStatus: newStatus,
+          })
+        );
+      }
+    });
+  };
 
   const handleClickOpen = (rowData) => {
     Swal.fire({
@@ -339,6 +359,35 @@ const DisplayLiveClass = ({
                       <option value="Approved">Approved</option>
                       <option value="Pending">Pending</option>
                       <option value="Rejected">Rejected</option>
+                    </select>
+                  </div>
+                ),
+              },
+              {
+                title: "Class Status",
+                field: "classStatus",
+                render: (rowData) => (
+                  <div>
+                    <select
+                      className={classes.statusDropdown}
+                      value={rowData.classStatus}
+                      onChange={(e) =>
+                        handleClassStatusChange(rowData, e.target.value)
+                      }
+                      style={{
+                        backgroundColor:
+                          rowData.classStatus === "Start"
+                            ? "#90EE90" // Light Green
+                            : rowData.classStatus === "Completed"
+                            ? "#FF7F7F" // Light Red
+                            : rowData.classStatus === "Pending"
+                            ? "#FFD700" // Gold
+                            : "#D3D3D3",
+                      }}
+                    >
+                      <option value="Start">Start</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Completed">Completed</option>
                     </select>
                   </div>
                 ),

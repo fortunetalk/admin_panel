@@ -56,6 +56,13 @@ const liveClass = (state = initialState, actions) => {
         liveClassData: payload,
       };
     }
+    case actionTypes.UPDATE_LIVE_CLASS_ONGOING_STATUS: {
+
+      return {
+        ...state,
+        liveClassData: payload,
+      };
+    }
     case actionTypes.DELETE_LIVE_CLASS: {
       return {
         ...state,

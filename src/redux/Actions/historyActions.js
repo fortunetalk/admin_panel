@@ -97,3 +97,8 @@ export const updateLiveCourseHistoryStatus = payload =>({
     type: actionTypes.CHANGE_LIVE_COURSE_HISTORY_STATUS,
     payload
 })
+
+export const getRegisterLiveClassHistory = payload =>({
+    type: actionTypes.GET_REGISTER_LIVE_CLASS_HISTORY,
+    payload
+})

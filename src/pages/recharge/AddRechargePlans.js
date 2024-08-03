@@ -22,8 +22,6 @@ const AddRechargePlans = ({ dispatch }) => {
   const classes = useStyles();
   const [rechargeAmount, setRechargeAmount] = useState("");
   const [extraPercent, setExtraPercent] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
   const [status, setStatus] = useState("");
   const [error, setError] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -42,14 +40,6 @@ const AddRechargePlans = ({ dispatch }) => {
       handleError("extraPercent", "Please enter Extra Percent");
       isValid = false;
     }
-    if (!startDate) {
-      handleError("startDate", "Please select Start Date");
-      isValid = false;
-    }
-    if (!endDate) {
-      handleError("endDate", "Please select End Date");
-      isValid = false;
-    }
     if (!status) {
       handleError("status", "Please select Status");
       isValid = false;
@@ -64,8 +54,6 @@ const AddRechargePlans = ({ dispatch }) => {
       var body = {
         amount: rechargeAmount,
         percentage: extraPercent,
-        startDate: startDate,
-        endDate: endDate,
         recharge_status: status,
       };
       handleReset();
@@ -76,8 +64,6 @@ const AddRechargePlans = ({ dispatch }) => {
   const handleReset = () => {
     setRechargeAmount("");
     setExtraPercent("");
-    setStartDate("");
-    setEndDate("");
     setStatus("");
     setError({});
   };
@@ -122,32 +108,6 @@ const AddRechargePlans = ({ dispatch }) => {
               value={extraPercent}
               onFocus={() => handleError("extraPercent", null)}
               onChange={(event) => setExtraPercent(event.target.value)}
-              variant="outlined"
-              fullWidth
-            />
-          </Grid>
-          <Grid item lg={6} sm={12} md={12} xs={12}>
-            <label>Start Date</label>
-            <TextField
-              type="date"
-              error={Boolean(error.startDate)}
-              helperText={error.startDate}
-              value={startDate}
-              onFocus={() => handleError("startDate", null)}
-              onChange={(event) => setStartDate(event.target.value)}
-              variant="outlined"
-              fullWidth
-            />
-          </Grid>
-          <Grid item lg={6} sm={12} md={12} xs={12}>
-            <label>End Date</label>
-            <TextField
-              type="date"
-              error={Boolean(error.endDate)}
-              helperText={error.endDate}
-              value={endDate}
-              onFocus={() => handleError("endDate", null)}
-              onChange={(event) => setEndDate(event.target.value)}
               variant="outlined"
               fullWidth
             />

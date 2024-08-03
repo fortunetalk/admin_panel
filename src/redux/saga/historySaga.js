@@ -15,6 +15,7 @@ import {
   delete_live_class_history,
   get_live_course_history,
   change_live_course_history_status,
+  get_register_live_class_history
 
 } from "../../utils/Constants";
 import { database, firestore } from "../../config/firbase";
@@ -456,6 +457,30 @@ function* updateLiveCourseHistoryStatus(action) {
   }
 }
 
+function* getRegisterLiveClassHistory(action) {
+  try {
+    const { payload } = action;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    const response = yield ApiRequest.postRequest({
+      url: api_url + get_register_live_class_history,
+      header: "json",
+      data: payload,
+    });
+
+    if (response?.success) {
+      yield put({
+        type: actionTypes.GET_REGISTER_LIVE_CLASS_HISTORY,
+        payload: response?.data,
+      });
+    }
+
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+  } catch (e) {
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+    console.log(e);
+  }
+}
+
 
 export default function* historySaga() {
   yield takeLeading(actionTypes.GET_CHAT_HISTORY, getChatHistory);
@@ -470,4 +495,5 @@ export default function* historySaga() {
   yield takeLeading(actionTypes.DELETE_LIVE_CLASS_HISTORY, deleteLiveClassHistory)
   yield takeLeading(actionTypes.GET_LIVE_COURSE_HISTORY, getLiveCourseHistory)
   yield takeLeading(actionTypes.CHANGE_LIVE_COURSE_HISTORY_STATUS, updateLiveCourseHistoryStatus)
+  yield takeLeading(actionTypes.GET_REGISTER_LIVE_CLASS_HISTORY, getRegisterLiveClassHistory)
 }

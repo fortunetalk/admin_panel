@@ -724,17 +724,17 @@ export const AddAstrologers = ({
   }, [state]);
 
 
-  const callPriceInt = parseInt(callPrice, 10);
-  const companyCallPriceInt = parseInt(companyCallPrice, 10);
+  const callPriceInt = parseFloat(callPrice);
+  const companyCallPriceInt = parseFloat(companyCallPrice);  
 
-  const chatPriceInt = parseInt(chatPrice, 10);
-  const companyChatPriceInt = parseInt(companyChatPrice, 10);
+  const chatPriceInt = parseFloat(chatPrice);
+  const companyChatPriceInt = parseFloat(companyChatPrice);
 
-  const liveVideoPriceInt = parseInt(liveVideoPrice, 10);
-  const companyLiveVideoPriceInt = parseInt(companyLiveVideoPrice, 10);
+  const liveVideoPriceInt = parseFloat(liveVideoPrice);
+  const companyLiveVideoPriceInt = parseFloat(companyLiveVideoPrice);
 
-  const liveCallPriceInt = parseInt(liveCallPrice,10);
-  const companyLiveCallPriceInt = parseInt(companyLiveCallPrice,10);
+  const liveCallPriceInt = parseFloat(liveCallPrice);
+  const companyLiveCallPriceInt = parseFloat(companyLiveCallPrice);
 
   return (
     <>

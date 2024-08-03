@@ -155,11 +155,12 @@ const AddDemoClass = ({ isLoading, dispatch, activeAstrologerData, activeCourseD
       formData.append("sessionTime", sessionTime);
       formData.append("googleMeet", googleMeet);
       formData.append("image", file);
-      formData.append("video", video.bytes, video.file);
-      formData.append("pdf", pdf.bytes, pdf.file);
+      formData.append("video", video.bytes);
+      formData.append("pdf", pdf.file);
+      // formData.append("pdf", pdf.bytes, pdf.file);
 
       dispatch(DemoActions.addDemoClass(formData));
-      // handleReset();
+      handleReset();
       // navigate("/displayDemoClass");
     }
   };

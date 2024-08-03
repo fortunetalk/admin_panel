@@ -34,7 +34,8 @@ const DisplayLiveCourseHistory = ({ dispatch, liveCourseHistoryData }) => {
       if (result.isConfirmed) {
         const newStatus = !rowData.courseCompleted;
         dispatch(HistoryActions.updateLiveCourseHistoryStatus({
-          liveCourseId: rowData._id,
+          liveCourseId: rowData?.liveId?._id,
+          customerId: rowData.customerId._id,
           courseCompleted: newStatus.toString()
         }));
       }

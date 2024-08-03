@@ -106,6 +106,11 @@ const routes = [
         name: "Live Class",
         icon: <BiAbacus />,
       },
+      // {
+      //   path: "/registerLiveClassHistory",
+      //   name: "Register Live Class History",
+      //   icon: <BiAbacus />,
+      // },
     ],
   },
   {

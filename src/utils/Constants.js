@@ -1,11 +1,11 @@
 // export const base_url = "http://165.232.182.110:4000/";
 // export const api_url = "http://165.232.182.110:4000/api/";
 
-// export const base_url = "http://localhost:8000/";
-// export const api_url = "http://localhost:8000/api/";
+export const base_url = "http://localhost:8000/";
+export const api_url = "http://localhost:8000/api/";
 
-export const base_url = "http://97.74.83.200:4000/";
-export const api_url = "http://97.74.83.200:4000/api/";
+// export const base_url = "http://97.74.83.200:4000/";
+// export const api_url = "http://97.74.83.200:4000/api/";
 
 
 // admin login 
@@ -135,7 +135,7 @@ export const update_astrologer_notification_status = 'admin/astrologer/notificat
 export const delete_astrologer_notification = 'admin/astrologer/notification/delete'
 
 export const get_chat_history = 'admin/chat_history'
-export const get_admin_earnig_history = 'admin/get_admin_earnig_history'
+export const get_admin_earnig_history = 'admin/get_call_report'
 export const get_call_history = 'admin/call_history'
 export const get_recharge_history = 'admin/recharge/history'
 export const get_wallet_payments = 'admin/get_wallet_payments'
@@ -147,6 +147,8 @@ export const change_live_class_history_status = 'admin/register_live_class/chang
 export const delete_live_class_history = 'admin/register_live_class/delete'
 export const get_live_course_history = 'admin/get_live_course_history'
 export const change_live_course_history_status = 'admin/course/change-course-status'
+export const get_register_live_class_history = 'admin/live_class_history_by_astrologer_id'
+
 
 export const create_language = 'admin/create_language'
 export const get_language  = 'admin/get_language'

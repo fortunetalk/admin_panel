@@ -21,6 +21,7 @@ import * as CourseActions from "../../redux/Actions/courseActions.js";
 import * as AstrologerActions from "../../redux/Actions/astrologerActions.js";
 import * as LiveClassActions from "../../redux/Actions/liveClassActions.js";
 import * as ScheduleClassActions from "../../redux/Actions/scheduleLiveClassActions.js";
+import * as HistoryActions from "../../redux/Actions/historyActions.js";
 import { connect } from "react-redux";
 
 const DisplayLiveClass = ({
@@ -238,6 +239,12 @@ const DisplayLiveClass = ({
     });
   };
 
+  const handleHistory = (rowData) => {
+    // Add your history logic here
+    dispatch(HistoryActions.getRegisterLiveClassHistory(rowData._id));
+    navigate(`/registerLiveClassHistory/${rowData._id}`);
+  };
+
   const handleOptionChange = (e) => {
     setStatus(e.target.value);
   };
@@ -246,6 +253,8 @@ const DisplayLiveClass = ({
     const date = new Date(dateString);
     return date.toISOString().split("T")[0] + " " + timeString;
   };
+
+  const reverseData = Array.isArray(liveClassData) ? liveClassData.slice().reverse() : [];
 
   return (
     <div className={classes.container}>
@@ -263,14 +272,14 @@ const DisplayLiveClass = ({
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
             title="Live Class"
-            data={liveClassData}
+            data={reverseData}
             columns={[
               {
                 title: "S.No",
                 editable: "never",
                 render: (rowData) =>
-                  Array.isArray(liveClassData)
-                    ? liveClassData.indexOf(rowData) + 1
+                  Array.isArray(reverseData)
+                    ? reverseData.indexOf(rowData) + 1
                     : "N/A",
               },
               { title: "Course Name", field: "courseId.title" },
@@ -402,6 +411,11 @@ const DisplayLiveClass = ({
                 icon: QuestionAnswer,
                 tooltip: 'Go to MCQ List',
                 onClick: (event, rowData) => handleMCQ(rowData),
+              },
+              {
+                icon: "history",
+                tooltip: "View History",
+                onClick: (event, rowData) => handleHistory(rowData),
               },
 
               {

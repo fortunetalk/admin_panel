@@ -19,8 +19,8 @@ const RechargePlan = ({ dispatch, rechargePlanData }) => {
   const [planId, setplanId] = useState("");
   const [rechargeAmount, setRechargeAmount] = useState('');
     const [extraPercent, setExtraPercent] = useState('');
-    const [startDate, setStartDate] = useState('');
-    const [endDate, setEndDate] = useState('');
+    // const [startDate, setStartDate] = useState('');
+    // const [endDate, setEndDate] = useState('');
     const [status, setStatus] = useState('');
     const [error, setError] = useState({});
 
@@ -32,8 +32,8 @@ const RechargePlan = ({ dispatch, rechargePlanData }) => {
     setOpen(true);
     setRechargeAmount(rowData?.amount);
     setExtraPercent(rowData?.percentage);
-    setStartDate(rowData?.startDate);
-    setEndDate(rowData?.endDate);
+    // setStartDate(rowData?.startDate);
+    // setEndDate(rowData?.endDate);
     setStatus(rowData?.recharge_status);
     setplanId(rowData._id);
   };
@@ -47,8 +47,8 @@ const RechargePlan = ({ dispatch, rechargePlanData }) => {
     var body = {
         "amount": rechargeAmount,
         "percentage": extraPercent,
-        "startDate": startDate,
-        "endDate": endDate,
+        // "startDate": startDate,
+        // "endDate": endDate,
         "recharge_status": status,
         "planId": planId
     }
@@ -117,16 +117,6 @@ const RechargePlan = ({ dispatch, rechargePlanData }) => {
               {
                 title: "Percentage",
                 field: "percentage",
-              },
-              {
-                title: "Start Date",
-                field: "startDate",
-                render: rowData => formatDate(rowData.startDate)
-              },
-              {
-                title: "end Date",
-                field: "endDate",
-                render: rowData => formatDate(rowData.endDate)
               },
               { title: "Status", field: "recharge_status", render: rowData => (
                 <div className={classes.statusButton}
@@ -206,32 +196,7 @@ const RechargePlan = ({ dispatch, rechargePlanData }) => {
                             onChange={(event) => setExtraPercent(event.target.value)}
                             variant='outlined' fullWidth />
                     </Grid>
-                    <Grid item lg={6} sm={12} md={12} xs={12} >
-                        <label>Start Date</label>
-                        <TextField
-                            type="date"
-                            error={Boolean(error.startDate)}
-                            helperText={error.startDate}
-                            value={startDate}
-                            onFocus={() => handleError('startDate', null)}
-                            onChange={(event) => setStartDate(event.target.value)}
-                            variant='outlined'
-                            fullWidth
-                        />
-                    </Grid>
-                    <Grid item lg={6} sm={12} md={12} xs={12} >
-                        <label>End Date</label>
-                        <TextField
-                            type="date"
-                            error={Boolean(error.endDate)}
-                            helperText={error.endDate}
-                            value={endDate}
-                            onFocus={() => handleError('endDate', null)}
-                            onChange={(event) => setEndDate(event.target.value)}
-                            variant='outlined'
-                            fullWidth
-                        />
-                    </Grid>
+                  
                     <Grid item lg={6} sm={12} md={12} xs={12} >
                         <FormControl fullWidth>
                             <InputLabel id="select-label">Status</InputLabel>

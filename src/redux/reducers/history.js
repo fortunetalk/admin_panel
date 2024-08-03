@@ -9,6 +9,7 @@ const initialState = {
   demoClassHistoryData: null,
   liveClassHistoryData: null,
   liveCourseHistoryData:null,
+  registerLiveClassHistoryData: null,
   isLoading: false,
 
 };
@@ -111,6 +112,12 @@ const history = (state = initialState, actions) => {
       return {
         ...state,
         liveCourseHistoryData: payload,
+      };
+    }
+    case actionTypes.GET_REGISTER_LIVE_CLASS_HISTORY: {
+      return {
+        ...state,
+        registerLiveClassHistoryData: payload,
       };
     }
 

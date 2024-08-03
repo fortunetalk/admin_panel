@@ -132,6 +132,7 @@ import DisplayAstrologerTrainingBanner from "./pages/banner/DisplayAstrologerTra
 import DemoClassHistory from "./pages/history/DemoClassHistory";
 import LiveClassHistory from "./pages/history/LiveClassHistory";
 import DisplayLiveCourseHistory from "./pages/history/DisplayLiveCourseHistory";
+import RegisterLiveClassHistory from "./pages/courses/RegisterLiveClassHistory";
 
 function App() {
   return (
@@ -310,6 +311,8 @@ function App() {
           <Route path="/addClass/:liveClassId" element={<AddClass/>} />
           <Route path="/mcqList/:liveClassId" element={<DisplayMCQ/>} />
           <Route path="/addMCQ/:liveClassId" element={<AddMCQ/>} />
+          <Route path="/registerLiveClassHistory/:liveClassId" element={<RegisterLiveClassHistory/>} />
+
 
           <Route path="/displayWorkshop" element={<DisplayWorkshop/>} />
           <Route path="/addWorkshop" element={<AddWorkshop/>} />

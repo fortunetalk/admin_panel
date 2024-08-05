@@ -32,7 +32,7 @@ const useStyles = makeStyles({
 const FullChatHistory = () => {
   const classes = useStyles();
   const location = useLocation();
-  const { customerId} = useParams();
+  const { customerId } = useParams();
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
@@ -40,17 +40,53 @@ const FullChatHistory = () => {
     
     const handleValueChange = (snapshot) => {
       const data = snapshot.val();
-      const messagesArray = data ? Object.values(data).map((msg) => ({
-        position: msg.user._id === customerId ? 'right' : 'left',
-        type: 'text',
-        title: msg.user.name || '',
-        text: msg.text || '',
-        className: classes.messageText,
-      })) : [];
+      const messagesArray = data ? Object.values(data).map((msg) => {
+        let messageContent = {
+          position: msg.user._id === customerId ? 'right' : 'left',
+          type: 'text',
+          title: msg.user.name || '',
+          text: msg.text || '',
+          className: classes.messageText,
+        };
+
+        // Check for media types
+        if (msg.image) {
+          messageContent = {
+            ...messageContent,
+            type: 'photo',
+            // You might want to add additional styles or attributes for images
+            data: {
+              uri: msg.image,
+              position: msg.user._id === customerId ? 'right' : 'left'
+            }
+          };
+        } else if (msg.video) {
+          messageContent = {
+            ...messageContent,
+            type: 'video',
+            data: {
+              uri: msg.video,
+              position: msg.user._id === customerId ? 'right' : 'left'
+            }
+          };
+        } else if (msg.audio) {
+          messageContent = {
+            ...messageContent,
+            type: 'audio',
+            data: {
+              audioURL: msg.audio,
+              position: msg.user._id === customerId ? 'right' : 'left'
+            }
+          };
+        }
+
+        return messageContent;
+      }) : [];
       setMessages(messagesArray);
     };
 
-    onValue(messagesRef, handleValueChange);
+    onValue(messagesRef, handleValueChange); 
+
     // return () => {
     //   ref(database, `Messages/${location.state.chatId}`).off('value', handleValueChange);
     // };

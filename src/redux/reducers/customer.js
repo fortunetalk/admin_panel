@@ -27,6 +27,12 @@ const customer = (state = initialState, actions) => {
         customerListData: payload,
       };
     }
+    case actionTypes.DELETE_CUSTOMER: {
+      return {
+        ...state,
+        customerListData: payload,
+      };
+    }
 
     default: {
       return state;

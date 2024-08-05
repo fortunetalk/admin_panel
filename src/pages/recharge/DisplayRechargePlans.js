@@ -5,16 +5,9 @@ import {
   TextField,
 } from "@mui/material";
 import MaterialTable from "material-table";
-import { useNavigate } from "react-router-dom";
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import { CloseRounded } from "@mui/icons-material";
-import Swal from "sweetalert2";
 import * as Actions from "../../redux/Actions/rechargeHistoryActions.js";
 import Loader from "../../Components/loading/Loader.js";
 import { connect } from "react-redux";
-import { secondsToHMS } from "../../utils/services.js";
-import moment from "moment";
 
 const DisplayRechargePlan = ({ dispatch, rechargeHistoryData }) => {
   const classes = useStyles();
@@ -54,7 +47,13 @@ const DisplayRechargePlan = ({ dispatch, rechargeHistoryData }) => {
               { title: "Type", field: "type" },
               { title: "Discount", field: "discount" },
               { title: "Offer", field: "offer" },
-              { title: "Amount", field: "amount" },
+              { 
+                title: "Amount", field: "amount" ,
+                render: (rowData) => {
+                  const balance = Number(rowData.amount).toFixed(2);
+                  return balance;
+                }
+              },
               { title: "Total Amount", field: "totalAmount" },
               { title: "Payment Methody", field: "paymentMethod" },
               { title: "Transaction Type", field: "transactionType" },

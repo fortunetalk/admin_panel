@@ -1,11 +1,11 @@
 // export const base_url = "http://165.232.182.110:4000/";
 // export const api_url = "http://165.232.182.110:4000/api/";
 
-export const base_url = "http://localhost:8000/";
-export const api_url = "http://localhost:8000/api/";
+// export const base_url = "http://localhost:8000/";
+// export const api_url = "http://localhost:8000/api/";
 
-// export const base_url = "http://97.74.83.200:4000/";
-// export const api_url = "http://97.74.83.200:4000/api/";
+export const base_url = "http://97.74.83.200:4000/";
+export const api_url = "http://97.74.83.200:4000/api/";
 
 
 // admin login 
@@ -106,7 +106,7 @@ export const get_all_customers = "admin/customer"
 export const change_customer_status = "admin/customer/change_status"
 export const online_offline_customer = "admin/set-customer-online"
 export const update_customer = "admin/customer/update"
-export const delete_customer = "admin/delete-customer"
+export const delete_customer = "admin/customer/delete"
 export const customer_chat_history = "customers/customers-chat-history"
 export const customer_call_history = "customers/customers-call-history"
 export const customer_payment_history = "admin/customers-payment-list"
@@ -238,7 +238,9 @@ export const demo_class_list='admin/demo_class'
 export const update_demo_class = 'admin/demo_class/update'
 export const change_demo_class_status = 'admin/demo_class/change_status'
 export const change_demo_class_admin_status = 'admin/demo_class/change_admin_status'
+export const change_demo_class_ongoing_status = 'admin/booked_demo_class/change_class_status'
 export const delete_demo_class = 'admin/demo_class/delete'
+export const booked_demo_class = 'admin/booked_demo_class'
 
 //WORKSHOP
 export const create_workshop='admin/workshop/add_new'

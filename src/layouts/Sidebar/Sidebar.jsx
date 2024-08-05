@@ -107,6 +107,11 @@ const routes = [
         icon: <BiAbacus />,
       },
       // {
+      //   path: "/bookedDemoClass",
+      //   name: "Booked Demo Class",
+      //   icon: <BiAbacus />,
+      // },
+      // {
       //   path: "/registerLiveClassHistory",
       //   name: "Register Live Class History",
       //   icon: <BiAbacus />,
@@ -147,7 +152,7 @@ const routes = [
       },
       {
         path: "/displayRechargePlan",
-        name: "List of Recharge",
+        name: "Recharge History",
         icon: <BiAbacus />,
       },
       {

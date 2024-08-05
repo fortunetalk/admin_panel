@@ -14,11 +14,6 @@ export const setAllCustomer = payload =>({
     payload
 })
 
-export const deleteCustomer = payload =>({
-    type: actionTypes.DELETE_CUSTOMER,
-    payload
-})
-
 export const banCustomer = payload =>({
     type: actionTypes.BAN_CUSTOMER,
     payload
@@ -26,5 +21,9 @@ export const banCustomer = payload =>({
 
 export const updateCustomer = payload =>({
     type: actionTypes.UPDATE_CUSTOMER,
+    payload
+})
+export const deleteCustomer = payload =>({
+    type: actionTypes.DELETE_CUSTOMER,
     payload
 })

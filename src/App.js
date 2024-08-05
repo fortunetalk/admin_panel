@@ -134,6 +134,7 @@ import LiveClassHistory from "./pages/history/LiveClassHistory";
 import DisplayLiveCourseHistory from "./pages/history/DisplayLiveCourseHistory";
 import RegisterLiveClassHistory from "./pages/courses/RegisterLiveClassHistory";
 import FullChatHistory from "./pages/history/FullChatHistory";
+import BookedDemoClass from "./pages/courses/BookedDemoClass";
 
 function App() {
   return (
@@ -314,6 +315,8 @@ function App() {
           <Route path="/mcqList/:liveClassId" element={<DisplayMCQ/>} />
           <Route path="/addMCQ/:liveClassId" element={<AddMCQ/>} />
           <Route path="/registerLiveClassHistory/:liveClassId" element={<RegisterLiveClassHistory/>} />
+          <Route path="/bookedDemoClass" element={<BookedDemoClass/>} />
+
 
 
           <Route path="/displayWorkshop" element={<DisplayWorkshop/>} />

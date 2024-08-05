@@ -249,7 +249,7 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
               {
                 title: "S.No",
                 editable: "never",
-                render: (rowData) => customerListData.indexOf(rowData) + 1,
+                render: rowData => Array.isArray(customerListData) ? customerListData.indexOf(rowData) + 1 : 'N/A'
               },
               { title: "Customer ID", field: "customerUniqueId" },
               { title: "Name", field: "customerName" },
@@ -303,6 +303,17 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
                 icon: "edit",
                 tooltip: "Edit Customer Data",
                 onClick: (event, rowData) => handleOpen(rowData),
+              },
+              {
+                icon: "delete",
+                tooltip: "Delete Customer",
+                onClick: (event, rowData) =>
+                  dispatch(
+                    CustomerActions.deleteCustomer({
+                      customerId: rowData?._id,
+                      title: rowData?.customerName,
+                    })
+                  ),
               },
               {
                 icon: () => (

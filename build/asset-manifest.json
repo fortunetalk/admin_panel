@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/static/css/main.11fef6f2.css",
-    "main.js": "/static/js/main.c844a475.js",
-    "static/js/498.f5e77409.chunk.js": "/static/js/498.f5e77409.chunk.js",
-    "static/js/703.21aa4b2d.chunk.js": "/static/js/703.21aa4b2d.chunk.js",
-    "static/js/198.f4162cfc.chunk.js": "/static/js/198.f4162cfc.chunk.js",
-    "static/js/787.07c26b3c.chunk.js": "/static/js/787.07c26b3c.chunk.js",
+    "main.css": "/static/css/main.0b04b279.css",
+    "main.js": "/static/js/main.abf088c2.js",
+    "static/js/239.cb9a7b32.chunk.js": "/static/js/239.cb9a7b32.chunk.js",
+    "static/js/213.b6305973.chunk.js": "/static/js/213.b6305973.chunk.js",
+    "static/js/455.693a7a11.chunk.js": "/static/js/455.693a7a11.chunk.js",
+    "static/js/453.f8bdd5e7.chunk.js": "/static/js/453.f8bdd5e7.chunk.js",
     "static/media/logo_icon.png": "/static/media/logo_icon.5bbd08514b023a2693ef.png",
     "static/media/login_background.jpg": "/static/media/login_background.2ec51fcc7164c2c356f7.jpg",
     "index.html": "/index.html",
-    "main.11fef6f2.css.map": "/static/css/main.11fef6f2.css.map",
-    "main.c844a475.js.map": "/static/js/main.c844a475.js.map",
-    "498.f5e77409.chunk.js.map": "/static/js/498.f5e77409.chunk.js.map",
-    "703.21aa4b2d.chunk.js.map": "/static/js/703.21aa4b2d.chunk.js.map",
-    "198.f4162cfc.chunk.js.map": "/static/js/198.f4162cfc.chunk.js.map",
-    "787.07c26b3c.chunk.js.map": "/static/js/787.07c26b3c.chunk.js.map"
+    "main.0b04b279.css.map": "/static/css/main.0b04b279.css.map",
+    "main.abf088c2.js.map": "/static/js/main.abf088c2.js.map",
+    "239.cb9a7b32.chunk.js.map": "/static/js/239.cb9a7b32.chunk.js.map",
+    "213.b6305973.chunk.js.map": "/static/js/213.b6305973.chunk.js.map",
+    "455.693a7a11.chunk.js.map": "/static/js/455.693a7a11.chunk.js.map",
+    "453.f8bdd5e7.chunk.js.map": "/static/js/453.f8bdd5e7.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.11fef6f2.css",
-    "static/js/main.c844a475.js"
+    "static/css/main.0b04b279.css",
+    "static/js/main.abf088c2.js"
   ]
 }

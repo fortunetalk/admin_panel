@@ -133,6 +133,7 @@ import DemoClassHistory from "./pages/history/DemoClassHistory";
 import LiveClassHistory from "./pages/history/LiveClassHistory";
 import DisplayLiveCourseHistory from "./pages/history/DisplayLiveCourseHistory";
 import RegisterLiveClassHistory from "./pages/courses/RegisterLiveClassHistory";
+import FullChatHistory from "./pages/history/FullChatHistory";
 
 function App() {
   return (
@@ -197,6 +198,7 @@ function App() {
           <Route path="/displayEnquiry" element={<DisplayEnquiry />} />
           <Route path="/AddEnquiry" element={<AddEnquiry />} />
           <Route path="/history/ChatHistory" element={<ChatHistory />} />
+          <Route path="/history/fullChatHistory/:customerId" element={<FullChatHistory/>} />
           <Route path="/history/CallHistory" element={<CallHistory />} />
           <Route path="/history/demoClassHistory" element={<DemoClassHistory/>} />
           <Route path="/history/liveClassHistory" element={<LiveClassHistory/>} />

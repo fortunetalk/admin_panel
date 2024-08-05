@@ -73,6 +73,10 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
     setViewData(false);
   };
 
+  const handleClickOpen = (rowData) => {
+    navigate(`/history/fullChatHistory/${rowData.customerId._id}`, {state:{chatId: rowData.chatId}})
+  };
+
   return (
     <div className={classes.container}>
       <Loader />
@@ -139,6 +143,14 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
               //   ),
               // },
               { title: "Status", field: "status" },
+
+              { title: "View Chat History", field: "status", render: rowData => (
+                <div className={classes.statusButton}
+                style={{ backgroundColor:  '#90EE90'}}
+                onClick={() => handleClickOpen(rowData)}>
+                  View Chat
+                </div>
+              )},
             ]}
             options={{ ...propStyles.tableStyles, filtering: false }}
             actions={[

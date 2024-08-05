@@ -7,16 +7,14 @@ import { getFirestore } from "firebase/firestore";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyAhYUKc9pTGGZ-LpKtOZ6q-dDy_t5W9un8",
-  authDomain: "namoastro-8f2e7.firebaseapp.com",
-  databaseURL: "https://namoastro-8f2e7-default-rtdb.firebaseio.com",
-  projectId: "namoastro-8f2e7",
-  storageBucket: "namoastro-8f2e7.appspot.com",
-  messagingSenderId: "1057767146446",
-  appId: "1:1057767146446:web:4e81291eda71f8ad72619f",
-  measurementId: "G-3Z56X2BZVK",
+  apiKey: "AIzaSyD7ZPT4E4U6Ie19GTSBAqaYSXSuJUxUub0",
+  authDomain: "fortunetalk-node.firebaseapp.com",
+  databaseURL: "https://fortunetalk-node-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "fortunetalk-node",
+  storageBucket: "fortunetalk-node.appspot.com",
+  messagingSenderId: "410336005427",
+  appId: "1:410336005427:web:d68a62840090bbefbc8246"
 };
 
 // Initialize Firebase

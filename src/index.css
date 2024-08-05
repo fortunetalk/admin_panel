@@ -58,3 +58,6 @@ a {
 .css-1t1j96h-MuiPaper-root-MuiDialog-paper {
   max-width: 60% !important;
 }
+.rce-mbox.rce-mbox-right{
+  width: 50vw !important;
+}

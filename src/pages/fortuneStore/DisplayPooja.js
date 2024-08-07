@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useStyles } from "../../assets/styles.js";
+import { useStyles, propStyles } from "../../assets/styles.js";
 import {
   Avatar,
   Grid,
@@ -229,25 +229,7 @@ const DisplayPooja = ({ poojaData, poojaCategoryData }) => {
                 ),
               },
             ]}
-            options={{
-              sorting: true,
-              search: true,
-              searchFieldAlignment: "right",
-              filtering: true,
-              paging: true,
-              // pageSizeOptions: createArrayWithBreakdowns(editable?.length, 5),
-              pageSize: 5,
-              paginationType: "stepped",
-              showFirstLastPageButtons: true,
-              paginationPosition: "bottom",
-              exportButton: false,
-              exportAllData: false,
-              exportFileName: "Category data",
-              addRowPosition: "first",
-              actionsColumnIndex: -1,
-              selection: false,
-              showSelectAllCheckbox: false,
-            }}
+            options={{ ...propStyles.tableStyles, filtering: false }}
             actions={[
               {
                 icon: "visibility",

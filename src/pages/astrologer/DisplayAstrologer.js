@@ -45,8 +45,6 @@ const ListAstrology = ({ astrologerListData }) => {
   }, []);
 
   const handleEdit = (astrologerId) => {
-    // const selectedAstro = astrologerListData.find(astro => astro._id === astrologerId);
-    // updateState({ editModalOpen: true, selectedAstro });
     navigate(`/editAstrologer/${astrologerId}`);
   };
 
@@ -160,6 +158,10 @@ const ListAstrology = ({ astrologerListData }) => {
                 render: (rowData) => astrologerListData.indexOf(rowData) + 1,
               },
               {
+                title: "Unique ID",
+                field: "astroUniqueId",
+              },
+              {
                 title: "Display Name",
                 field: "displayName",
               },
@@ -174,7 +176,12 @@ const ListAstrology = ({ astrologerListData }) => {
               {
                 title: "Wallet",
                 field: "wallet_balance",
+                render: (rowData) => {
+                  const balance = Number(rowData.wallet_balance).toFixed(2);
+                  return balance;
+                }
               },
+              
               {
                 title: "Status",
                 field: "status",
@@ -235,7 +242,7 @@ const ListAstrology = ({ astrologerListData }) => {
             actions={[
               {
                 icon: "edit",
-                tooltip: "Edit Skill",
+                tooltip: "Edit Astrologer",
                 onClick: (event, rowData) => handleEdit(rowData._id),
               },
               {
@@ -281,7 +288,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Display Name"
-                      value={selectedAstro.displayName}
+                      value={selectedAstro?.displayName}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -291,7 +298,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Name"
-                      value={selectedAstro.name}
+                      value={selectedAstro?.name}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -301,7 +308,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Email"
-                      value={selectedAstro.email}
+                      value={selectedAstro?.email}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -311,7 +318,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Phone"
-                      value={`${selectedAstro.phoneCode} ${selectedAstro.phoneNumber}`}
+                      value={`${selectedAstro?.phoneCode} ${selectedAstro?.phoneNumber}`}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -321,7 +328,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Gender"
-                      value={selectedAstro.gender}
+                      value={selectedAstro?.gender}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -332,7 +339,7 @@ const ListAstrology = ({ astrologerListData }) => {
                       fullWidth
                       label="Date of Birth"
                       value={new Date(
-                        selectedAstro.dateOfBirth
+                        selectedAstro?.dateOfBirth
                       ).toLocaleDateString()}
                       InputProps={{
                         readOnly: true,
@@ -343,7 +350,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Experience"
-                      value={selectedAstro.experience}
+                      value={selectedAstro?.experience}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -353,7 +360,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Address"
-                      value={selectedAstro.address}
+                      value={selectedAstro?.address}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -363,7 +370,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Country"
-                      value={selectedAstro.countryId.title}
+                      value={selectedAstro?.countryId?.title}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -373,7 +380,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="State"
-                      value={selectedAstro.stateId.title}
+                      value={selectedAstro?.stateId?.title}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -383,7 +390,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="City"
-                      value={selectedAstro.cityId.title}
+                      value={selectedAstro?.cityId?.title}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -393,7 +400,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Zip Code"
-                      value={selectedAstro.zipCode}
+                      value={selectedAstro?.zipCode}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -403,7 +410,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Languages"
-                      value={selectedAstro.language}
+                      value={selectedAstro?.language}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -413,7 +420,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="About"
-                      value={selectedAstro.about}
+                      value={selectedAstro?.about}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -425,7 +432,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Education Qualification"
-                      value={selectedAstro.educationQualification}
+                      value={selectedAstro?.educationQualification}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -435,7 +442,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Astrology Qualification"
-                      value={selectedAstro.astrologyQualification}
+                      value={selectedAstro?.astrologyQualification}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -445,7 +452,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Follower Count"
-                      value={selectedAstro.follower_count}
+                      value={selectedAstro?.follower_count}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -455,7 +462,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Rating"
-                      value={selectedAstro.rating}
+                      value={selectedAstro?.rating}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -465,7 +472,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Average Rating"
-                      value={selectedAstro.avgRating}
+                      value={selectedAstro?.avgRating}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -476,7 +483,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Bank Account Number"
-                      value={selectedAstro.bankAcountNumber}
+                      value={selectedAstro?.bankAcountNumber}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -486,7 +493,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Bank Name"
-                      value={selectedAstro.bankName}
+                      value={selectedAstro?.bankName}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -496,7 +503,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Account Type"
-                      value={selectedAstro.accountType}
+                      value={selectedAstro?.accountType}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -506,7 +513,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="IFSC Code"
-                      value={selectedAstro.ifscCode}
+                      value={selectedAstro?.ifscCode}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -516,7 +523,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Account Holder Name"
-                      value={selectedAstro.accountHolderName}
+                      value={selectedAstro?.accountHolderName}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -526,7 +533,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Aadhar Number"
-                      value={selectedAstro.addharNumber}
+                      value={selectedAstro?.addharNumber}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -536,7 +543,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="PAN Number"
-                      value={selectedAstro.panNumber}
+                      value={selectedAstro?.panNumber}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -546,7 +553,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Chat Price"
-                      value={selectedAstro.chatPrice}
+                      value={selectedAstro?.chatPrice}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -556,7 +563,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Company Chat Price"
-                      value={selectedAstro.companyChatPrice}
+                      value={selectedAstro?.companyChatPrice}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -566,7 +573,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Call Price"
-                      value={selectedAstro.callPrice}
+                      value={selectedAstro?.callPrice}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -576,7 +583,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Company Call Price"
-                      value={selectedAstro.companyCallPrice}
+                      value={selectedAstro?.companyCallPrice}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -586,7 +593,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Live Video Price"
-                      value={selectedAstro.liveVideoPrice}
+                      value={selectedAstro?.liveVideoPrice}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -596,7 +603,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Company Live Video Price"
-                      value={selectedAstro.companyLiveVideoPrice}
+                      value={selectedAstro?.companyLiveVideoPrice}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -606,7 +613,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Live Call Price"
-                      value={selectedAstro.liveCallPrice}
+                      value={selectedAstro?.liveCallPrice}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -616,7 +623,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Company Live Call Price"
-                      value={selectedAstro.companyLiveCallPrice}
+                      value={selectedAstro?.companyLiveCallPrice}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -626,7 +633,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Astrologer Type"
-                      value={selectedAstro.astrologerType}
+                      value={selectedAstro?.astrologerType}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -636,7 +643,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Status"
-                      value={selectedAstro.status}
+                      value={selectedAstro?.status}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -646,7 +653,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Wallet Balance"
-                      value={selectedAstro.wallet_balance}
+                      value={selectedAstro?.wallet_balance}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -657,13 +664,13 @@ const ListAstrology = ({ astrologerListData }) => {
                       fullWidth
                       label="Skills"
                       value={
-                        selectedAstro.skillId.length > 1
+                        selectedAstro?.skillId.length > 1
                           ? selectedAstro.skillId
-                              .map((skill) => skill.title)
-                              .join(", ")
+                            .map((skill) => skill.title)
+                            .join(", ")
                           : selectedAstro.skillId.length === 1
-                          ? selectedAstro.skillId[0].title
-                          : ""
+                            ? selectedAstro.skillId[0].title
+                            : ""
                       }
                       InputProps={{
                         readOnly: true,
@@ -675,13 +682,13 @@ const ListAstrology = ({ astrologerListData }) => {
                       fullWidth
                       label="Remedies"
                       value={
-                        selectedAstro.remediesId.length > 1
+                        selectedAstro?.remediesId.length > 1
                           ? selectedAstro.remediesId
-                              .map((remedy) => remedy.title)
-                              .join(", ")
+                            .map((remedy) => remedy.title)
+                            .join(", ")
                           : selectedAstro.remediesId.length === 1
-                          ? selectedAstro.remediesId[0].title
-                          : ""
+                            ? selectedAstro.remediesId[0].title
+                            : ""
                       }
                       InputProps={{
                         readOnly: true,
@@ -689,17 +696,17 @@ const ListAstrology = ({ astrologerListData }) => {
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                  <TextField
+                    <TextField
                       fullWidth
                       label="Expertise"
                       value={
-                        selectedAstro.expertiseId.length > 1
+                        selectedAstro?.expertiseId.length > 1
                           ? selectedAstro.expertiseId
-                              .map((expertise) => expertise.title)
-                              .join(", ")
+                            .map((expertise) => expertise.title)
+                            .join(", ")
                           : selectedAstro.expertiseId.length === 1
-                          ? selectedAstro.expertiseId[0].title
-                          : ""
+                            ? selectedAstro.expertiseId[0].title
+                            : ""
                       }
                       InputProps={{
                         readOnly: true,
@@ -710,7 +717,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Astrologer Type"
-                      value={selectedAstro.astrologerType}
+                      value={selectedAstro?.astrologerType}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -720,7 +727,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Preferred Days"
-                      value={selectedAstro.preferredDays}
+                      value={selectedAstro?.preferredDays}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -730,7 +737,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <TextField
                       fullWidth
                       label="Login / Logout"
-                      value={selectedAstro.isLoggined ? "Login" : "Logout"}
+                      value={selectedAstro?.isLoggined ? "Login" : "Logout"}
                       InputProps={{
                         readOnly: true,
                       }}
@@ -761,7 +768,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <Grid item xs={12} sm={3}>
                       <label htmlFor="">Profile Image</label>
                       <Avatar
-                        src={selectedAstro.profileImage}
+                        src={selectedAstro?.profileImage}
                         variant="square"
                         style={{
                           width: "100%",
@@ -775,7 +782,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <Grid item xs={12} sm={3}>
                       <label htmlFor="">ID Proof Image</label>
                       <Avatar
-                        src={selectedAstro.idProofImage}
+                        src={selectedAstro?.idProofImage}
                         variant="square"
                         style={{
                           width: "100%",
@@ -789,7 +796,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     <Grid item xs={12} sm={3}>
                       <label htmlFor="">Bank Proof Image</label>
                       <Avatar
-                        src={selectedAstro.bankProofImage}
+                        src={selectedAstro?.bankProofImage}
                         variant="square"
                         style={{
                           width: "100%",

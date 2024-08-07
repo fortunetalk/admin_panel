@@ -30,7 +30,6 @@ function* createSkill(actions) {
       },
       data: payload,
     });
-
     if (response?.success) {
       Swal.fire({
         icon: "success",
@@ -48,20 +47,19 @@ function* createSkill(actions) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.SET_IS_LOADING, payload: response.error });
+      yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
     }
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
     console.log(e);
     Swal.fire({
       icon: "error",
-      title: "Unexpected Error Occured",
+      title: "Unexpected Error Occurred",
       text: e.message,
       showConfirmButton: false,
       timer: 2000,
     });
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: e });
+  } finally {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   }
 }
 
@@ -79,15 +77,15 @@ function* getSkills() {
       });
     }
 
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: response.data });
-  } catch (e) {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+  } catch (e) {
     console.log(e);
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   }
 }
+
 function* getActiveSkills() {
   try {
-    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
     const response = yield ApiRequest.getRequest({
       url: api_url + get_active_skills,
     });
@@ -98,10 +96,7 @@ function* getActiveSkills() {
         payload: response?.data,
       });
     }
-
-    // yield put({ type: actionTypes.SET_IS_LOADING, payload: response.data });
   } catch (e) {
-    // yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
     console.log(e);
   }
 }
@@ -119,7 +114,7 @@ function* updateSkill(actions) {
     if (response.success) {
       Swal.fire({
         icon: "success",
-        title: "Skill Updated Successfull",
+        title: "Skill Updated Successfully",
         showConfirmButton: false,
         timer: 2000,
       });
@@ -134,10 +129,10 @@ function* updateSkill(actions) {
         timer: 2000,
       });
     }
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
     console.log(e);
+  } finally {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   }
 }
 
@@ -169,7 +164,7 @@ function* deleteSkill(actions) {
       if (response?.success) {
         Swal.fire({
           icon: "success",
-          title: "Skill Deleted Successfull",
+          title: "Skill Deleted Successfully",
           showConfirmButton: false,
           timer: 2000,
         });
@@ -185,13 +180,13 @@ function* deleteSkill(actions) {
         });
       }
     }
-
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
     console.log(e);
+  } finally {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   }
 }
+
 function* updateSkillStatus(action) {
   try {
     const { payload } = action;
@@ -235,7 +230,6 @@ function* updateSkillStatus(action) {
 function* createSubSkill(actions) {
   try {
     const { payload } = actions;
-
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
     const response = yield ApiRequest.postRequest({
       url: api_url + add_subSkill,
@@ -246,10 +240,11 @@ function* createSubSkill(actions) {
     if (response.success) {
       Swal.fire({
         icon: "success",
-        title: "Sub Skill Added Successfull",
+        title: "Sub Skill Added Successfully",
         showConfirmButton: false,
         timer: 2000,
       });
+      yield put({ type: actionTypes.GET_ALL_SKILLS, payload: response });
     } else {
       Swal.fire({
         icon: "error",
@@ -259,10 +254,10 @@ function* createSubSkill(actions) {
         timer: 2000,
       });
     }
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
     console.log(e);
+  } finally {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   }
 }
 
@@ -278,11 +273,10 @@ function* getSubSkills() {
         payload: response?.data,
       });
     }
-
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
     console.log(e);
+  } finally {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   }
 }
 
@@ -314,10 +308,10 @@ function* updateSubSkill(actions) {
         timer: 2000,
       });
     }
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
     console.log(e);
+  } finally {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   }
 }
 
@@ -349,7 +343,7 @@ function* deleteSubSkill(actions) {
       if (response.success) {
         Swal.fire({
           icon: "success",
-          title: "Sub Skill Deleted Successfull",
+          title: "Sub Skill Deleted Successfully",
           showConfirmButton: false,
           timer: 2000,
         });
@@ -359,17 +353,16 @@ function* deleteSubSkill(actions) {
         Swal.fire({
           icon: "error",
           title: "Server Error",
-          text: "Skill Delete Failed",
+          text: "Sub Skill Delete Failed",
           showConfirmButton: false,
           timer: 2000,
         });
       }
     }
-
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   } catch (e) {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
     console.log(e);
+  } finally {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   }
 }
 

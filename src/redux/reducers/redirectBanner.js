@@ -2,12 +2,19 @@ import * as actionTypes from "../actionTypes";
 
 const initialState = {
   redirectBannerData: null,
+  isLoading: false,
 };
 
 const redirectBanner = (state = initialState, actions) => {
   const { payload, type } = actions;
 
   switch (type) {
+    case actionTypes.SET_IS_LOADING: {
+      return {
+        ...state,
+        isLoading: payload,
+      };
+    } 
     case actionTypes.CREATE_REDIRECTION_BANNER: {
       return {
         ...state,

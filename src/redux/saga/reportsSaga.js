@@ -17,7 +17,7 @@ function* getAdminEarnings() {
     if (response.success) {
       yield put({
         type: actionTypes.SET_ADMIN_EARNINGS,
-        payload: response.history.reverse(),
+        payload: response?.data?.liveCalls.reverse(),
       });
     }
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });

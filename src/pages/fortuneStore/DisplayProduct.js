@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useStyles } from "../../assets/styles.js";
+import { useStyles, propStyles } from "../../assets/styles.js";
 import {
   Avatar,
   Grid,
@@ -109,14 +109,7 @@ const DisplayProduct = ({ productData, productCategoryData }) => {
       handleError("status", "Please select status");
       isValid = false;
     }
-    if (!image.data) {
-      handleError("image", "Please upload image");
-      isValid = false;
-    }
-    if (!galleryImage) {
-      handleError("galleryImage", "Please upload gallery image");
-      isValid = false;
-    }
+
     return isValid;
   };
 
@@ -265,25 +258,7 @@ const DisplayProduct = ({ productData, productCategoryData }) => {
                 ),
               },
             ]}
-            options={{
-              sorting: true,
-              search: true,
-              searchFieldAlignment: "right",
-              filtering: true,
-              paging: true,
-              // pageSizeOptions: createArrayWithBreakdowns(editable?.length, 5),
-              pageSize: 5,
-              paginationType: "stepped",
-              showFirstLastPageButtons: true,
-              paginationPosition: "bottom",
-              exportButton: false,
-              exportAllData: false,
-              exportFileName: "Category data",
-              addRowPosition: "first",
-              actionsColumnIndex: -1,
-              selection: false,
-              showSelectAllCheckbox: false,
-            }}
+            options={{ ...propStyles.tableStyles, filtering: false }}
             actions={[
               {
                 icon: "visibility",
@@ -455,7 +430,6 @@ const DisplayProduct = ({ productData, productCategoryData }) => {
                 type="file"
               />
             </Grid>
-            <div className={classes.errorstyles}>{error.image}</div>
           </Grid>
           <Grid item lg={4} sm={6} md={4} xs={6}>
             <Avatar
@@ -483,7 +457,6 @@ const DisplayProduct = ({ productData, productCategoryData }) => {
                 multiple
               />
             </Grid>
-            <div className={classes.errorstyles}>{error.galleryImage}</div>
           </Grid>
 
           <Grid item lg={12} sm={12} md={12} xs={12}>

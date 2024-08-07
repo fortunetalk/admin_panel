@@ -116,11 +116,13 @@ const DisplayState = ({  stateData, countryData }) => {
                 title: "S.No",
                 editable: "never",
                 render: (rowData) => stateData.indexOf(rowData) + 1,
+                sorting:true,
               },
-              { title: "State", field: "title" },
+              { title: "State", field: "title", sorting:true },
               {
                 title: "Country",
                 field: "countryId.title",
+                sorting:true
               },
               { title: "Status", field: "status", render: rowData => (
                 <div className={classes.statusButton}
@@ -131,7 +133,10 @@ const DisplayState = ({  stateData, countryData }) => {
               )},
 
             ]}
-            options={propStyles.tableStyles}
+            options={{
+              ...propStyles.tableStyles,
+              sorting: true,
+            }}
             style={{ fontSize: "1.4rem" }}
             actions={[
               {

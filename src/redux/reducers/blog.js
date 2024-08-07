@@ -2,19 +2,29 @@ import * as actionTypes from "../actionTypes";
 
 const initialState = {
   appBlogData: null,
-  setBlogData:null,
-  updateBlogData:null,
-  deleteBlogData:null,
+  isLoading: false,
 };
 
 const blog = (state = initialState, actions) => {
   const { payload, type } = actions;
 
   switch (type) {
+    case actionTypes.SET_IS_LOADING: {
+      return {
+        ...state,
+        isLoading: true,
+      };
+    }
+    case actionTypes.UNSET_IS_LOADING:{
+      return {
+        ...state,
+        isLoading: false,
+      };
+    }
     case actionTypes.CREATE_BLOG: {
       return {
         ...state,
-        setBlogData: payload,
+        appBlogData: payload,
       };
     }
     case actionTypes.BLOG_LIST: {
@@ -24,26 +34,27 @@ const blog = (state = initialState, actions) => {
       };
     }
     case actionTypes.UPDATE_BLOG: {
-      const updatedData = state.appBlogData.map(category =>
-        category._id === payload._id ? payload : category
-      );
       return {
         ...state,
-        appBlogData: updatedData,
+        appBlogData: payload,
       };
     }
     case actionTypes.DELETE_BLOG: {
-      const updatedData = state.appBlogData.filter(category => category._id !== payload);
       return {
         ...state,
-        appBlogData: updatedData,
+        appBlogData: payload,
       };
     }
     case actionTypes.DELETE_MULTIPLE_BLOG: {
-      const updatedData = state.appBlogData.filter(category => category._id !== payload);
       return {
         ...state,
-        appBlogData: updatedData,
+        appBlogData: payload,
+      };
+    }
+    case actionTypes.UPDATE_BLOG_STATUS: {
+      return {
+        ...state,
+        appBlogData: payload,
       };
     }
 

@@ -6,6 +6,7 @@ import { Outlet } from "react-router-dom";
 import { connect } from "react-redux";
 // import Loading from "../Components/loading/loading";
 import * as Actions from '../redux/Actions/dashboardActions'
+import Footer from "./Footer/Footer";
 
 const Layout = ({dispatch, isSidebarOpen}) => {
   const handleClickOutside = () => {
@@ -21,6 +22,7 @@ const Layout = ({dispatch, isSidebarOpen}) => {
           <main className="maincontainer">
             <Outlet />{" "}
           </main>
+          <Footer/>
         </div>
         <div
           onClick={handleClickOutside}

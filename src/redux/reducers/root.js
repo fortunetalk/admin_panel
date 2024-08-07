@@ -28,8 +28,22 @@ import poojaBanner from './poojaBanner'
 import callChatBanner from "./callChatBanner";
 import testimonial from './testimonial'
 import demoClass from "./demoClass";
+import liveClass from "./liveClass";
+import scheduleLiveClass from "./scheduleLiveClass";
+import workshop from "./workshop";
+import mcq from "./mcq";
+import gift from "./gift";
+import privacyPolicy from "./privacyPolicy";
+import admin from './admin';
+import request from "./request";
+import astrologerBanner from "./astrologerBanner";
+import termsAndCondition from "./termsAndCondition";
+import liveStream from "./liveStream";
+import rechargeHistory from "./rechargeHistory";
+import astrologerTrainingBanner from "./astrologerTrainingBanner";
 
 const rootReducer = combineReducers({
+  admin,
   dashboard,
   review,
   customer,
@@ -56,8 +70,20 @@ const rootReducer = combineReducers({
   productBanner,
   poojaBanner,
   callChatBanner,
+  astrologerBanner,
   testimonial,
   demoClass,
+  liveClass,
+  scheduleLiveClass,
+  workshop,
+  mcq,
+  gift,
+  privacyPolicy,
+  request,
+  termsAndCondition,
+  liveStream,
+  rechargeHistory,
+  astrologerTrainingBanner,
 });
 
 // const appReducer = (state, action) => {

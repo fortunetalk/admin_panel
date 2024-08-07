@@ -164,14 +164,7 @@ const DisplayCourses = ({ dispatch, courseData }) => {
                 ),
               },
 
-              {
-                title: "Description",
-                field: "description",
-              },
-              {
-                title: "Learn & Earn",
-                field: "learnEarn",
-              },
+             
               { title: "Status", field: "status", render: rowData => (
                 <div className={classes.statusButton}
                 style={{ backgroundColor: rowData.status === 'Active' ? '#90EE90' : '#FF7F7F '}}

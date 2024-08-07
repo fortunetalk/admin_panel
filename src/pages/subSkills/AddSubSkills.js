@@ -161,10 +161,17 @@ const AddSubSkills = ({ dispatch, skillsData }) => {
   );
 
   function fillSkillList() {
-    return skillsData.map((item) => {
-      return <MenuItem value={item._id}>{item.title}</MenuItem>;
-    });
+    if (!Array.isArray(skillsData)) {
+      return <MenuItem disabled>No skills available</MenuItem>;
+    }
+  
+    return skillsData.map((item) => (
+      <MenuItem key={item._id} value={item._id}>
+        {item.title}
+      </MenuItem>
+    ));
   }
+  
 };
 
 const mapStateToProps = (state) => ({

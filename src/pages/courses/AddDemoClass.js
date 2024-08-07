@@ -8,12 +8,10 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  CircularProgress,
+
 } from "@mui/material";
 import DvrIcon from "@mui/icons-material/Dvr";
-import { add_subSkill, get_skills } from "../../utils/Constants.js";
-import { getData, postData } from "../../utils/FetchNodeServices.js";
-import Swal from "sweetalert2";
-import { Colors } from "../../assets/styles.js";
 import { useNavigate } from "react-router-dom";
 import logo_icon from "../../assets/images/logo_icon.png";
 import { connect } from "react-redux";
@@ -22,7 +20,7 @@ import * as CourseActions from "../../redux/Actions/courseActions.js";
 import * as AstrologerActions from "../../redux/Actions/astrologerActions.js";
 import Loader from "../../Components/loading/Loader.js";
 
-const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
+const AddDemoClass = ({ isLoading, dispatch, activeAstrologerData, activeCourseData }) => {
   const navigate = useNavigate();
   const classes = useStyles();
   const [courseId, setcourseId] = useState("");
@@ -92,15 +90,51 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
       isValid = false;
     }
     if (!astrologerId) {
-      handleError("courseId", "Please Select Astrologer");
+      handleError("astrologerId", "Please Select Astrologer");
       isValid = false;
     }
     if (!className) {
       handleError("className", "Please Input Class Name");
       isValid = false;
     }
+    if (!status) {
+      handleError("status", "Please Select Status");
+      isValid = false;
+    }
+    if (!date) {
+      handleError("date", "Please Input Date");
+      isValid = false;
+    }
     if (!file) {
       handleError("icon", "Please upload an image");
+      isValid = false;
+    }
+    if (!time) {
+      handleError("time", "Please Input Time");
+      isValid = false;
+    }
+    if (!sessionTime) {
+      handleError("sessionTime", "Please Input Session Time");
+      isValid = false;
+    }
+    if (!googleMeet) {
+      handleError("googleMeet", "Please Input Google Meet URL");
+      isValid = false;
+    }
+    if (!video.file) {
+      handleError("video", "Video is required");
+      isValid = false;
+    }
+    if (!learn) {
+      handleError("learn", "This field is required");
+      isValid = false;
+    }
+    if (!courseContent) {
+      handleError("courseContent", "This field is required");
+      isValid = false;
+    }
+    if (!description) {
+      handleError("description", "This field is required");
       isValid = false;
     }
     return isValid;
@@ -121,12 +155,13 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
       formData.append("sessionTime", sessionTime);
       formData.append("googleMeet", googleMeet);
       formData.append("image", file);
-      formData.append("video", video.bytes, video.file);
-      formData.append("pdf", pdf.bytes, pdf.file);
+      formData.append("video", video.bytes);
+      formData.append("pdf", pdf.file);
+      // formData.append("pdf", pdf.bytes, pdf.file);
 
       dispatch(DemoActions.addDemoClass(formData));
       handleReset();
-      navigate("/displayDemoClass");
+      // navigate("/displayDemoClass");
     }
   };
 
@@ -322,7 +357,7 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
               error={error.description ? true : false}
             />
           </Grid>
-          
+
           <Grid item lg={12} md={12} sm={12} xs={12}>
             <TextField
               fullWidth
@@ -348,20 +383,20 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
           >
             <label className={classes.uploadImageButton}>
               {
-                icon.file ? 
-                icon.file:
-                'Upload Image'
+                icon.file ?
+                  icon.file :
+                  'Upload Image'
               }
               <input
-            onChange={handleIcon}
-            hidden
-            accept="image/*"
-            type="file"
-          />
-        </label>
-        <div className={classes.errorStyles}>{error.icon}</div>
+                onChange={handleIcon}
+                hidden
+                accept="image/*"
+                type="file"
+              />
+            </label>
+            <div className={classes.errorStyles}>{error.icon}</div>
           </Grid>
-          
+
           <Grid
             item
             lg={4}
@@ -372,51 +407,54 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
           >
             <label className={classes.uploadImageButton}>
               Upload Video
-               <input
-            onChange={handleVideo}
-            hidden
-            accept="video/*"
-            type="file"
-          />
+              <input
+                onChange={handleVideo}
+                hidden
+                accept="video/*"
+                type="file"
+              />
             </label>
             <div className={classes.errorstyles}>{error.video}</div>
           </Grid>
           <Grid item lg={2} sm={6} md={2} xs={6}>
-          {video.file && (
-          <video
-            src={video.file}
-            style={{ width: 150 }}
-            controls
-          />
-        )}
+            {video.file && (
+              <video
+                src={video.file}
+                style={{ width: 150 }}
+                controls
+              />
+            )}
           </Grid>
 
           <Grid
-        item
-        lg={2}
-        sm={6}
-        md={2}
-        xs={6}
-        className={classes.uploadContainer}
-      >
-        <label className={classes.uploadImageButton}>
-          {
-            pdf.file ? pdf.file : 'Upload PDF'
-          }
-          <input
-            onChange={handlePdf}
-            hidden
-            accept="application/pdf"
-            type="file"
-          />
-        </label>
-        <div className={classes.errorStyles}>{error.pdf}</div>
-      </Grid>
+            item
+            lg={2}
+            sm={6}
+            md={2}
+            xs={6}
+            className={classes.uploadContainer}
+          >
+            <label className={classes.uploadImageButton}>
+              {
+                pdf.file ? pdf.file : 'Upload PDF'
+              }
+              <input
+                onChange={handlePdf}
+                hidden
+                accept="application/pdf"
+                type="file"
+              />
+            </label>
+            <div className={classes.errorStyles}>{error.pdf}</div>
+          </Grid>
 
           <Grid item lg={6} sm={6} md={6} xs={6}>
+           
             <div onClick={handleSubmit} className={classes.submitbutton}>
-              Submit
+              {isLoading ? <CircularProgress size={24} /> : " Submit"}
+
             </div>
+
           </Grid>
           <Grid item lg={6} sm={6} md={6} xs={6}>
             <div onClick={handleReset} className={classes.denyButton}>
@@ -439,11 +477,12 @@ const AddDemoClass = ({ dispatch, activeAstrologerData, activeCourseData }) => {
     });
   }
 };
-
+console.log("state======");
 const mapStateToProps = (state) => ({
-  subSkillData: state.skills.subSkillData,
   activeCourseData: state.course.activeCourseData,
   activeAstrologerData: state.astrologer.activeAstrologerData,
+  isLoading: state.demoClass.isLoading,
+
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

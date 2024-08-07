@@ -40,7 +40,7 @@ const routes = [
       {
         path: "/astrologers/topAstrologers",
         name: "Top Astrologers",
-        icon: <BiUser />, 
+        icon: <BiUser />,
       },
       {
         path: "/displayEnquiry",
@@ -101,7 +101,27 @@ const routes = [
         name: "Demo Class",
         icon: <BiAbacus />,
       },
+      {
+        path: "/displayLiveClass",
+        name: "Live Class",
+        icon: <BiAbacus />,
+      },
+      // {
+      //   path: "/bookedDemoClass",
+      //   name: "Booked Demo Class",
+      //   icon: <BiAbacus />,
+      // },
+      // {
+      //   path: "/registerLiveClassHistory",
+      //   name: "Register Live Class History",
+      //   icon: <BiAbacus />,
+      // },
     ],
+  },
+  {
+    path: "/displayWorkshop",
+    name: "Workshop",
+    icon: <BiAbacus />,
   },
   {
     path: "/skills",
@@ -126,8 +146,13 @@ const routes = [
     icon: <BiAbacus />,
     subRoutes: [
       {
+        path: "/rechargePlan",
+        name: "Recharge Plan",
+        icon: <BiAbacus />,
+      },
+      {
         path: "/displayRechargePlan",
-        name: "List of Recharge",
+        name: "Recharge History",
         icon: <BiAbacus />,
       },
       {
@@ -153,8 +178,28 @@ const routes = [
         icon: <BiAbacus />,
       },
       {
+        path: "/history/demoClassHistory",
+        name: "Demo Class History",
+        icon: <BiAbacus />,
+      },
+      {
+        path: "/history/liveClassHistory",
+        name: "Live Class History",
+        icon: <BiAbacus />,
+      },
+      {
+        path: "/history/liveCourseHistory",
+        name: "Live Course History",
+        icon: <BiAbacus />,
+      },
+      {
         path: "/history/UsersGiftHistory",
         name: "User's Gift History",
+        icon: <BiAbacus />,
+      },
+      {
+        path: "/history/RechargeHistory",
+        name: "Recharge History",
         icon: <BiAbacus />,
       },
     ],
@@ -182,7 +227,6 @@ const routes = [
     name: "Live Stream",
     icon: <BiAbacus />,
   },
-  // babita
   {
     path: "/displayRemedise",
     name: "Remedies",
@@ -192,7 +236,7 @@ const routes = [
     path: "/displayExpertise",
     name: "Expertise",
     icon: <BiAbacus />,
-    
+
   },
   {
     path: "/displayReview",
@@ -216,25 +260,16 @@ const routes = [
     name: "Gift",
     icon: <BiAbacus />,
   },
-  {
-    path: "/displayLanguage",
-    name: "Language",
-    icon: <BiAbacus />,
-  },
-  {
-    path: "/test",
-    name: "Test",
-    icon: <BiAbacus />,
-  },
+
   {
     path: "/displayBlogCategory",
     name: "Blog Category",
     icon: <BiAbacus />,
-    
+
   },
   {
     path: "/displayAstroblog",
-    name: "AstroBlog",
+    name: "Blog",
     icon: <BiAbacus />,
   },
   {
@@ -247,6 +282,16 @@ const routes = [
     name: "Banner",
     icon: <BiAbacus />,
     subRoutes: [
+      {
+        path: "/displayAstrologerTrainingBanner",
+        name: "Astrologer Training Banner",
+        icon: <BiAbacus />,
+      },
+      {
+        path: "/displayAstrologerBanner",
+        name: "Astrologer Banner",
+        icon: <BiAbacus />,
+      },
       {
         path: "/displayCourseBanner",
         name: "Course Banner",
@@ -277,7 +322,7 @@ const routes = [
         name: "Pooja Banner",
         icon: <BiAbacus />,
       },
-      
+
     ],
   },
   {
@@ -285,11 +330,7 @@ const routes = [
     name: "Pages",
     icon: <BiAbacus />,
     subRoutes: [
-      {
-        path: "/displayFaq",
-        name: "FAQs",
-        icon: <BiAbacus />,
-      },
+
       {
         path: "/displayTermsAndConditions",
         name: "Terms And Conditions",
@@ -300,24 +341,33 @@ const routes = [
         name: "Privacy Policy",
         icon: <BiAbacus />,
       },
+
+
+    ],
+  },
+  {
+    path: "/request",
+    name: "Request",
+    icon: <BiAbacus />,
+    subRoutes: [
       {
-        path: "/displayHowToUse",
-        name: "How to use- ScreenShots",
+        path: "/profileRequest",
+        name: "Profile Reques",
         icon: <BiAbacus />,
       },
       {
-        path: "/displayTestimonials",
-        name: "Home Page Testimonials",
+        path: "/phoneRequest",
+        name: "Phone Number Request",
         icon: <BiAbacus />,
       },
       {
-        path: "/displayOurAstrologers",
-        name: "Home Page Our Astrologers",
+        path: "/bankRequest",
+        name: "Bank Request",
         icon: <BiAbacus />,
       },
       {
-        path: "/displayHowToUseVideos",
-        name: "How to use - Videos",
+        path: "/galleryRequest",
+        name: "Gallery Image Request",
         icon: <BiAbacus />,
       },
     ],
@@ -379,10 +429,17 @@ const routes = [
       {
         path: "/setting/city",
         name: "City",
-        icon: <BiUser />, 
+        icon: <BiUser />,
       },
+
+
     ],
   },
+  // {
+  //   path: "/displayPrivacyPolicy",
+  //   name: "Privacy Policy",
+  //   icon: <BiAbacus />,
+  // },
   {
     path: "/appVersion",
     name: "App Version",
@@ -429,19 +486,38 @@ const SideBar = ({ children, dispatch, isSidebarOpen }) => {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth > 991) setHiddenSidebarWidth(45);
-      else setHiddenSidebarWidth(0);
+      if (window.innerWidth > 991) {
+        setHiddenSidebarWidth(45);
+      } else {
+        setHiddenSidebarWidth(0);
+      }
     };
 
-    // Attach the event listener
+    handleResize();
+
     window.addEventListener("resize", handleResize);
 
-    // Clean up the event listener on component unmount
-    handleResize();
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     if (window.innerWidth > 991) setHiddenSidebarWidth(45);
+  //     else setHiddenSidebarWidth(0);
+  //   };
+
+  //   // Attach the event listener
+  //   window.addEventListener("resize", handleResize);
+
+  //   // Clean up the event listener on component unmount
+  //   handleResize();
+  //   return () => {
+  //     window.removeEventListener("resize", handleResize);
+  //   };
+  // }, []);
+
   return (
     <>
       <motion.div
@@ -459,7 +535,7 @@ const SideBar = ({ children, dispatch, isSidebarOpen }) => {
           <div className="top_section">Fortune Talk</div>
         ) : (
           <div className="top_section">
-            <img src={logo_icon} style={{ width: 30, height: 30 }} />
+            <img src={logo_icon} style={{ width: 30, height: 30 }} alt="logo" />
           </div>
         )}
         <section className="routes">
@@ -505,10 +581,10 @@ const SideBar = ({ children, dispatch, isSidebarOpen }) => {
   );
 };
 
-const mapStateToProps = state =>({
+const mapStateToProps = state => ({
   isSidebarOpen: state.dashboard.isSidebarOpen
 })
 
-const mapDispatchToProps = dispatch =>({dispatch})
+const mapDispatchToProps = dispatch => ({ dispatch })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SideBar);

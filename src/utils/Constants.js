@@ -1,8 +1,19 @@
 // export const base_url = "http://165.232.182.110:4000/";
 // export const api_url = "http://165.232.182.110:4000/api/";
 
-export const base_url = "https://node-backend-live.onrender.com/";
-export const api_url = "https://node-backend-live.onrender.com/api/";
+// export const base_url = "http://localhost:8000/";
+// export const api_url = "http://localhost:8000/api/";
+
+export const base_url = "http://97.74.83.200:4000/";
+export const api_url = "http://97.74.83.200:4000/api/";
+
+
+// admin login 
+export const admin_login='admin/login';
+export const admin_logout='admin/logout';
+export const admin_change_password='admin/change_password';
+
+
 
 export const get_dashboard = 'admin/get_dashboard'
 
@@ -49,16 +60,27 @@ export const verify_review = 'admin/verify-review'
 
 //Astrologer
 export const add_astrologer = "admin/add-astrologers";
-export const update_astrologer = "admin/update-astrologer";
+export const update_astrologer = "admin/astrologer_update";
 export const update_astrologer_status = "admin/astrologer-change-status";
 export const update_astrologer_call_status = "admin/astrologer-change-call-status";
 export const update_astrologer_chat_status = "admin/astrologer-change-chat-status";
+export const update_astrologer_skill = "admin//astrologer_update_skill";
+export const update_astrologer_remedies = "admin/astrologer_update_remedies";
+export const update_astrologer_experties = "admin/astrologer_update_expertise";
+export const update_astrologer_allowed_countries = "admin/astrologer_update_allowedCountry";
+export const update_astrologer_preferred_days = "admin/astrologer_update_prefer_days";
+export const update_astrologer_profile_image = "admin/astrologer-update-profile-image";
+export const update_astrologer_bank_image = "admin/astrologer_update_bank_proof";
+export const update_astrologer_id_image = "admin/astrologer_update_id_proof";
+export const update_astrologer_gallery_image = "admin/astrologer-update-gallery-image";
+export const update_astrologer_astrologer_type = "admin/astrologer_update_astrologer_type";
 
-export const create_recharge_plan = "admin/create_recharge_plan";
-export const get_recharge_plans = "admin/get-all-recharge-plans";
-export const update_recharge_plans = "admin/update-recharge-plan"
-export const delete_recharge_plans = "admin/delete-recharge-plan"
-export const update_recharge_plan_status = "admin/update-recharge-plan-status"
+
+export const create_recharge_plan = "admin/recharge_plan/add";
+export const get_recharge_plans = "admin/recharge_plan";
+export const update_recharge_plans = "admin/recharge_plan/update"
+export const delete_recharge_plans = "admin/recharge_plan/delete"
+export const update_recharge_plan_status = "admin/recharge_plan/change_status"
 
 export const add_first_recharge_offer = "admin/add-first-recharge";
 export const get_first_recharge_offer = "admin/get-first-recharge"
@@ -79,11 +101,12 @@ export const get_all_users = "admin/get-all-user"
 export const add_notifications = "admin/add-notifications"
 export const get_all_notifications = "admin/get-all-notifications"
 
-export const get_all_customers = "admin/get-all-customers"
-export const ban_customer = "admin/change-banned-status"
+export const add_customer = "admin/customer/add"
+export const get_all_customers = "admin/customer"
+export const change_customer_status = "admin/customer/change_status"
 export const online_offline_customer = "admin/set-customer-online"
-export const update_customer = "admin/update-customer-data"
-export const delete_customer = "admin/delete-customer"
+export const update_customer = "admin/customer/update"
+export const delete_customer = "admin/customer/delete"
 export const customer_chat_history = "customers/customers-chat-history"
 export const customer_call_history = "customers/customers-call-history"
 export const customer_payment_history = "admin/customers-payment-list"
@@ -98,15 +121,34 @@ export const update_banner = "admin/banner/update"
 export const delete_banner = "admin/banner/delete"
 export const change_redirect_banner_status='admin/banner/change-status'
 
-export const send_customer_notification = 'admin/send_customer_notification'
-export const get_customer_notification = 'admin/get-customer-notification'
-export const send_astrologer_notification = 'admin/send_astrologer_notification'
-export const get_astrologer_notification = 'admin/get-astrologer-notification'
+//notification
+export const send_customer_notification = 'admin/customer/notification/add'
+export const update_customer_notification = 'admin/customer/notification/update'
+export const update_customer_notification_status = 'admin/customer/notification/change_status'
+export const delete_customer_notification = 'admin/customer/notification/delete'
+export const get_customer_notification = 'admin/customer/notification'
 
-export const get_chat_history = 'admin/get_chat_history'
-export const get_admin_earnig_history = 'admin/get_admin_earnig_history'
-export const get_call_history = 'admin/get_call_history'
+export const send_astrologer_notification = 'admin/astrologer/notification/add'
+export const get_astrologer_notification = 'admin/astrologer/notification'
+export const update_astrologer_notification = 'admin/astrologer/notification/update'
+export const update_astrologer_notification_status = 'admin/astrologer/notification/change_status'
+export const delete_astrologer_notification = 'admin/astrologer/notification/delete'
+
+export const get_chat_history = 'admin/chat_history'
+export const get_admin_earnig_history = 'admin/get_call_report'
+export const get_call_history = 'admin/call_history'
+export const get_recharge_history = 'admin/recharge/history'
 export const get_wallet_payments = 'admin/get_wallet_payments'
+export const get_demo_class_history = 'admin/booked_demo_class'
+export const change_demo_class_history_status = 'admin/booked_demo_class/change_status'
+export const delete_demo_class_history = 'admin/booked_demo_class/delete'
+export const get_live_class_history = 'admin/register_live_class'
+export const change_live_class_history_status = 'admin/register_live_class/change_status'
+export const delete_live_class_history = 'admin/register_live_class/delete'
+export const get_live_course_history = 'admin/get_live_course_history'
+export const change_live_course_history_status = 'admin/course/change-course-status'
+export const get_register_live_class_history = 'admin/live_class_history_by_astrologer_id'
+
 
 export const create_language = 'admin/create_language'
 export const get_language  = 'admin/get_language'
@@ -147,14 +189,15 @@ export const change_pooja_status = 'admin/pooja/change-status'
 export const create_blog_category='admin/add-blog-category'
 export const blog_category_list='admin/blog-category-list'
 export const update_blog_category='admin/blog-category/update/'
-export const delete_blog_category='admin/blog-category/delete/'
+export const delete_blog_category='admin/blog-category/delete'
 export const active_blog_category='admin/active-blog-category'
 
 //BLOG
-export const create_blog='admin/add-blog'
-export const blog_list='admin/blog-list'
-export const update_blog='admin/update-blog/'
-export const delete_blog='admin/delete-blog'
+export const create_blog='admin/blog/add'
+export const blog_list='admin/blog'
+export const update_blog='admin/update'
+export const update_blog_status='admin/blog/change_status'
+export const delete_blog='admin/blog/delete'
 export const delete_multiple_blog='admin/delete-multiple-blog'
 
 //country
@@ -192,10 +235,44 @@ export const delete_course = 'admin/course/delete'
 //DEMO CLASS
 export const create_demo_class='admin/demo_class/add_new'
 export const demo_class_list='admin/demo_class'
-// export const get_demo_class='admin/demo_class'
 export const update_demo_class = 'admin/demo_class/update'
 export const change_demo_class_status = 'admin/demo_class/change_status'
+export const change_demo_class_admin_status = 'admin/demo_class/change_admin_status'
+export const change_demo_class_ongoing_status = 'admin/booked_demo_class/change_class_status'
 export const delete_demo_class = 'admin/demo_class/delete'
+export const booked_demo_class = 'admin/booked_demo_class'
+
+//WORKSHOP
+export const create_workshop='admin/workshop/add_new'
+export const workshop_list='admin/workshop'
+export const update_workshop = 'admin/workshop/update'
+export const change_workshop_status = 'admin/workshop/change_status'
+export const change_workshop_admin_status = 'admin/workshop/change_admin_status'
+export const delete_workshop = 'admin/workshop/delete'
+
+//MCQ
+export const create_mcq='admin/mcq/add_new'
+export const mcq_list='admin/mcq'
+export const update_mcq = 'admin/mcq/update'
+export const change_mcq_status = 'admin/mcq/change_status'
+export const change_mcq_admin_status = 'admin/mcq/change_admin_status'
+export const delete_mcq = 'admin/mcq/delete'
+
+//LIVE CLASS
+export const create_live_class='admin/live_class/add_new'
+export const live_class_list='admin/live_class'
+export const update_live_class = 'admin/live_class/update'
+export const change_live_class_status = 'admin/live_class/change_status'
+export const change_live_class_admin_status = 'admin/live_class/change_admin_status'
+export const change_live_class_ongoing_status = 'admin/live_class/change_class_status'
+export const delete_live_class = 'admin/live_class/delete'
+
+//SCHEDULE CLASS
+export const add_class='admin/class/add_new'
+export const class_list='admin/class'
+export const update_class = 'admin/class/update'
+export const change_class_status = 'admin/class/change_status'
+export const delete_class = 'admin/class/delete'
 
 //COURSE BANNER
 export const create_course_banner='admin/course-banner/add'
@@ -204,12 +281,26 @@ export const update_course_banner = 'admin/course-banner/update'
 export const change_course_banner_status = 'admin/course-banner/change-status'
 export const delete_course_banner = 'admin/course-banner/delete'
 
+//ASTROLOGER TRAINING BANNER
+export const create_astrologer_training_banner='admin/astrologer-training-banner/add'
+export const astrologer_training_banner_list='admin/astrologer-training-banner'
+export const update_astrologer_training_banner = 'admin/astrologer-training-banner/update'
+export const change_astrologer_training_banner_status = 'admin/astrologer-training-banner/change-status'
+export const delete_astrologer_training_banner = 'admin/astrologer-training-banner/delete'
+
 //ECOMMERCE BANNER
 export const create_ecommerce_banner='admin/ecommerce-banner/add'
 export const ecommerce_banner_list='admin/ecommerce-banner'
 export const update_ecommerce_banner = 'admin/ecommerce-banner/update'
 export const change_ecommerce_banner_status = 'admin/ecommerce-banner/change-status'
 export const delete_ecommerce_banner = 'admin/ecommerce-banner/delete'
+
+//ASTROLOGER BANNER
+export const create_astrologer_banner='admin/astrologer-banner/add'
+export const astrologer_banner_list='admin/astrologer-banner'
+export const update_astrologer_banner = 'admin/astrologer-banner/update'
+export const change_astrologer_banner_status = 'admin/astrologer-banner/change-status'
+export const delete_astrologer_banner = 'admin/astrologer-banner/delete'
 
 //PRODUCT BANNER
 export const create_product_banner='admin/product-banner/add'
@@ -238,5 +329,44 @@ export const testimonial_list='admin/testimonial'
 export const update_testimonial = 'admin/testimonial/update'
 export const change_testimonial_status = 'admin/testimonial/change-status'
 export const delete_testimonial = 'admin/testimonial/delete'
+
+//Testimonials
+export const create_gift='admin/gift/add'
+export const gift_list='admin/gift'
+export const update_gift = 'admin/gift/update'
+export const change_gift_status = 'admin/gift/change_status'
+export const delete_gift = 'admin/gift/delete'
+
+//Privacy Policy
+export const create_privacy_policy='admin/privacy-policy/add'
+export const privacy_policy_list='admin/privacy-policy'
+export const update_privacy_policy = 'admin/privacy-policy/update'
+export const change_privacy_policy_status = 'admin/privacy-policy/change-status'
+export const delete_privacy_policy = 'admin/privacy-policy/delete'
+
+//Terms and Condition
+export const create_term_condition='admin/term-condition/add'
+export const term_condition_list='admin/term-condition'
+export const update_term_condition = 'admin/term-condition/update'
+export const change_term_condition_status = 'admin/term-condition/change-status'
+export const delete_term_condition = 'admin/term-condition/delete'
+
+//request
+export const get_profile_request = 'admin/request/profile';
+export const update_profile_request = 'admin/verify/request/profile'
+export const get_phone_request = 'admin/request/phoneNumber';
+export const update_phone_request = 'admin/verify/request/phoneNumber'
+export const get_bank_request = 'admin/request/bank';
+export const update_bank_request = 'admin/verify/request/bank'
+export const get_gallery_request = 'admin/request/gallery';
+export const update_gallery_request = 'admin/verify/request/gallery'
+
+//live stream
+export const get_live_stream_list= 'admin/live_stream'
+export const update_live_stream_status= 'admin/live_stream/change_status'
+export const delete_live_stream= 'admin/live_stream/delete'
+
+//recharge
+export const recharge_history_list= 'admin/recharge/history'
 
 export const get_all_country = 'https://api.countrystatecity.in/v1/countries'

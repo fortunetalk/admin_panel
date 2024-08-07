@@ -2,102 +2,144 @@ import React, { useState, useEffect } from "react";
 import { useStyles } from "../../assets/styles.js";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
+import { Select, Avatar, CircularProgress, MenuItem, Grid, TextField } from "@mui/material";
 import DvrIcon from "@mui/icons-material/Dvr";
 import { useNavigate } from "react-router-dom";
 import { connect, useDispatch } from "react-redux";
-import { activeBlogCategory } from "../../redux/Actions/blogCategoryActions.js";
+import { getBlogCategory } from "../../redux/Actions/blogCategoryActions.js";
 import { addBlog } from "../../redux/Actions/blogActions.js";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
-export const AddAstroblog = ({activeBlogCategoryData, addBlog}) => {
+
+export const AddAstroblog = ({ appBlogCategoryData, addBlog, isLoading }) => {
   const dispatch = useDispatch();
-
   const classes = useStyles();
   const navigate = useNavigate();
 
   const [error, setError] = useState({
     title: "",
-    image: "",
     status: "",
-    created_by: "",
     description: "",
     blogCategoryId: "",
+    gallery: "",
   });
 
   const [title, setTitle] = useState("");
   const [status, setStatus] = useState("");
-  const [created_by, setcreated_by] = useState("");
-  const [description, setdescription] = useState("");
-  const [image, setimage] = useState(null);
+  const [description, setDescription] = useState("");
+  const [icon, setIcon] = useState({ file: '', bytes: null });
+  const [file, setFile] = useState(null);
   const [blogCategoryId, setBlogCategoryId] = useState("");
+  const [galleryImages, setGalleryImages] = useState([]);
 
   useEffect(() => {
-    if (!activeBlogCategoryData) {
-      dispatch(activeBlogCategory());
+    if (!appBlogCategoryData) {
+      dispatch(getBlogCategory());
     }
-  }, [dispatch, activeBlogCategoryData]);
+  }, []);
 
-
-  const handleProfile = (e) => {
+  const handleIcon = (e) => {
     if (e.target.files && e.target.files.length > 0) {
-      setimage({
+      setIcon({
         file: URL.createObjectURL(e.target.files[0]),
         bytes: e.target.files[0],
       });
-      // Add your logic for handling profile photo here
+      setFile(e.target.files[0]);
     }
   };
+
+
+
+
+  const handleGallery = (event) => {
+    const files = Array.from(event.target.files);
+    setGalleryImages(files);
+  };
+
   const handleOptionChange = (e) => {
     setStatus(e.target.value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Validate fields before submitting
-    if (!title || !status || !created_by || !description) {
+    if (!title || !status || !description || !blogCategoryId) {
       setError({
-        title: !title ? "title is required" : "",
+        title: !title ? "Title is required" : "",
         status: !status ? "Status is required" : "",
-        created_by: !created_by ? "Create By is required" : "",
-        description: !description ? "Short Bio is required" : "",
-        // image: !image ? "Profile Photo is required" : "",
+        description: !description ? "Description is required" : "",
+        blogCategoryId: !blogCategoryId ? "Category is required" : "",
+        gallery: galleryImages.length === 0 ? "At least one gallery image is required" : "",
       });
       return;
     }
-    addBlog({ title, status, created_by, description, image, blogCategoryId });
-    navigate('/displayAstroblog')
 
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('status', status);
+    formData.append('description', description);
+    formData.append('blogCategoryId', blogCategoryId);
 
-    setError({
-      title: "",
-      image: "",
-      status: "",
-      created_by: "",
-      description: "",
+    if (file) {
+      formData.append('image', file);
+    }
+
+    galleryImages.forEach((img, index) => {
+      formData.append('galleryImage', img);
     });
-    setTitle("");
-    setStatus("");
-    setcreated_by("");
-    setdescription("");
-    setimage(null);
+
+    try {
+      await addBlog(formData);
+      handleReset();
+    } catch (error) {
+      console.error("Failed to submit blog", error.response?.data || error.message);
+      setError({ ...error.response?.data, gallery: "Failed to upload gallery images" });
+    }
   };
 
+
+
+
+  const modules = {
+    toolbar: [
+      [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'align': [] }],
+      ['link', 'image', 'video'],
+      ['clean']
+    ],
+    clipboard: {
+      matchVisual: false,
+    }
+  };
+  
+  const formats = [
+    'header', 'font',
+    'list', 'bullet',
+    'bold', 'italic', 'underline', 'strike', 'blockquote',
+    'color', 'background',
+    'align',
+    'link', 'image', 'video'
+  ];
+
+
   const handleReset = () => {
-    // Clear errors and reset form
     setError({
       title: "",
-      image: "",
       status: "",
-      created_by: "",
       description: "",
+      gallery: "",
+      blogCategoryId: "",
     });
     setTitle("");
     setStatus("");
-    setcreated_by("");
-    setdescription("");
-    setimage(null);
+    setDescription("");
+    setIcon({ file: '', bytes: null });
+    setFile(null);
+    setGalleryImages([]);
+    setBlogCategoryId("");
   };
 
   return (
@@ -106,49 +148,55 @@ export const AddAstroblog = ({activeBlogCategoryData, addBlog}) => {
         <Grid container spacing={2}>
           <Grid item lg={12} sm={12} md={12} xs={12}>
             <div className={classes.headingContainer}>
-              <div className={classes.heading}>Add Astroblog</div>
+              <div className={classes.heading}>Add Blog</div>
               <div
                 onClick={() => navigate("/displayAstroblog")}
                 className={classes.addButton}
               >
                 <DvrIcon />
                 <div className={classes.addButtontext}>
-                  Display/AddAstroblog
+                  Display/Add Blog
                 </div>
               </div>
             </div>
           </Grid>
 
           <Grid item lg={6} sm={12} md={12} xs={12}>
-          <FormControl fullWidth>
-      <InputLabel id="blog-category-select-label">Select Blog Category</InputLabel>
-      <Select labelId="blog-category-select-label" id="blog-category-select" value={blogCategoryId}
-                onChange={(e) => setBlogCategoryId(e.target.value)}>
-        {activeBlogCategoryData?.map(category => (
-          <MenuItem key={category._id} value={category._id}>
-            {category.title}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+            <FormControl fullWidth>
+              <InputLabel id="blog-category-select-label">Select Blog Category</InputLabel>
+              <Select
+                labelId="blog-category-select-label"
+                id="blog-category-select"
+                value={blogCategoryId}
+                onChange={(e) => setBlogCategoryId(e.target.value)}
+                error={!!error.blogCategoryId}
+              >
+                {appBlogCategoryData?.map(category => (
+                  <MenuItem key={category._id} value={category._id}>
+                    {category.title}
+                  </MenuItem>
+                ))}
+              </Select>
+              <div className={classes.errorstyles}>{error.blogCategoryId}</div>
+            </FormControl>
           </Grid>
 
           <Grid item lg={6} sm={12} md={6} xs={12}>
-              <FormControl fullWidth>
-                <InputLabel id="select-label">Select Status</InputLabel>
-                <Select
-                  labelId="select-label"
-                  variant="outlined"
-                  value={status}
-                  onChange={handleOptionChange}
-                  error={!!error.status}
-                >
-                  <MenuItem value="Active">Active</MenuItem>
-                  <MenuItem value="InActive">InActive</MenuItem>
-                </Select>
-                <div className={classes.errorstyles}>{error.status}</div>
-              </FormControl>
-            </Grid>
+            <FormControl fullWidth>
+              <InputLabel id="select-label">Select Status</InputLabel>
+              <Select
+                labelId="select-label"
+                variant="outlined"
+                value={status}
+                onChange={handleOptionChange}
+                error={!!error.status}
+              >
+                <MenuItem value="Active">Active</MenuItem>
+                <MenuItem value="InActive">InActive</MenuItem>
+              </Select>
+              <div className={classes.errorstyles}>{error.status}</div>
+            </FormControl>
+          </Grid>
 
           <Grid item lg={6} sm={12} md={12} xs={12}>
             <TextField
@@ -164,63 +212,82 @@ export const AddAstroblog = ({activeBlogCategoryData, addBlog}) => {
 
           <Grid
             item
-            lg={3}
-            sm={3}
-            md={3}
-            xs={3}
+            lg={4}
+            sm={6}
+            md={6}
+            xs={6}
             className={classes.uploadContainer}
           >
-            <Grid
-              component="label"
-              onClick={() => {} /* Don't forget to handleProfile here */}
-              className={classes.uploadImageButton}
-            >
-              {image ? (
-                <img src={image.file} alt="Profile Preview" />
-              ) : (
-                "Upload Profile Icon"
-              )}
+            <label className={classes.uploadImageButton}>
+              Upload Picture
               <input
-                onChange={handleProfile}
+                onChange={handleIcon}
                 hidden
                 accept="image/*"
                 type="file"
               />
-            </Grid>
-            <div className={classes.errorstyles}>{error.image}</div>
+            </label>
+            <div className={classes.errorstyles}>{error.icon}</div>
+          </Grid>
+          <Grid item lg={2} sm={6} md={2} xs={6}>
+            <Avatar src={icon.file} style={{ width: 56, height: 56 }} />
           </Grid>
 
-
-          <Grid item lg={6} sm={12} md={12} xs={12}>
-            <TextField
-              label="Created by"
-              value={created_by}
-              onChange={(e) => setcreated_by(e.target.value)}
-              variant="outlined"
-              fullWidth
-              error={!!error.created_by}
-              helperText={error.created_by}
-            />
+          <Grid
+            item
+            lg={6}
+            sm={12}
+            md={12}
+            xs={12}
+            className={classes.uploadContainer}
+          >
+            <Grid component="label" className={classes.uploadImageButton}>
+              Upload Gallery Images
+              <input
+                onChange={handleGallery}
+                hidden
+                accept="image/*"
+                type="file"
+                multiple
+              />
+            </Grid>
+            <div className={classes.errorstyles}>{error.gallery}</div>
           </Grid>
 
           <Grid item lg={12} sm={12} md={12} xs={12}>
-            <TextField
-              id="outlined-multiline-static"
-              multiline
-              rows={4}
-              label="Description"
+            <Grid
+              container
+              direction="row"
+              spacing={2}
+              style={{ overflowX: "auto", whiteSpace: "nowrap" }}
+            >
+              {galleryImages.map((img, index) => (
+                <Grid item key={index} style={{ width: "auto" }}>
+                  <Avatar
+                    src={URL.createObjectURL(img)}
+                    variant="square"
+                    style={{ width: "100px", height: "100px" }}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </Grid>
+
+          <Grid item lg={12} sm={12} md={12} xs={12}>
+            <ReactQuill
+              theme="snow"
               value={description}
-              onChange={(e) => setdescription(e.target.value)}
-              variant="outlined"
-              fullWidth
-              error={!!error.description}
-              helperText={error.description}
+              onChange={setDescription}
+              modules={modules}
+              formats={formats}
+              placeholder="Enter description..."
             />
+            <div className={classes.errorstyles}>{error.description}</div>
           </Grid>
 
           <Grid item lg={6} sm={6} md={6} xs={6}>
             <div onClick={handleSubmit} className={classes.submitbutton}>
-              Submit
+              {isLoading ? <CircularProgress size={24} /> : "Submit"}
             </div>
           </Grid>
           <Grid item lg={6} sm={6} md={6} xs={6}>
@@ -235,15 +302,13 @@ export const AddAstroblog = ({activeBlogCategoryData, addBlog}) => {
 };
 
 const mapStateToProps = (state) => ({
-  activeBlogCategoryData: state.blogCategory?.activeBlogCategoryData,
+  appBlogCategoryData: state.blogCategory?.appBlogCategoryData,
+  isLoading: state.blog.isLoading,
 });
 
-// const mapDispatchToProps = {
-//   activeBlogCategory,
-// };
 const mapDispatchToProps = (dispatch) => ({
-  addBlog: (category) => dispatch(addBlog(category)),
-  activeBlogCategory
+  addBlog: (formData) => dispatch(addBlog(formData)),
+  getBlogCategory: () => dispatch(getBlogCategory()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddAstroblog);

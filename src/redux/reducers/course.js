@@ -14,7 +14,7 @@ const course = (state = initialState, actions) => {
         ...state,
         courseData: payload,
       };
-    } 
+    }
 
     case actionTypes.GET_ALL_COURSES: {
       return {
@@ -29,25 +29,25 @@ const course = (state = initialState, actions) => {
       };
     }
     case actionTypes.UPDATE_COURSE_STATUS: {
-      
+
       return {
-          ...state,
-          courseData: payload,
-      };
-  }
-  case actionTypes.UPDATE_COURSE: {
-   
-    return {
         ...state,
         courseData: payload,
-    };
-}
-  case actionTypes.DELETE_COURSE: {
-    return {
-      ...state,
-      courseData: payload,
-    };
-  }
+      };
+    }
+    case actionTypes.UPDATE_COURSE: {
+
+      return {
+        ...state,
+        courseData: payload,
+      };
+    }
+    case actionTypes.DELETE_COURSE: {
+      return {
+        ...state,
+        courseData: payload,
+      };
+    }
 
     default: {
       return state;

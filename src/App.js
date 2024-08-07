@@ -12,7 +12,6 @@ import AddRechargePlans from "./pages/recharge/AddRechargePlans";
 import DisplayRechargePlans from "./pages/recharge/DisplayRechargePlans";
 import DisplayFirstRechargeOffer from "./pages/recharge/DisplayFirstRechargeOffer";
 import AddFirstRechargeOffer from "./pages/recharge/AddFirstRechargeOffer";
-import Notifications from "./pages/notification/Notifications";
 
 import AddRemedies from "./pages/remedies/AddRemedies";
 import DisplayRemedies from "./pages/remedies/DisplayRemedies";
@@ -31,6 +30,7 @@ import AddEnquiry from "./pages/astrologer/AddEnquiry";
 import ChatHistory from "./pages/history/ChatHistory";
 import CallHistory from "./pages/history/CallHistory";
 import UsersGiftHistory from "./pages/history/UsersGiftHistory";
+import RechargeHistory from "./pages/history/RechargeHistory";
 import LiveStream from "./pages/livestream/DisplayLiveStream";
 import DisplayUser from "./pages/user/DisplayUser";
 import AddUser from "./pages/user/AddUser";
@@ -64,7 +64,6 @@ import SaleSummary from "./pages/reports/SaleSummary";
 import EditAstrologer from "./pages/astrologer/EditAstrologer";
 import Try from "../src/pages/try/Try";
 import GooglePlacesAutocomplete from "../src/pages/try/Try";
-import DisplayNotification from "./pages/notification/DisplayNotification";
 import DisplayCustomerOrderHistory from "./pages/customer/DisplayCustomerOrderHistory";
 import DisplayCustomerPaymentHistory from "./pages/customer/DisplayCustomerPaymentHisotry";
 import AppReviews from "./pages/review/AppReviews";
@@ -72,8 +71,6 @@ import CustomerNotification from "./pages/notification/CustomerNotification";
 import AstrologerNotification from "./pages/notification/AstrologerNotification";
 import ChatSummary from "./pages/history/ChatSummary";
 import TopAstrologers from "./pages/astrologer/TopAstrologers";
-import DisplayLanguage from "./pages/languages/DisplayLanguage";
-import AddLanguage from "./pages/languages/AddLanguage";
 
 import DisplayBlogCategory from "./pages/blogCategory/DisplayBlogCategory";
 import AddBlogCategory from "./pages/blogCategory/AddBlogCategory";
@@ -111,6 +108,33 @@ import DisplayCourses from "./pages/courses/DisplayCourses";
 import AddCourses from "./pages/courses/AddCourses";
 import DisplayDemoClass from "./pages/courses/DisplayDemoClass";
 import AddDemoClass from "./pages/courses/AddDemoClass";
+import DisplayLiveClass from "./pages/courses/DisplayLiveClass";
+import AddLiveClass from "./pages/courses/AddLiveClass";
+import LiveClassList from "./pages/courses/LiveClassList";
+import AddClass from "./pages/courses/AddClass";
+import DisplayWorkshop from "./pages/workshop/DisplayWorkshop";
+import AddWorkshop from "./pages/workshop/AddWorkshop";
+import DisplayMCQ from "./pages/courses/DisplayMCQ";
+import AddMCQ from "./pages/courses/AddMCQ";
+import AddCustomerNotification from "./pages/notification/AddCustomerNotification";
+import AddAstrologerNotification from "./pages/notification/AddAstrologerNotification";
+import AddPrivacyPolicy from "./pages/pages/AddPrivacyPolicy";
+import ProfileRequest from "./pages/request/ProfileRequest";
+import PhoneRequest from "./pages/request/PhoneRequest";
+import BankRequest from "./pages/request/BankRequest";
+import GalleryRequest from "./pages/request/GalleryRequest";
+import AddAstrologerBanner from "./pages/banner/AddAstrologerBanner";
+import DisplayAstrologerBanner from "./pages/banner/DisplayAstrologerBanner";
+import AddTermsAndCondition from "./pages/pages/AddTermsAndCondition";
+import RechargePlan from "./pages/recharge/RechargePlan";
+import AddAstrologerTrainingBanner from "./pages/banner/AddAstrologerTrainingBanner";
+import DisplayAstrologerTrainingBanner from "./pages/banner/DisplayAstrologerTrainingBanner";
+import DemoClassHistory from "./pages/history/DemoClassHistory";
+import LiveClassHistory from "./pages/history/LiveClassHistory";
+import DisplayLiveCourseHistory from "./pages/history/DisplayLiveCourseHistory";
+import RegisterLiveClassHistory from "./pages/courses/RegisterLiveClassHistory";
+import FullChatHistory from "./pages/history/FullChatHistory";
+import BookedDemoClass from "./pages/courses/BookedDemoClass";
 
 function App() {
   return (
@@ -123,6 +147,7 @@ function App() {
           <Route path="/displaySkills" element={<DisplaySkills />} />
           <Route path="/addSubSkills" element={<AddSubSkills />} />
           <Route path="/displaySubSkills" element={<DisplaySubSkills />} />
+          <Route path="/rechargePlan" element={<RechargePlan/>} />
           <Route path="/addRechargePlan" element={<AddRechargePlans />} />
           <Route
             path="/displayRechargePlan"
@@ -136,18 +161,13 @@ function App() {
             path="/addFirstRechargeOffer"
             element={<AddFirstRechargeOffer />}
           />
-          <Route path="/notifications" element={<Notifications />} />
-          <Route
-            path="/displayNotifications"
-            element={<DisplayNotification />}
-          />
+        
 
           <Route path="/displayRemedise" element={<DisplayRemedies />} />
           <Route path="/AddRemedies" element={<AddRemedies />} />
           <Route path="/displayExpertise" element={<DisplayExpertise />} />
           <Route path="/AddExpertise" element={<AddExpertise />} />
-          <Route path="/displayLanguage" element={<DisplayLanguage />} />
-          <Route path="/addLanguage" element={<AddLanguage />} />
+
           <Route path="/displayCustomer" element={<DisplayCustomer />} />
           <Route
             path="/displayCustomerOrderHistory"
@@ -179,11 +199,13 @@ function App() {
           <Route path="/displayEnquiry" element={<DisplayEnquiry />} />
           <Route path="/AddEnquiry" element={<AddEnquiry />} />
           <Route path="/history/ChatHistory" element={<ChatHistory />} />
+          <Route path="/history/fullChatHistory/:customerId" element={<FullChatHistory/>} />
           <Route path="/history/CallHistory" element={<CallHistory />} />
-          <Route
-            path="/history/UsersGiftHistory"
-            element={<UsersGiftHistory />}
-          />
+          <Route path="/history/demoClassHistory" element={<DemoClassHistory/>} />
+          <Route path="/history/liveClassHistory" element={<LiveClassHistory/>} />
+          <Route path="/history/liveCourseHistory" element={<DisplayLiveCourseHistory/>} />
+          <Route path="/history/UsersGiftHistory" element={<UsersGiftHistory />} />
+          <Route path="/history/RechargeHistory" element={<RechargeHistory />} />
           <Route path="/liveStream" element={<LiveStream />} />
           <Route path="/displayUser" element={<DisplayUser />} />
           <Route path="/AddUser" element={<AddUser />} />
@@ -211,7 +233,9 @@ function App() {
             path="/displayTermsAndConditions"
             element={<TermsAndConditions />}
           />
+          <Route path="/addTermsAndCondition" element={<AddTermsAndCondition/>} />
           <Route path="/displayPrivacyPolicy" element={<PrivacyPolicy />} />
+          <Route path="/addPrivacyPolicy" element={<AddPrivacyPolicy/>} />
           <Route
             path="/displayTestimonials"
             element={<DisplayTestimonials />}
@@ -272,6 +296,10 @@ function App() {
           <Route path="/displayProductBanner" element={<DisplayProductBanner/>} />
           <Route path="/addPoojaCategoryBanner" element={<AddPoojaCategoryBanner/>} />
           <Route path="/displayPoojaBanner" element={<DisplayPoojaBanner/>} />
+          <Route path="/addAstrologerBanner" element={<AddAstrologerBanner/>} />
+          <Route path="/displayAstrologerBanner" element={<DisplayAstrologerBanner/>} />
+          <Route path="/addAstrologerTrainingBanner" element={<AddAstrologerTrainingBanner/>} />
+          <Route path="/displayAstrologerTrainingBanner" element={<DisplayAstrologerTrainingBanner/>} />
 
           <Route path="/displayTestimonial" element={<DisplayTestimonial/>} />
           <Route path="/addTestimonial" element={<AddTestimonial/>} />
@@ -280,6 +308,19 @@ function App() {
           <Route path="/addCourse" element={<AddCourses/>} />
           <Route path="/displayDemoClass" element={<DisplayDemoClass/>} />
           <Route path="/scheduleDemoClass" element={<AddDemoClass/>} />
+          <Route path="/displayLiveClass" element={<DisplayLiveClass/>} />
+          <Route path="/scheduleLiveClass" element={<AddLiveClass/>} />
+          <Route path="/liveClassList/:liveClassId" element={<LiveClassList/>} />
+          <Route path="/addClass/:liveClassId" element={<AddClass/>} />
+          <Route path="/mcqList/:liveClassId" element={<DisplayMCQ/>} />
+          <Route path="/addMCQ/:liveClassId" element={<AddMCQ/>} />
+          <Route path="/registerLiveClassHistory/:liveClassId" element={<RegisterLiveClassHistory/>} />
+          <Route path="/bookedDemoClass" element={<BookedDemoClass/>} />
+
+
+
+          <Route path="/displayWorkshop" element={<DisplayWorkshop/>} />
+          <Route path="/addWorkshop" element={<AddWorkshop/>} />
 
 
           <Route
@@ -287,9 +328,23 @@ function App() {
             element={<CustomerNotification />}
           />
           <Route
+            path="/addCustomerNotification"
+            element={<AddCustomerNotification/>}
+          />
+          <Route
+            path="/addAstrologerNotification"
+            element={<AddAstrologerNotification/>}
+          />
+          <Route
             path="/astrologerNotification"
             element={<AstrologerNotification />}
           />
+
+          {/* Request */}
+          <Route path="/profileRequest" element={<ProfileRequest/>} />
+          <Route path="/phoneRequest" element={<PhoneRequest/>} />
+          <Route path="/bankRequest" element={<BankRequest/>} />
+          <Route path="/galleryRequest" element={<GalleryRequest/>} />
         
           <Route path="chatSummary" element={<ChatSummary />} />
         </Route>

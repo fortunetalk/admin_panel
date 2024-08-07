@@ -32,6 +32,7 @@ const DisplayDemoClass = ({
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [viewData, setViewData] = useState(false);
+  const [demoClassId, setDemoClassId] = useState("");
   const [courseId, setcourseId] = useState("");
   const [astrologerId, setAstrologerId] = useState("");
   const [className, setclassName] = useState("");
@@ -46,8 +47,8 @@ const DisplayDemoClass = ({
   const [googleMeet, setGoogleMeet] = useState("");
   const [icon, setIcon] = useState({ file: "", bytes: null });
   const [file, setFile] = useState(null);
-  const [videoFile, setVideoFile] = useState(null);
-  const [videoUrl, setVideoUrl] = useState("");
+  const [video, setVideo] = useState({ file: '', bytes: null });
+  const [pdf, setPdf] = useState({ file: '', bytes: null });
 
   useEffect(function () {
     dispatch(CourseActions.getActiveCourseData());
@@ -55,17 +56,25 @@ const DisplayDemoClass = ({
     dispatch(AstrologerActions.getAllActiveAstrologer());
   }, []);
 
+  function fillCourseList() {
+    return activeCourseData.map((item) => {
+      return <MenuItem value={item._id}>{item.title}</MenuItem>;
+    });
+  }
+
+  function fillAstrologerList() {
+    return activeAstrologerData.map((item) => {
+      return <MenuItem value={item._id}>{item.displayName}</MenuItem>;
+    });
+  }
+
   const handleOpen = (rowData) => {
     setOpen(true);
-    setclassName(rowData.className);
-  };
-
-  const handleView = (rowData) => {
-    setViewData(true);
     const formattedDate = new Date(rowData?.date).toISOString().split("T")[0];
     setDate(formattedDate);
+    setDemoClassId(rowData?._id)
     setcourseId(rowData?.courseId?.title);
-    setAstrologerId(rowData?.astrologerId.displayName);
+    setAstrologerId(rowData?.astrologerId?.displayName);
     setclassName(rowData?.className);
     setStatus(rowData?.status);
     setDescription(rowData?.description);
@@ -75,7 +84,26 @@ const DisplayDemoClass = ({
     setSessionTime(rowData?.sessionTime);
     setGoogleMeet(rowData?.googleMeet);
     setIcon(rowData?.image);
-    setVideoUrl(rowData?.video);
+    setVideo(rowData?.video);
+  };
+
+  const handleView = (rowData) => {
+    setViewData(true);
+    const formattedDate = new Date(rowData?.date).toISOString().split("T")[0];
+    setDate(formattedDate);
+    setDemoClassId(rowData?._id)
+    setcourseId(rowData?.courseId?.title);
+    setAstrologerId(rowData?.astrologerId?.displayName);
+    setclassName(rowData?.className);
+    setStatus(rowData?.status);
+    setDescription(rowData?.description);
+    setLearn(rowData?.learn);
+    setCourseContent(rowData?.courseContent);
+    setTime(rowData?.time);
+    setSessionTime(rowData?.sessionTime);
+    setGoogleMeet(rowData?.googleMeet);
+    setIcon(rowData?.image);
+    setVideo(rowData?.video);
     
   };
 
@@ -93,11 +121,26 @@ const DisplayDemoClass = ({
       setFile(e.target.files[0]);
     }
   };
-  const handleVideoUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setVideoFile(file);
-      setVideoUrl(URL.createObjectURL(file));
+
+  const handleVideo = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const selectedVideo = e.target.files[0];
+      setVideo({
+        file: selectedVideo.name,
+        bytes: selectedVideo,
+      });
+      handleError('video', null);
+    }
+  };
+
+  const handlePdf = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const selectedPdf = e.target.files[0];
+      setPdf({
+        file: selectedPdf.name,
+        bytes: selectedPdf,
+      });
+      handleError('pdf', null);
     }
   };
 
@@ -107,20 +150,18 @@ const DisplayDemoClass = ({
       handleError("courseId", "Please Select Skill");
       isValid = false;
     }
-    if (!className) {
-      handleError("className", "Please input Sub Skill");
-      isValid = false;
-    }
-    if (!file) {
-      handleError("icon", "Please upload an image");
-      isValid = false;
-    }
+   
+    // if (!file) {
+    //   handleError("icon", "Please upload an image");
+    //   isValid = false;
+    // }
     return isValid;
   };
 
   const handleSubmit = async () => {
     if (validation()) {
       var formData = new FormData();
+      formData.append("demoClassId", demoClassId);
       formData.append("astrologerId", astrologerId);
       formData.append("courseId", courseId);
       formData.append("className", className);
@@ -133,8 +174,10 @@ const DisplayDemoClass = ({
       formData.append("time", time);
       formData.append("sessionTime", sessionTime);
       formData.append("googleMeet", googleMeet);
+      formData.append("video", video.bytes);
+      formData.append("pdf", pdf.bytes);
 
-      //   dispatch(SkillActions.updateclassName({formData, subcourseId}));
+        dispatch(DemoClassActions.updateDemoClass(formData));
       handleClose();
     }
   };
@@ -147,6 +190,27 @@ const DisplayDemoClass = ({
     setViewData(false);
   };
 
+  const handleAdminStatusChange = (rowData, newStatus) => {
+    Swal.fire({
+      title: "Are you sure you want to change the Admin Status?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, change it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(
+          DemoClassActions.updateDemoClassAdminStatus({
+            demoClassId: rowData._id,
+            adminStatus: newStatus,
+          })
+        );
+      }
+    });
+  };
+  
   const handleClickOpen = (rowData) => {
     Swal.fire({
       title: "Are you sure to Change the Status?",
@@ -178,6 +242,28 @@ const DisplayDemoClass = ({
     return date.toISOString().split("T")[0] + " " + timeString;
   };
 
+  const handleClassStatusChange = (rowData, newStatus) => {
+    Swal.fire({
+      title: "Are you sure you want to change the Class Status?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, change it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(
+          DemoClassActions.updateDemoClassOngoingStatus({
+            demoClassId: rowData._id,
+            classStatus: newStatus,
+          })
+        );
+      }
+    });
+  };
+  
+
   return (
     <div className={classes.container}>
       <div className={classes.box}>
@@ -205,7 +291,12 @@ const DisplayDemoClass = ({
                     : "N/A",
               },
               { title: "Course Name", field: "courseId.title" },
-              { title: "Astrologer Name", field: "astrologerId.displayName" },
+              {
+                title: "Astrologer Name",
+                field: "astrologerId.displayName",
+                render: rowData => rowData.astrologerId ? rowData.astrologerId.displayName : 'N/A'
+              },
+              
               { title: "Class Name", field: "className" },
 
               {
@@ -226,6 +317,64 @@ const DisplayDemoClass = ({
                     style={{ width: 50, height: 50 }}
                     variant="rounded"
                   />
+                ),
+              },
+
+              {
+                title: 'Admin Status',
+                field: 'adminStatus',
+                render: (rowData) => (
+                  <div>
+                    <select
+                      className={classes.statusDropdown}
+                      value={rowData.adminStatus}
+                      onChange={(e) => handleAdminStatusChange(rowData, e.target.value)}
+                      style={{
+                        backgroundColor:
+                          rowData.adminStatus === 'Approved'
+                            ? '#90EE90' // Light Green
+                            : rowData.adminStatus === 'Rejected'
+                            ? '#FF7F7F' // Light Red
+                            : rowData.adminStatus === 'Pending'
+                            ? '#FFD700' // Gold
+                            : '#D3D3D3', 
+                      }}
+                    >
+                      <option value="Approved">Approved</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Rejected">Rejected</option>
+                    </select>
+                  </div>
+                ),
+              },
+
+              {
+                title: "Class Status",
+                field: "classStatus",
+                render: (rowData) => (
+                  <div>
+                    <select
+                      className={classes.statusDropdown}
+                      value={rowData.classStatus}
+                      onChange={(e) =>
+                        handleClassStatusChange(rowData, e.target.value)
+                      }
+                      style={{
+                        backgroundColor:
+                          rowData.classStatus === "Start"
+                            ? "#90EE90" // Light Green
+                            : rowData.classStatus === "Completed"
+                            ? "#FF7F7F" // Light Red
+                            : rowData.classStatus === "Pending"
+                            ? "#FFD700" // Gold
+                            : "#D3D3D3",
+                      }}
+                    >
+                      <option value="Start">Start</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Completed">Completed</option>
+                    </select>
+                  </div>
                 ),
               },
 
@@ -301,11 +450,7 @@ const DisplayDemoClass = ({
   }
 
   function editModal() {
-    // const fillSkillList = () => {
-    //   return skillsData.map((item) => {
-    //     return <MenuItem value={item._id}>{item.title}</MenuItem>;
-    //   });
-    // };
+
     const showEditForm = () => {
       return (
         <Grid container spacing={2}>
@@ -314,39 +459,51 @@ const DisplayDemoClass = ({
               <div className={classes.heading}>Edit Demo Class</div>
             </div>
           </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Enter "
-              error={error.className ? true : false}
-              helperText={error.className}
-              value={className}
-              onFocus={() => handleError("className", null)}
-              onChange={(event) => setclassName(event.target.value)}
-              variant="outlined"
-              fullWidth
-            />
-          </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
+           <Grid item lg={6} md={6} sm={12} xs={12}>
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Skill</InputLabel>
+              <InputLabel id="demo-simple-select-label">
+                Select Course
+              </InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                label="Skill"
+                label="Course"
                 value={courseId}
                 onFocus={() => handleError("courseId", null)}
                 onChange={(e) => setcourseId(e.target.value)}
                 error={error.courseId ? true : false}
               >
                 <MenuItem disabled value={null}>
-                  -Select Skill-
+                  -Select Course-
                 </MenuItem>
-                {/* {skillsData && fillSkillList()} */}
+                {activeCourseData && fillCourseList()}
               </Select>
             </FormControl>
             <div className={classes.errorstyles}>{error.courseId}</div>
           </Grid>
-          <Grid item lg={12} sm={12} md={6} xs={12}>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">
+                Select Astrologer
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Astrologer"
+                value={astrologerId}
+                onFocus={() => handleError("astrologerId", null)}
+                onChange={(e) => setAstrologerId(e.target.value)}
+                error={error.astrologerId ? true : false}
+              >
+                <MenuItem disabled value={null}>
+                  -Select Astrologer-
+                </MenuItem>
+                {activeAstrologerData && fillAstrologerList()}
+              </Select>
+            </FormControl>
+            <div className={classes.errorstyles}>{error.astrologerId}</div>
+          </Grid>
+          <Grid item lg={6} sm={6} md={6} xs={12}>
             <FormControl fullWidth>
               <InputLabel id="select-label">Select Status</InputLabel>
               <Select
@@ -362,15 +519,192 @@ const DisplayDemoClass = ({
               <div className={classes.errorstyles}>{error.status}</div>
             </FormControl>
           </Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <TextField
+              label="Class Name"
+              error={error.className ? true : false}
+              helperText={error.className}
+              value={className}
+              onFocus={() => handleError("className", null)}
+              onChange={(event) => setclassName(event.target.value)}
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+
+          <Grid item lg={6} sm={12} md={6} xs={12}>
+            <TextField
+              type="date"
+              value={date}
+              variant="outlined"
+              fullWidth
+              onFocus={() => handleError("date", null)}
+              onChange={(event) => setDate(event.target.value)}
+              helperText={error.date}
+              error={error.date ? true : false}
+            />
+          </Grid>
+
+          <Grid item lg={6} sm={12} md={6} xs={12}>
+            <TextField
+              type="time"
+              label="Time"
+              value={time}
+              variant="outlined"
+              fullWidth
+              onFocus={() => handleError("time", null)}
+              onChange={(event) => setTime(event.target.value)}
+              helperText={error.time}
+              error={error.time ? true : false}
+            />
+          </Grid>
+          <Grid item lg={6} sm={12} md={6} xs={12}>
+            <TextField
+              type="text"
+              label="Session Time"
+              value={sessionTime}
+              variant="outlined"
+              fullWidth
+              onFocus={() => handleError("sessionTime", null)}
+              onChange={(event) => setSessionTime(event.target.value)}
+              helperText={error.sessionTime}
+              error={error.sessionTime ? true : false}
+            />
+          </Grid>
+          <Grid item lg={6} sm={12} md={6} xs={12}>
+            <TextField
+              type="text"
+              label="Google Meet URL"
+              value={googleMeet}
+              variant="outlined"
+              fullWidth
+              onFocus={() => handleError("googleMeet", null)}
+              onChange={(event) => setGoogleMeet(event.target.value)}
+              helperText={error.googleMeet}
+              error={error.googleMeet ? true : false}
+            />
+          </Grid>
+
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <TextField
+              fullWidth
+              label="Learn"
+              id="fullWidth"
+              value={learn}
+              multiline
+              rows={4}
+              onFocus={() => handleError("learn", null)}
+              onChange={(event) => setLearn(event.target.value)}
+              helperText={error.learn}
+              error={error.learn ? true : false}
+            />
+          </Grid>
+
           <Grid item lg={12} md={12} sm={12} xs={12}>
             <TextField
               fullWidth
               label="Description"
               id="fullWidth"
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              multiline
+              rows={4}
+              onFocus={() => handleError("description", null)}
+              onChange={(event) => setDescription(event.target.value)}
+              helperText={error.description}
+              error={error.description ? true : false}
             />
           </Grid>
+          
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <TextField
+              fullWidth
+              label="Course Content"
+              id="fullWidth"
+              value={courseContent}
+              multiline
+              rows={4}
+              onFocus={() => handleError("courseContent", null)}
+              onChange={(event) => setCourseContent(event.target.value)}
+              helperText={error.courseContent}
+              error={error.courseContent ? true : false}
+            />
+          </Grid>
+
+          <Grid
+            item
+            lg={4}
+            sm={6}
+            md={6}
+            xs={6}
+            className={classes.uploadContainer}
+          >
+            <label className={classes.uploadImageButton}>
+              {
+                icon.file ? 
+                icon.file:
+                'Upload Image'
+              }
+              <input
+            onChange={handleIcon}
+            hidden
+            accept="image/*"
+            type="file"
+          />
+        </label>
+        <div className={classes.errorStyles}>{error.icon}</div>
+          </Grid>
+          
+          <Grid
+            item
+            lg={4}
+            sm={6}
+            md={6}
+            xs={6}
+            className={classes.uploadContainer}
+          >
+            <label className={classes.uploadImageButton}>
+              Upload Video
+               <input
+            onChange={handleVideo}
+            hidden
+            accept="video/*"
+            type="file"
+          />
+            </label>
+            <div className={classes.errorstyles}>{error.video}</div>
+          </Grid>
+          <Grid item lg={2} sm={6} md={2} xs={6}>
+          {video.file && (
+          <video
+            src={video.file}
+            style={{ width: 150 }}
+            controls
+          />
+        )}
+          </Grid>
+
+          <Grid
+        item
+        lg={2}
+        sm={6}
+        md={2}
+        xs={6}
+        className={classes.uploadContainer}
+      >
+        <label className={classes.uploadImageButton}>
+          {
+            pdf.file ? pdf.file : 'Upload PDF'
+          }
+          <input
+            onChange={handlePdf}
+            hidden
+            accept="application/pdf"
+            type="file"
+          />
+        </label>
+        <div className={classes.errorStyles}>{error.pdf}</div>
+      </Grid>
+
           <Grid item lg={6} sm={6} md={6} xs={6}>
             <div onClick={handleSubmit} className={classes.submitbutton}>
               Submit
@@ -550,7 +884,7 @@ const DisplayDemoClass = ({
               variant="square"
               style={{
                 width: "100%",
-                height: "100px",
+                height: "150px",
                 objectFit: "cover",
               }}
             />
@@ -558,10 +892,10 @@ const DisplayDemoClass = ({
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <label htmlFor="">Video</label>
             <video
-              src={videoUrl}
+              src={video}
               style={{
                 width: "100%",
-                height: "100px",
+                height: "150px",
                 objectFit: "cover",
               }}
               controls

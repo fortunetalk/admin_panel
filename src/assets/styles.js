@@ -168,13 +168,32 @@ export const useStyles = makeStyles({
   statusButton: {
     display: "inline-block",
     padding: "0.5rem 1rem",
-    fontSize: "10px",
-    color: "#fff",
+    fontSize: "12px",
+    color: "black",
     border: "none",
     borderRadius: "1rem", 
     cursor: "pointer",
     textAlign: "center",
-  }
+    fontWeight:'600'
+
+  },
+  statusDropdown: {
+    fontSize: "14px",
+    padding: '0.5rem',
+    borderRadius: '1rem',
+    border: "none",
+    cursor: 'pointer',
+    color: "black",
+    textAlign: "center",
+    fontWeight:'600'
+  },
+  imagePreview: {
+    width: '100px',
+    height: '100px',
+    padding:'4px',
+    // borderRadius: theme.shape.borderRadius,
+    objectFit: 'cover',
+  },
 
 });
 
@@ -183,17 +202,17 @@ export const useStyles = makeStyles({
 
 export const propStyles = {
   tableStyles: {
-    sorting: false,
+    sorting: true,
     search: true,
     searchFieldAlignment: "right",
-    filtering: true,
+    filtering: false,
     paging: true,
     pageSize: 5,
     paginationType: "stepped",
     showFirstLastPageButtons: true,
     paginationPosition: "bottom",
-    exportButton: false,
-    exportAllData: false,
+    exportButton: true,
+    exportAllData: true,
     exportFileName: "Category data",
     addRowPosition: "first",
     actionsColumnIndex: -1,

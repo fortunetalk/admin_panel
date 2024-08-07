@@ -97,18 +97,18 @@ export const AdminEarning = ({dispatch, adminEarningData}) => {
         title="Reports"
         data={adminEarningData} 
         columns={[
-          { title: 'Trans Id', field: 'transactionId' },
-          { title: 'Type', field: 'type' },
-          { title: 'Astrologers', field: 'astrologerDetails.astrologerName' },
-          { title: 'Customers', field: 'customerDetails.customerName' },
-          { title: 'Total Price', render: rowData=>(<div>{parseFloat(rowData?.totalPrice).toFixed(2)}</div>) },
-          { title: 'Admin Share',  render: rowData=>(<div>{parseFloat(rowData?.adminPrice).toFixed(2)}</div>) },
-          { title: 'Astro Share', render: rowData=>(<div>{parseFloat(rowData?.partnerPrice).toFixed(2)}</div>) },
-          { title: 'Duration', render: rowData=>(<div>{secondsToHMS(rowData?.duration)}</div>) },
-          { title: 'Start Time', render: rowData=>(<div>{rowData?.startTime && moment(parseInt(rowData?.startTime)).format('HH:mm:ss A')}</div>) },
-          { title: 'End time', render: rowData=>(<div>{rowData?.endTime && moment(parseInt(rowData?.endTime)).format('HH:mm:ss A')}</div>) },
-          { title: 'Date', render: rowData=>(<div>{rowData?.endTime && moment(parseInt(rowData?.createdAt)).format('DD-MM-YYYY')}</div>) },
-        ]}
+          { title: 'Stream Id', field: 'streamId' },
+          { title: 'Customer Name', render: rowData => `${rowData.customerId.firstName} ${rowData.customerId.lastName}` },
+          { title: 'Room Id', field: 'roomId' },
+          { title: 'Start Time', render: rowData => rowData.startTime ? moment(rowData.startTime).format('HH:mm:ss A') : '' },
+          { title: 'End Time', render: rowData => rowData.endTime ? moment(rowData.endTime).format('HH:mm:ss A') : '' },
+          { title: 'Duration', render: rowData => secondsToHMS(rowData.durationInSeconds) },
+          { title: 'Max Duration', field: 'maxDuration' },
+          { title: 'Amount', render: rowData => parseFloat(rowData.amount).toFixed(2) },
+          { title: 'Call Type', field: 'callType' },
+          { title: 'Status', field: 'status' },
+          { title: 'Date', render: rowData => rowData.endTime ? moment(rowData.endTime).format('DD-MM-YYYY') : '' },
+      ]}
         options={{ ...propStyles.tableStyles, filtering: false, exportButton: true, exportAllData: true, }}
       />
     </Grid>

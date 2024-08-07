@@ -15,22 +15,31 @@ function extractErrorMessage(html) {
   return errorMessage.trim();
 }
 
-
 class _ApiRequest {
   post_header = "multipart/form-data";
   get_header = "application/json";
 
-  postRequest = async ({ url = null, data = null, header = "form" }) => {
+  postRequest = async ({
+    url = null,
+    data = null,
+    header = "form",
+    token = null,
+  }) => {
     try {
-      const response = await axios({
-        method: "post",
-        url: url,
-        headers: {
-          "Content-Type": header === "form" ? this.post_header : this.get_header,
-        },
-        data: data,
-      });
-      return response.data;
+
+      console.log('header',header)
+      console.log('data',data)
+
+    const response = await axios({
+      method: "post",
+      url: url,
+      headers: {
+        "Content-Type": header === "form" ? this.post_header : this.get_header,
+        Authorization: `Bearer ${token}`,
+      },
+      data: data,
+    });
+    return response.data;
     } catch (e) {
       if (e.response && e.response.data) {
         const errorMessage = extractErrorMessage(e.response.data);

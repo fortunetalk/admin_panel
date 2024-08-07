@@ -1,6 +1,6 @@
 // DisplayBlogCategory.js
 import React, { useEffect, useState } from "react";
-import { useStyles } from '../../assets/styles.js'
+import { useStyles, propStyles } from '../../assets/styles.js'
 import { Grid, TextField, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { AddCircleRounded } from '@mui/icons-material';
 import MaterialTable from "material-table";
@@ -12,7 +12,7 @@ import Swal from "sweetalert2";
 import { connect, useDispatch } from "react-redux";
 import { getBlogCategory, updateBlogCategory, deleteBlogCategory } from "../../redux/Actions/blogCategoryActions.js";
 
-const DisplayBlogCategory = ({ appBlogCategoryData, getBlogCategory, updateBlogCategory, deleteBlogCategory }) => {
+const DisplayBlogCategory = ({ appBlogCategoryData }) => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const navigate = useNavigate();
@@ -24,10 +24,8 @@ const DisplayBlogCategory = ({ appBlogCategoryData, getBlogCategory, updateBlogC
   });
 
   useEffect(() => {
-    if (!appBlogCategoryData) {
       dispatch(getBlogCategory());
-    }
-  }, [dispatch, appBlogCategoryData]);
+  }, []);
 
   const handleOpen = (rowData) => {
     setOpen(true);
@@ -55,7 +53,6 @@ const DisplayBlogCategory = ({ appBlogCategoryData, getBlogCategory, updateBlogC
         status: selectedCategory.status
       }));
       handleClose();
-    //   window.location.reload();
     } else {
       Swal.fire({
         icon: 'error',
@@ -106,19 +103,7 @@ const DisplayBlogCategory = ({ appBlogCategoryData, getBlogCategory, updateBlogC
               { title: 'Title', field: 'title' },
               { title: 'Status', field: 'status' },
             ]}
-            options={{
-              sorting: true,
-              search: true,
-              searchFieldAlignment: "right",
-              filtering: true,
-              paging: true,
-              pageSize: 5,
-              paginationType: "stepped",
-              showFirstLastPageButtons: true,
-              paginationPosition: "bottom",
-              exportButton: false,
-              actionsColumnIndex: -1,
-            }}
+            options={{ ...propStyles.tableStyles, filtering: false }}
             actions={[
                 {
                   icon: 'edit',
@@ -207,10 +192,6 @@ const mapStateToProps = (state) => ({
   appBlogCategoryData: state.blogCategory?.appBlogCategoryData,
 });
 
-const mapDispatchToProps = {
-  getBlogCategory,
-  updateBlogCategory,
-  deleteBlogCategory,
-};
+const mapDispatchToProps = (dispatch) => ({ dispatch });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DisplayBlogCategory);

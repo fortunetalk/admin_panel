@@ -19,6 +19,10 @@ export const setChatHistory = payload =>({
     type: actionTypes.SET_CHAT_HISTORY,
     payload
 })
+export const deleteChatHistory = payload =>({
+    type: actionTypes.DELETE_CHAT_HISTORY,
+    payload
+})
 
 export const getChatSummary = payload =>({
     type: actionTypes.GET_CHAT_SUMMARY,
@@ -37,6 +41,10 @@ export const getCallHistory = payload =>({
 
 export const setCallHistory = payload =>({
     type: actionTypes.SET_CALL_HISTORY,
+    payload
+})
+export const deleteCallHistory = payload =>({
+    type: actionTypes.DELETE_CALL_HISTORY,
     payload
 })
 export const getRechargeHistory = payload =>({

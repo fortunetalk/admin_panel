@@ -106,11 +106,11 @@ const routes = [
         name: "Live Class",
         icon: <BiAbacus />,
       },
-      // {
-      //   path: "/bookedDemoClass",
-      //   name: "Booked Demo Class",
-      //   icon: <BiAbacus />,
-      // },
+      {
+        path: "/mcqAnswerList",
+        name: "Attempted MCQ's",
+        icon: <BiAbacus />,
+      },
       // {
       //   path: "/registerLiveClassHistory",
       //   name: "Register Live Class History",

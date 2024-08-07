@@ -173,6 +173,8 @@ const DisplayPooja = ({ poojaData, poojaCategoryData }) => {
     }
   };
 
+  const reverseData = Array.isArray(poojaData) ? poojaData.slice().reverse() : [];
+
 
   return (
     <div className={classes.container}>
@@ -188,14 +190,14 @@ const DisplayPooja = ({ poojaData, poojaCategoryData }) => {
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
             title="Pooja's"
-            data={poojaData}
+            data={reverseData}
             columns={[
               {
                 title: "S.No",
                 editable: "never",
                 render: (rowData) =>
-                  Array.isArray(poojaData)
-                    ? poojaData?.indexOf(rowData) + 1
+                  Array.isArray(reverseData)
+                    ? reverseData?.indexOf(rowData) + 1
                     : "N/A",
               },
               { title: "Title", field: "title" },

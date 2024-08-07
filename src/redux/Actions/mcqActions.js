@@ -20,8 +20,12 @@ export const updateMCQStatus = payload =>({
   payload
 })
 
-
 export const deleteMCQ = payload =>({
   type: actionTypes.DELETE_MCQ,
+  payload
+})
+
+export const getMCQAnswerList = payload =>({
+  type: actionTypes.MCQ_ANSWER_LIST,
   payload
 })

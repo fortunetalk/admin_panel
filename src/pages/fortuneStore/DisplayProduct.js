@@ -199,6 +199,8 @@ const DisplayProduct = ({ productData, productCategoryData }) => {
     }
   };
 
+  const reverseData = Array.isArray(productData) ? productData.slice().reverse() : [];
+
 
   return (
     <div className={classes.container}>
@@ -214,14 +216,14 @@ const DisplayProduct = ({ productData, productCategoryData }) => {
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
             title="Products"
-            data={productData}
+            data={reverseData}
             columns={[
               {
                 title: "S.No",
                 editable: "never",
                 render: (rowData) =>
-                  Array.isArray(productData)
-                    ? productData?.indexOf(rowData) + 1
+                  Array.isArray(reverseData)
+                    ? reverseData?.indexOf(rowData) + 1
                     : "N/A",
               },
               { title: "Title", field: "title" },

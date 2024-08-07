@@ -97,7 +97,7 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
               {
                 title: "S.No",
                 editable: "never",
-                render: (rowData) => chatHistoryData.indexOf(rowData) + 1,
+                render: rowData => Array.isArray(chatHistoryData) ? chatHistoryData.indexOf(rowData) + 1 : 'N/A'
               },
 
             //   { title: "Chat ID", field: "_id" },
@@ -106,6 +106,7 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
                 field: "astrologerId.displayName",
               },
               { title: "Customer Name", field: "customerId.firstName" },
+              { title: "Chat Price", field: "chatPrice" },
               {
                 title: "Duration",
                 render: (rowData) => (
@@ -158,6 +159,16 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
                 icon: "visibility",
                 tooltip: "View Chat History",
                 onClick: (event, rowData) => handleView(rowData),
+              },
+              {
+                icon: "delete",
+                tooltip: "Delete Chat History",
+                onClick: (event, rowData) =>
+                  dispatch(
+                    HistoryActions.deleteChatHistory({
+                      chatId: rowData?._id,
+                    })
+                  ),
               },
             //   {
             //     icon: "chat",

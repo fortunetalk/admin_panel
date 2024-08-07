@@ -93,7 +93,7 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
               {
                 title: "S.No",
                 editable: "never",
-                render: (rowData) => callHistoryData.indexOf(rowData) + 1,
+                render: rowData => Array.isArray(callHistoryData) ? callHistoryData.indexOf(rowData) + 1 : 'N/A'
               },
 
             //   { title: "Call ID", field: "_id" },
@@ -147,17 +147,17 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                 tooltip: "View Chat History",
                 onClick: (event, rowData) => handleView(rowData),
               },
-            //   {
-            //     icon: "chat",
-            //     tooltip: "Summary",
-            //     onClick: (event, rowData) =>
-            //       navigate("/chatSummary", {
-            //         state: {
-            //           astroID: rowData?.astrologerId,
-            //           customerID: rowData?.customerId,
-            //         },
-            //       }),
-            //   },
+              {
+                icon: "delete",
+                tooltip: "Delete Chat History",
+                onClick: (event, rowData) =>
+                  dispatch(
+                    HistoryActions.deleteCallHistory({
+                      callId: rowData?._id,
+                    })
+                  ),
+              },
+          
             ]}
           />
         </Grid>

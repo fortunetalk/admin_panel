@@ -15,7 +15,9 @@ import {
   delete_live_class_history,
   get_live_course_history,
   change_live_course_history_status,
-  get_register_live_class_history
+  get_register_live_class_history,
+  delete_chat_history,
+  delete_call_history
 
 } from "../../utils/Constants";
 import { database, firestore } from "../../config/firbase";
@@ -78,6 +80,54 @@ async function getChatData(chatId) {
     return messages;
   } catch (e) {
     console.log(e)
+  }
+}
+function* deleteChatHistory(actions) {
+  try {
+    const { payload } = actions;
+    const result = yield Swal.fire({
+      title: `Are you sure to Delete`,
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: Colors.primaryLight,
+      cancelButtonColor: Colors.red,
+      confirmButtonText: "Delete",
+    });
+
+    if (result.isConfirmed) {
+      yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
+      const response = yield ApiRequest.postRequest({
+        url: api_url + delete_chat_history,
+        header: "json",
+        data: payload,
+      });
+
+      if (response.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Data Deleted Successfull",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+
+        yield put({ type: actionTypes.GET_CHAT_HISTORY, payload: null });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Server Error",
+          text: "Data Deletion Failed",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      }
+    }
+
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+  } catch (e) {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    console.log(e);
   }
 }
 
@@ -153,6 +203,54 @@ function* getCallHistory() {
     yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   } catch (e) {
     yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+    console.log(e);
+  }
+}
+function* deleteCallHistory(actions) {
+  try {
+    const { payload } = actions;
+    const result = yield Swal.fire({
+      title: `Are you sure to Delete`,
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: Colors.primaryLight,
+      cancelButtonColor: Colors.red,
+      confirmButtonText: "Delete",
+    });
+
+    if (result.isConfirmed) {
+      yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
+      const response = yield ApiRequest.postRequest({
+        url: api_url + delete_call_history,
+        header: "json",
+        data: payload,
+      });
+
+      if (response.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Data Deleted Successfull",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+
+        yield put({ type: actionTypes.GET_CALL_HISTORY, payload: null });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Server Error",
+          text: "Data Deletion Failed",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      }
+    }
+
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+  } catch (e) {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
     console.log(e);
   }
 }
@@ -484,8 +582,10 @@ function* getRegisterLiveClassHistory(action) {
 
 export default function* historySaga() {
   yield takeLeading(actionTypes.GET_CHAT_HISTORY, getChatHistory);
+  yield takeLeading(actionTypes.DELETE_CHAT_HISTORY, deleteChatHistory);
   yield takeLeading(actionTypes.GET_CHAT_SUMMARY, getChatSummary)
   yield takeLeading(actionTypes.GET_CALL_HISTORY, getCallHistory)
+  yield takeLeading(actionTypes.DELETE_CALL_HISTORY, deleteCallHistory)
   yield takeLeading(actionTypes.GET_RECHARGE_HISTORY, getRechargeHistory)
   yield takeLeading(actionTypes.GET_DEMO_CLASS_HISTORY, getDemoClassHistory)
   yield takeLeading(actionTypes.UPDATE_DEMO_CLASS_HISTORY_STATUS, updateDemoClassStatus)

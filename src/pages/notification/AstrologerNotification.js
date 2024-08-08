@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useStyles } from "../../assets/styles.js";
+import { useStyles, propStyles } from "../../assets/styles.js";
 import { Avatar, Grid, FormControl, InputLabel, Select, DialogContent, Dialog, MenuItem, TextField } from "@mui/material";
 import { AddCircleRounded } from "@mui/icons-material";
 import MaterialTable from "material-table";
@@ -179,25 +179,7 @@ const AstrologerNotification = ({ astrologerNotificationData, dispatch }) => {
                 ),
               },
             ]}
-            options={{
-              sorting: true,
-              search: true,
-              searchFieldAlignment: "right",
-              filtering: true,
-              paging: true,
-              // pageSizeOptions: createArrayWithBreakdowns(editable?.length, 5),
-              pageSize: 5,
-              paginationType: "stepped",
-              showFirstLastPageButtons: true,
-              paginationPosition: "bottom",
-              exportButton: false,
-              exportAllData: false,
-              exportFileName: "Category data",
-              addRowPosition: "first",
-              actionsColumnIndex: -1,
-              selection: false,
-              showSelectAllCheckbox: false,
-            }}
+            options={propStyles.tableStyles}
             actions={[
               {
                 icon: "edit",

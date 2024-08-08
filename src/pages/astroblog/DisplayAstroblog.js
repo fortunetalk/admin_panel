@@ -32,7 +32,6 @@ const DisplayAstroblog = ({
   appBlogData,
   getBlogs,
   updateBlog,
-  deleteBlog,
   deleteMultipleBlog,
   updateBlogStatus,
   appBlogCategoryData,
@@ -146,21 +145,6 @@ const DisplayAstroblog = ({
     setOpen(false);
   };
 
-  const handleDelete = (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        dispatch(deleteBlog(id));
-      }
-    });
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -245,7 +229,12 @@ const DisplayAstroblog = ({
               {
                 icon: "delete",
                 tooltip: "Delete Blog",
-                onClick: (event, rowData) => handleDelete(rowData?._id),
+                onClick: (event, rowData) =>
+                  dispatch(
+                    deleteBlog({
+                      blogId: rowData?._id,
+                    })
+                  ),
               },
               {
                 icon: () => (

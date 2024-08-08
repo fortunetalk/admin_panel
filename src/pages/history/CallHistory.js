@@ -73,6 +73,8 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
     setViewData(false);
   };
 
+  const reverseData = Array.isArray(callHistoryData) ? callHistoryData.slice().reverse() : [];
+
   return (
     <div className={classes.container}>
       <Loader />
@@ -88,12 +90,12 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
             title=" Call History"
-            data={callHistoryData}
+            data={reverseData}
             columns={[
               {
                 title: "S.No",
                 editable: "never",
-                render: rowData => Array.isArray(callHistoryData) ? callHistoryData.indexOf(rowData) + 1 : 'N/A'
+                render: rowData => Array.isArray(reverseData) ? reverseData.indexOf(rowData) + 1 : 'N/A'
               },
 
             //   { title: "Call ID", field: "_id" },
@@ -102,6 +104,13 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                 field: "astrologerId.displayName",
               },
               { title: "Customer Name", field: "customerId.firstName" },
+              { title: "Commission Price", field: "commissionPrice" },
+              { title: "Deducted Amount", field: "deductedAmount",
+                render: (rowData) => {
+                  const balance = Number(rowData.deductedAmount).toFixed(2);
+                  return balance;
+                }
+               },
               {
                 title: "Duration",
                 render: (rowData) => (
@@ -111,24 +120,7 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                   </div>
                 ),
               },
-              {
-                title: "Start Time",
-                render: (rowData) => (
-                  <div>
-                    {rowData?.startTime &&
-                      moment(rowData?.startTime).format("HH:mm:ss A")}
-                  </div>
-                ),
-              },
-              {
-                title: "End time",
-                render: (rowData) => (
-                  <div>
-                    {rowData?.endTime &&
-                      moment(rowData?.endTime).format("HH:mm:ss A")}
-                  </div>
-                ),
-              },
+            
               {
                 title: "Date",
                 render: (rowData) => (

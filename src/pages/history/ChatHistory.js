@@ -77,6 +77,8 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
     navigate(`/history/fullChatHistory/${rowData.customerId._id}`, {state:{chatId: rowData.chatId}})
   };
 
+  const reverseData = Array.isArray(chatHistoryData) ? chatHistoryData.slice().reverse() : [];
+
   return (
     <div className={classes.container}>
       <Loader />
@@ -92,12 +94,12 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
             title=" Chat History"
-            data={chatHistoryData}
+            data={reverseData}
             columns={[
               {
                 title: "S.No",
                 editable: "never",
-                render: rowData => Array.isArray(chatHistoryData) ? chatHistoryData.indexOf(rowData) + 1 : 'N/A'
+                render: rowData => Array.isArray(reverseData) ? reverseData.indexOf(rowData) + 1 : 'N/A'
               },
 
             //   { title: "Chat ID", field: "_id" },
@@ -106,7 +108,10 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
                 field: "astrologerId.displayName",
               },
               { title: "Customer Name", field: "customerId.firstName" },
+              { title: "Call Price", field: "callPrice" },
               { title: "Chat Price", field: "chatPrice" },
+              { title: "Commission Price", field: "commissionPrice" },
+              { title: "Deducted Amount", field: "deductedAmount" },
               {
                 title: "Duration",
                 render: (rowData) => (

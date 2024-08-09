@@ -10,7 +10,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Button
+  Button,
+  CircularProgress
 } from "@mui/material";
 import { AddCircleRounded, CloseRounded } from "@mui/icons-material";
 import MaterialTable from "material-table";
@@ -415,10 +416,14 @@ const DisplayAstroblog = ({
 
   return (
     <div className={classes.container}>
+      {
+        !appBlogData ? <CircularProgress/> :
+
       <div className={classes.box}>
         {displayTable()}
         {editModal()}
       </div>
+      }
     </div>
   );
 };

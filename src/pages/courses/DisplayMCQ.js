@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { propStyles, useStyles } from "../../assets/styles.js";
-import {  Grid, TextField, FormControl, InputLabel, MenuItem, Select, Radio, RadioGroup, FormControlLabel } from "@mui/material";
+import {  Grid, TextField, FormControl, InputLabel, MenuItem, Select, Radio, RadioGroup, FormControlLabel, CircularProgress } from "@mui/material";
 import { Colors } from "../../assets/styles.js";
 import { AddCircleRounded } from "@mui/icons-material";
 import logo_icon from "../../assets/images/logo_icon.png";
@@ -114,10 +114,13 @@ const DisplayMCQ = ({ dispatch, mcqData }) => {
 
   return (
     <div className={classes.container}>
+      {
+        !mcqData ? <CircularProgress/> :
       <div className={classes.box}>
         {mcqData && displayTable()}
         {editModal()}
       </div>
+      }
     </div>
   );
   function displayTable() {

@@ -8,7 +8,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Typography
+  CircularProgress
 } from "@mui/material";
 import { AddCircleRounded } from "@mui/icons-material";
 import MaterialTable from "material-table";
@@ -178,10 +178,13 @@ const DisplayPooja = ({ poojaData, poojaCategoryData }) => {
 
   return (
     <div className={classes.container}>
-      <div className={classes.box}>
+      {
+        !poojaData ? <CircularProgress/> :
+        <div className={classes.box}>
         {displayTable()}
         {editModal()}
       </div>
+      }
     </div>
   );
   function displayTable() {

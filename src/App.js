@@ -314,7 +314,6 @@ function App() {
           <Route path="/addClass/:liveClassId" element={<AddClass/>} />
           <Route path="/mcqList/:liveClassId" element={<DisplayMCQ/>} />
           <Route path="/addMCQ/:liveClassId" element={<AddMCQ/>} />
-          <Route path="/registerLiveClassHistory/:liveClassId" element={<RegisterLiveClassHistory/>} />
           <Route path="/mcqAnswerList" element={<MCQAnswerList/>} />
 
 

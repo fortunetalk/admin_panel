@@ -3,6 +3,7 @@ import { useStyles, propStyles } from "../../assets/styles.js";
 import {
   Grid,
   TextField,
+  CircularProgress
 } from "@mui/material";
 import MaterialTable from "material-table";
 import * as Actions from "../../redux/Actions/rechargeHistoryActions.js";
@@ -20,10 +21,13 @@ const DisplayRechargePlan = ({ dispatch, rechargeHistoryData }) => {
 
   return (
     <div className={classes.container}>
-      <Loader />
+      {
+        !rechargeHistoryData ? <CircularProgress/> :
       <div className={classes.box}>
         {rechargeHistoryData && displayTable()}
+
       </div>
+      }
     </div>
   );
   function displayTable() {

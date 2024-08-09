@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useStyles, propStyles } from "../../assets/styles.js";
-import { Grid, TextField, InputLabel, Select,FormControl, MenuItem, Avatar } from "@mui/material";
+import { Grid, TextField, InputLabel, Select,FormControl, MenuItem, Avatar, CircularProgress } from "@mui/material";
 import MaterialTable from "material-table";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
@@ -9,8 +9,6 @@ import Swal from "sweetalert2";
 import * as HistoryActions from "../../redux/Actions/historyActions.js";
 import Loader from "../../Components/loading/Loader.js";
 import { connect } from "react-redux";
-import { secondsToHMS } from "../../utils/services.js";
-import moment from "moment";
 
 const DemoClassHistory = ({ dispatch, demoClassHistoryData }) => {
   const classes = useStyles();
@@ -91,13 +89,16 @@ const DemoClassHistory = ({ dispatch, demoClassHistoryData }) => {
 
   return (
     <div className={classes.container}>
-      <Loader />
+      {
+        !demoClassHistoryData ? <CircularProgress/> :
       <div className={classes.box}>
         {demoClassHistoryData && displayTable()}
         {editModal()}
       </div>
+      }
     </div>
   );
+
   function displayTable() {
     return (
       <Grid container spacing={1}>

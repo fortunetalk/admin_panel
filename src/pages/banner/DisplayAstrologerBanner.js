@@ -1,6 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { propStyles, useStyles } from "../../assets/styles.js";
-import { Grid, FormControl, InputLabel, MenuItem, Select, Avatar } from "@mui/material";
+import {
+  Grid,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Avatar,
+  CircularProgress,
+} from "@mui/material";
 import { Colors } from "../../assets/styles.js";
 import { AddCircleRounded } from "@mui/icons-material";
 import MaterialTable from "material-table";
@@ -25,7 +33,6 @@ const DisplayAstrologerBanner = ({ dispatch, astrologerBannerData }) => {
   useEffect(function () {
     dispatch(Actions.getAstrologerBannerData());
   }, []);
-
 
   // Open modal with specific row data
   const handleOpen = (rowData) => {
@@ -75,7 +82,12 @@ const DisplayAstrologerBanner = ({ dispatch, astrologerBannerData }) => {
     }).then((result) => {
       if (result.isConfirmed) {
         const newStatus = rowData.status === "Active" ? "InActive" : "Active";
-        dispatch(Actions.updateAstrologerBannerStatus({ bannerId: rowData._id, status: newStatus }));
+        dispatch(
+          Actions.updateAstrologerBannerStatus({
+            bannerId: rowData._id,
+            status: newStatus,
+          })
+        );
       }
     });
   };
@@ -99,18 +111,27 @@ const DisplayAstrologerBanner = ({ dispatch, astrologerBannerData }) => {
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
             title="Astrologer Banner"
-            data={Array.isArray(astrologerBannerData) ? astrologerBannerData : []}
+            data={
+              Array.isArray(astrologerBannerData) ? astrologerBannerData : []
+            }
             columns={[
               {
                 title: "S.No",
                 editable: "never",
-                render: (rowData) => Array.isArray(astrologerBannerData) ? astrologerBannerData.indexOf(rowData) + 1 : "N/A",
+                render: (rowData) =>
+                  Array.isArray(astrologerBannerData)
+                    ? astrologerBannerData.indexOf(rowData) + 1
+                    : "N/A",
               },
               {
                 title: "Image",
                 field: "image",
                 render: (rowData) => (
-                  <Avatar src={rowData.image} style={{ width: 50, height: 50 }} variant="rounded" />
+                  <Avatar
+                    src={rowData.image}
+                    style={{ width: 50, height: 50 }}
+                    variant="rounded"
+                  />
                 ),
               },
               {
@@ -119,7 +140,10 @@ const DisplayAstrologerBanner = ({ dispatch, astrologerBannerData }) => {
                 render: (rowData) => (
                   <div
                     className={classes.statusButton}
-                    style={{ backgroundColor: rowData.status === "Active" ? "#90EE90" : "#FF7F7F" }}
+                    style={{
+                      backgroundColor:
+                        rowData.status === "Active" ? "#90EE90" : "#FF7F7F",
+                    }}
                     onClick={() => handleClickOpen(rowData)}
                   >
                     {rowData.status}
@@ -138,7 +162,10 @@ const DisplayAstrologerBanner = ({ dispatch, astrologerBannerData }) => {
               {
                 icon: "delete",
                 tooltip: "Delete Banner",
-                onClick: (event, rowData) => dispatch(Actions.deleteAstrologerBanner({ bannerId: rowData._id })),
+                onClick: (event, rowData) =>
+                  dispatch(
+                    Actions.deleteAstrologerBanner({ bannerId: rowData._id })
+                  ),
               },
               {
                 icon: () => (
@@ -189,15 +216,31 @@ const DisplayAstrologerBanner = ({ dispatch, astrologerBannerData }) => {
                   <div className={classes.errorstyles}>{error.status}</div>
                 </FormControl>
               </Grid>
-              <Grid item lg={4} sm={6} md={4} xs={6} className={classes.uploadContainer}>
+              <Grid
+                item
+                lg={4}
+                sm={6}
+                md={4}
+                xs={6}
+                className={classes.uploadContainer}
+              >
                 <Grid component="label" className={classes.uploadImageButton}>
                   Upload Image
-                  <input onChange={handleIcon} hidden accept="image/*" type="file" />
+                  <input
+                    onChange={handleIcon}
+                    hidden
+                    accept="image/*"
+                    type="file"
+                  />
                 </Grid>
                 <div className={classes.errorstyles}>{error.icon}</div>
               </Grid>
               <Grid item lg={2} sm={6} md={2} xs={6}>
-                <Avatar color={Colors.primaryDark} src={icon.file} style={{ width: 56, height: 56 }} />
+                <Avatar
+                  color={Colors.primaryDark}
+                  src={icon.file}
+                  style={{ width: 56, height: 56 }}
+                />
               </Grid>
               <Grid item lg={6} sm={6} md={6} xs={6}>
                 <div onClick={handleSubmit} className={classes.submitbutton}>
@@ -218,10 +261,14 @@ const DisplayAstrologerBanner = ({ dispatch, astrologerBannerData }) => {
 
   return (
     <div className={classes.container}>
-      <div className={classes.box}>
-        {astrologerBannerData && displayTable()}
-        {editModal()}
-      </div>
+      {!astrologerBannerData ? (
+        <CircularProgress />
+      ) : (
+        <div className={classes.box}>
+          {astrologerBannerData && displayTable()}
+          {editModal()}
+        </div>
+      )}
     </div>
   );
 };
@@ -232,4 +279,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });
 
-export default connect(mapStateToProps, mapDispatchToProps)(DisplayAstrologerBanner);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DisplayAstrologerBanner);

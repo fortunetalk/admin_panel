@@ -121,13 +121,18 @@ const TermsAndConditions = ({ dispatch, termsAndConditionData, isLoading }) => {
 
   return (
     <div className={classes.container}>
-      <div className={classes.box}>
-        {termsAndConditionData && displayTable()}
-        {editModal()}
-        {viewModal()}
-      </div>
+      {!termsAndConditionData ? (
+        <CircularProgress />
+      ) : (
+        <div className={classes.box}>
+          {termsAndConditionData && displayTable()}
+          {editModal()}
+          {viewModal()}
+        </div>
+      )}
     </div>
   );
+
     function displayTable() {
       return (
         <Grid container spacing={1}>

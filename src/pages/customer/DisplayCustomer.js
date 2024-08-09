@@ -10,14 +10,9 @@ import {
   MenuItem,
   Dialog,
   DialogContent,
-  CircularProgress
+  CircularProgress,
 } from "@mui/material";
-import {
-
-  CloseRounded,
-  AddCircleRounded
-
-} from "@mui/icons-material";
+import { CloseRounded, AddCircleRounded } from "@mui/icons-material";
 import MaterialTable from "material-table";
 import { Colors } from "../../assets/styles.js";
 
@@ -37,93 +32,95 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
   const [profilePicture, setProfilePicture] = useState({
     file: "",
     bytes: "",
-  })
-  const [error, setError] =useState('')
+  });
+  const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
-    customerId: '',
-    firstName:'',
-    lastName:'',
-    name: '',
-    email: '',
-    mobileNumber: '',
-    gender: '',
-    dob: '',
-    tob: '',
+    customerId: "",
+    firstName: "",
+    lastName: "",
+    name: "",
+    email: "",
+    mobileNumber: "",
+    gender: "",
+    dob: "",
+    tob: "",
     birthAddress: {
-      birthPlace: '',
-      latitude: '',
-      longitude: ''
+      birthPlace: "",
+      latitude: "",
+      longitude: "",
     },
-    currentAddress: '',
-    occupation: '',
-    problem: '',
-    walletBalance: '',
-    googleId: '',
-    facebookId: '',
-    status: '',
+    currentAddress: "",
+    occupation: "",
+    problem: "",
+    walletBalance: "",
+    googleId: "",
+    facebookId: "",
+    status: "",
     profilePicture: { file: "", bytes: "" },
-    referCode:'',
-
+    referCode: "",
   });
 
-  useEffect(function () {
-    dispatch(CustomerActions.getAllCustomer());
-  }, [dispatch]);
+  useEffect(
+    function () {
+      dispatch(CustomerActions.getAllCustomer());
+    },
+    [dispatch]
+  );
 
   const formatDate = (date) => {
-    if (!date) return '';
+    if (!date) return "";
     const d = new Date(date);
-    let month = '' + (d.getMonth() + 1);
-    let day = '' + d.getDate();
+    let month = "" + (d.getMonth() + 1);
+    let day = "" + d.getDate();
     const year = d.getFullYear();
-  
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
-  
-    return [year, month, day].join('-');
+
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
+
+    return [year, month, day].join("-");
   };
 
   const formatTime = (time) => {
-    if (!time) return '';
+    if (!time) return "";
     const date = new Date(`1970-01-01T${time}Z`);
-    const hours = String(date.getUTCHours()).padStart(2, '0');
-    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+    const hours = String(date.getUTCHours()).padStart(2, "0");
+    const minutes = String(date.getUTCMinutes()).padStart(2, "0");
     return `${hours}:${minutes}`;
   };
-  
-
 
   const handleOpen = (rowData) => {
     setOpen(true);
-    console.log('timeOfBirth',rowData.timeOfBirth)
+    console.log("timeOfBirth", rowData.timeOfBirth);
     setFormData({
-      customerId: rowData?._id || '',
-      firstName: rowData?.firstName || '',
-      lastName: rowData?.lastName || '',
-      name: rowData?.customerName || '',
-      email: rowData?.email || '',
-      mobileNumber: rowData?.phoneNumber || '',
-      gender: rowData?.gender || '',
+      customerId: rowData?._id || "",
+      firstName: rowData?.firstName || "",
+      lastName: rowData?.lastName || "",
+      name: rowData?.customerName || "",
+      email: rowData?.email || "",
+      mobileNumber: rowData?.phoneNumber || "",
+      gender: rowData?.gender || "",
       dob: formatDate(rowData?.dateOfBirth),
       tob: formatTime(rowData?.timeOfBirth),
       birthAddress: {
-        birthPlace: rowData?.birthAddress?.birthPlace || '',
-        latitude: rowData?.birthAddress?.latitude || '',
-        longitude: rowData?.birthAddress?.longitude || ''
+        birthPlace: rowData?.birthAddress?.birthPlace || "",
+        latitude: rowData?.birthAddress?.latitude || "",
+        longitude: rowData?.birthAddress?.longitude || "",
       },
-      currentAddress: rowData?.currentAddress.city || '',
-      occupation: rowData?.occupation || '',
-      problem: rowData?.problem || '',
-      walletBalance: rowData?.walletBalance || '',
-      googleId: rowData?.googleId || '',
-      facebookId: rowData?.facebookId || '',
-      status: rowData?.status || '',
-      profilePicture: { file: rowData.image, bytes: rowData.image } || { file: '', bytes: '' },
-      referCode: rowData?.referCode
+      currentAddress: rowData?.currentAddress.city || "",
+      occupation: rowData?.occupation || "",
+      problem: rowData?.problem || "",
+      walletBalance: rowData?.walletBalance || "",
+      googleId: rowData?.googleId || "",
+      facebookId: rowData?.facebookId || "",
+      status: rowData?.status || "",
+      profilePicture: { file: rowData.image, bytes: rowData.image } || {
+        file: "",
+        bytes: "",
+      },
+      referCode: rowData?.referCode,
     });
   };
-  
 
   const handleError = (input, value) => {
     setError((prev) => ({ ...prev, [input]: value }));
@@ -136,7 +133,7 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
 
   const validation = () => {
     var isValid = true;
-   
+
     // if (!formData.phoneNumber) {
     //   handleError("phoneNumber", "Phone Number is required");
     //   isValid = false;
@@ -168,27 +165,30 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
   const handleView = (rowData) => {
     setViewData(true);
     setFormData({
-      customerId: rowData.customerUniqueId || '',
-      name: rowData.customerName || '',
-      email: rowData.email || '',
-      mobileNumber: rowData.phoneNumber || '',
-      gender: rowData.gender || '',
-      dob: rowData.dateOfBirth || '',
-      tob: rowData.timeOfBirth || '',
+      customerId: rowData.customerUniqueId || "",
+      name: rowData.customerName || "",
+      email: rowData.email || "",
+      mobileNumber: rowData.phoneNumber || "",
+      gender: rowData.gender || "",
+      dob: rowData.dateOfBirth || "",
+      tob: rowData.timeOfBirth || "",
       birthAddress: {
-        birthPlace: rowData.birthPlaceAddress?.birthPlace || '',
-        latitude: rowData.birthPlaceAddress?.latitude || '',
-        longitude: rowData.birthPlaceAddress?.longitude || ''
+        birthPlace: rowData.birthPlaceAddress?.birthPlace || "",
+        latitude: rowData.birthPlaceAddress?.latitude || "",
+        longitude: rowData.birthPlaceAddress?.longitude || "",
       },
-      currentAddress: rowData.currentAddress.city || '',
-      occupation: rowData.occupation || '',
-      problem: rowData.problem || '',
-      walletBalance: rowData.walletBalance || '',
-      googleId: rowData.googleId || '',
-      facebookId: rowData.facebookId || '',
-      status: rowData.status || '',
-      profilePicture: { file: rowData.profileImage, bytes: rowData.profileImage } || { file: '', bytes: '' },
-      referCode: rowData.referCode
+      currentAddress: rowData.currentAddress.city || "",
+      occupation: rowData.occupation || "",
+      problem: rowData.problem || "",
+      walletBalance: rowData.walletBalance || "",
+      googleId: rowData.googleId || "",
+      facebookId: rowData.facebookId || "",
+      status: rowData.status || "",
+      profilePicture: {
+        file: rowData.profileImage,
+        bytes: rowData.profileImage,
+      } || { file: "", bytes: "" },
+      referCode: rowData.referCode,
     });
   };
 
@@ -214,7 +214,6 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
     });
   };
 
-
   const handleOrderHistory = (rowData) => {
     navigate("/displayCustomerOrderHistory", {
       state: { customerData: rowData },
@@ -229,12 +228,15 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
 
   return (
     <div className={classes.container}>
-      <Loader />
-      <div className={classes.box}>
-        {customerListData && displayTable()}
-        {editModal()}
-        {viewModal()}
-      </div>
+      {!customerListData ? (
+        <CircularProgress />
+      ) : (
+        <div className={classes.box}>
+          {customerListData && displayTable()}
+          {editModal()}
+          {viewModal()}
+        </div>
+      )}
     </div>
   );
 
@@ -249,7 +251,10 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
               {
                 title: "S.No",
                 editable: "never",
-                render: rowData => Array.isArray(customerListData) ? customerListData.indexOf(rowData) + 1 : 'N/A'
+                render: (rowData) =>
+                  Array.isArray(customerListData)
+                    ? customerListData.indexOf(rowData) + 1
+                    : "N/A",
               },
               { title: "Customer ID", field: "customerUniqueId" },
               { title: "Name", field: "customerName" },
@@ -289,7 +294,6 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
                   </div>
                 ),
               },
-           
             ]}
             options={propStyles.tableStyles}
             style={{ fontSize: "1.4rem" }}
@@ -346,236 +350,236 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
             </div>
           </Grid>
           <Grid item lg={6} md={6} sm={12} xs={12}>
-  <TextField
-    label="Customer ID"
-    value={formData.customerId}
-    variant="outlined"
-    fullWidth
-    InputProps={{
-      readOnly: true,
-    }}
-  />
-</Grid>
+            <TextField
+              label="Customer ID"
+              value={formData.customerId}
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
 
-<Grid item lg={6} md={6} sm={12} xs={12}>
-  <TextField
-    label="Name"
-    value={formData.name}
-    name="name"
-    variant="outlined"
-    fullWidth
-    InputProps={{
-      readOnly: true,
-    }}
-  />
-</Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <TextField
+              label="Name"
+              value={formData.name}
+              name="name"
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
 
-<Grid item lg={6} md={6} sm={12} xs={12}>
-  <TextField
-    label="Email"
-    value={formData.email}
-    name="email"
-    variant="outlined"
-    fullWidth
-    InputProps={{
-      readOnly: true,
-    }}
-  />
-</Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <TextField
+              label="Email"
+              value={formData.email}
+              name="email"
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
 
-<Grid item lg={6} md={6} sm={12} xs={12}>
-  <TextField
-    label="Mobile Number"
-    value={formData.mobileNumber}
-    name="mobileNumber"
-    variant="outlined"
-    fullWidth
-    InputProps={{
-      readOnly: true,
-    }}
-  />
-</Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <TextField
+              label="Mobile Number"
+              value={formData.mobileNumber}
+              name="mobileNumber"
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
 
-<Grid item lg={6} md={6} sm={12} xs={12}>
-  <TextField
-    label="Gender"
-    value={formData.gender}
-    name="gender"
-    variant="outlined"
-    fullWidth
-    InputProps={{
-      readOnly: true,
-    }}
-  />
-</Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <TextField
+              label="Gender"
+              value={formData.gender}
+              name="gender"
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
 
-<Grid item lg={6} md={6} sm={12} xs={12}>
-  <TextField
-    label="Date of Birth"
-    value={formData.dob}
-    name="dob"
-    variant="outlined"
-    fullWidth
-    InputProps={{
-      readOnly: true,
-    }}
-  />
-</Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <TextField
+              label="Date of Birth"
+              value={formData.dob}
+              name="dob"
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
 
-<Grid item lg={6} md={6} sm={12} xs={12}>
-  <TextField
-    label="Time of Birth"
-    value={formData.tob}
-    name="tob"
-    variant="outlined"
-    fullWidth
-    InputProps={{
-      readOnly: true,
-    }}
-  />
-</Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <TextField
+              label="Time of Birth"
+              value={formData.tob}
+              name="tob"
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
 
-<Grid item lg={6} md={6} sm={12} xs={12}>
-  <TextField
-    label="Birth Place"
-    value={formData.birthAddress.birthPlace}
-    name="birthAddress.birthPlace"
-    variant="outlined"
-    fullWidth
-    InputProps={{
-      readOnly: true,
-    }}
-  />
-</Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <TextField
+              label="Birth Place"
+              value={formData.birthAddress.birthPlace}
+              name="birthAddress.birthPlace"
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
 
-<Grid item lg={6} md={6} sm={12} xs={12}>
-  <TextField
-    label="Latitude"
-    value={formData.birthAddress.latitude}
-    name="birthAddress.latitude"
-    variant="outlined"
-    fullWidth
-    InputProps={{
-      readOnly: true,
-    }}
-  />
-</Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <TextField
+              label="Latitude"
+              value={formData.birthAddress.latitude}
+              name="birthAddress.latitude"
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
 
-<Grid item lg={6} md={6} sm={12} xs={12}>
-  <TextField
-    label="Longitude"
-    value={formData.birthAddress.longitude}
-    name="birthAddress.longitude"
-    variant="outlined"
-    fullWidth
-    InputProps={{
-      readOnly: true,
-    }}
-  />
-</Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <TextField
+              label="Longitude"
+              value={formData.birthAddress.longitude}
+              name="birthAddress.longitude"
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
 
-<Grid item lg={6} md={6} sm={12} xs={12}>
-  <TextField
-    label="Current Address"
-    value={formData.currentAddress}
-    name="currentAddress"
-    variant="outlined"
-    fullWidth
-    InputProps={{
-      readOnly: true,
-    }}
-  />
-</Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <TextField
+              label="Current Address"
+              value={formData.currentAddress}
+              name="currentAddress"
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
 
-<Grid item lg={6} md={6} sm={12} xs={12}>
-  <TextField
-    label="Occupation"
-    value={formData.occupation}
-    name="occupation"
-    variant="outlined"
-    fullWidth
-    InputProps={{
-      readOnly: true,
-    }}
-  />
-</Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <TextField
+              label="Occupation"
+              value={formData.occupation}
+              name="occupation"
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
 
-<Grid item lg={6} md={6} sm={12} xs={12}>
-  <TextField
-    label="Problem"
-    value={formData.problem}
-    name="problem"
-    variant="outlined"
-    fullWidth
-    InputProps={{
-      readOnly: true,
-    }}
-  />
-</Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <TextField
+              label="Problem"
+              value={formData.problem}
+              name="problem"
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
 
-<Grid item lg={6} md={6} sm={12} xs={12}>
-  <TextField
-    label="Wallet Balance"
-    value={formData.walletBalance}
-    name="walletBalance"
-    variant="outlined"
-    fullWidth
-    InputProps={{
-      readOnly: true,
-    }}
-  />
-</Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <TextField
+              label="Wallet Balance"
+              value={formData.walletBalance}
+              name="walletBalance"
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
 
-<Grid item lg={6} md={6} sm={12} xs={12}>
-  <TextField
-    label="Google ID"
-    value={formData.googleId}
-    name="googleId"
-    variant="outlined"
-    fullWidth
-    InputProps={{
-      readOnly: true,
-    }}
-  />
-</Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <TextField
+              label="Google ID"
+              value={formData.googleId}
+              name="googleId"
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
 
-<Grid item lg={6} md={6} sm={12} xs={12}>
-  <TextField
-    label="Facebook ID"
-    value={formData.facebookId}
-    name="facebookId"
-    variant="outlined"
-    fullWidth
-    InputProps={{
-      readOnly: true,
-    }}
-  />
-</Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <TextField
+              label="Facebook ID"
+              value={formData.facebookId}
+              name="facebookId"
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
 
-<Grid item lg={6} md={6} sm={12} xs={12}>
-  <TextField
-    label="Status"
-    value={formData.status}
-    name="status"
-    variant="outlined"
-    fullWidth
-    InputProps={{
-      readOnly: true,
-    }}
-  />
-</Grid>
-<Grid item lg={6} md={6} sm={12} xs={12}>
-  <TextField
-    label="Refer Code"
-    value={formData.referCode}
-    name="referCode"
-    variant="outlined"
-    fullWidth
-    InputProps={{
-      readOnly: true,
-    }}
-  />
-</Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <TextField
+              label="Status"
+              value={formData.status}
+              name="status"
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <TextField
+              label="Refer Code"
+              value={formData.referCode}
+              name="referCode"
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
 
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <label htmlFor="">Image</label>
@@ -589,7 +593,6 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
               }}
             />
           </Grid>
-
         </Grid>
       );
     };
@@ -615,16 +618,18 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
               </div>
             </div>
           </Grid>
-         
+
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
               label="First Name"
               helperText={error.firstName}
               value={formData.firstName}
-              onChange={(event) => setFormData((prevFormData) => ({
-                ...prevFormData,
-                firstName: event.target.value
-              }))}
+              onChange={(event) =>
+                setFormData((prevFormData) => ({
+                  ...prevFormData,
+                  firstName: event.target.value,
+                }))
+              }
               variant="outlined"
               fullWidth
             />
@@ -634,10 +639,12 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
               label="Last Name"
               helperText={error.lastName}
               value={formData.lastName}
-              onChange={(event) => setFormData((prevFormData) => ({
-                ...prevFormData,
-                lastName: event.target.value
-              }))}
+              onChange={(event) =>
+                setFormData((prevFormData) => ({
+                  ...prevFormData,
+                  lastName: event.target.value,
+                }))
+              }
               variant="outlined"
               fullWidth
             />
@@ -647,10 +654,12 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
               label="Customer Name"
               helperText={error.name}
               value={formData.name}
-              onChange={(event) => setFormData((prevFormData) => ({
-                ...prevFormData,
-                name: event.target.value
-              }))}
+              onChange={(event) =>
+                setFormData((prevFormData) => ({
+                  ...prevFormData,
+                  name: event.target.value,
+                }))
+              }
               variant="outlined"
               fullWidth
             />
@@ -662,10 +671,12 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
               <Select
                 labelId="select-label"
                 value={formData.gender}
-                onChange={(event) => setFormData((prevFormData) => ({
-                  ...prevFormData,
-                  gender: event.target.value
-                }))}
+                onChange={(event) =>
+                  setFormData((prevFormData) => ({
+                    ...prevFormData,
+                    gender: event.target.value,
+                  }))
+                }
                 variant="outlined"
               >
                 <MenuItem value="Male">Male</MenuItem>
@@ -680,10 +691,12 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
               helperText={error.phoneNumber}
               value={formData.mobileNumber}
               onFocus={() => handleError("phoneNumber", null)}
-              onChange={(event) => setFormData((prevFormData) => ({
-                ...prevFormData,
-                mobileNumber: event.target.value
-              }))}
+              onChange={(event) =>
+                setFormData((prevFormData) => ({
+                  ...prevFormData,
+                  mobileNumber: event.target.value,
+                }))
+              }
               variant="outlined"
               fullWidth
             />
@@ -692,14 +705,16 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
               type="date"
-              label="DOB"  
+              label="DOB"
               helperText={error.dob}
               value={formData.dob}
               onFocus={() => handleError("dob", null)}
-              onChange={(event) => setFormData((prevFormData) => ({
-                ...prevFormData,
-                dob: event.target.value
-              }))}
+              onChange={(event) =>
+                setFormData((prevFormData) => ({
+                  ...prevFormData,
+                  dob: event.target.value,
+                }))
+              }
               variant="outlined"
               fullWidth
             />
@@ -707,14 +722,16 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
               type="time"
-              label="Time of Birth"  
+              label="Time of Birth"
               helperText={error.tob}
               value={formData.tob}
               onFocus={() => handleError("tob", null)}
-              onChange={(event) => setFormData((prevFormData) => ({
-                ...prevFormData,
-                tob: event.target.value
-              }))}
+              onChange={(event) =>
+                setFormData((prevFormData) => ({
+                  ...prevFormData,
+                  tob: event.target.value,
+                }))
+              }
               variant="outlined"
               fullWidth
             />
@@ -727,10 +744,12 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
               helperText={error.occupation}
               value={formData.occupation}
               onFocus={() => handleError("occupation", null)}
-              onChange={(event) => setFormData((prevFormData) => ({
-                ...prevFormData,
-                occupation: event.target.value
-              }))}
+              onChange={(event) =>
+                setFormData((prevFormData) => ({
+                  ...prevFormData,
+                  occupation: event.target.value,
+                }))
+              }
               variant="outlined"
               fullWidth
             />
@@ -741,10 +760,12 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
               helperText={error.problem}
               value={formData.problem}
               onFocus={() => handleError("problem", null)}
-              onChange={(event) => setFormData((prevFormData) => ({
-                ...prevFormData,
-                problem: event.target.value
-              }))}
+              onChange={(event) =>
+                setFormData((prevFormData) => ({
+                  ...prevFormData,
+                  problem: event.target.value,
+                }))
+              }
               variant="outlined"
               fullWidth
             />
@@ -756,10 +777,12 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
               <Select
                 labelId="select-label"
                 value={formData.status}
-                onChange={(event) => setFormData((prevFormData) => ({
-                  ...prevFormData,
-                  status: event.target.value
-                }))}
+                onChange={(event) =>
+                  setFormData((prevFormData) => ({
+                    ...prevFormData,
+                    status: event.target.value,
+                  }))
+                }
                 variant="outlined"
               >
                 <MenuItem value="Active">Active</MenuItem>
@@ -768,9 +791,9 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
               <div className={classes.errorstyles}>{error.gender}</div>
             </FormControl>
           </Grid>
-         
+
           <Grid item lg={6} sm={6} md={6} xs={6}>
-          <div onClick={handleSubmit} className={classes.submitbutton}>
+            <div onClick={handleSubmit} className={classes.submitbutton}>
               {isLoading ? <CircularProgress size={24} /> : "Submit"}
             </div>
           </Grid>
@@ -796,7 +819,6 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
 const mapStateToProps = (state) => ({
   customerListData: state.customer.customerListData,
   isLoading: state.customer.isLoading,
-
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

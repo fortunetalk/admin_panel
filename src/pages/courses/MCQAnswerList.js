@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useStyles, propStyles } from "../../assets/styles.js";
-import { Grid, TextField, InputLabel, Select,FormControl, MenuItem, Avatar } from "@mui/material";
+import { Grid, TextField, InputLabel, Select,FormControl, MenuItem, Avatar, CircularProgress } from "@mui/material";
 import MaterialTable from "material-table";
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import { CloseRounded } from "@mui/icons-material";
-import Swal from "sweetalert2";
 import * as Actions from "../../redux/Actions/mcqActions.js";
 import Loader from "../../Components/loading/Loader.js";
 import { connect } from "react-redux";
-import { secondsToHMS } from "../../utils/services.js";
-import moment from "moment";
 
 const MCQAnswerList = ({ dispatch, mcqAnswerListData }) => {
   const classes = useStyles();
@@ -22,11 +16,12 @@ const MCQAnswerList = ({ dispatch, mcqAnswerListData }) => {
 
   return (
     <div className={classes.container}>
-      <Loader />
+      {
+        !mcqAnswerListData ? <CircularProgress/> :
       <div className={classes.box}>
         {mcqAnswerListData && displayTable()}
-        {/* {editModal()} */}
       </div>
+      }
     </div>
   );
   function displayTable() {

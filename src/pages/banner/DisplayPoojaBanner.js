@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { propStyles, useStyles } from "../../assets/styles.js";
-import {  Grid, TextField, FormControl, InputLabel, MenuItem, Select, Avatar } from "@mui/material";
+import {  Grid, TextField, FormControl, InputLabel, MenuItem, Select, Avatar, CircularProgress } from "@mui/material";
 import { Colors } from "../../assets/styles.js";
 import { AddCircleRounded } from "@mui/icons-material";
 import logo_icon from "../../assets/images/logo_icon.png";
@@ -113,12 +113,18 @@ const DisplayPoojaBanner = ({ dispatch, poojaBannerData }) => {
 
   return (
     <div className={classes.container}>
-      <div className={classes.box}>
-        {poojaBannerData && displayTable()}
-        {editModal()}
-      </div>
+      {!poojaBannerData ? (
+        <CircularProgress />
+      ) : (
+        <div className={classes.box}>
+          {poojaBannerData && displayTable()}
+          {editModal()}
+        </div>
+      )}
     </div>
   );
+
+
   function displayTable() {
     return (
       <Grid container spacing={1}>

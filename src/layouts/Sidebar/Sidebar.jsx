@@ -155,11 +155,11 @@ const routes = [
         name: "Recharge History",
         icon: <BiAbacus />,
       },
-      {
-        path: "/displayFirstRechargeOffer",
-        name: "First Recharge Offer",
-        icon: <BiAbacus />,
-      },
+      // {
+      //   path: "/displayFirstRechargeOffer",
+      //   name: "First Recharge Offer",
+      //   icon: <BiAbacus />,
+      // },
     ],
   },
   {

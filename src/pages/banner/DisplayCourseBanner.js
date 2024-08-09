@@ -8,6 +8,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  CircularProgress
 } from "@mui/material";
 import { AddCircleRounded } from "@mui/icons-material";
 import MaterialTable from "material-table";
@@ -115,10 +116,14 @@ const DisplayCourseBanner = ({ dispatch, courseBannerData, courseData }) => {
 
   return (
     <div className={classes.container}>
-      <div className={classes.box}>
-        {courseBannerData && displayTable()}
-        {editModal()}
-      </div>
+      {!courseBannerData ? (
+        <CircularProgress />
+      ) : (
+        <div className={classes.box}>
+          {courseBannerData && displayTable()}
+          {editModal()}
+        </div>
+      )}
     </div>
   );
 

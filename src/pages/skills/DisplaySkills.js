@@ -115,10 +115,13 @@ const DisplaySkills = ({ dispatch, skillsData }) => {
 
   return (
     <div className={classes.container}>
+      {
+        !skillsData ? <CircularProgress/> :
       <div className={classes.box}>
         {skillsData && displayTable()}
         {editModal()}
       </div>
+      }
     </div>
   );
 

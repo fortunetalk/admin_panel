@@ -3,18 +3,7 @@ import { Colors, propStyles, useStyles } from "../../../assets/styles.js";
 import { Avatar, Grid, Button, TextField, InputLabel, FormControl, MenuItem, Select } from "@mui/material";
 import { AddCircleRounded, Close } from "@mui/icons-material";
 import MaterialTable from "material-table";
-import {
-  base_url,
-  delete_country,
-  get_countrys,
-  update_country,
-} from "../../../utils/Constants.js";
-import {
-  deleteData,
-  getData,
-  postData,
-  putData,
-} from "../../../utils/FetchNodeServices.js";
+
 import { useNavigate } from "react-router-dom";
 import Dialog from "@mui/material/Dialog";
 import {DialogContent, CircularProgress } from "@mui/material";
@@ -110,12 +99,17 @@ const Country = ({  countryData }) => {
     dispatch(settingActions.countryStateList({ countryId: rowData._id }));
     navigate(`/setting/country/${rowData._id}`)
   }
+
   return (
     <div className={classes.container}>
-      <div className={classes.box}>
-        {countryData && displayTable()}
-        {editModal()}
-      </div>
+      {!countryData ? (
+        <CircularProgress />
+      ) : (
+        <div className={classes.box}>
+          {countryData && displayTable()}
+          {editModal()}
+        </div>
+      )}
     </div>
   );
 

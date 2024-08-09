@@ -36,7 +36,7 @@ export const updateDemoClassAdminStatus = payload =>({
 })
 
 export const deleteDemoClass = payload =>({
-  type: actionTypes.UPDATE_DEMO_CLASS_ONGOING_STATUS,
+  type: actionTypes.DELETE_DEMO_CLASS,
   payload
 })
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useStyles, propStyles } from "../../assets/styles.js";
-import { Avatar, Grid, FormControl, InputLabel, Select, DialogContent, Dialog, MenuItem, TextField } from "@mui/material";
+import { Avatar, Grid, FormControl, InputLabel, Select, DialogContent, Dialog, MenuItem, TextField, CircularProgress } from "@mui/material";
 import { AddCircleRounded } from "@mui/icons-material";
 import MaterialTable from "material-table";
 import { useNavigate } from "react-router-dom";
@@ -118,11 +118,13 @@ const AstrologerNotification = ({ astrologerNotificationData, dispatch }) => {
 
   return (
     <div className={classes.container}>
-      <Loader />
+      {
+        !astrologerNotificationData ? <CircularProgress/> :
       <div className={classes.box}>
         {astrologerNotificationData && displayTable()}
         {editModal()}
       </div>
+      }
     </div>
   );
 

@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { propStyles, useStyles } from "../../assets/styles.js";
-import {  Grid, TextField, FormControl, InputLabel, MenuItem, Select, Avatar } from "@mui/material";
-import { Colors } from "../../assets/styles.js";
+import {  Grid, TextField, FormControl, InputLabel, MenuItem, Select, Avatar, CircularProgress } from "@mui/material";
 import { AddCircleRounded } from "@mui/icons-material";
 import logo_icon from "../../assets/images/logo_icon.png";
 import MaterialTable from "material-table";
@@ -121,12 +120,17 @@ const DisplayTestimonial = ({ dispatch, testimonialData }) => {
 
   return (
     <div className={classes.container}>
-      <div className={classes.box}>
-        {testimonialData && displayTable()}
-        {editModal()}
-      </div>
+      {!testimonialData ? (
+        <CircularProgress />
+      ) : (
+        <div className={classes.box}>
+          {testimonialData && displayTable()}
+          {editModal()}
+        </div>
+      )}
     </div>
   );
+
   function displayTable() {
     return (
       <Grid container spacing={1}>

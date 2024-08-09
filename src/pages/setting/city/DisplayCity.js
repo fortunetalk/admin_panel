@@ -102,10 +102,14 @@ const DisplayCity = ({  cityData, stateData }) => {
 
   return (
     <div className={classes.container}>
-      <div className={classes.box}>
-        {cityData && displayTable()}
-        {editModal()}
-      </div>
+      {!cityData ? (
+        <CircularProgress />
+      ) : (
+        <div className={classes.box}>
+          {cityData && displayTable()}
+          {editModal()}
+        </div>
+      )}
     </div>
   );
 

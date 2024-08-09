@@ -9,6 +9,7 @@ import {
   Select,
   MenuItem,
   Tooltip,
+  CircularProgress
 } from "@mui/material";
 import { AddCircleRounded, PictureAsPdf } from "@mui/icons-material";
 import MaterialTable from "material-table";
@@ -266,11 +267,14 @@ const DisplayDemoClass = ({
 
   return (
     <div className={classes.container}>
+      {
+        !demoClassData ? <CircularProgress/> :
       <div className={classes.box}>
         {demoClassData && displayTable()}
         {editModal()}
         {viewModal()}
       </div>
+      }
     </div>
   );
 

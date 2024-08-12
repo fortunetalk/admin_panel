@@ -373,23 +373,6 @@ const routes = [
     ],
   },
   {
-    path: "/askAstrologer",
-    name: "Ask Astrologer",
-    icon: <BiAbacus />,
-    subRoutes: [
-      {
-        path: "/displayTitle",
-        name: "Title",
-        icon: <BiAbacus />,
-      },
-      {
-        path: "/displayListOfQuestions",
-        name: "List Of Questions",
-        icon: <BiAbacus />,
-      },
-    ],
-  },
-  {
     path: "/reports",
     name: "Reports",
     icon: <BiAbacus />,
@@ -435,16 +418,7 @@ const routes = [
 
     ],
   },
-  // {
-  //   path: "/displayPrivacyPolicy",
-  //   name: "Privacy Policy",
-  //   icon: <BiAbacus />,
-  // },
-  {
-    path: "/appVersion",
-    name: "App Version",
-    icon: <BiAbacus />,
-  },
+
 ];
 
 const inputAnimation = {

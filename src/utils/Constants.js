@@ -1,11 +1,11 @@
 // export const base_url = "http://165.232.182.110:4000/";
 // export const api_url = "http://165.232.182.110:4000/api/";
 
-// export const base_url = "http://localhost:8000/";
-// export const api_url = "http://localhost:8000/api/";
+export const base_url = "http://localhost:8000/";
+export const api_url = "http://localhost:8000/api/";
 
-export const base_url = "http://97.74.83.200:4000/";
-export const api_url = "http://97.74.83.200:4000/api/";
+// export const base_url = "http://97.74.83.200:4000/";
+// export const api_url = "http://97.74.83.200:4000/api/";
 
 
 // admin login 
@@ -110,6 +110,7 @@ export const delete_customer = "admin/customer/delete"
 export const customer_chat_history = "customers/customers-chat-history"
 export const customer_call_history = "customers/customers-call-history"
 export const customer_payment_history = "admin/customers-payment-list"
+export const recharge_by_admin = "admin/recharge_by_admin"
 
 export const add_customer_recharge = 'admin/recharge-customer-wallet'
 

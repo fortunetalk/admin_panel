@@ -16,7 +16,7 @@ import { CloseRounded, AddCircleRounded } from "@mui/icons-material";
 import MaterialTable from "material-table";
 import { Colors } from "../../assets/styles.js";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import moment from "moment";
 import Swal from "sweetalert2";
 import { connect } from "react-redux";
@@ -26,6 +26,7 @@ import Loader from "../../Components/loading/Loader.js";
 const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
   const classes = useStyles();
   const navigate = useNavigate();
+
 
   const [open, setOpen] = useState(false);
   const [viewData, setViewData] = useState(false);
@@ -142,7 +143,7 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
   };
 
   const handleSubmit = () => {
-    if (validation()) {
+
       const formPayload = new FormData();
       formPayload.append("customerId", formData.customerId);
       formPayload.append("firstName", formData.firstName);
@@ -159,7 +160,6 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
 
       dispatch(CustomerActions.updateCustomer(formPayload));
       setOpen(false);
-    }
   };
 
   const handleView = (rowData) => {
@@ -214,9 +214,9 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
     });
   };
 
-  const handleOrderHistory = (rowData) => {
-    navigate("/displayCustomerOrderHistory", {
-      state: { customerData: rowData },
+  const addRecharge = (rowData) => {
+    navigate("/rechargeByAdmin", {
+      state: { customerId: rowData?._id },
     });
   };
 
@@ -318,6 +318,11 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
                       title: rowData?.customerName,
                     })
                   ),
+              },
+              {
+                icon: "add_circle",
+                tooltip: "Add Recharge",
+                onClick: (event, rowData) => addRecharge(rowData),
               },
               {
                 icon: () => (

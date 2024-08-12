@@ -1,7 +1,7 @@
 import { call, put, race, takeEvery, takeLeading } from "redux-saga/effects";
 import * as actionTypes from "../actionTypes";
 import { ApiRequest } from "../../utils/apiRequest";
-import { api_url, add_customer,change_customer_status, delete_customer, get_all_customers, update_customer } from "../../utils/Constants";
+import { api_url, add_customer,change_customer_status, delete_customer, get_all_customers, update_customer, recharge_by_admin } from "../../utils/Constants";
 import Swal from "sweetalert2";
 import { Colors } from "../../assets/styles";
 
@@ -165,37 +165,27 @@ function* updateCustomer(actions) {
   try {
     const { payload } = actions;
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
     const response = yield ApiRequest.postRequest({
       url: api_url + update_customer,
       header: "application/json",
       data: payload,
     });
 
-
-    if (response) {
-      if (response.success) {
-        // yield call(payload?.onSuccess(false)) 
-        Swal.fire({
-          icon: "success",
-          title: "Customer Updated Successfull",
-          showConfirmButton: false,
-          timer: 2000,
-        });
-        yield put({ type: actionTypes.GET_ALL_CUSTOMER, payload: response.data })
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Warning",
-          text: response?.message,
-          showConfirmButton: false,
-          timer: 2000,
-        });
-      }
+    // Check if the response was successful
+    if (response?.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Customer Updated Successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      yield put({ type: actionTypes.GET_ALL_CUSTOMER, payload: response.data });
     } else {
       Swal.fire({
         icon: "error",
-        title: "Server Error",
-        text: "Failed to edit customer",
+        title: "Warning",
+        text: response?.message || "Failed to edit customer",
         showConfirmButton: false,
         timer: 2000,
       });
@@ -204,9 +194,65 @@ function* updateCustomer(actions) {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   } catch (e) {
     console.log(e);
+    Swal.fire({
+      icon: "error",
+      title: "Server Error",
+      text: "An error occurred while updating the customer",
+      showConfirmButton: false,
+      timer: 2000,
+    });
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   }
 }
+
+function* addRecharge(actions) {
+  try {
+    const { payload } = actions;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    const response = yield ApiRequest.postRequest({
+      url: api_url + recharge_by_admin,
+      header: "application/json",
+      data: payload,
+    });
+
+    if (response.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Recharge Added Successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      yield put({ type: actionTypes.GET_ALL_CUSTOMER, payload: response.data });
+    } else if (response.error) {
+      // Check if the error is a validation error and display appropriate message
+      const errorMessage = response.error.message || "Server Error";
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: errorMessage,
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      yield put({ type: actionTypes.SET_IS_LOADING, payload: response.error });
+    }
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+  } catch (e) {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    console.log(e);
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: e.message,
+      showConfirmButton: false,
+      timer: 2000,
+    });
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: e });
+  }
+  finally{
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+  }
+}
+
 
 export default function* customerSaga() {
   yield takeLeading(actionTypes.ADD_CUSTOMER, addCustomer)
@@ -214,4 +260,5 @@ export default function* customerSaga() {
   yield takeLeading(actionTypes.DELETE_CUSTOMER, deleteCustomers)
   yield takeLeading(actionTypes.BAN_CUSTOMER, updateCustomerStatus)
   yield takeLeading(actionTypes.UPDATE_CUSTOMER, updateCustomer)
+  yield takeLeading(actionTypes.ADD_RECHARGE_BY_ADMIN, addRecharge)
 }

@@ -114,7 +114,7 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
               { title: "Call Price", field: "callPrice" },
               { title: "Chat Price", field: "chatPrice" },
               { title: "Commission Price", field: "commissionPrice" },
-              { title: "Deducted Amount", field: "deductedAmount" },
+              { title: "Total Charge", field: "deductedAmount" },
               {
                 title: "Duration",
                 render: (rowData) => (

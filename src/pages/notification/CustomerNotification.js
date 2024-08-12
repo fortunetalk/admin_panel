@@ -62,18 +62,7 @@ const CustomerNotification = ({ customerNotificationData, dispatch }) => {
     }
   };
 
-  const validation = () => {
-    var isValid = true;
-    if (!status) {
-      handleError("status", "Please Select Status");
-      isValid = false;
-    }
-
-    return isValid;
-  };
-
   const handleSubmit = async () => {
-    if (validation()) {
       var formData = new FormData();
       formData.append("notificationId", notificationId);
       formData.append("image", file);
@@ -85,7 +74,6 @@ const CustomerNotification = ({ customerNotificationData, dispatch }) => {
 
       dispatch(NotificationActions.updateCustomerNotification(formData));
       setOpen(false);
-    }
   };
 
   const handleClickOpen = (rowData) => {
@@ -118,6 +106,8 @@ const CustomerNotification = ({ customerNotificationData, dispatch }) => {
     setOpen(false);
   };
 
+  const reverseData = Array.isArray(customerNotificationData) ? customerNotificationData.slice().reverse() : [];
+
 
   return (
     <div className={classes.container}>
@@ -137,14 +127,14 @@ const CustomerNotification = ({ customerNotificationData, dispatch }) => {
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
             title="Customer Notifications"
-            data={customerNotificationData}
+            data={reverseData}
             columns={[
               {
                 title: "S.No",
                 editable: "never",
                 render: (rowData) =>
-                  Array.isArray(customerNotificationData)
-                    ? customerNotificationData.indexOf(rowData) + 1
+                  Array.isArray(reverseData)
+                    ? reverseData.indexOf(rowData) + 1
                     : "N/A",
               },
               { title: "Title", field: "title" },

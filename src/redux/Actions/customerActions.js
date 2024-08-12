@@ -27,3 +27,7 @@ export const deleteCustomer = payload =>({
     type: actionTypes.DELETE_CUSTOMER,
     payload
 })
+export const addRechargeByAdmin = payload =>({
+    type: actionTypes.ADD_RECHARGE_BY_ADMIN,
+    payload
+})

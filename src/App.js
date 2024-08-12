@@ -39,12 +39,6 @@ import AddGift from "./pages/gift/AddGift";
 import DisplayAstroblog from "./pages/astroblog/DisplayAstroblog";
 import AddAstroblog from "./pages/astroblog/AddAstroblog";
 import AddAppverstion from "./pages/appverstion/AddAppverstion";
-import DisplayAnnouncements from "./pages/announcements/DisplayAnnouncements";
-import AddAnnouncements from "./pages/announcements/AddAnnouncements";
-import DisplayTitle from "./pages/askastrologer/DisplayTitle";
-import AddTitle from "./pages/askastrologer/AddTitle";
-import DisplayListOfQuestion from "./pages/askastrologer/DisplayListOfQuestion";
-import AddListOfQuestion from "./pages/askastrologer/AddListOfQuestion";
 
 import DisplayFaq from "./pages/pages/DisplayFaq";
 import AddFaq from "./pages/pages/AddFaq";
@@ -135,6 +129,7 @@ import DisplayLiveCourseHistory from "./pages/history/DisplayLiveCourseHistory";
 import RegisterLiveClassHistory from "./pages/courses/RegisterLiveClassHistory";
 import FullChatHistory from "./pages/history/FullChatHistory";
 import MCQAnswerList from "./pages/courses/MCQAnswerList";
+import AddRechargeByAdmin from "./pages/customer/AddRechargeByAdmin";
 
 function App() {
   return (
@@ -149,6 +144,7 @@ function App() {
           <Route path="/displaySubSkills" element={<DisplaySubSkills />} />
           <Route path="/rechargePlan" element={<RechargePlan/>} />
           <Route path="/addRechargePlan" element={<AddRechargePlans />} />
+          <Route path="/rechargeByAdmin" element={<AddRechargeByAdmin/>} />
           <Route
             path="/displayRechargePlan"
             element={<DisplayRechargePlans />}
@@ -214,18 +210,6 @@ function App() {
           <Route path="/displayAstroblog" element={<DisplayAstroblog />} />
           <Route path="/AddAstroblog" element={<AddAstroblog />} />
           <Route path="/appVersion" element={<AddAppverstion />} />
-          <Route
-            path="/displayAnnouncements"
-            element={<DisplayAnnouncements />}
-          />
-          <Route path="/AddAnnouncements" element={<AddAnnouncements />} />
-          <Route path="/displayTitle" element={<DisplayTitle />} />
-          <Route path="/AddTitle" element={<AddTitle />} />
-          <Route
-            path="/displayListOfQuestions"
-            element={<DisplayListOfQuestion />}
-          />
-          <Route path="/AddListOfQuestion" element={<AddListOfQuestion />} />
 
           <Route path="/displayFaq" element={<DisplayFaq />} />
           <Route path="/AddFaq" element={<AddFaq />} />

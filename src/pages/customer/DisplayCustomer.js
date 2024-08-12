@@ -132,16 +132,6 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
     setOpen(false);
   };
 
-  const validation = () => {
-    var isValid = true;
-
-    // if (!formData.phoneNumber) {
-    //   handleError("phoneNumber", "Phone Number is required");
-    //   isValid = false;
-    // }
-    return isValid;
-  };
-
   const handleSubmit = () => {
 
       const formPayload = new FormData();
@@ -216,6 +206,12 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
 
   const addRecharge = (rowData) => {
     navigate("/rechargeByAdmin", {
+      state: { customerId: rowData?._id },
+    });
+  };
+
+  const viewCustomerHistory = (rowData) => {
+    navigate("/customerRechargeHistory", {
       state: { customerId: rowData?._id },
     });
   };
@@ -323,6 +319,11 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
                 icon: "add_circle",
                 tooltip: "Add Recharge",
                 onClick: (event, rowData) => addRecharge(rowData),
+              },
+              {
+                icon: "history",
+                tooltip: "View Customer History",
+                onClick: (event, rowData) => viewCustomerHistory(rowData),
               },
               {
                 icon: () => (

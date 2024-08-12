@@ -1,7 +1,7 @@
 import { call, put, race, takeEvery, takeLeading } from "redux-saga/effects";
 import * as actionTypes from "../actionTypes";
 import { ApiRequest } from "../../utils/apiRequest";
-import { api_url, add_customer,change_customer_status, delete_customer, get_all_customers, update_customer, recharge_by_admin } from "../../utils/Constants";
+import { api_url, add_customer,change_customer_status, delete_customer, get_all_customers, update_customer, recharge_by_admin, admin_recharge_history } from "../../utils/Constants";
 import Swal from "sweetalert2";
 import { Colors } from "../../assets/styles";
 
@@ -253,6 +253,32 @@ function* addRecharge(actions) {
   }
 }
 
+function* rechargeHistory(actions) {
+  try {
+    const { payload } = actions;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
+    const response = yield ApiRequest.postRequest({
+      url: api_url + admin_recharge_history,
+      header: "application/json",
+      data: payload,
+    });
+
+    if (response.success) {
+      yield put({
+        type: actionTypes.CUSTOMER_RECHARGE_HISTORY_LIST,
+        payload: response.data,
+      });
+    } else if (response.error) {
+      const errorMessage = response.error.message || "Server Error";
+      yield put({ type: actionTypes.SET_IS_LOADING, payload: errorMessage });
+    }
+  } catch (e) {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: e.message });
+  } finally {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+  }
+}
 
 export default function* customerSaga() {
   yield takeLeading(actionTypes.ADD_CUSTOMER, addCustomer)
@@ -261,4 +287,5 @@ export default function* customerSaga() {
   yield takeLeading(actionTypes.BAN_CUSTOMER, updateCustomerStatus)
   yield takeLeading(actionTypes.UPDATE_CUSTOMER, updateCustomer)
   yield takeLeading(actionTypes.ADD_RECHARGE_BY_ADMIN, addRecharge)
+  yield takeLeading(actionTypes.CUSTOMER_RECHARGE_HISTORY_LIST, rechargeHistory)
 }

@@ -130,6 +130,7 @@ import RegisterLiveClassHistory from "./pages/courses/RegisterLiveClassHistory";
 import FullChatHistory from "./pages/history/FullChatHistory";
 import MCQAnswerList from "./pages/courses/MCQAnswerList";
 import AddRechargeByAdmin from "./pages/customer/AddRechargeByAdmin";
+import CustomerRechargeHistory from "./pages/customer/CustomerRechargeHistory";
 
 function App() {
   return (
@@ -145,6 +146,7 @@ function App() {
           <Route path="/rechargePlan" element={<RechargePlan/>} />
           <Route path="/addRechargePlan" element={<AddRechargePlans />} />
           <Route path="/rechargeByAdmin" element={<AddRechargeByAdmin/>} />
+          <Route path="/customerRechargeHistory" element={<CustomerRechargeHistory/>} />
           <Route
             path="/displayRechargePlan"
             element={<DisplayRechargePlans />}

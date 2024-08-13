@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import "../dashboard/dashboard.css";
 import { useStyles } from "../dashboard/dashboardStyles";
+import {CircularProgress} from "@mui/material";
+import { useNavigate } from 'react-router-dom'
 import Chart from "react-apexcharts";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import ChatIcon from '@mui/icons-material/Chat';
@@ -17,18 +19,55 @@ import {
   List,
   ListItem,
   ListItemText,
+  Paper, 
+  Typography
 } from "@mui/material";
 import { connect } from "react-redux";
 import * as DashboardActions from "../../redux/Actions/dashboardActions";
 import Loader from "../../Components/loading/Loader";
 
+const DashboardCard = ({ title, value, background, route }) => {
+  const navigate = useNavigate();
+  return (
+    <Paper
+      elevation={3}
+      sx={{
+        background,
+        padding: '16px',
+        borderRadius: '8px',
+        color: '#fff',
+        height: '200px', // Increase the height here
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        cursor: 'pointer',
+        '&:hover': {
+          opacity: 0.8,
+        },
+      }}
+      onClick={() => navigate(route)} 
+    >
+      <Box display="flex" flexDirection="column" alignItems="center">
+        <Typography variant="h4" component="h2" gutterBottom>
+          {title}
+        </Typography>
+        <Typography variant="h2" component="h1" fontWeight="bold">
+           {value}
+        </Typography>
+      </Box>
+    </Paper>
+  );
+};
+
 const Dashboard = ({ dashboardData, dispatch }) => {
-  // console.log(dashboardData);
+
   var classes = useStyles();
 
-  // useEffect(() => {
-  //   dispatch(DashboardActions.getDashboard());
-  // }, []);
+  useEffect(() => {
+    dispatch(DashboardActions.getDashboard());
+  }, []);
+
 
   const [chartData, setChartData] = useState({
     options: {},
@@ -97,129 +136,74 @@ const Dashboard = ({ dashboardData, dispatch }) => {
     }
   }, []);
 
+  const cardsData = [
+    {
+      title: 'Total Recharge',
+      value: `₹ ${dashboardData?.totalRechargeAmount?.toFixed(2)}`,
+      background: 'linear-gradient(to right, #9333ea, #7c3aed)',
+      route: '/displayRechargePlan',
+    },
+    {
+      title: 'Total Users',
+      value: dashboardData?.customerCount,
+      background: 'linear-gradient(to right, #f50057, #ff4081)',
+      route: '/displayCustomer'
+    },
+    {
+      title: 'Total Astrologers',
+      value: dashboardData?.astrologerCount,
+      background: 'linear-gradient(to right, #2e7d32, #4caf50)',
+      route: '/astrologers/displayAstrologer'
+    },
+    {
+      title: 'Total Courses',
+      value: dashboardData?.totalCourseCount,
+      background: 'linear-gradient(to right, #1e88e5, #42a5f5)',
+      route: '/displayCourses'
+    },
+    {
+      title: 'Live Course Registrations',
+      value: dashboardData?.totalRegisteredLiveCourse,
+      background: 'linear-gradient(to right, #9333ea, #7c3aed)',
+      route: '/displayLiveClass'
+    },
+    {
+      title: 'Demo Course Registrations',
+      value: dashboardData?.totalRegisteredDemoCourse,
+      background: 'linear-gradient(to right, #ff9800, #ffc107)',
+      route: '/displayDemoClass'
+    },
+  ];
+
+  if (!dashboardData) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
     <div className={classes.dashboard_container}>
-      <Loader />
       <div className={classes.dashboard_inner_container}>
-        <h2 style={{ color: "black", marginBottom: "1rem" }}>User</h2>
-        <Grid container spacing={2}>
-          <Grid item lg={8} sm={12} md={12} xs={12}>
-            <FormControl ref={formRef} sx={{ width: "100%" }}>
-              <InputLabel id="demo-simple-select-autowidth-label">
-                Select an Option
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-autowidth-label"
-                id="demo-simple-select-autowidth"
-                autoWidth
-                label="Select an Option"
-                MenuProps={{ PaperProps: { style: { width: formWidth } } }}
-              >
-                <MenuItem value={10}>User App</MenuItem>
-                <MenuItem value={20}>Website</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item lg={4} sm={12} md={12} xs={12}>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100%",
-                gap: '4px',
-                width: "100%",
-                borderRadius: "10px",
-                backgroundColor: "#F27806",
-                p: 1,
-                textAlign: "center",
-                fontWeight: "1rem",
-                cursor: 'pointer'
-              }}
-            >
-              <RemoveRedEyeIcon sx={{ fontSize: '2rem' }} />
-              <span style={{ fontSize: '2rem', fontWeight: "700" }}>4556</span>
-            </Box>
 
+      <Box sx={{ flexGrow: 1, padding: 3 }}>
+      <Grid container spacing={3} >
+        {cardsData?.map((item, index) => (
+          <Grid item xs={12} sm={6} md={4} key={index} >
+            <DashboardCard {...item} />
           </Grid>
-        </Grid>
+        ))}
+      </Grid>
+    </Box>
 
-        <Grid container spacing={2} sx={{ mt: 4, mb: 4 }}>
-          <Grid item lg={4} sm={12} md={12} xs={12}>
-            <div className={classes.dashboard_card}>
-              <div className="donut">
-                <CurrencyRupeeIcon style={{ height: "8rem", width: "8rem", color: '#F27806' }} />
-
-                <h3 style={{ color: '#F27806' }}>Total Recharge</h3>
-                <h1 style={{ color: '#F27806' }}>₹ 23,74566</h1>
-              </div>
-            </div>
-          </Grid>
-          <Grid item lg={4} sm={12} md={12} xs={12}>
-            <div className={classes.dashboard_card}>
-              <div className="donut">
-                <ChatIcon style={{ height: "8rem", width: "8rem", color: '#F27806' }} />
-
-                <h3 style={{ color: '#F27806' }}>Total Chat</h3>
-                <h1 style={{ color: '#F27806' }}>4566</h1>
-              </div>
-            </div>
-          </Grid>
-          <Grid item lg={4} sm={12} md={12} xs={12}>
-            <div className={classes.dashboard_card}>
-              <div className="donut">
-                <CallIcon style={{ height: "8rem", width: "8rem", color: '#F27806' }} />
-
-                <h3 style={{ color: '#F27806' }}>Total Call</h3>
-                <h1 style={{ color: '#F27806' }}>6766</h1>
-              </div>
-            </div>
-          </Grid>
-
-          {/* <Grid item lg={3} sm={12} md={12} xs={12}>
-            <div className={classes.dashboard_card}>
-              <div className="donut" style={{ paddingTop: "20px" }}>
-                <img
-                  src={require("../../assets/images/comment.png")}
-                  alt="users"
-                  style={{ height: "6rem", width: "6rem" }}
-                />
-                <h1 style={{ paddingTop: "10px" }}>
-                  {dashboardData && dashboardData?.total_chat}
-                </h1>
-                <h4>No. Of Chats</h4>
-              </div>
-            </div>
-          </Grid>
-          <Grid item lg={6} sm={12} md={12} xs={12}>
-            <div className={classes.graph_card}>
-              <div className="donut">
-                <Chart
-                  options={chartData.options}
-                  series={chartData.series}
-                  type="donut"
-                  width="330"
-                />
-              </div>
-            </div>
-          </Grid>
-          <Grid item lg={6} sm={12} md={12} xs={12}>
-            <div className={classes.graph_card}>
-              <div className="app">
-                <div className="row">
-                  <div className="mixed-chart">
-                    <Chart
-                      options={data.options}
-                      series={data.series}
-                      type="bar"
-                      width="330"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Grid> */}
-        </Grid>
 
         <h2 style={{ color: "black", marginBottom: "1rem" }}>Astrologer</h2>
         <Grid container spacing={2}>
@@ -264,7 +248,7 @@ const Dashboard = ({ dashboardData, dispatch }) => {
               }}
             >
               <RemoveRedEyeIcon sx={{ fontSize: '2rem' }} />
-              <span style={{ fontSize: '2rem', fontWeight: "700" }}>4556</span>
+              <span style={{ fontSize: '2rem', fontWeight: "700" }}>{dashboardData?.astrologerCount}</span>
             </Box>
 
           </Grid>

@@ -30,6 +30,12 @@ const dashboard = (state = initialState, actions) => {
         dashboardData: payload,
       };
     }
+    case actionTypes.GET_DASHBOARD: {
+      return {
+        ...state,
+        dashboardData: payload,
+      };
+    }
 
     default: {
       return state;

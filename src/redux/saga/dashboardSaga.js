@@ -9,7 +9,6 @@ import {
 
 function* getDashboard(actions) {
   try {
-    const { payload } = actions;
 
     const response = yield ApiRequest.getRequest({
       url: api_url + get_dashboard,
@@ -18,7 +17,7 @@ function* getDashboard(actions) {
     if (response?.success) {
       yield put({
         type: actionTypes.SET_DASHBOARD,
-        payload: response?.dashboard,
+        payload: response?.data,
       });
     }
 

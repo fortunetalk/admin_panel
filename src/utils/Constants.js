@@ -13,8 +13,6 @@ export const admin_login='admin/login';
 export const admin_logout='admin/logout';
 export const admin_change_password='admin/change_password';
 
-
-
 export const get_dashboard = 'admin/get_dashboard'
 
 //Skills

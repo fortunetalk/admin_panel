@@ -18,8 +18,6 @@ const CustomerRechargeHistory = ({ dispatch, rechargeHistoryData }) => {
     }
   }, [customerId, dispatch]);
 
-  console.log('rechargeHistoryData',rechargeHistoryData)
-
   return (
     <div className={classes.container}>
       {!rechargeHistoryData ? (
@@ -48,7 +46,12 @@ const CustomerRechargeHistory = ({ dispatch, rechargeHistoryData }) => {
               },
               { title: "Customer Name", field: "customerId.customerName" },
               { title: "Email", field: "customerId.email" },
-              { title: "Amount", field: "amount" },
+              { title: "Amount", field: "amount",
+                render: (rowData) => {
+                  const balance = Number(rowData.amount).toFixed(2);
+                  return balance;
+                }
+               },
               { title: "Total Amount", field: "totalAmount" },
               { title: "Discount", field: "discount" },
               { title: "Offer", field: "offer" },

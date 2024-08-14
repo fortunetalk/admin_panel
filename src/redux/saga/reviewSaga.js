@@ -20,7 +20,7 @@ function* getAstrologersReviews() {
     if (response.success) {
       yield put({
         type: actionTypes.SET_ASTROLOGERS_REVIEWS,
-        payload: response.review.reverse(),
+        payload: response.data,
       });
     }
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });

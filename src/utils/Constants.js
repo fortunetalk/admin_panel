@@ -50,8 +50,8 @@ export const get_main_expertise = "admin/get-all-main-expertise";
 export const update_main_expertise = "admin/update-main-expertise";
 export const delete_main_expertise = "admin/delete-main-expertise";
 
-export const add_review = "admin/add-review";
-export const get_review = "admin/get-all-review";
+export const add_review = "api/admin/add_reviews";
+export const get_review = "admin/get_all_reviews";
 export const update_review = "admin/update-review";
 export const delete_review = "admin/delete-review";
 export const verify_review = 'admin/verify-review'

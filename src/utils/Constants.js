@@ -1,11 +1,11 @@
 // export const base_url = "http://165.232.182.110:4000/";
 // export const api_url = "http://165.232.182.110:4000/api/";
 
-// export const base_url = "http://localhost:8000/";
-// export const api_url = "http://localhost:8000/api/";
+export const base_url = "http://localhost:8000/";
+export const api_url = "http://localhost:8000/api/";
 
-export const base_url = "http://97.74.83.200:4000/";
-export const api_url = "http://97.74.83.200:4000/api/";
+// export const base_url = "http://97.74.83.200:4000/";
+// export const api_url = "http://97.74.83.200:4000/api/";
 
 
 // admin login 
@@ -13,9 +13,7 @@ export const admin_login='admin/login';
 export const admin_logout='admin/logout';
 export const admin_change_password='admin/change_password';
 
-
-
-export const get_dashboard = 'admin/get_dashboard'
+export const get_dashboard = 'admin/dashboard'
 
 //Skills
 export const add_skill = "admin/add-newSkill";
@@ -52,8 +50,8 @@ export const get_main_expertise = "admin/get-all-main-expertise";
 export const update_main_expertise = "admin/update-main-expertise";
 export const delete_main_expertise = "admin/delete-main-expertise";
 
-export const add_review = "admin/add-review";
-export const get_review = "admin/get-all-review";
+export const add_review = "api/admin/add_reviews";
+export const get_review = "admin/get_all_reviews";
 export const update_review = "admin/update-review";
 export const delete_review = "admin/delete-review";
 export const verify_review = 'admin/verify-review'
@@ -110,6 +108,8 @@ export const delete_customer = "admin/customer/delete"
 export const customer_chat_history = "customers/customers-chat-history"
 export const customer_call_history = "customers/customers-call-history"
 export const customer_payment_history = "admin/customers-payment-list"
+export const recharge_by_admin = "admin/recharge_by_admin"
+export const admin_recharge_history = "admin/admin_recharge_history"
 
 export const add_customer_recharge = 'admin/recharge-customer-wallet'
 
@@ -135,8 +135,10 @@ export const update_astrologer_notification_status = 'admin/astrologer/notificat
 export const delete_astrologer_notification = 'admin/astrologer/notification/delete'
 
 export const get_chat_history = 'admin/chat_history'
+export const delete_chat_history = 'admin/chat_history/delete'
 export const get_admin_earnig_history = 'admin/get_call_report'
 export const get_call_history = 'admin/call_history'
+export const delete_call_history = 'admin/call_history/delete'
 export const get_recharge_history = 'admin/recharge/history'
 export const get_wallet_payments = 'admin/get_wallet_payments'
 export const get_demo_class_history = 'admin/booked_demo_class'
@@ -257,6 +259,7 @@ export const update_mcq = 'admin/mcq/update'
 export const change_mcq_status = 'admin/mcq/change_status'
 export const change_mcq_admin_status = 'admin/mcq/change_admin_status'
 export const delete_mcq = 'admin/mcq/delete'
+export const mcq_answer_list='admin/mcqAnsList'
 
 //LIVE CLASS
 export const create_live_class='admin/live_class/add_new'

@@ -147,7 +147,7 @@ function* updateBlogStatus(action) {
 function* deleteBlog(actions) {
   try {
     const { payload } = actions;
-    const result = yield call(Swal.fire, {
+    const result = yield Swal.fire({
       title: `Are you sure to Delete`,
       text: "You won't be able to revert this!",
       icon: "warning",
@@ -160,7 +160,7 @@ function* deleteBlog(actions) {
     if (result.isConfirmed) {
       yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
-      const response = yield call(ApiRequest.postRequest, {
+      const response = yield ApiRequest.postRequest({
         url: api_url + delete_blog,
         header: "json",
         data: {
@@ -171,12 +171,12 @@ function* deleteBlog(actions) {
       if (response.success) {
         Swal.fire({
           icon: "success",
-          title: "Blog Deleted Successfully",
+          title: "Blog Deleted Successfull",
           showConfirmButton: false,
           timer: 2000,
         });
 
-        yield put({ type: actionTypes.BLOG_LIST, payload: null });
+        yield put({ type: actionTypes.DELETE_BLOG, payload: null });
       } else {
         Swal.fire({
           icon: "error",
@@ -187,10 +187,11 @@ function* deleteBlog(actions) {
         });
       }
     }
+
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   } catch (e) {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
     console.log(e);
-  } finally {
-    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   }
 }
 

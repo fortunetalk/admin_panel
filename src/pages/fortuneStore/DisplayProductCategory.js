@@ -8,6 +8,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  CircularProgress
 } from "@mui/material";
 import { AddCircleRounded } from "@mui/icons-material";
 import MaterialTable from "material-table";
@@ -135,10 +136,13 @@ const DisplayProductCategory = ({ productCategoryData }) => {
 
   return (
     <div className={classes.container}>
-      <div className={classes.box}>
+      {
+        !productCategoryData ? <CircularProgress/> :
+        <div className={classes.box}>
         {displayTable()}
         {editModal()}
       </div>
+      }
     </div>
   );
   function displayTable() {

@@ -138,13 +138,18 @@ const PrivacyPolicy = ({ dispatch, privacyPolicyData, isLoading }) => {
 
   return (
     <div className={classes.container}>
-      <div className={classes.box}>
-        {privacyPolicyData && displayTable()}
-        {editModal()}
-        {viewModal()}
-      </div>
+      {!privacyPolicyData ? (
+        <CircularProgress />
+      ) : (
+        <div className={classes.box}>
+          {privacyPolicyData && displayTable()}
+          {editModal()}
+          {viewModal()}
+        </div>
+      )}
     </div>
   );
+
   function displayTable() {
     return (
       <Grid container spacing={1}>

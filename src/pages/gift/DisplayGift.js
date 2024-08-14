@@ -121,12 +121,17 @@ const DisplayGift = ({ dispatch, giftData, isLoading }) => {
 
   return (
     <div className={classes.container}>
-      <div className={classes.box}>
-        {giftData && displayTable()}
-        {editModal()}
-      </div>
+      {!giftData ? (
+        <CircularProgress />
+      ) : (
+        <div className={classes.box}>
+          {giftData && displayTable()}
+          {editModal()}
+        </div>
+      )}
     </div>
   );
+
   function displayTable() {
     return (
       <Grid container spacing={1}>

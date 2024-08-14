@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { propStyles, useStyles } from "../../assets/styles.js";
-import {  Grid, TextField, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {  Grid, TextField, FormControl, InputLabel, MenuItem, Select, CircularProgress } from "@mui/material";
 import { Colors } from "../../assets/styles.js";
 import { AddCircleRounded } from "@mui/icons-material";
 import MaterialTable from "material-table";
@@ -93,10 +93,13 @@ const RechargePlan = ({ dispatch, rechargePlanData }) => {
 
   return (
     <div className={classes.container}>
+      {
+        !rechargePlanData ? <CircularProgress/> :
       <div className={classes.box}>
         {rechargePlanData && displayTable()}
         {editModal()}
       </div>
+      }
     </div>
   );
   function displayTable() {

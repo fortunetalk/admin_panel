@@ -2,6 +2,7 @@ import * as actionTypes from "../actionTypes";
 
 const initialState = {
   mcqData: null,
+  mcqAnswerListData: null,
   isLoading: false,
 
 };
@@ -45,6 +46,14 @@ const mcq = (state = initialState, actions) => {
       mcqData: payload,
     };
   }
+  
+  case actionTypes.MCQ_ANSWER_LIST: {
+    return {
+      ...state,
+      mcqAnswerListData: payload,
+    };
+  }
+
   case actionTypes.SET_IS_LOADING: {
     return {
       ...state,

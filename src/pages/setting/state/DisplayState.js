@@ -97,10 +97,14 @@ const DisplayState = ({  stateData, countryData }) => {
 
   return (
     <div className={classes.container}>
-      <div className={classes.box}>
-        {stateData && displayTable()}
-        {editModal()}
-      </div>
+      {!stateData ? (
+        <CircularProgress />
+      ) : (
+        <div className={classes.box}>
+          {stateData && displayTable()}
+          {editModal()}
+        </div>
+      )}
     </div>
   );
 

@@ -3,6 +3,7 @@ import { useStyles, propStyles } from "../../assets/styles.js";
 import {
     Grid,
     TextField,
+    CircularProgress
 } from "@mui/material";
 import MaterialTable from "material-table";
 import { useNavigate } from "react-router-dom";
@@ -58,13 +59,15 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
 
     return (
         <div className={classes.container}>
-            <Loader />
-            <div className={classes.box}>
-                {rechargeHistoryData && displayTable()}
-                {editModal()}
-            </div>
+          {
+            !rechargeHistoryData ? <CircularProgress/> :
+          <div className={classes.box}>
+            {rechargeHistoryData && displayTable()}
+            {editModal()}
+          </div>
+          }
         </div>
-    );
+      );
 
     function displayTable() {
         return (

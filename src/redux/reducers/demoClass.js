@@ -2,7 +2,6 @@ import * as actionTypes from "../actionTypes";
 
 const initialState = {
   demoClassData: null,
-  bookedDemoClassData: null,
   isLoading: false,
 
 };
@@ -70,12 +69,7 @@ const demoClass = (state = initialState, actions) => {
         demoClassData: payload,
       };
     }
-    case actionTypes.BOOKED_DEMO_CLASS_LIST: {
-      return {
-        ...state,
-        bookedDemoClassData: payload,
-      };
-    }
+
 
     default: {
       return state;

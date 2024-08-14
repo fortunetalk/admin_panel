@@ -8,7 +8,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Typography
+  CircularProgress
 } from "@mui/material";
 import { AddCircleRounded } from "@mui/icons-material";
 import MaterialTable from "material-table";
@@ -173,13 +173,18 @@ const DisplayPooja = ({ poojaData, poojaCategoryData }) => {
     }
   };
 
+  const reverseData = Array.isArray(poojaData) ? poojaData.slice().reverse() : [];
+
 
   return (
     <div className={classes.container}>
-      <div className={classes.box}>
+      {
+        !poojaData ? <CircularProgress/> :
+        <div className={classes.box}>
         {displayTable()}
         {editModal()}
       </div>
+      }
     </div>
   );
   function displayTable() {
@@ -188,14 +193,14 @@ const DisplayPooja = ({ poojaData, poojaCategoryData }) => {
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
             title="Pooja's"
-            data={poojaData}
+            data={reverseData}
             columns={[
               {
                 title: "S.No",
                 editable: "never",
                 render: (rowData) =>
-                  Array.isArray(poojaData)
-                    ? poojaData?.indexOf(rowData) + 1
+                  Array.isArray(reverseData)
+                    ? reverseData?.indexOf(rowData) + 1
                     : "N/A",
               },
               { title: "Title", field: "title" },

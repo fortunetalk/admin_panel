@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Colors, useStyles, propStyles } from '../../assets/styles.js'
-import { Grid, TextField, MenuItem, FormControl, InputLabel, Select } from "@mui/material";
+import { Grid, TextField, MenuItem, FormControl, InputLabel, Select, CircularProgress } from "@mui/material";
 
 import { AddCircleRounded, Close } from '@mui/icons-material';
 import MaterialTable from "material-table";
 import logo_icon from '../../assets/images/logo_icon.png'
-import { get_first_recharge_offer, get_skills, update_first_recharge_offer, update_skill } from "../../utils/Constants.js";
-import { getData, postData } from '../../utils/FetchNodeServices.js'
 import { useNavigate } from "react-router-dom";
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -78,12 +76,15 @@ const DisplayFirstRechargeOffer = ({dispatch, firstRechareOfferData}) => {
 
     return (
         <div className={classes.container}>
-            <div className={classes.box}>
-                {firstRechareOfferData && displayTable()}
-                {editModal()}
-            </div>
-        </div >
-    );
+          {
+            !firstRechargeOfferData ? <CircularProgress/> :
+          <div className={classes.box}>
+            {firstRechargeOfferData && displayTable()}
+            {editModal()}
+          </div>
+          }
+        </div>
+      );
 
 
     function displayTable() {

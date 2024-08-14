@@ -3,7 +3,8 @@ import { propStyles, useStyles } from "../../assets/styles.js";
 import {
   Avatar,
   Grid,
-  Box
+  Box,
+  CircularProgress
 } from "@mui/material";
 import MaterialTable from "material-table";
 import Swal from "sweetalert2";
@@ -61,9 +62,13 @@ const GalleryRequest = ({
 
   return (
     <div className={classes.container}>
-      <div className={classes.box}>
-        {galleryRequestData && displayTable()}
-      </div>
+      {!galleryRequestData ? (
+        <CircularProgress />
+      ) : (
+        <div className={classes.box}>
+          {galleryRequestData && displayTable()}
+        </div>
+      )}
     </div>
   );
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useStyles, propStyles } from "../../assets/styles.js";
-import { Grid, TextField, InputLabel, Select,FormControl, MenuItem, Avatar } from "@mui/material";
+import { Grid, TextField, InputLabel, Select,FormControl, MenuItem, Avatar, CircularProgress } from "@mui/material";
 import MaterialTable from "material-table";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
@@ -44,13 +44,15 @@ const DisplayLiveCourseHistory = ({ dispatch, liveCourseHistoryData }) => {
 
   return (
     <div className={classes.container}>
-      <Loader />
+      {
+        !liveCourseHistoryData ? <CircularProgress/> :
       <div className={classes.box}>
         {liveCourseHistoryData && displayTable()}
-        {/* {editModal()} */}
       </div>
+      }
     </div>
   );
+
   function displayTable() {
     return (
       <Grid container spacing={1}>

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { propStyles, useStyles } from "../../assets/styles.js";
-import {  Grid, TextField, FormControl, InputLabel, MenuItem, Select, Avatar } from "@mui/material";
+import {  Grid, TextField, FormControl, InputLabel, MenuItem, Select, Avatar, CircularProgress } from "@mui/material";
 import { Colors } from "../../assets/styles.js";
 import { AddCircleRounded } from "@mui/icons-material";
 import logo_icon from "../../assets/images/logo_icon.png";
@@ -132,10 +132,13 @@ const DisplayCourses = ({ dispatch, courseData }) => {
 
   return (
     <div className={classes.container}>
-      <div className={classes.box}>
-        {courseData && displayTable()}
+      {
+        !courseData ? <CircularProgress/> :
+        <div className={classes.box}>
+        {displayTable()}
         {editModal()}
       </div>
+      }
     </div>
   );
   function displayTable() {

@@ -8,6 +8,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  CircularProgress
 } from "@mui/material";
 import { AddCircleRounded } from "@mui/icons-material";
 import MaterialTable from "material-table";
@@ -97,12 +98,17 @@ const DisplayExpertise = ({dispatch, expertiesData}) => {
 
   return (
     <div className={classes.container}>
-      <div className={classes.box}>
-        {expertiesData && displayTable()}
-        {editModal()}
-      </div>
+      {!expertiesData ? (
+        <CircularProgress />
+      ) : (
+        <div className={classes.box}>
+          {expertiesData && displayTable()}
+          {editModal()}
+        </div>
+      )}
     </div>
   );
+
   function displayTable() {
     return (
       <Grid container spacing={1}>

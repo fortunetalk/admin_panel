@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { propStyles, useStyles } from "../../assets/styles.js";
-import {  Grid, TextField, FormControl, InputLabel, MenuItem, Select, Avatar } from "@mui/material";
-import { Colors } from "../../assets/styles.js";
+import {  Grid, TextField, FormControl, InputLabel, MenuItem, Select, Avatar, CircularProgress } from "@mui/material";
 import { AddCircleRounded } from "@mui/icons-material";
 import logo_icon from "../../assets/images/logo_icon.png";
 import MaterialTable from "material-table";
@@ -34,11 +33,12 @@ const DisplayTestimonial = ({ dispatch, testimonialData }) => {
 
   const handleOpen = (rowData) => {
     setOpen(true);
-    settestimonialId(rowData._id);
-    setname(rowData.name);
-    setRating(rowData.rating);
-    setDescription(rowData.description);
-    setStatus(rowData.status);
+    settestimonialId(rowData?._id);
+    setname(rowData?.name);
+    setRating(rowData?.rating);
+    setDescription(rowData?.description);
+    setStatus(rowData?.status);
+    setIcon({ file: rowData?.image, bytes: null });
   };
 
 
@@ -71,31 +71,12 @@ const DisplayTestimonial = ({ dispatch, testimonialData }) => {
         file: URL.createObjectURL(e.target.files[0]),
         bytes: e.target.files[0],
       });
-      handleError("icon", null);
       setFile(e.target.files[0]);
     }
   };
 
-  const validation = () => {
-    var isValid = true;
-    if (!name) {
-      handleError("name", "Please input name");
-      isValid = false;
-    }
-
-    if (!description) {
-      handleError("description", "Please input Description");
-      isValid = false;
-    }
-    if (!file) {
-        handleError("icon", "Please upload an image");
-        isValid = false;
-      }
-    return isValid;
-  };
 
   const handleSubmit = async () => {
-    if (validation()) {
       var formData = new FormData();
       formData.append("status", status);
       formData.append("name", name);
@@ -108,8 +89,6 @@ const DisplayTestimonial = ({ dispatch, testimonialData }) => {
         Actions.updateTestimonial( formData)
       );
     setOpen(false);
-
-    }
   };
 
   const handleClose = useCallback(() => {
@@ -141,12 +120,17 @@ const DisplayTestimonial = ({ dispatch, testimonialData }) => {
 
   return (
     <div className={classes.container}>
-      <div className={classes.box}>
-        {testimonialData && displayTable()}
-        {editModal()}
-      </div>
+      {!testimonialData ? (
+        <CircularProgress />
+      ) : (
+        <div className={classes.box}>
+          {testimonialData && displayTable()}
+          {editModal()}
+        </div>
+      )}
     </div>
   );
+
   function displayTable() {
     return (
       <Grid container spacing={1}>
@@ -237,7 +221,6 @@ const DisplayTestimonial = ({ dispatch, testimonialData }) => {
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
               label="Enter Name"
-              error={error.name ? true : false}
               helperText={error.name}
               value={name}
               onFocus={() => handleError("name", null)}
@@ -259,7 +242,6 @@ const DisplayTestimonial = ({ dispatch, testimonialData }) => {
                   <MenuItem value="Active">Active</MenuItem>
                   <MenuItem value="InActive">InActive</MenuItem>
                 </Select>
-                <div className={classes.errorstyles}>{error.status}</div>
               </FormControl>
             </Grid>
 
@@ -273,7 +255,6 @@ const DisplayTestimonial = ({ dispatch, testimonialData }) => {
             onFocus={() => handleError("rating", null)}
             onChange={handleRatingValueChange}
             helperText={error.rating}
-            error={error.rating ? true : false}
           />
         </Grid>
 
@@ -286,7 +267,7 @@ const DisplayTestimonial = ({ dispatch, testimonialData }) => {
             className={classes.uploadContainer}
           >
             <label className={classes.uploadImageButton}>
-              Upload Picture
+              Change Image
               <input
                 onChange={handleIcon}
                 hidden
@@ -294,7 +275,6 @@ const DisplayTestimonial = ({ dispatch, testimonialData }) => {
                 type="file"
               />
             </label>
-            <div className={classes.errorstyles}>{error.icon}</div>
           </Grid>
           <Grid item lg={2} sm={6} md={2} xs={6}>
             <Avatar src={icon.file} style={{ width: 56, height: 56 }} />
@@ -309,7 +289,6 @@ const DisplayTestimonial = ({ dispatch, testimonialData }) => {
               value={description}
               onChange={(event) => setDescription(event.target.value)}
               variant="outlined"
-              error={error.description ? true : false}
               helperText={error.description}
             />
           </Grid>

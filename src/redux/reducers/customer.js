@@ -2,6 +2,8 @@ import * as actionTypes from "../actionTypes";
 
 const initialState = {
   customerListData: null,
+  addRechargeByAdmin: null,
+  rechargeHistoryData: null,
   isLoading: false,
 };
 
@@ -31,6 +33,18 @@ const customer = (state = initialState, actions) => {
       return {
         ...state,
         customerListData: payload,
+      };
+    }
+    case actionTypes.ADD_RECHARGE_BY_ADMIN: {
+      return {
+        ...state,
+        addRechargeByAdmin: payload,
+      };
+    }
+    case actionTypes.CUSTOMER_RECHARGE_HISTORY_LIST: {
+      return {
+        ...state,
+        rechargeHistoryData: payload,
       };
     }
 

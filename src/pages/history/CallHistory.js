@@ -3,6 +3,7 @@ import { useStyles, propStyles } from "../../assets/styles.js";
 import {
   Grid,
   TextField,
+  CircularProgress
 } from "@mui/material";
 import MaterialTable from "material-table";
 import { useNavigate } from "react-router-dom";
@@ -73,13 +74,17 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
     setViewData(false);
   };
 
+  const reverseData = Array.isArray(callHistoryData) ? callHistoryData.slice().reverse() : [];
+
   return (
     <div className={classes.container}>
-      <Loader />
+      {
+        !callHistoryData ? <CircularProgress/> :
       <div className={classes.box}>
         {callHistoryData && displayTable()}
         {editModal()}
       </div>
+      }
     </div>
   );
   function displayTable() {
@@ -88,12 +93,12 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
             title=" Call History"
-            data={callHistoryData}
+            data={reverseData}
             columns={[
               {
                 title: "S.No",
                 editable: "never",
-                render: (rowData) => callHistoryData.indexOf(rowData) + 1,
+                render: rowData => Array.isArray(reverseData) ? reverseData.indexOf(rowData) + 1 : 'N/A'
               },
 
             //   { title: "Call ID", field: "_id" },
@@ -102,6 +107,13 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                 field: "astrologerId.displayName",
               },
               { title: "Customer Name", field: "customerId.firstName" },
+              { title: "Commission Price", field: "commissionPrice" },
+              { title: "Deducted Amount", field: "deductedAmount",
+                render: (rowData) => {
+                  const balance = Number(rowData.deductedAmount).toFixed(2);
+                  return balance;
+                }
+               },
               {
                 title: "Duration",
                 render: (rowData) => (
@@ -111,24 +123,7 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                   </div>
                 ),
               },
-              {
-                title: "Start Time",
-                render: (rowData) => (
-                  <div>
-                    {rowData?.startTime &&
-                      moment(rowData?.startTime).format("HH:mm:ss A")}
-                  </div>
-                ),
-              },
-              {
-                title: "End time",
-                render: (rowData) => (
-                  <div>
-                    {rowData?.endTime &&
-                      moment(rowData?.endTime).format("HH:mm:ss A")}
-                  </div>
-                ),
-              },
+            
               {
                 title: "Date",
                 render: (rowData) => (
@@ -147,17 +142,17 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                 tooltip: "View Chat History",
                 onClick: (event, rowData) => handleView(rowData),
               },
-            //   {
-            //     icon: "chat",
-            //     tooltip: "Summary",
-            //     onClick: (event, rowData) =>
-            //       navigate("/chatSummary", {
-            //         state: {
-            //           astroID: rowData?.astrologerId,
-            //           customerID: rowData?.customerId,
-            //         },
-            //       }),
-            //   },
+              {
+                icon: "delete",
+                tooltip: "Delete Chat History",
+                onClick: (event, rowData) =>
+                  dispatch(
+                    HistoryActions.deleteCallHistory({
+                      callId: rowData?._id,
+                    })
+                  ),
+              },
+          
             ]}
           />
         </Grid>

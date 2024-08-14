@@ -3,6 +3,7 @@ import { propStyles, useStyles } from "../../assets/styles.js";
 import {
   Avatar,
   Grid,
+  CircularProgress
 } from "@mui/material";
 import MaterialTable from "material-table";
 import Swal from "sweetalert2";
@@ -60,9 +61,13 @@ const ProfileRequest = ({
 
   return (
     <div className={classes.container}>
-      <div className={classes.box}>
-        {profileRequestData && displayTable()}
-      </div>
+      {!profileRequestData ? (
+        <CircularProgress />
+      ) : (
+        <div className={classes.box}>
+          {profileRequestData && displayTable()}
+        </div>
+      )}
     </div>
   );
 

@@ -8,6 +8,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Box,
+  CircularProgress
 } from "@mui/material";
 import { AddCircleRounded } from "@mui/icons-material";
 import MaterialTable from "material-table";
@@ -54,6 +56,7 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
     // fetchAllCustomers()
     // fetchAllAstrologers()
   }, []);
+
 
   const fetchAllCustomers = async () => {
     var response = await getData(get_all_customers);
@@ -152,6 +155,23 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
 
   const {} = state;
 
+  const reverseData = Array.isArray(astrologersReviews) ? astrologersReviews.slice().reverse() : [];
+
+  if (!astrologersReviews) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
     <div className={classes.container}>
       <div className={classes.box}>
@@ -161,6 +181,7 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
     </div>
   );
 
+
   function displayTable() {
     return (
       <Grid container spacing={1}>
@@ -168,54 +189,54 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
             title=" All Review"
-            data={astrologersReviews}
+            data={reverseData}
             columns={[
               {
                 title: "S.No",
                 editable: "never",
-                render: (rowData) => astrologersReviews.indexOf(rowData) + 1,
+                render: (rowData) => reverseData.indexOf(rowData) + 1,
               },
-              { title: "Customer", field: "customer.customerName" },
-              { title: "astrologer", field: "astrologer.astrologerName" },
+              { title: "Customer", field: "customerId.customerName" },
+              { title: "astrologer", field: "astrologerId.displayName" },
               { title: "Comments", field: "comments", filtering: false },
-              { title: "ratings", field: "ratings", filtering: false },
-              {
-                title: "Verify",
-                field: "isVerified",
-                filtering: false,
-                render: (rowData) => {
-                  return (
-                    <div
-                      onClick={() =>
-                        dispatch(
-                          ReviewActions.updateAstrologerReviewStatus({
-                            isVerify: !rowData.is_verified,
-                            id: rowData?._id,
-                          })
-                        )
-                      }
-                      style={{
-                        backgroundColor: !rowData.is_verified
-                          ? Colors.red_a
-                          : Colors.greenLight,
+              { title: "Rating", field: "rating", filtering: false },
+              // {
+              //   title: "Verify",
+              //   field: "isVerified",
+              //   filtering: false,
+              //   render: (rowData) => {
+              //     return (
+              //       <div
+              //         onClick={() =>
+              //           dispatch(
+              //             ReviewActions.updateAstrologerReviewStatus({
+              //               isVerify: !rowData.is_verified,
+              //               id: rowData?._id,
+              //             })
+              //           )
+              //         }
+              //         style={{
+              //           backgroundColor: !rowData.is_verified
+              //             ? Colors.red_a
+              //             : Colors.greenLight,
 
-                        color: Colors.white,
-                        textAlign: "center",
-                        paddingTop: 5,
-                        paddingBottom: 5,
-                        width: "100%",
-                        fontSize: 14,
-                        fontFamily: "Philospher",
-                        borderRadius: 5,
-                        cursor: "pointer",
-                        alignSelf: "center",
-                      }}
-                    >
-                      {!rowData.is_verified ? "Verify" : "Unverify"}
-                    </div>
-                  );
-                },
-              },
+              //           color: Colors.white,
+              //           textAlign: "center",
+              //           paddingTop: 5,
+              //           paddingBottom: 5,
+              //           width: "100%",
+              //           fontSize: 14,
+              //           fontFamily: "Philospher",
+              //           borderRadius: 5,
+              //           cursor: "pointer",
+              //           alignSelf: "center",
+              //         }}
+              //       >
+              //         {!rowData.is_verified ? "Verify" : "Unverify"}
+              //       </div>
+              //     );
+              //   },
+              // },
             ]}
             options={propStyles.tableStyles}
             actions={[
@@ -248,122 +269,122 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
   }
 
   function editModal() {
-    const showEditForm = () => {
-      return (
-        <Grid container spacing={2}>
-          <Grid item lg={12} sm={12} md={12} xs={12}>
-            <div className={classes.headingContainer}>
-              <div className={classes.heading}>All Customer</div>
-              <div onClick={handleClose} className={classes.closeButton}>
-                <CloseRounded />
-              </div>
-            </div>
-          </Grid>
+    // const showEditForm = () => {
+    //   return (
+    //     <Grid container spacing={2}>
+    //       <Grid item lg={12} sm={12} md={12} xs={12}>
+    //         <div className={classes.headingContainer}>
+    //           <div className={classes.heading}>All Customer</div>
+    //           <div onClick={handleClose} className={classes.closeButton}>
+    //             <CloseRounded />
+    //           </div>
+    //         </div>
+    //       </Grid>
 
-          <Grid item lg={4} sm={12} md={12} xs={12}>
-            <FormControl fullWidth>
-              <InputLabel id="select-label">Select Astrologer</InputLabel>
-              <Select
-                label="Select Option"
-                labelId="select-label"
-                value={astrologer}
-                disabled
-                onChange={(e) => setAstrologer(e.target.value)}
-                variant="outlined"
-                error={error.astrologer ? true : false}
-              >
-                <MenuItem value="-Select Astrologer-" disabled>
-                  -Select Astrologer-
-                </MenuItem>
-                {astrologerList &&
-                  astrologerList.map((item) => {
-                    return (
-                      <MenuItem value={item._id}>
-                        {item.astrologerName}
-                      </MenuItem>
-                    );
-                  })}
-              </Select>
-              <div className={classes.errorstyles}>{error.astrologer}</div>
-            </FormControl>
-          </Grid>
+    //       <Grid item lg={4} sm={12} md={12} xs={12}>
+    //         <FormControl fullWidth>
+    //           <InputLabel id="select-label">Select Astrologer</InputLabel>
+    //           <Select
+    //             label="Select Option"
+    //             labelId="select-label"
+    //             value={astrologer}
+    //             disabled
+    //             onChange={(e) => setAstrologer(e.target.value)}
+    //             variant="outlined"
+    //             error={error.astrologer ? true : false}
+    //           >
+    //             <MenuItem value="-Select Astrologer-" disabled>
+    //               -Select Astrologer-
+    //             </MenuItem>
+    //             {astrologerList &&
+    //               astrologerList?.map((item) => {
+    //                 return (
+    //                   <MenuItem value={item._id}>
+    //                     {item.astrologerName}
+    //                   </MenuItem>
+    //                 );
+    //               })}
+    //           </Select>
+    //           <div className={classes.errorstyles}>{error.astrologer}</div>
+    //         </FormControl>
+    //       </Grid>
 
-          <Grid item lg={4} sm={12} md={12} xs={12}>
-            <FormControl fullWidth>
-              <InputLabel id="select-label">Select Customer</InputLabel>
-              <Select
-                disabled
-                label="Select Option"
-                labelId="select-label"
-                value={customer}
-                onChange={(e) => setCustomer(e.target.value)}
-                variant="outlined"
-                error={error.customer ? true : false}
-              >
-                <MenuItem value="-Select Astrologer-" disabled>
-                  -Select Customer-
-                </MenuItem>
-                {astrologerList &&
-                  customerList.map((item) => {
-                    return (
-                      <MenuItem value={item._id}>{item.customerName}</MenuItem>
-                    );
-                  })}
-              </Select>
-              <div className={classes.errorstyles}>{error.customer}</div>
-            </FormControl>
-          </Grid>
+    //       <Grid item lg={4} sm={12} md={12} xs={12}>
+    //         <FormControl fullWidth>
+    //           <InputLabel id="select-label">Select Customer</InputLabel>
+    //           <Select
+    //             disabled
+    //             label="Select Option"
+    //             labelId="select-label"
+    //             value={customer}
+    //             onChange={(e) => setCustomer(e.target.value)}
+    //             variant="outlined"
+    //             error={error.customer ? true : false}
+    //           >
+    //             <MenuItem value="-Select Astrologer-" disabled>
+    //               -Select Customer-
+    //             </MenuItem>
+    //             {astrologerList &&
+    //               customerList.map((item) => {
+    //                 return (
+    //                   <MenuItem value={item._id}>{item.customerName}</MenuItem>
+    //                 );
+    //               })}
+    //           </Select>
+    //           <div className={classes.errorstyles}>{error.customer}</div>
+    //         </FormControl>
+    //       </Grid>
 
-          <Grid item lg={4} sm={6} md={6} xs={6}>
-            <TextField
-              type="number"
-              value={rating}
-              variant="outlined"
-              fullWidth
-              error={error.rating ? true : false}
-              helperText={error.rating}
-              inputProps={{ min: 1, max: 5 }}
-              onChange={(e) => {
-                const inputValue = e.target.value;
-                if (inputValue >= 0 && inputValue <= 5) {
-                  setRating(inputValue);
-                }
-              }}
-            />
-          </Grid>
+    //       <Grid item lg={4} sm={6} md={6} xs={6}>
+    //         <TextField
+    //           type="number"
+    //           value={rating}
+    //           variant="outlined"
+    //           fullWidth
+    //           error={error.rating ? true : false}
+    //           helperText={error.rating}
+    //           inputProps={{ min: 1, max: 5 }}
+    //           onChange={(e) => {
+    //             const inputValue = e.target.value;
+    //             if (inputValue >= 0 && inputValue <= 5) {
+    //               setRating(inputValue);
+    //             }
+    //           }}
+    //         />
+    //       </Grid>
 
-          <Grid item lg={12} sm={6} md={6} xs={6}>
-            <TextField
-              id="outlined-multiline-static"
-              label="Comment"
-              multiline
-              rows={4}
-              fullWidth
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              error={error.comment ? true : false}
-              helperText={error.comment}
-            />
-          </Grid>
+    //       <Grid item lg={12} sm={6} md={6} xs={6}>
+    //         <TextField
+    //           id="outlined-multiline-static"
+    //           label="Comment"
+    //           multiline
+    //           rows={4}
+    //           fullWidth
+    //           value={comment}
+    //           onChange={(e) => setComment(e.target.value)}
+    //           error={error.comment ? true : false}
+    //           helperText={error.comment}
+    //         />
+    //       </Grid>
 
-          <Grid item lg={6} sm={6} md={6} xs={6}>
-            <div onClick={handleSubmit} className={classes.submitbutton}>
-              Submit
-            </div>
-          </Grid>
-          <Grid item lg={6} sm={6} md={6} xs={6}>
-            <div onClick={handleClose} className={classes.denyButton}>
-              Reset
-            </div>
-          </Grid>
-        </Grid>
-      );
-    };
+    //       <Grid item lg={6} sm={6} md={6} xs={6}>
+    //         <div onClick={handleSubmit} className={classes.submitbutton}>
+    //           Submit
+    //         </div>
+    //       </Grid>
+    //       <Grid item lg={6} sm={6} md={6} xs={6}>
+    //         <div onClick={handleClose} className={classes.denyButton}>
+    //           Reset
+    //         </div>
+    //       </Grid>
+    //     </Grid>
+    //   );
+    // };
 
     return (
       <div>
         <Dialog open={open}>
-          <DialogContent>{showEditForm()}</DialogContent>
+          {/* <DialogContent>{showEditForm()}</DialogContent> */}
         </Dialog>
       </div>
     );

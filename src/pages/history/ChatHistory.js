@@ -3,6 +3,7 @@ import { useStyles, propStyles } from "../../assets/styles.js";
 import {
   Grid,
   TextField,
+  CircularProgress
 } from "@mui/material";
 import MaterialTable from "material-table";
 import { useNavigate } from "react-router-dom";
@@ -77,13 +78,17 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
     navigate(`/history/fullChatHistory/${rowData.customerId._id}`, {state:{chatId: rowData.chatId}})
   };
 
+  const reverseData = Array.isArray(chatHistoryData) ? chatHistoryData.slice().reverse() : [];
+
   return (
     <div className={classes.container}>
-      <Loader />
+      {
+        !chatHistoryData ? <CircularProgress/> :
       <div className={classes.box}>
         {chatHistoryData && displayTable()}
         {editModal()}
       </div>
+      }
     </div>
   );
   function displayTable() {
@@ -92,12 +97,12 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
             title=" Chat History"
-            data={chatHistoryData}
+            data={reverseData}
             columns={[
               {
                 title: "S.No",
                 editable: "never",
-                render: (rowData) => chatHistoryData.indexOf(rowData) + 1,
+                render: rowData => Array.isArray(reverseData) ? reverseData.indexOf(rowData) + 1 : 'N/A'
               },
 
             //   { title: "Chat ID", field: "_id" },
@@ -106,6 +111,10 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
                 field: "astrologerId.displayName",
               },
               { title: "Customer Name", field: "customerId.firstName" },
+              { title: "Call Price", field: "callPrice" },
+              { title: "Chat Price", field: "chatPrice" },
+              { title: "Commission Price", field: "commissionPrice" },
+              { title: "Total Charge", field: "deductedAmount" },
               {
                 title: "Duration",
                 render: (rowData) => (
@@ -158,6 +167,16 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
                 icon: "visibility",
                 tooltip: "View Chat History",
                 onClick: (event, rowData) => handleView(rowData),
+              },
+              {
+                icon: "delete",
+                tooltip: "Delete Chat History",
+                onClick: (event, rowData) =>
+                  dispatch(
+                    HistoryActions.deleteChatHistory({
+                      chatId: rowData?._id,
+                    })
+                  ),
               },
             //   {
             //     icon: "chat",

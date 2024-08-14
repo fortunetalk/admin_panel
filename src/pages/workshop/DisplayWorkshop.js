@@ -9,6 +9,7 @@ import {
   Select,
   MenuItem,
   Tooltip,
+  CircularProgress
 } from "@mui/material";
 import { AddCircleRounded, PictureAsPdf } from "@mui/icons-material";
 import MaterialTable from "material-table";
@@ -251,11 +252,14 @@ const DisplayWorkshop = ({
 
   return (
     <div className={classes.container}>
+      {
+        !workshopData ? <CircularProgress/> :
       <div className={classes.box}>
         {workshopData && displayTable()}
         {editModal()}
         {viewModal()}
       </div>
+      }
     </div>
   );
 

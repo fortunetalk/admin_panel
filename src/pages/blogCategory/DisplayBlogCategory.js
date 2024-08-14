@@ -1,7 +1,7 @@
 // DisplayBlogCategory.js
 import React, { useEffect, useState } from "react";
 import { useStyles, propStyles } from '../../assets/styles.js'
-import { Grid, TextField, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { Grid, TextField, FormControl, InputLabel, Select, MenuItem, CircularProgress } from "@mui/material";
 import { AddCircleRounded } from '@mui/icons-material';
 import MaterialTable from "material-table";
 import { useNavigate } from "react-router-dom";
@@ -81,10 +81,14 @@ const DisplayBlogCategory = ({ appBlogCategoryData }) => {
 
   return (
     <div className={classes.container}>
-      <div className={classes.box}>
-        {displayTable()}
-        {editModal()}
-      </div>
+      {!appBlogCategoryData ? (
+        <CircularProgress />
+      ) : (
+        <div className={classes.box}>
+          {appBlogCategoryData && displayTable()}
+          {editModal()}
+        </div>
+      )}
     </div>
   );
 

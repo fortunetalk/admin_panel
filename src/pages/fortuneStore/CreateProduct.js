@@ -31,7 +31,7 @@ const CreateProduct = ({ dispatch, productCategoryData }) => {
   const [galleryImage, setGalleryImage] = useState([]);
   const [galleryFiles, setGalleryFiles] = useState([]);
   const [file, setFile] = useState(null);
-  const [icon, setIcon] = useState({ file: logo_icon, bytes: null });
+  const [icon, setIcon] = useState({ file:'', bytes: null });
   const [productCategoryTitle, setProductCategoryTitle] = useState('')
   const [error, setError] = useState({});
 

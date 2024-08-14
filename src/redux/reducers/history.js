@@ -36,6 +36,12 @@ const history = (state = initialState, actions) => {
         chatHistoryData: payload,
       };
     }
+    case actionTypes.DELETE_CHAT_HISTORY: {
+      return {
+        ...state,
+        chatHistoryData: payload,
+      };
+    }
 
     case actionTypes.SET_CHAT_SUMMARY: {
       return {
@@ -45,6 +51,12 @@ const history = (state = initialState, actions) => {
     }
 
     case actionTypes.SET_CALL_HISTORY: {
+      return {
+        ...state,
+        callHistoryData: payload,
+      };
+    }
+    case actionTypes.DELETE_CALL_HISTORY: {
       return {
         ...state,
         callHistoryData: payload,

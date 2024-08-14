@@ -292,26 +292,6 @@ function* deleteDemoClass(actions) {
   }
 }
 
-function* getAllBookedDemoClass() {
-  try {
-    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
-    const response = yield call(ApiRequest.getRequest, {
-      url: api_url + booked_demo_class,
-    });
-
-
-    if (response) {
-      yield put({
-        type: actionTypes.BOOKED_DEMO_CLASS_LIST,
-        payload: response?.data,
-      });
-    }
-    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
-  } catch (e) {
-    console.log(e);
-    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
-  }
-}
 
 export default function* demoClassSaga() {
   yield takeLeading(actionTypes.CREATE_DEMO_CLASS, addDemoClass);
@@ -321,5 +301,5 @@ export default function* demoClassSaga() {
   yield takeLeading(actionTypes.UPDATE_DEMO_CLASS_ADMIN_STATUS, updateDemoClassAdminStatus);
   yield takeLeading(actionTypes.UPDATE_DEMO_CLASS_ONGOING_STATUS, updateDemoClassOngoingStatus);
   yield takeLeading(actionTypes.DELETE_DEMO_CLASS, deleteDemoClass);
-  yield takeLeading(actionTypes.BOOKED_DEMO_CLASS_LIST, getAllBookedDemoClass);
+
 }

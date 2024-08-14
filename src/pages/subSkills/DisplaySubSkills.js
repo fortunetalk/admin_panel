@@ -8,6 +8,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  CircularProgress
 } from "@mui/material";
 import { AddCircleRounded } from "@mui/icons-material";
 import MaterialTable from "material-table";
@@ -104,10 +105,13 @@ const DisplaySubSkills = ({ dispatch, subSkillData, skillsData }) => {
 
   return (
     <div className={classes.container}>
+      {
+        !subSkillData ? <CircularProgress/> :
       <div className={classes.box}>
         {subSkillData && displayTable()}
         {editModal()}
       </div>
+      }
     </div>
   );
 

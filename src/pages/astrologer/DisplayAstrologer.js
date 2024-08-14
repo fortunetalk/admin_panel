@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogTitle,
   Dialog,
+  CircularProgress
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { CloseRounded } from "@mui/icons-material";
@@ -138,11 +139,15 @@ const ListAstrology = ({ astrologerListData }) => {
 
   return (
     <div className={classes.container}>
-      {/* <Loader isVisible={isLoading} /> */}
-      <div className={classes.box}>{astrologerListData && displayTable()}</div>
+      {!astrologerListData ? (
+        <CircularProgress />
+      ) : (
+        <div className={classes.box}>{displayTable()}</div>
+      )}
       {viewModalInfo()}
     </div>
   );
+  
 
   function displayTable() {
     return (

@@ -9,6 +9,7 @@ import {
   Select,
   MenuItem,
   Tooltip,
+  CircularProgress
 } from "@mui/material";
 import { AddCircleRounded, PictureAsPdf, School, QuestionAnswer } from "@mui/icons-material";
 import MaterialTable from "material-table";
@@ -259,11 +260,10 @@ const DisplayLiveClass = ({
     });
   };
 
-  const handleHistory = (rowData) => {
-    // Add your history logic here
-    dispatch(HistoryActions.getRegisterLiveClassHistory(rowData._id));
-    navigate(`/registerLiveClassHistory/${rowData._id}`);
-  };
+  // const handleHistory = (rowData) => {
+  //   dispatch(HistoryActions.getRegisterLiveClassHistory(rowData._id));
+  //   navigate(`/registerLiveClassHistory/${rowData._id}`);
+  // };
 
   const handleOptionChange = (e) => {
     setStatus(e.target.value);
@@ -278,11 +278,14 @@ const DisplayLiveClass = ({
 
   return (
     <div className={classes.container}>
+      {
+        !liveClassData ? <CircularProgress/> :
       <div className={classes.box}>
         {liveClassData && displayTable()}
         {editModal()}
         {viewModal()}
       </div>
+      }
     </div>
   );
 
@@ -461,11 +464,11 @@ const DisplayLiveClass = ({
                 tooltip: 'Go to MCQ List',
                 onClick: (event, rowData) => handleMCQ(rowData),
               },
-              {
-                icon: "history",
-                tooltip: "View History",
-                onClick: (event, rowData) => handleHistory(rowData),
-              },
+              // {
+              //   icon: "history",
+              //   tooltip: "View History",
+              //   onClick: (event, rowData) => handleHistory(rowData),
+              // },
 
               {
                 icon: () => (

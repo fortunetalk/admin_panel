@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useStyles } from "../../assets/styles.js";
-import { Avatar, Grid, FormControl, InputLabel, Select, DialogContent, Dialog, MenuItem, TextField } from "@mui/material";
+import { useStyles, propStyles } from "../../assets/styles.js";
+import { Avatar, Grid, FormControl, InputLabel, Select, DialogContent, Dialog, MenuItem, TextField, CircularProgress } from "@mui/material";
 import { AddCircleRounded } from "@mui/icons-material";
 import MaterialTable from "material-table";
 import { useNavigate } from "react-router-dom";
@@ -60,18 +60,7 @@ const AstrologerNotification = ({ astrologerNotificationData, dispatch }) => {
     }
   };
 
-  const validation = () => {
-    var isValid = true;
-    if (!status) {
-      handleError("status", "Please Select Status");
-      isValid = false;
-    }
-
-    return isValid;
-  };
-
   const handleSubmit = async () => {
-    if (validation()) {
       var formData = new FormData();
       formData.append("notificationId", notificationId);
       formData.append("image", file);
@@ -82,7 +71,6 @@ const AstrologerNotification = ({ astrologerNotificationData, dispatch }) => {
 
       dispatch(NotificationActions.updateAstrologerNotification(formData));
       setOpen(false);
-    }
   };
 
   const handleClickOpen = (rowData) => {
@@ -115,14 +103,18 @@ const AstrologerNotification = ({ astrologerNotificationData, dispatch }) => {
     setOpen(false);
   };
 
+  const reverseData = Array.isArray(astrologerNotificationData) ? astrologerNotificationData.slice().reverse() : [];
+
 
   return (
     <div className={classes.container}>
-      <Loader />
+      {
+        !astrologerNotificationData ? <CircularProgress/> :
       <div className={classes.box}>
         {astrologerNotificationData && displayTable()}
         {editModal()}
       </div>
+      }
     </div>
   );
 
@@ -132,14 +124,14 @@ const AstrologerNotification = ({ astrologerNotificationData, dispatch }) => {
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
             title="Astrologer Notifications"
-            data={astrologerNotificationData}
+            data={reverseData}
             columns={[
               {
                 title: "S.No",
                 editable: "never",
                 render: (rowData) =>
-                  Array.isArray(astrologerNotificationData)
-                    ? astrologerNotificationData.indexOf(rowData) + 1
+                  Array.isArray(reverseData)
+                    ? reverseData.indexOf(rowData) + 1
                     : "N/A",
               },
               { title: "Title", field: "title" },
@@ -179,25 +171,7 @@ const AstrologerNotification = ({ astrologerNotificationData, dispatch }) => {
                 ),
               },
             ]}
-            options={{
-              sorting: true,
-              search: true,
-              searchFieldAlignment: "right",
-              filtering: true,
-              paging: true,
-              // pageSizeOptions: createArrayWithBreakdowns(editable?.length, 5),
-              pageSize: 5,
-              paginationType: "stepped",
-              showFirstLastPageButtons: true,
-              paginationPosition: "bottom",
-              exportButton: false,
-              exportAllData: false,
-              exportFileName: "Category data",
-              addRowPosition: "first",
-              actionsColumnIndex: -1,
-              selection: false,
-              showSelectAllCheckbox: false,
-            }}
+            options={propStyles.tableStyles}
             actions={[
               {
                 icon: "edit",

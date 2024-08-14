@@ -54,7 +54,6 @@ const FullChatHistory = () => {
           messageContent = {
             ...messageContent,
             type: 'photo',
-            // You might want to add additional styles or attributes for images
             data: {
               uri: msg.image,
               position: msg.user._id === customerId ? 'right' : 'left'
@@ -76,7 +75,8 @@ const FullChatHistory = () => {
             data: {
               audioURL: msg.audio,
               position: msg.user._id === customerId ? 'right' : 'left'
-            }
+            },
+            
           };
         }
 

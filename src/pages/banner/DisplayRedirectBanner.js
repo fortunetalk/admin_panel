@@ -196,10 +196,14 @@ const DisplayRedirectBanner = ({ redirectBannerData, astrologerListData, product
 
   return (
     <div className={classes.container}>
-      <div className={classes.box}>
-        {redirectBannerData && displayTable()}
-        {editModal()}
-      </div>
+      {!redirectBannerData ? (
+        <CircularProgress />
+      ) : (
+        <div className={classes.box}>
+          {redirectBannerData && displayTable()}
+          {editModal()}
+        </div>
+      )}
     </div>
   );
 

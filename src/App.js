@@ -39,12 +39,6 @@ import AddGift from "./pages/gift/AddGift";
 import DisplayAstroblog from "./pages/astroblog/DisplayAstroblog";
 import AddAstroblog from "./pages/astroblog/AddAstroblog";
 import AddAppverstion from "./pages/appverstion/AddAppverstion";
-import DisplayAnnouncements from "./pages/announcements/DisplayAnnouncements";
-import AddAnnouncements from "./pages/announcements/AddAnnouncements";
-import DisplayTitle from "./pages/askastrologer/DisplayTitle";
-import AddTitle from "./pages/askastrologer/AddTitle";
-import DisplayListOfQuestion from "./pages/askastrologer/DisplayListOfQuestion";
-import AddListOfQuestion from "./pages/askastrologer/AddListOfQuestion";
 
 import DisplayFaq from "./pages/pages/DisplayFaq";
 import AddFaq from "./pages/pages/AddFaq";
@@ -134,7 +128,9 @@ import LiveClassHistory from "./pages/history/LiveClassHistory";
 import DisplayLiveCourseHistory from "./pages/history/DisplayLiveCourseHistory";
 import RegisterLiveClassHistory from "./pages/courses/RegisterLiveClassHistory";
 import FullChatHistory from "./pages/history/FullChatHistory";
-import BookedDemoClass from "./pages/courses/BookedDemoClass";
+import MCQAnswerList from "./pages/courses/MCQAnswerList";
+import AddRechargeByAdmin from "./pages/customer/AddRechargeByAdmin";
+import CustomerRechargeHistory from "./pages/customer/CustomerRechargeHistory";
 
 function App() {
   return (
@@ -149,6 +145,8 @@ function App() {
           <Route path="/displaySubSkills" element={<DisplaySubSkills />} />
           <Route path="/rechargePlan" element={<RechargePlan/>} />
           <Route path="/addRechargePlan" element={<AddRechargePlans />} />
+          <Route path="/rechargeByAdmin" element={<AddRechargeByAdmin/>} />
+          <Route path="/customerRechargeHistory" element={<CustomerRechargeHistory/>} />
           <Route
             path="/displayRechargePlan"
             element={<DisplayRechargePlans />}
@@ -214,18 +212,6 @@ function App() {
           <Route path="/displayAstroblog" element={<DisplayAstroblog />} />
           <Route path="/AddAstroblog" element={<AddAstroblog />} />
           <Route path="/appVersion" element={<AddAppverstion />} />
-          <Route
-            path="/displayAnnouncements"
-            element={<DisplayAnnouncements />}
-          />
-          <Route path="/AddAnnouncements" element={<AddAnnouncements />} />
-          <Route path="/displayTitle" element={<DisplayTitle />} />
-          <Route path="/AddTitle" element={<AddTitle />} />
-          <Route
-            path="/displayListOfQuestions"
-            element={<DisplayListOfQuestion />}
-          />
-          <Route path="/AddListOfQuestion" element={<AddListOfQuestion />} />
 
           <Route path="/displayFaq" element={<DisplayFaq />} />
           <Route path="/AddFaq" element={<AddFaq />} />
@@ -314,8 +300,7 @@ function App() {
           <Route path="/addClass/:liveClassId" element={<AddClass/>} />
           <Route path="/mcqList/:liveClassId" element={<DisplayMCQ/>} />
           <Route path="/addMCQ/:liveClassId" element={<AddMCQ/>} />
-          <Route path="/registerLiveClassHistory/:liveClassId" element={<RegisterLiveClassHistory/>} />
-          <Route path="/bookedDemoClass" element={<BookedDemoClass/>} />
+          <Route path="/mcqAnswerList" element={<MCQAnswerList/>} />
 
 
 

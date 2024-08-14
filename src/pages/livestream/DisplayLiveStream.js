@@ -3,6 +3,7 @@ import { useStyles, propStyles } from "../../assets/styles.js";
 import {
   Grid,
   TextField,
+  CircularProgress
 } from "@mui/material";
 import MaterialTable from "material-table";
 import { useNavigate } from "react-router-dom";
@@ -94,13 +95,17 @@ const LiveStream = ({ dispatch, liveStreamData }) => {
 
   return (
     <div className={classes.container}>
-      <Loader />
-      <div className={classes.box}>
-        {liveStreamData && displayTable()}
-        {editModal()}
-      </div>
+      {!liveStreamData ? (
+        <CircularProgress />
+      ) : (
+        <div className={classes.box}>
+          {liveStreamData && displayTable()}
+          {editModal()}
+        </div>
+      )}
     </div>
   );
+  
   function displayTable() {
     return (
       <Grid container spacing={1}>

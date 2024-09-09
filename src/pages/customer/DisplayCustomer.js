@@ -22,6 +22,7 @@ import Swal from "sweetalert2";
 import { connect } from "react-redux";
 import * as CustomerActions from "../../redux/Actions/customerActions.js";
 import Loader from "../../Components/loading/Loader.js";
+import { api_url, get_all_customers } from "../../utils/Constants.js";
 
 const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
   const classes = useStyles();
@@ -62,12 +63,12 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
     referCode: "",
   });
 
-  useEffect(
-    function () {
-      dispatch(CustomerActions.getAllCustomer());
-    },
-    [dispatch]
-  );
+  // useEffect(
+  //   function () {
+  //     dispatch(CustomerActions.getAllCustomer());
+  //   },
+  //   [dispatch]
+  // );
 
   const formatDate = (date) => {
     if (!date) return "";
@@ -224,15 +225,13 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
 
   return (
     <div className={classes.container}>
-      {!customerListData ? (
-        <CircularProgress />
-      ) : (
+ 
         <div className={classes.box}>
-          {customerListData && displayTable()}
+          { displayTable()}
           {editModal()}
           {viewModal()}
         </div>
-      )}
+
     </div>
   );
 
@@ -242,15 +241,12 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
             title="Customer"
-            data={customerListData}
+           
             columns={[
               {
                 title: "S.No",
                 editable: "never",
-                render: (rowData) =>
-                  Array.isArray(customerListData)
-                    ? customerListData.indexOf(rowData) + 1
-                    : "N/A",
+                render: (rowData) => rowData.tableData.id + 1,
               },
               { title: "Customer ID", field: "customerUniqueId" },
               { title: "Name", field: "customerName" },
@@ -291,8 +287,47 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
                 ),
               },
             ]}
-            options={propStyles.tableStyles}
-            style={{ fontSize: "1.4rem" }}
+            // data={customerListData}
+            data={query =>
+              new Promise((resolve, reject) => {
+                console.log("query", query.filters);
+                const filters = {}
+
+                query.filters.map(item => {
+                  if (item.value.length > 0) {
+                    filters[item.column.field] = item.value[0]
+                  }
+                })
+                console.log({
+                  page: query.page + 1, // MaterialTable uses 0-indexed pages
+                  limit: query.pageSize === 0 ? 10 : query.pageSize,
+                  ...filters, // Include processed filters
+                })
+
+                fetch( api_url + get_all_customers, {
+                  method: 'POST', // Specify the request method
+                  headers: {
+                    'Content-Type': 'application/json', // Set the content type to JSON
+                  },
+                  body: JSON.stringify({
+                    page: query.page + 1, // MaterialTable uses 0-indexed pages
+                    limit: query.pageSize === 0 ? 10 : query.pageSize,
+                  }), // Convert the request body to JSON
+                })
+                  .then(response => response.json())
+                  .then(result => {
+                    console.log(result)
+                    resolve({
+                      data: result.data.data, // Adjust based on your API response
+                      page: result.data.pagination.currentPage - 1, // Adjust for 0-indexed pages
+                      totalCount: result.data.pagination.totalCount, // Total number of rows
+                    })
+                  })
+              })
+            }
+
+            options={{ ...propStyles.tableStyles,  paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100],}}
+            style={{ fontSize: "1.0rem" }}
             actions={[
               {
                 icon: "visibility",

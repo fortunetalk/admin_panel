@@ -12,62 +12,9 @@ import Loader from "../../Components/loading/Loader.js";
 import { connect } from "react-redux";
 import { secondsToHMS } from "../../utils/services.js";
 import moment from "moment";
-import { Select, MenuItem, InputLabel, FormControl } from '@mui/material';
-import axios from "axios";
+import { api_url, get_chat_history } from "../../utils/Constants.js";
 
-// FilterDropdown Component
-const FilterDropdown = ({ onFilterChange, options, label }) => {
-  const [filter, setFilter] = useState('');
 
-  const handleChange = (event) => {
-    const value = event.target.value;
-    setFilter(value);
-    onFilterChange(value);
-  };
-
-  return (
-    <FormControl variant="outlined" style={{ minWidth: 120 }}>
-      <InputLabel>{label}</InputLabel>
-      <Select
-        value={filter}
-        onChange={handleChange}
-        label={label}
-      >
-        <MenuItem value="">All</MenuItem>
-        {options.map((option, index) => (
-          <MenuItem key={index} value={option}>{option}</MenuItem>
-        ))}
-      </Select>
-    </FormControl>
-  );
-};
-
-const StatusFilterDropdown = ({ onFilterChange, options }) => {
-  const [statusFilter, setStatusFilter] = useState('');
-
-  const handleChange = (event) => {
-    const value = event.target.value;
-    setStatusFilter(value);
-    onFilterChange(value);
-  };
-
-  return (
-    <FormControl variant="outlined" style={{ minWidth: 120 }}>
-       <InputLabel >Status</InputLabel>
-       {/* <InputLabel style={{ color: 'black', fontSize:'px'}}>Status</InputLabel> */}
-      <Select
-        value={statusFilter}
-        onChange={handleChange}
-        label="Status"
-      >
-        <MenuItem value="">All</MenuItem>
-        {options.map((option, index) => (
-          <MenuItem key={index} value={option}>{option}</MenuItem>
-        ))}
-      </Select>
-    </FormControl>
-  );
-};
 
 const ChatHistory = ({ dispatch, chatHistoryData }) => {
   const classes = useStyles();
@@ -84,6 +31,7 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
     astrologerName: "",
     astrologerDisplayName: "",
     astrologerEmail: "",
+    requestTime: "",
     startTime: "",
     endTime: "",
     durationInSeconds: "",
@@ -114,6 +62,7 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
       astrologerName: rowData?.astrologerId?.name || "",
       astrologerDisplayName: rowData?.astrologerId?.displayName || "",
       astrologerEmail: rowData?.astrologerId?.email || "",
+      requestTime: new Date(rowData?.createdAt).toLocaleString() || "",
       startTime: new Date(rowData?.startTime).toLocaleString() || "",
       endTime: new Date(rowData?.endTime).toLocaleString() || "",
       durationInSeconds: rowData?.durationInSeconds || "",
@@ -142,22 +91,12 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
     ? Array.from(new Set(chatHistoryData.map(data => data.status || '')))
     : [];
 
-  const reverseData = Array.isArray(chatHistoryData) ? chatHistoryData.slice().reverse() : [];
-  const filteredData = reverseData.filter(rowData => 
-    (filter === '' || rowData.astrologerId?.displayName === filter) &&
-    (statusFilter === '' || rowData.status === statusFilter)
-  );
-
   return (
     <div className={classes.container}>
-      {
-        !chatHistoryData ? <CircularProgress /> :
-        chatHistoryData.length === 0 ? <p>No chat history available.</p> :
-          <div className={classes.box}>
-            {displayTable()}
-            {editModal()}
-          </div>
-      }
+      <div className={classes.box}>
+        {displayTable()}
+        {editModal()}
+      </div>
     </div>
   );
 
@@ -168,23 +107,20 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
           <MaterialTable
             title={
               <div>
-                <span style={{fontWeight:'500', fontSize:'25px', marginRight:'20px'}}>Chat History</span>
-                <StatusFilterDropdown
-                  onFilterChange={(value) => setStatusFilter(value)}
-                  options={statusOptions}
-                />
+                <span style={{ fontWeight: '500', fontSize: '25px', marginRight: '20px' }}>Chat History</span>
               </div>
             }
-            // data={filteredData}
+
             columns={[
               {
                 title: "S.No",
                 editable: "never",
-                render: (rowData) =>rowData.tableData.id+1,
+                render: (rowData) => rowData.tableData.id + 1,
               },
               {
                 title: "Astrologer Display Name",
                 field: "astrologerId.displayName",
+                filtering: false,
               },
               {
                 title: "Customer Name",
@@ -201,16 +137,34 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
                   return `${phoneNumber}`;
                 }
               },
-              { title: "Call Price", field: "callPrice" },
-              { title: "Chat Price", field: "chatPrice" },
-              { title: "Commission Price", field: "commissionPrice" },
-              { title: "Total Charge", field: "deductedAmount" },
+              { title: "Chat Price", field: "chatPrice" , filtering: false,},
+              { title: "Commission Price", field: "commissionPrice", filtering: false, },
+              // { title: "Total Charge", field: "deductedAmount" },
+              {
+                title: "Total Charge",
+                field: "deductedAmount",
+                filtering: false,
+                render: rowData => {
+                  const amount = Number(rowData.deductedAmount).toFixed(2);
+                  return `₹ ${amount}`;
+                }
+              },
               {
                 title: "Duration",
                 render: (rowData) => (
                   <div>
                     {rowData?.durationInSeconds &&
                       secondsToHMS(rowData?.durationInSeconds)}
+                  </div>
+                ),
+              },
+              {
+                title: "Request Time",
+                render: (rowData) => (
+                  <div>
+                    {rowData?.createdAt
+                      ? moment(rowData?.createdAt).format("DD-MM-YYYY HH:mm:ss A")
+                      : "N/A"}
                   </div>
                 ),
               },
@@ -234,10 +188,11 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
                   </div>
                 ),
               },
-              { title: "Status", field: "status" },
+              { title: "Status", field: "status", lookup: { COMPLETED: "COMPLETED", REJECTED: "REJECTED", ACCEPTED: "ACCEPTED", CREATED: "CREATED" }, },
               {
                 title: "View Chat History",
                 field: "status",
+                filtering: false,
                 render: rowData => (
                   <div className={classes.statusButton}
                     style={{ backgroundColor: '#90EE90' }}
@@ -247,33 +202,78 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
                 )
               },
             ]}
+
+
             data={query =>
               new Promise((resolve, reject) => {
-                console.log("query", query)
-                // API call using axios
-                axios.get(`http://localhost:8000/api/admin/chat_history`, {
-                  data: {
-                    page: query.page + 1, // MaterialTable uses 0-indexed pages
-                    limit: query.pageSize ==0? 10: query.pageSize,
+                console.log("query", query.filters);
+                const filters = {}
+
+                query.filters.map(item => {
+                  if (item.value.length > 0) {
+                    filters[item.column.field] = item.value[0]
                   }
                 })
-                .then(response => {
-                  console.log("response", response);
-                  // Resolve the promise with data, page, and totalCount
-                  resolve({
-                    data: response.data.data.data, // assuming the API returns data in this format
-                    page: response.data.data.pagination.page - 1, // Adjust for 0-indexed pages
-                    totalCount: response?.data?.data.pagination?.totalCount, // Total number of rows in your dataset
-                  });
+                console.log({
+                  page: query.page + 1, // MaterialTable uses 0-indexed pages
+                  limit: query.pageSize === 0 ? 10 : query.pageSize,
+                  ...filters, // Include processed filters
                 })
-                .catch(error => {
-                  console.error('Error fetching data:', error);
-                  reject(error);
-                });
+
+                fetch( api_url + get_chat_history, {
+                  method: 'POST', // Specify the request method
+                  headers: {
+                    'Content-Type': 'application/json', // Set the content type to JSON
+                  },
+                  body: JSON.stringify({
+                    page: query.page + 1, // MaterialTable uses 0-indexed pages
+                    limit: query.pageSize === 0 ? 10 : query.pageSize,
+                    ...filters, // Include processed filters
+                  }), // Convert the request body to JSON
+                })
+                  .then(response => response.json())
+                  .then(result => {
+                    console.log(result)
+                    resolve({
+                      data: result.data.data, // Adjust based on your API response
+                      page: result.data.pagination.currentPage - 1, // Adjust for 0-indexed pages
+                      totalCount: result.data.pagination.totalCount, // Total number of rows
+                    })
+                  })
               })
+
+
+
+              // await axios.post(api_url + get_chat_history, {
+              //   data: {
+              //     page: query.page + 1, // MaterialTable uses 0-indexed pages
+              //     limit: query.pageSize === 0 ? 10 : query.pageSize,
+              //     ...filters, // Include processed filters
+              //   }
+              // })
+
+              //   .then(response => {
+              //     console.log("response", response);
+              //     console.log({
+              //       data: response.data.data.data, // Adjust based on your API response
+              //       page: response.data.data.pagination.currentPage - 1, // Adjust for 0-indexed pages
+              //       totalCount: response.data.data.pagination.totalCount, // Total number of rows
+              //     })
+              //     // Resolve the promise with data, page, and totalCount
+              //     resolve({
+              //       data: response.data.data.data, // Adjust based on your API response
+              //       page: response.data.data.pagination.currentPage - 1, // Adjust for 0-indexed pages
+              //       totalCount: response.data.data.pagination.totalCount, // Total number of rows
+              //     });
+              //   })
+              //   .catch(error => {
+              //     console.error('Error fetching data:', error);
+              //     reject(error);
+              //   });
+              // })
             }
 
-            options={{ ...propStyles.tableStyles, filtering: false, paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], }}
+            options={{ ...propStyles.tableStyles,  paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], filtering: 'true' }}
             style={{ fontSize: "1rem" }}
             actions={[
               {
@@ -413,6 +413,17 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
             <TextField
               label="Astrologer Email"
               value={data.astrologerEmail}
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </Grid>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
+            <TextField
+              label="Request Time"
+              value={data.requestTime}
               variant="outlined"
               fullWidth
               InputProps={{

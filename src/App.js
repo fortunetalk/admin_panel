@@ -139,7 +139,12 @@ import AddAstrologersOffers from "./pages/astrologerOffers/AddAstrologersOffers"
 import AstrologerChatSupport from "./pages/chatSupport/AstrologerChatSupport";
 import CustomerChatSupport from "./pages/chatSupport/CustomerChatSupport";
 import VersionUpdate from "./pages/setting/versionUpdate/VersionUpdate";
-import { CallDiscussion } from "./pages/callDiscussion/DisplayCallDiscussion";
+import AddCallDiscussion from "./pages/callDiscussion/AddCallDiscussion";
+import DisplayCallDiscussion from "./pages/callDiscussion/DisplayCallDiscussion";
+import AddRechargeHistory from "./pages/recharge/AddRechargeHistory";
+import WaitingList from "./pages/waitingList/WaitingList";
+import WaitingListHistory from "./pages/waitingList/WaitingListHistory";
+
 
 function App() {
   return (
@@ -156,6 +161,7 @@ function App() {
           <Route path="/addRechargePlan" element={<AddRechargePlans />} />
           <Route path="/rechargeByAdmin" element={<AddRechargeByAdmin/>} />
           <Route path="/customerRechargeHistory" element={<CustomerRechargeHistory/>} />
+          <Route path="/addRechargeHistory" element={<AddRechargeHistory/>} />
           <Route
             path="/displayRechargePlan"
             element={<DisplayRechargePlans />}
@@ -212,13 +218,14 @@ function App() {
           <Route path="/history/liveClassHistory" element={<LiveClassHistory/>} />
           <Route path="/history/liveCourseHistory" element={<DisplayLiveCourseHistory/>} />
           <Route path="/history/UsersGiftHistory" element={<UsersGiftHistory />} />
-          <Route path="/history/RechargeHistory" element={<RechargeHistory />} />
+          <Route path="/history/wallet-transaction" element={<RechargeHistory />} />
           <Route path="/liveStream" element={<LiveStream />} />
           <Route path="/displayUser" element={<DisplayUser />} />
           <Route path="/AddUser" element={<AddUser />} />
           <Route path="/displayGift" element={<DisplayGift />} />
           <Route path="/AddGift" element={<AddGift />} />
-          <Route path="/call-discussion" element={<CallDiscussion />} />
+          <Route path="/call-discussion" element={<DisplayCallDiscussion />} />
+          <Route path="/add-call-discussion" element={<AddCallDiscussion />} />
 
           <Route path="/displayAstrologerOffer" element={<DisplayAstrologerOffers />} />
 
@@ -330,6 +337,11 @@ function App() {
           {/* Chat Support */}
           <Route path="/chat-support-astrologers" element={<AstrologerChatSupport/>} />
           <Route path="/chat-support-customers" element={<CustomerChatSupport/>} />
+
+
+          {/* Waiting List */}
+          <Route path="/display-wait-list" element={<WaitingList/>} />
+          <Route path="/display-wait-list-history" element={<WaitingListHistory/>} />
 
 
           <Route

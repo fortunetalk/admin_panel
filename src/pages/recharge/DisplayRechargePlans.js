@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useStyles, propStyles } from "../../assets/styles.js";
+
 import {
   Grid,
   TextField,
   CircularProgress
 } from "@mui/material";
 import MaterialTable from "material-table";
+import { AddCircleRounded } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 import * as Actions from "../../redux/Actions/rechargeHistoryActions.js";
+import * as RechargeHistoryActions from "../../redux/Actions/rechargeHistoryActions.js";
 import Loader from "../../Components/loading/Loader.js";
 import { connect } from "react-redux";
 
 const DisplayRechargePlan = ({ dispatch, rechargeHistoryData }) => {
   const classes = useStyles();
+  const navigate = useNavigate();
 
   useEffect(function () {
     dispatch(Actions.getRechargeHistory());
@@ -46,6 +51,7 @@ const DisplayRechargePlan = ({ dispatch, rechargeHistoryData }) => {
              
               { title: "Customer ID", field: "customerId.customerUniqueId" },
               { title: "Customer Name", field: "customerId.customerName" },
+              { title: "Customer Number", field: "customerId.phoneNumber" },
               // { title: "Reference Model", field: "referenceModel" },
               { title: "Invoice ID", field: "invoiceId" },
               { title: "Type", field: "type" },
@@ -63,14 +69,33 @@ const DisplayRechargePlan = ({ dispatch, rechargeHistoryData }) => {
                   return balance;
                 }
               },
-              { title: "Total Amount", field: "totalAmount" },
-              { title: "Payment Methody", field: "paymentMethod" },
-              { title: "Transaction Type", field: "transactionType" },
               { title: "GST", field: "gst" },
+              { title: "Total Amount", field: "totalAmount" },
+              { title: "Payment Method", field: "paymentMethod" },
+              { title: "Transaction Type", field: "transactionType" },
+           
               
             ]}
             options={{ ...propStyles.tableStyles, filtering: false }}
-          
+            actions={[
+              {
+                icon: "delete",
+                tooltip: "Delete Recharge",
+                onClick: (event, rowData) => dispatch(RechargeHistoryActions.deleteRechargeHistory({invoiceId: rowData?.invoiceId}))
+              },
+              {
+                icon: () => (
+                  <div className={classes.addButton}>
+                    <AddCircleRounded />
+                    <div className={classes.addButtontext}>Add New</div>
+                  </div>
+                ),
+                tooltip: "Add Recharge",
+                isFreeAction: true,
+                onClick: () => navigate("/addRechargeHistory"),
+              },
+            ]}
+
           />
         </Grid>
       </Grid>

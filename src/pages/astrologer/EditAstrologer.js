@@ -36,6 +36,7 @@ import * as SkillActions from "../../redux/Actions/skillsActions.js";
 import * as RemedyActions from "../../redux/Actions/remediesActions.js";
 import * as SettingActions from "../../redux/Actions/settingActions.js";
 import Loader from "../../Components/loading/Loader.js";
+import moment from "moment/moment.js";
 
 const preferredDaysList = ["Mon", "Tues", "Wed", "Thu", "Fri", "Sat", "Sun"];
 // const languageData = ["Hindi", "English"];
@@ -100,6 +101,7 @@ export const EditAstrologer = ({
 
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const containerRef = useRef(null);
 
   const [galleryImages, setGalleryImages] = useState([]);
@@ -200,6 +202,7 @@ export const EditAstrologer = ({
         currencyType: astrologerData?.currencyType,
         gender: astrologerData?.gender,
         password: astrologerData?.password,
+        //  dateOfBirth: astrologerData?.moment ? astrologerData.moment(dateOfBirth).format("DD-MM-YYYY") : dateOfBirth,
         dateOfBirth: astrologerData?.dateOfBirth,
         experience: astrologerData?.experience,
         phoneCode: astrologerData?.phoneCode,
@@ -341,6 +344,12 @@ export const EditAstrologer = ({
   };
 
   // console.log('data===>',astrologerData?.currencyValue)
+
+
+  const onAdd =()=>{
+    navigate('/astrologers/displayAstrologer')
+  }
+
 
   const handleRatingChange = (e) => {
     const newRating = e.target.value;
@@ -504,7 +513,7 @@ export const EditAstrologer = ({
         language,
       };
 
-      dispatch(AstrologerActions.updateAstrologerData(data));
+      dispatch(AstrologerActions.updateAstrologerData({data,onAdd}));
 
       console.log("Data submitted");
     } catch (error) {
@@ -749,12 +758,20 @@ export const EditAstrologer = ({
     setOpenDays(false);
   };
   const handleUpdateOptions = () => {
-    var formData = new FormData();
+    const formData = new FormData();
+    console.log(astrologerId)
     formData.append("astrologerId", astrologerId);
+    const payload = {
+      astrologerId,
+      astrologerType: options
+    }
+    console.log(payload)
     for (let i = 0; i < options.length; i++) {
+      console.log("array",[i]);
       formData.append(`astrologerType[${i}]`, options[i]);
     }
-    dispatch(AstrologerActions.updateAstrologerAstrologerType(formData));
+   
+    dispatch(AstrologerActions.updateAstrologerAstrologerType(payload));
     setOpenAstrologerType(false);
   };
 
@@ -791,7 +808,6 @@ export const EditAstrologer = ({
     working,
     panNumber,
     preferredDays,
-
     skills,
     expertise,
     remedies,
@@ -810,6 +826,9 @@ export const EditAstrologer = ({
     options,
     countryValue,
   } = state;
+
+  const formattedDateOfBirth = moment(dateOfBirth).format("YYYY-MM-DD");
+
 
   useEffect(() => {
     if (country) {
@@ -1862,7 +1881,7 @@ export const EditAstrologer = ({
         <Grid item lg={4} sm={12} md={12} xs={12}>
           <TextField
             type="date"
-            value={dateOfBirth}
+            value={formattedDateOfBirth}
             variant="outlined"
             // inputProps={{ max: "2020-05-31" }}
             inputProps={{

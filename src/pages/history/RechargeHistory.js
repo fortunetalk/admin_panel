@@ -23,9 +23,9 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
 
     const [viewData, setViewData] = useState(false);
     const [data, setData] = useState({
-        referenceId: "",
         customerId: "",
         customerName: "",
+        customerNumber: "",
         invoiceId: "",
         amount: "",
         paymentMethod: "",
@@ -41,9 +41,9 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
     const handleView = (rowData) => {
         setViewData(true);
         setData({
-            referenceId: rowData?.referenceId || "",
             customerId: rowData?.customerId?.customerUniqueId || "",
             customerName: rowData?.customerId?.firstName || "",
+            customerNumber: rowData?.customerId?.phoneNumber || "",
             invoiceId: rowData?.invoiceId || "",
             amount: rowData?.amount || "",
             referenceModel: rowData?.referenceModel || "",
@@ -74,7 +74,7 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
             <Grid container spacing={1}>
                 <Grid item lg={12} sm={12} md={12} xs={12}>
                     <MaterialTable
-                        title="Recharge History"
+                        title="Wallet Transactions"
                         data={rechargeHistoryData}
                         columns={[
                             {
@@ -90,12 +90,36 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                                return `${firstName} ${lastname}`
                              },
                              },
-                            { title: "Amount", field: "amount" },
-                            { title: "InvoiceId", field: "invoiceId" },
-                            { title: "ReferenceId", field: "referenceId" },
-                            { title: "PaymentMethod", field: "paymentMethod" },
-                            { title: "TransactionType", field: "transactionType" },
-                            { title: "ReferenceModel", field: "referenceModel" },
+                             { title: "Customer Number", field: "customerId.phoneNumber" },
+                             { 
+                                title: "Amount", 
+                                field: "amount",
+                                render: (rowData) => {
+                                  const balance = Number(rowData.amount).toFixed(2);
+                                  if (rowData.amount === 0) {
+                                    return `₹ 0.00`;
+                                  }
+                                  if (rowData?.transactionType === "DEBIT") {
+                                    return `- ₹${balance}`;
+                                  }
+                                  return `+ ₹${balance}`;
+                                }
+                              },
+                            // { title: "InvoiceId", field: "invoiceId" },
+                            // { title: "PaymentMethod", field: "paymentMethod" },
+                            { title: "TransactionType",
+                                render: (rowData) => {
+                                   
+                                    if (rowData?.transactionType=="DEBIT"){
+                                        return `Deducted`;
+                                    }
+                                    else{
+                                        return `Credited`;
+                                    }
+                                    
+                                  }
+                            },
+                            // { title: "ReferenceModel", field: "referenceModel" },
                             { title: "Type", field: "type" },
                         ]}
                         options={{
@@ -154,6 +178,17 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                     </Grid>
                     <Grid item lg={6} md={6} sm={12} xs={12}>
                         <TextField
+                            label="Customer Phone Number"
+                            value={data.customerNumber}
+                            variant="outlined"
+                            fullWidth
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                        />
+                    </Grid>
+                    <Grid item lg={6} md={6} sm={12} xs={12}>
+                        <TextField
                             label="Amount"
                             value={data.amount || "0"}
                             variant="outlined"
@@ -167,17 +202,6 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                         <TextField
                             label="Invoice ID"
                             value={data.invoiceId}
-                            variant="outlined"
-                            fullWidth
-                            InputProps={{
-                                readOnly: true,
-                            }}
-                        />
-                    </Grid>
-                    <Grid item lg={6} md={6} sm={12} xs={12}>
-                        <TextField
-                            label="Reference ID"
-                            value={data.referenceId}
                             variant="outlined"
                             fullWidth
                             InputProps={{

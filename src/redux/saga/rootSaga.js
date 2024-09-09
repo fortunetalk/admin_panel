@@ -42,6 +42,7 @@ import liveStreamSaga from "./liveStreamSaga";
 import rechargeHistorySaga from "./rechargeHistorySaga";
 import astrologerTrainingBannerSaga from "./astrologerTrainingBannerSaga";
 import offerSaga from "./offerSaga";
+import callDiscussionSaga from "./callDiscussionSaga";
 
 
 export default function* rootSaga() {
@@ -88,5 +89,6 @@ export default function* rootSaga() {
     rechargeHistorySaga(),
     astrologerTrainingBannerSaga(),
     offerSaga(),
+    callDiscussionSaga(),
   ]);
 }

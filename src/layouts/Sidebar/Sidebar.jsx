@@ -142,6 +142,23 @@ const routes = [
     ],
   },
   {
+    path: "/wait-list",
+    name: "Waiting List",
+    icon: <BiAbacus />,
+    subRoutes: [
+      {
+        path: "/display-wait-list",
+        name: "Waiting List ",
+        icon: <BiAbacus />,
+      },
+      {
+        path: "/display-wait-list-history",
+        name: "Waiting List History ",
+        icon: <BiAbacus />,
+      },
+    ],
+  },
+  {
     path: "/recharge",
     name: "Recharge",
     icon: <BiAbacus />,
@@ -179,6 +196,11 @@ const routes = [
         icon: <BiAbacus />,
       },
       {
+        path: "/history/wallet-transaction",
+        name: "Wallet Transaction",
+        icon: <BiAbacus />,
+      },
+      {
         path: "/history/demoClassHistory",
         name: "Demo Class History",
         icon: <BiAbacus />,
@@ -198,11 +220,7 @@ const routes = [
         name: "User's Gift History",
         icon: <BiAbacus />,
       },
-      {
-        path: "/history/RechargeHistory",
-        name: "Recharge History",
-        icon: <BiAbacus />,
-      },
+      
     ],
   },
   {

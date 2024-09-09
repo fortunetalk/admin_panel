@@ -29,6 +29,7 @@ import {
   verifyUnverifyAstrologer,
   updateAstrologerStatus,
 } from "../../redux/Actions/astrologerActions.js";
+import { api_url, get_all_astrologers } from "../../utils/Constants.js";
 
 const ListAstrology = ({ astrologerListData }) => {
   const dispatch = useDispatch();
@@ -41,9 +42,9 @@ const ListAstrology = ({ astrologerListData }) => {
     selectedAstro: null,
   });
 
-  useEffect(() => {
-    dispatch(getAllAstrologer());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getAllAstrologer());
+  // }, []);
 
   const handleEdit = (astrologerId) => {
     navigate(`/editAstrologer/${astrologerId}`);
@@ -139,11 +140,8 @@ const ListAstrology = ({ astrologerListData }) => {
 
   return (
     <div className={classes.container}>
-      {!astrologerListData ? (
-        <CircularProgress />
-      ) : (
-        <div className={classes.box}>{displayTable()}</div>
-      )}
+    
+      {displayTable()}
       {viewModalInfo()}
     </div>
   );
@@ -155,12 +153,12 @@ const ListAstrology = ({ astrologerListData }) => {
         <Grid item lg={12} sm={12} md={12} xs={12} style={{ marginTop: 15 }}>
           <MaterialTable
             title="List of Astrologers"
-            data={astrologerListData}
+          
             columns={[
               {
                 title: "S.No",
                 editable: "never",
-                render: (rowData) => astrologerListData.indexOf(rowData) + 1,
+                render: (rowData) => rowData.tableData.id + 1,
               },
               {
                 title: "Unique ID",
@@ -195,7 +193,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     className={classes.statusButton}
                     style={{
                       backgroundColor:
-                        rowData.status === "Blocked" ? "#90EE90" : "#FF7F7F ",
+                      rowData.status === "Blocked" ? "#FF7F7F" : "  #90EE90",
                     }}
                     onClick={() => handleClickOpen(rowData)}
                   >
@@ -214,7 +212,9 @@ const ListAstrology = ({ astrologerListData }) => {
                       backgroundColor:
                         rowData.callStatus === "Online"
                           ? "#90EE90"
-                          : "#FF7F7F ",
+                          : rowData.callStatus === "Busy"
+                          ? "#FF7F7F"
+                          : "#D3D3D3", // Default color if it's neither Online nor Busy
                     }}
                     onClick={() => handleChangeCallStatus(rowData)}
                   >
@@ -232,8 +232,10 @@ const ListAstrology = ({ astrologerListData }) => {
                     style={{
                       backgroundColor:
                         rowData.chatStatus === "Online"
-                          ? "#90EE90"
-                          : "#FF7F7F ",
+                        ? "#90EE90"
+                        : rowData.chatStatus === "Busy"
+                        ? "#FF7F7F"
+                        : "#D3D3D3", 
                     }}
                     onClick={() => handleChangeChatStatus(rowData)}
                   >
@@ -242,8 +244,51 @@ const ListAstrology = ({ astrologerListData }) => {
                 ),
               },
             ]}
-            options={{ ...propStyles.tableStyles, filtering: false }}
-            style={{ fontSize: "1.4rem" }}
+
+            // data={astrologerListData}
+
+            data={query =>
+              new Promise((resolve, reject) => {
+                console.log('Query:', query);
+                const filters = {};
+            
+                query.filters.forEach(item => {
+                  if (item.value.length > 0) {
+                    filters[item.column.field] = item.value[0];
+                  }
+                });
+            
+                console.log('Filters:', filters);
+            
+                fetch(api_url + get_all_astrologers, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    page: query.page + 1,
+                    limit: query.pageSize === 0 ? 10 : query.pageSize,
+                  }),
+                })
+                  .then(response => response.json())
+                  .then(result => {
+                    console.log('Fetch Result:', result.data);
+                    resolve({
+                      data: result.data.data,
+                      page: result.data.pagination.currentPage - 1,
+                      totalCount: result.data.pagination.totalCount,
+                    });
+                  })
+                  .catch(error => {
+                    console.error('Fetch Error:', error);
+                    reject(error);
+                  });
+              })
+            }
+
+
+            options={{ ...propStyles.tableStyles,  paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], filtering: false }}
+            style={{ fontSize: "1.2rem" }}
             actions={[
               {
                 icon: "edit",

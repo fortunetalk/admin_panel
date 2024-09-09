@@ -29,8 +29,9 @@ import { doc, getDoc, collection, orderBy, query, onSnapshot, getDocs } from "fi
 function* getChatHistory() {
   try {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
-    const response = yield ApiRequest.getRequest({
+    const response = yield ApiRequest.postRequest({
       url: api_url + get_chat_history,
+      
     });
 
 

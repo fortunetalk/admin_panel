@@ -109,7 +109,8 @@ export const ChatEarning = ({dispatch, adminEarningData}) => {
                 return astrologerShare.toFixed(2); 
               }
             },
-          { title: 'Total Charge', render: rowData =>`${rowData.deductedAmount}` },
+          // { title: 'Total Charge', render: rowData =>`${rowData.deductedAmount}` },
+          { title: 'Total Charge', render: rowData => `${parseFloat(rowData.deductedAmount).toFixed(2)}` },
           { title: 'Amount', render: rowData => parseFloat(rowData.chatPrice).toFixed(2) },
           { title: 'Status', field: 'status' },
           {

@@ -1,17 +1,17 @@
 // Production Server
-// export const base_url = "http://97.74.83.200:4000/";
-// export const api_url = "http://97.74.83.200:4000/api/";
+export const base_url = "http://97.74.83.200:4000/";
+export const api_url = "http://97.74.83.200:4000/api/";
 
 // Testing Server
 // export const base_url = "http://97.74.83.200:8000/";
 // export const api_url = "http://97.74.83.200:8000/api/";
 
 // Local Server
-export const base_url = "http://localhost:8000/";
-export const api_url = "http://localhost:8000/api/";
+// export const base_url = "http://localhost:4000/";
+// export const api_url = "http://localhost:4000/api/";
 
 
-// admin login 
+// admin login    
 export const admin_login='admin/login';
 export const admin_logout='admin/logout';
 export const admin_change_password='admin/change_password';
@@ -59,13 +59,20 @@ export const update_review = "admin/update-review";
 export const delete_review = "admin/review-delete";
 export const verify_review = 'admin/verify-review'
 
+// Call Discussions
+
+export const add_call_discussion = "admin/customer/add_discussion";
+export const get_call_discussion = "admin/customer/user_discussion";
+export const update_call_discussion = "admin/customer/update_discussion";
+export const delete_call_discussion = "admin/customer/delete_discussion";
+
+
 // Astrologers Offers
 
 export const add_offers = "admin/offer/create_astrologer_offer";
 export const get_offers = "admin/offer/get_astrologer_offer";
 export const update_offers = "admin/offer/update_astrologer_offer";
 export const delete_offers = "admin/offer/delete_astrologer_offer";
-// export const verify_offers = 'admin/verify-review'
 
 //Astrologer
 export const add_astrologer = "admin/add-astrologers";
@@ -382,5 +389,7 @@ export const delete_live_stream= 'admin/live_stream/delete'
 
 //recharge
 export const recharge_history_list= 'admin/recharge/history'
+export const recharge_history_add= 'admin/recharge/add'
+export const recharge_history_delete= 'admin/recharge/delete'
 
 export const get_all_country = 'https://api.countrystatecity.in/v1/countries'

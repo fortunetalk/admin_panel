@@ -78,6 +78,9 @@ const languages = [
 
 const astrologerTypeList = ["Consultation", "Teaching", "Pandit", "All"];
 
+
+
+
 export const AddAstrologers = ({
   activeSkillsData,
   activeExpertiseData,
@@ -90,7 +93,7 @@ export const AddAstrologers = ({
 }) => {
   var classes = useStyles();
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const [galleryImage, setGalleryImage] = useState([]);
   const [galleryFiles, setGalleryFiles] = useState([]);
 
@@ -209,6 +212,7 @@ export const AddAstrologers = ({
     }
     handleError("countryValue", null);
   };
+  
 
   const handleRemedies = (item) => {
     if (remedies.some((selectedItem) => selectedItem === item._id)) {
@@ -480,6 +484,10 @@ export const AddAstrologers = ({
     return isValid;
   };
 
+  const onAdd =()=>{
+    navigate('/astrologers/displayAstrologer')
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -556,6 +564,8 @@ export const AddAstrologers = ({
         AstrologerActions.addAstrologer({
           data: formData,
           reset: handleReset,
+          onAdd: onAdd,
+          
         })
       );
       // navigate('/astrologers/displayAstrologer')
@@ -1757,6 +1767,8 @@ export const AddAstrologers = ({
   );
 };
 
+
+
 const mapStateToProps = (state) => ({
   activeSkillsData: state.skills.activeSkillsData,
   activeExpertiseData: state.experites.activeExpertiseData,
@@ -1769,10 +1781,5 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });
-
-// const mapDispatchToProps = (dispatch) => ({
-//   addAstrologer: (category) => dispatch(AstrologerActions.addAstrologer(category)),
-
-// });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddAstrologers);

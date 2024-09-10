@@ -1,21 +1,45 @@
 import React from "react";
-import { Avatar, Conversation,  } from "@chatscope/chat-ui-kit-react";
+import { Avatar, Conversation, } from "@chatscope/chat-ui-kit-react";
+import { connect } from "react-redux";
+import * as ChatSupportActions from  '../../../redux/Actions/supportChatActions';
 
-const Conversations = ({ info, name, lastSenderName, src }) => {
-    
+const Conversations = ({ dispatch, customerListData }) => {
+    console.log(customerListData, 'dsfjsdjkfhsjdfhsjs');
     return (
-        <Conversation
-        info={info}
-        lastSenderName={lastSenderName}
-        name={name}>
+        <>
+            {
+                customerListData.map((item, index) => {
+                    console.log("item", item)
+                    return (
+                        <Conversation
+                            info={item.text}
+                            lastSenderName={item.user.name}
+                            name={item.user.name}
+                            onClick={() =>{
+                                dispatch(ChatSupportActions.setCurrentCustomerSupport(item));
+                            }}
+                        >
 
-        <Avatar
-            name={name}
-             src={src}
-        />
+                            <Avatar
+                                name={item.user.name}
+                                src={item.user.avatar}
+                            />
+                            {/* <Conversation.Operations onClick={()=>{
+                               console.log("kjdhjksf");
+                            }} /> */}
+                        </Conversation>
+                    )
 
-    </Conversation>
+                })}
+        </>
+
     );
 };
 
-export default Conversations;
+const mapStateToProps = state => ({
+    customerListData: state.chatSupport.customerListData
+})
+
+const mapDispatchToProps = dispatch => ({ dispatch })
+
+export default connect(mapStateToProps, mapDispatchToProps)(Conversations);

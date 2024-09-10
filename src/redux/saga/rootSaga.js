@@ -43,6 +43,7 @@ import rechargeHistorySaga from "./rechargeHistorySaga";
 import astrologerTrainingBannerSaga from "./astrologerTrainingBannerSaga";
 import offerSaga from "./offerSaga";
 import callDiscussionSaga from "./callDiscussionSaga";
+import chatSupportSaga from "./chatSupportSaga";
 
 
 export default function* rootSaga() {
@@ -90,5 +91,6 @@ export default function* rootSaga() {
     astrologerTrainingBannerSaga(),
     offerSaga(),
     callDiscussionSaga(),
+    chatSupportSaga()
   ]);
 }

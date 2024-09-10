@@ -43,6 +43,7 @@ import rechargeHistory from "./rechargeHistory";
 import astrologerTrainingBanner from "./astrologerTrainingBanner";
 import offers from "./offers";
 import callDiscussion from "./callDiscussion";
+import chatSupport from "./chatSupportReducer";
 
 const rootReducer = combineReducers({
   admin,
@@ -88,6 +89,7 @@ const rootReducer = combineReducers({
   astrologerTrainingBanner,
   offers,
   callDiscussion,
+  chatSupport
 });
 
 // const appReducer = (state, action) => {

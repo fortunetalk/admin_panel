@@ -23,7 +23,6 @@ const firebaseConfig = {
 
 
 // Testing
-
 // const firebaseConfig = {
 //   apiKey: "AIzaSyAVZhvNHhF64aY_okmKFMjK4WXMx9BYKj8",
 //   authDomain: "fortunetalk-test.firebaseapp.com",

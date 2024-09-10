@@ -143,7 +143,8 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
               {
                 title: "Total Charge",
                 field: "deductedAmount",
-                filtering: false,
+                filtering: true,
+                lookup: { ZEROS: "NO BALANCE", NONZEROS: "HAVE BALANCE", },
                 render: rowData => {
                   const amount = Number(rowData.deductedAmount).toFixed(2);
                   return `₹ ${amount}`;
@@ -242,35 +243,6 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
                   })
               })
 
-
-
-              // await axios.post(api_url + get_chat_history, {
-              //   data: {
-              //     page: query.page + 1, // MaterialTable uses 0-indexed pages
-              //     limit: query.pageSize === 0 ? 10 : query.pageSize,
-              //     ...filters, // Include processed filters
-              //   }
-              // })
-
-              //   .then(response => {
-              //     console.log("response", response);
-              //     console.log({
-              //       data: response.data.data.data, // Adjust based on your API response
-              //       page: response.data.data.pagination.currentPage - 1, // Adjust for 0-indexed pages
-              //       totalCount: response.data.data.pagination.totalCount, // Total number of rows
-              //     })
-              //     // Resolve the promise with data, page, and totalCount
-              //     resolve({
-              //       data: response.data.data.data, // Adjust based on your API response
-              //       page: response.data.data.pagination.currentPage - 1, // Adjust for 0-indexed pages
-              //       totalCount: response.data.data.pagination.totalCount, // Total number of rows
-              //     });
-              //   })
-              //   .catch(error => {
-              //     console.error('Error fetching data:', error);
-              //     reject(error);
-              //   });
-              // })
             }
 
             options={{ ...propStyles.tableStyles,  paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], filtering: 'true' }}

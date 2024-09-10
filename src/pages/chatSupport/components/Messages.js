@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Avatar, Message, MessageSeparator } from "@chatscope/chat-ui-kit-react";
 import moment from "moment";
 
+
 const Messages = ({ messageOne, messageTwo, }) => {
-    console.log(messageOne);
-    console.log(messageTwo);
     const [seprateMessageVisible, setSeprateMessageVisible] = useState(false);
 
     useEffect(() => {
@@ -42,10 +41,8 @@ const Messages = ({ messageOne, messageTwo, }) => {
                     message: messageOne.message,
                     position: messageOne.position,
                     sender: messageOne.sender,
-                    sentTime: messageOne.sentTime,
-
-                }}
-            >
+                    sentTime: "10:00",
+                }}>
                 {messageOne.direction === 'incoming' && (
                     <Avatar
                         name={messageOne.name}

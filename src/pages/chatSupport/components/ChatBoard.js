@@ -84,10 +84,19 @@ const ChatBoard = ({ dispatch, currentCustomerSupport }) => {
                         ))}
 
                     </MessageList>
-                    <MessageInput placeholder="Type message here" onSend={(text) => {
+                    <MessageInput placeholder="Type message here" 
+                    // onAttachClick={ () => {
+                    //     if (fileInputRef.current) {
+                    //       fileInputRef.current.click();
+                    //     }
+                    //   }:
+                      
+
+                     onSend={(text) => {
                         console.log('send message', text)
                         dispatch(SupportChatActions.sendSupportChatMessage({ text }))
-                    }} />
+                    }}
+                     />
                 </ChatContainer>
             }
         </>

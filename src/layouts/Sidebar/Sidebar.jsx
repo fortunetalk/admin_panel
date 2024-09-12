@@ -267,11 +267,11 @@ const routes = [
         name: "Astrologer Review",
         icon: <BiAbacus />,
       },
-      {
-        path: "/appReviews",
-        name: "App Review",
-        icon: <BiAbacus />,
-      },
+      // {
+      //   path: "/appReviews",
+      //   name: "App Review",
+      //   icon: <BiAbacus />,
+      // },
     ],
   },
   {
@@ -281,7 +281,7 @@ const routes = [
   },
   {
     path: "/call-discussion",
-    name: "Call Discussion",
+    name: "User Call Discussion",
     icon: <BiAbacus />,
   },
   
@@ -296,23 +296,7 @@ const routes = [
     name: "Blog",
     icon: <BiAbacus />,
   },
-  {
-    path: "/displayAstroblog",
-    name: "Review",
-    icon: <BiAbacus />,
-    subRoutes: [
-      {
-        path: "/displayReview",
-        name: "Astrologer Review",
-        icon: <BiAbacus />,
-      },
-      {
-        path: "/appReviews",
-        name: "App Review",
-        icon: <BiAbacus />,
-      },
-    ],
-  },
+  
 
   {
     path: "/displayAstrologerOffer",

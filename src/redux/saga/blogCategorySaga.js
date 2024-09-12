@@ -15,6 +15,8 @@ function* createBlogCategory(actions) {
       data: payload,
     });
 
+    console.log(response)
+
     if (response.success) {
       Swal.fire({
         icon: "success",

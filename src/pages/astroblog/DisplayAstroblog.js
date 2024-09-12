@@ -13,6 +13,7 @@ import {
   Button,
   CircularProgress
 } from "@mui/material";
+import logo_icon from "../../assets/images/logo_icon.png";
 import { AddCircleRounded, CloseRounded } from "@mui/icons-material";
 import MaterialTable from "material-table";
 import { useNavigate } from "react-router-dom";
@@ -38,7 +39,7 @@ const DisplayAstroblog = ({
   appBlogCategoryData,
   getBlogCategory
 }) => {
-
+  console.log(appBlogCategoryData)
   const classes = useStyles();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -48,6 +49,7 @@ const DisplayAstroblog = ({
   const [isAllSelected, setIsAllSelected] = useState(false);
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState(null);
+  const [icon, setIcon] = useState({ file: logo_icon, bytes: null });
 
   const [blogData, setBlogData] = useState({
     _id: "",
@@ -59,6 +61,8 @@ const DisplayAstroblog = ({
     oldImage: "",
     categoryId: ""
   });
+
+
   const [error, setError] = useState({});
 
   useEffect(() => {
@@ -68,21 +72,19 @@ const DisplayAstroblog = ({
   }, [dispatch, appBlogData]);
 
   useEffect(() => {
-    if (!appBlogCategoryData) {
-      dispatch(getBlogCategory());
-    }
-  }, [dispatch, appBlogCategoryData]);
+     dispatch(getBlogCategory());
+  }, [dispatch,]);
 
   const handleOpen = (rowData) => {
     setOpen(true);
     setBlogData({
-      _id: rowData._id,
-      title: rowData.title,
-      description: rowData.description,
-      galleryImages: rowData.galleryImage || [],
-      status: rowData.status,
-      oldImage: rowData.image,
-      categoryId: rowData.categoryId || ""
+      _id: rowData?._id,
+      title: rowData?.title,
+      description: rowData?.description,
+      galleryImages: rowData?.galleryImage || [],
+      status: rowData?.status,
+      oldImage: rowData?.image,
+      categoryId: rowData?.categoryId || ""
     });
   };
 
@@ -92,29 +94,27 @@ const DisplayAstroblog = ({
 
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
-      setFile(e.target.files[0]);
+      setBlogData(prev => {
+        const newData = { ...prev, image: { file: e.target.files[0], bytes: e.target.files[0] } }
+        return newData
+      })
     }
-  };
-
-  const handleGalleryChange = (event) => {
-    const files = Array.from(event.target.files);
-    setGalleryImages(files);
   };
 
   const handleUpdate = () => {
     const { _id, title, description, image, status, categoryId } = blogData;
 
-    if (title && description && image.bytes && status && categoryId) {
+    if (title && description && status) {
       const formData = new FormData();
-      formData.append('id', _id);
+      formData.append('blogId', _id);
       formData.append('title', title);
       formData.append('description', description);
-      formData.append('image', image.bytes); // Append image bytes only if selected
+      // formData.append('image', image.bytes); // Append image bytes only if selected
       formData.append('status', status);
       formData.append('categoryId', categoryId);
 
-      if (file) {
-        formData.append('image', file);
+      if (image?.file) {
+        formData.append('image', image?.bytes);
       }
 
       galleryImages.forEach((img) => {
@@ -133,6 +133,7 @@ const DisplayAstroblog = ({
   };
 
   const handleClose = () => {
+    setOpen(false);
     setBlogData({
       _id: "",
       title: "",
@@ -143,9 +144,7 @@ const DisplayAstroblog = ({
       oldImage: "",
       categoryId: ""
     });
-    setOpen(false);
   };
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -176,7 +175,7 @@ const DisplayAstroblog = ({
       confirmButtonText: 'Yes, Change it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        const newStatus = rowData.status === 'Active' ? 'InActive' : 'Active';
+        const newStatus = rowData?.status === 'Active' ? 'InActive' : 'Active';
         dispatch(updateBlogStatus({ blogId: rowData._id, status: newStatus }));
       }
     });
@@ -212,9 +211,9 @@ const DisplayAstroblog = ({
                 field: "status",
                 render: rowData => (
                   <div className={classes.statusButton}
-                    style={{ backgroundColor: rowData.status === 'Active' ? '#90EE90' : '#FF7F7F ' }}
+                    style={{ backgroundColor: rowData?.status === 'Active' ? '#90EE90' : '#FF7F7F ' }}
                     onClick={() => handleClickOpen(rowData)}>
-                    {rowData.status}
+                    {rowData?.status}
                   </div>
                 )
               },
@@ -280,6 +279,23 @@ const DisplayAstroblog = ({
   ];
 
   const editModal = () => {
+    const handleIcon = (e) => {
+      if (e.target.files && e.target.files.length > 0) {
+        setBlogData(prevState => {
+          const newData = { ...prevState, image: { file: URL.createObjectURL(e.target.files[0]), bytes: e.target.files[0] } }
+          console.log(newData)
+          return newData
+        })
+        handleError("icon", null);
+        setFile(e.target.files[0]);
+      }
+    };
+
+    const handleGalleryChange = (event) => {
+      const files = Array.from(event.target.files);
+      setGalleryImages(files);
+    };
+
     return (
       <Dialog open={open} onClose={handleClose}>
         <DialogContent>
@@ -299,17 +315,17 @@ const DisplayAstroblog = ({
                   labelId="blog-category-select-label"
                   id="blog-category-select"
                   name="categoryId"
-                  value={blogData.categoryId}
+                  value={blogData?.categoryId}
                   onChange={handleChange}
-                  error={!!error.categoryId}
+                  error={!!error?.categoryId}
                 >
-                  {appBlogCategoryData?.map(category => (
-                    <MenuItem key={category._id} value={category._id}>
-                      {category.title}
+                  {appBlogCategoryData && appBlogCategoryData?.map(category => (
+                    <MenuItem key={category?._id} value={category?._id}>
+                      {category?.title}
                     </MenuItem>
                   ))}
                 </Select>
-                <div className={classes.errorstyles}>{error.categoryId}</div>
+                <div className={classes.errorstyles}>{error?.categoryId}</div>
               </FormControl>
             </Grid>
 
@@ -320,23 +336,23 @@ const DisplayAstroblog = ({
                   labelId="status-select-label"
                   id="status-select"
                   name="status"
-                  value={blogData.status}
+                  value={blogData?.status}
                   onChange={handleChange}
-                  error={!!error.status}
+                  error={!!error?.status}
                 >
                   <MenuItem value="Active">Active</MenuItem>
                   <MenuItem value="InActive">InActive</MenuItem>
                 </Select>
-                <div className={classes.errorstyles}>{error.status}</div>
+                <div className={classes.errorstyles}>{error?.status}</div>
               </FormControl>
             </Grid>
             <Grid item lg={6} md={6} sm={6} xs={6}>
               <TextField
                 label="Title"
                 name="title"
-                error={!!error.title}
-                helperText={error.title}
-                value={blogData.title}
+                error={!!error?.title}
+                helperText={error?.title}
+                value={blogData?.title}
                 onFocus={() => handleError("title", null)}
                 onChange={handleChange}
                 variant="outlined"
@@ -348,7 +364,7 @@ const DisplayAstroblog = ({
               <Grid component="label" className={classes.uploadImageButton}>
                 Upload Picture
                 <input
-                  onChange={handleImageChange}
+                  onChange={handleIcon}
                   hidden
                   accept="image/*"
                   type="file"
@@ -357,7 +373,7 @@ const DisplayAstroblog = ({
             </Grid>
             <Grid item lg={2} sm={2} md={2} xs={2}>
               <Avatar
-                src={blogData?.oldImage} // Use image file if available
+                src={blogData?.image?.file} // Use image file if available
                 style={{ width: 56, height: 56 }}
               />
             </Grid>
@@ -378,7 +394,7 @@ const DisplayAstroblog = ({
                 {galleryImages.map((img, index) => (
                   <Grid item lg={2} md={3} sm={4} xs={6} key={index}>
                     <Avatar
-                      src={img}
+                      src={URL.createObjectURL(img)}
                       style={{ width: 56, height: 56, margin: 4 }}
                     />
                   </Grid>
@@ -388,16 +404,16 @@ const DisplayAstroblog = ({
             <Grid item lg={12} sm={12} md={12} xs={12}>
               <ReactQuill
                 theme="snow"
-                error={!!error.description}
-                helperText={error.description}
-                value={blogData.description}
+                error={!!error?.description}
+                helperText={error?.description}
+                value={blogData?.description}
                 onFocus={() => handleError("description", null)}
                 onChange={setDescription}
                 modules={modules}
                 formats={formats}
                 placeholder="Enter description..."
               />
-              <div className={classes.errorstyles}>{error.description}</div>
+              <div className={classes.errorstyles}>{error?.description}</div>
             </Grid>
 
             <Grid item lg={12} sm={12} md={12} xs={12} container justifyContent="center" alignItems="center">
@@ -417,12 +433,12 @@ const DisplayAstroblog = ({
   return (
     <div className={classes.container}>
       {
-        !appBlogData ? <CircularProgress/> :
+        !appBlogData ? <CircularProgress /> :
 
-      <div className={classes.box}>
-        {displayTable()}
-        {editModal()}
-      </div>
+          <div className={classes.box}>
+            {appBlogData && displayTable()}
+            {editModal()}
+          </div>
       }
     </div>
   );
@@ -430,7 +446,7 @@ const DisplayAstroblog = ({
 
 const mapStateToProps = (state) => ({
   appBlogData: state.blog?.appBlogData,
-  appBlogCategoryData: state.blog?.appBlogCategoryData
+  appBlogCategoryData: state.blogCategory?.appBlogCategoryData
 });
 
 const mapDispatchToProps = (dispatch) => ({

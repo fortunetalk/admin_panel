@@ -78,7 +78,7 @@ function* updateBlog(actions) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.UPDATE_BLOG, payload: response.data });
+      yield put({ type: actionTypes.BLOG_LIST, payload: response.data });
     } else {
       Swal.fire({
         icon: "error",
@@ -99,6 +99,7 @@ function* updateBlog(actions) {
     console.log(e);
   } finally {
     yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+
   }
 }
 

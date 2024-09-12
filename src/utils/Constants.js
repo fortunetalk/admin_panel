@@ -55,7 +55,7 @@ export const delete_main_expertise = "admin/delete-main-expertise";
 
 export const add_review = "api/admin/add_reviews";
 export const get_review = "admin/get_all_reviews";
-export const update_review = "admin/update-review";
+export const update_review = "admin/review_update";
 export const delete_review = "admin/review-delete";
 export const verify_review = 'admin/verify-review'
 
@@ -215,7 +215,7 @@ export const active_blog_category='admin/active-blog-category'
 //BLOG
 export const create_blog='admin/blog/add'
 export const blog_list='admin/blog'
-export const update_blog='admin/update'
+export const update_blog='admin/blog/update'
 export const update_blog_status='admin/blog/change_status'
 export const delete_blog='admin/blog/delete'
 export const delete_multiple_blog='admin/delete-multiple-blog'

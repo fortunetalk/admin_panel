@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Colors, propStyles, useStyles } from "../../assets/styles.js";
 import MaterialTable from "material-table";
 import {
@@ -32,6 +32,7 @@ import {
 import { api_url, get_all_astrologers } from "../../utils/Constants.js";
 
 const ListAstrology = ({ astrologerListData }) => {
+  const tableRef = useRef(null);
   const dispatch = useDispatch();
   var classes = useStyles();
   const navigate = useNavigate();
@@ -68,6 +69,11 @@ const ListAstrology = ({ astrologerListData }) => {
       return newData;
     });
   };
+  const onUpdate = () => {
+    setTimeout(() => {
+      navigate(0); // Refreshes the current page
+    }, 5000);
+  }
 
   const { editModalOpen, viewModalOpen, selectedAstro } = state;
 
@@ -106,15 +112,23 @@ const ListAstrology = ({ astrologerListData }) => {
       if (result.isConfirmed) {
         const newStatus =
           rowData.callStatus === "Online" ? "Offline" : "Online";
+        // dispatch(
+        //   updateAstrologerCallStatus({
+        //     astrologerId: rowData._id,
+        //     callStatus: newStatus,
+        //     onUpdate })
+        // );
         dispatch(
-          updateAstrologerCallStatus({
-            astrologerId: rowData._id,
-            callStatus: newStatus,
-          })
+          updateAstrologerCallStatus({ data:{ astrologerId: rowData._id, callStatus: newStatus}, onComplete: onRefreshTable  })
         );
       }
     });
   };
+
+  const onRefreshTable = () => {
+    tableRef.current && tableRef.current.onQueryChange()
+  }
+
   const handleChangeChatStatus = (rowData) => {
     Swal.fire({
       title: "Are you sure to Change the Chat Status?",
@@ -128,12 +142,8 @@ const ListAstrology = ({ astrologerListData }) => {
       if (result.isConfirmed) {
         const newStatus =
           rowData.chatStatus === "Online" ? "Offline" : "Online";
-        dispatch(
-          updateAstrologerChatStatus({
-            astrologerId: rowData._id,
-            chatStatus: newStatus,
-          })
-        );
+        dispatch(updateAstrologerChatStatus({ data: { astrologerId: rowData._id, chatStatus: newStatus }, onComplete: onRefreshTable }));
+
       }
     });
   };
@@ -150,6 +160,7 @@ const ListAstrology = ({ astrologerListData }) => {
       <Grid container spacing={2}>
         <Grid item lg={12} sm={12} md={12} xs={12} style={{ marginTop: 15 }}>
           <MaterialTable
+            tableRef={tableRef}
             title="List of Astrologers"
             columns={[
               {
@@ -211,8 +222,8 @@ const ListAstrology = ({ astrologerListData }) => {
                         rowData.callStatus === "Online"
                           ? "#90EE90"
                           : rowData.callStatus === "Busy"
-                          ? "#FF7F7F"
-                          : "#D3D3D3", // Default color if it's neither Online nor Busy
+                            ? "#FF7F7F"
+                            : "#D3D3D3", // Default color if it's neither Online nor Busy
                     }}
                     onClick={() => handleChangeCallStatus(rowData)}
                   >
@@ -232,8 +243,8 @@ const ListAstrology = ({ astrologerListData }) => {
                         rowData.chatStatus === "Online"
                           ? "#90EE90"
                           : rowData.chatStatus === "Busy"
-                          ? "#FF7F7F"
-                          : "#D3D3D3",
+                            ? "#FF7F7F"
+                            : "#D3D3D3",
                     }}
                     onClick={() => handleChangeChatStatus(rowData)}
                   >
@@ -288,6 +299,7 @@ const ListAstrology = ({ astrologerListData }) => {
               pageSize: 10,
               pageSizeOptions: [10, 20, 50, 100],
               filtering: false,
+              
             }}
             style={{ fontSize: "1.2rem" }}
             actions={[
@@ -717,11 +729,11 @@ const ListAstrology = ({ astrologerListData }) => {
                       value={
                         selectedAstro?.skillId.length > 1
                           ? selectedAstro.skillId
-                              .map((skill) => skill.title)
-                              .join(", ")
+                            .map((skill) => skill.title)
+                            .join(", ")
                           : selectedAstro.skillId.length === 1
-                          ? selectedAstro.skillId[0].title
-                          : ""
+                            ? selectedAstro.skillId[0].title
+                            : ""
                       }
                       InputProps={{
                         readOnly: true,
@@ -735,11 +747,11 @@ const ListAstrology = ({ astrologerListData }) => {
                       value={
                         selectedAstro?.remediesId.length > 1
                           ? selectedAstro.remediesId
-                              .map((remedy) => remedy.title)
-                              .join(", ")
+                            .map((remedy) => remedy.title)
+                            .join(", ")
                           : selectedAstro.remediesId.length === 1
-                          ? selectedAstro.remediesId[0].title
-                          : ""
+                            ? selectedAstro.remediesId[0].title
+                            : ""
                       }
                       InputProps={{
                         readOnly: true,
@@ -753,11 +765,11 @@ const ListAstrology = ({ astrologerListData }) => {
                       value={
                         selectedAstro?.expertiseId.length > 1
                           ? selectedAstro.expertiseId
-                              .map((expertise) => expertise.title)
-                              .join(", ")
+                            .map((expertise) => expertise.title)
+                            .join(", ")
                           : selectedAstro.expertiseId.length === 1
-                          ? selectedAstro.expertiseId[0].title
-                          : ""
+                            ? selectedAstro.expertiseId[0].title
+                            : ""
                       }
                       InputProps={{
                         readOnly: true,

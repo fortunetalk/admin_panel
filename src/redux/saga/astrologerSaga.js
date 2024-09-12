@@ -211,13 +211,13 @@ function* updateAstrologerStatus(action) {
 
 function* updateAstrologerCallStatus(action) {
   try {
-    const { payload } = action;
+    const {  data, onComplete } = action.payload;
     // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_astrologer_call_status,
       header: "json",
-      data: payload,
+      data: data,
     });
 
     if (response && response.success) {
@@ -227,10 +227,9 @@ function* updateAstrologerCallStatus(action) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({
-        type: actionTypes.UPDATE_ASTROLOER_CALL_STATUS,
-        payload: response,
-      });
+      yield call(onComplete);
+      // yield put({ type: actionTypes.UPDATE_ASTROLOER_CALL_STATUS,payload: response, });
+      // yield put({ type: actionTypes.GET_ALL_ASTROLOGER, payload: null });
     } else {
       Swal.fire({
         icon: "error",
@@ -250,19 +249,19 @@ function* updateAstrologerCallStatus(action) {
       timer: 2000,
     });
   } finally {
-    // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
+    yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
+    yield put({ type: actionTypes.GET_ALL_ASTROLOGER, payload: null });
   }
 }
 
 function* updateAstrologerChatStatus(action) {
   try {
-    const { payload } = action;
+    const { data, onComplete } = action?.payload || {};
     // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
-
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_astrologer_chat_status,
       header: "json",
-      data: payload,
+      data: data,
     });
 
     if (response && response.success) {
@@ -272,10 +271,11 @@ function* updateAstrologerChatStatus(action) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({
-        type: actionTypes.UPDATE_ASTROLOGER_CHAT_STATUS,
-        payload: response,
-      });
+      yield call(onComplete)
+      // yield put({
+      //   type: actionTypes.UPDATE_ASTROLOGER_CHAT_STATUS,
+      //   payload: response,
+      // });
     } else {
       Swal.fire({
         icon: "error",

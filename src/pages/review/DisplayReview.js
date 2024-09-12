@@ -100,36 +100,51 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
     return isValid;
   };
 
+  // const handleSubmit = async () => {
+  //   if (validation()) {
+  //     // setIsLoading(true)
+  //     var body = {
+  //       reviewId: reviewId,
+  //       ratings: rating,
+  //       comments: comment,
+  //     };
+  //     var response = await postData(update_review, body);
+  //     // setIsLoading(false)
+  //     if (response?.success) {
+  //       Swal.fire({
+  //         icon: "success",
+  //         title: "Review Updated Successfull",
+  //         showConfirmButton: true,
+  //         timer: 2000,
+  //       });
+  //       // fetchAllReviews();
+  //       handleClose();
+  //     } else {
+  //       Swal.fire({
+  //         title: "Failed",
+  //         text: "Please Check your Internet!",
+  //         icon: "error",
+  //         showConfirmButton: false,
+  //         timer: 2000,
+  //       });
+  //     }
+  //   }
+  // };
+
+
   const handleSubmit = async () => {
-    if (validation()) {
-      // setIsLoading(true)
-      var body = {
-        reviewId: reviewId,
-        ratings: rating,
-        comments: comment,
-      };
-      var response = await postData(update_review, body);
-      // setIsLoading(false)
-      if (response.success) {
-        Swal.fire({
-          icon: "success",
-          title: "Review Updated Successfull",
-          showConfirmButton: true,
-          timer: 2000,
-        });
-        // fetchAllReviews();
-        handleClose();
-      } else {
-        Swal.fire({
-          title: "Failed",
-          text: "Please Check your Internet!",
-          icon: "error",
-          showConfirmButton: false,
-          timer: 2000,
-        });
-      }
-    }
-  };
+        var body = {
+            "reviewId": reviewId,
+            "customerId": customer,
+            "rating": rating,
+            "comments": comment
+        }
+   
+        dispatch(ReviewActions.updateAstrologerReview(body))
+        setOpen(false)
+
+};
+
 
   const handleDelete = async (rowData) => {
     Swal.fire({
@@ -197,10 +212,22 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
                 editable: "never",
                 render: (rowData) => reverseData.indexOf(rowData) + 1,
               },
-              { title: "User Name", field: "customerId.customerName" },
-              { title: "Astrologer Name", field: "astrologerId.displayName" },
+              { title: "User Name", field: "customerId.customerName", filtering: false },
+              { title: "Astrologer Name", field: "astrologerId.displayName", filtering: false },
               { title: "Comments", field: "comments", filtering: false },
-              { title: "Rating", field: "rating", filtering: false },
+              { title: "Rating", field: "rating", filtering: true ,
+                lookup: { 1: "1", 2: "2", 3: "3", 4: "4", 5:"5" },
+                width:'20'
+              },
+
+              // { 
+              //   title: "Rating", 
+              //   field: "rating", 
+              //   filtering: true,
+              //   inputProps={{ min: 1, max: 5 }}
+
+              // },
+
               {
                 title: "Date & Time",
                 field: "createdAt",
@@ -215,7 +242,11 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
               }
               
             ]}
-            options={propStyles.tableStyles}
+            options={{
+              ...propStyles.tableStyles, // Spread operator to include properties from propStyles.tableStyles
+              filtering: true, // Ensure this is added to the options
+              // Add other options as needed
+            }}
             actions={[
               {
                 icon: "edit",
@@ -269,6 +300,7 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
               helperText={error.rating}
               InputLabelProps={{ shrink: true }}  
               inputProps={{ min: 1, max: 5 ,}}
+            
               onChange={(e) => {
                 const inputValue = e.target.value;
                 if (inputValue >= 0 && inputValue <= 5) {

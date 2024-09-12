@@ -132,7 +132,10 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
               },
               { title: "Call Price", field: "callPrice",filtering: false, },
               { title: "Commission Price", field: "commissionPrice", filtering: false, },
-              { title: "Deducted Amount", field: "deductedAmount",filtering: false,
+             
+              { title: "Deducted Amount", field: "deductedAmount",
+                filtering: true,
+                lookup: { ZEROS: "NO BALANCE", NONZEROS: "HAVE BALANCE", },
                 render: (rowData) => {
                   const balance = Number(rowData.deductedAmount).toFixed(2);
                   return balance;

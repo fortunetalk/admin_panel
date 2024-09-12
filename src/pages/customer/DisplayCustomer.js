@@ -12,7 +12,7 @@ import {
   DialogContent,
   CircularProgress,
 } from "@mui/material";
-import { CloseRounded, AddCircleRounded } from "@mui/icons-material";
+import { CloseRounded, AddCircleRounded, Search } from "@mui/icons-material";
 import MaterialTable from "material-table";
 import { Colors } from "../../assets/styles.js";
 
@@ -301,6 +301,7 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
                 console.log({
                   page: query.page + 1, // MaterialTable uses 0-indexed pages
                   limit: query.pageSize === 0 ? 10 : query.pageSize,
+                  search: query.search,
                   ...filters, // Include processed filters
                 })
 
@@ -312,6 +313,7 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
                   body: JSON.stringify({
                     page: query.page + 1, // MaterialTable uses 0-indexed pages
                     limit: query.pageSize === 0 ? 10 : query.pageSize,
+                    search: query.search,
                   }), // Convert the request body to JSON
                 })
                   .then(response => response.json())

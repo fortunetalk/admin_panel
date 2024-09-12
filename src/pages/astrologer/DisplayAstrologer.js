@@ -14,7 +14,7 @@ import {
   DialogContent,
   DialogTitle,
   Dialog,
-  CircularProgress
+  CircularProgress,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { CloseRounded } from "@mui/icons-material";
@@ -140,12 +140,10 @@ const ListAstrology = ({ astrologerListData }) => {
 
   return (
     <div className={classes.container}>
-    
       {displayTable()}
       {viewModalInfo()}
     </div>
   );
-  
 
   function displayTable() {
     return (
@@ -153,7 +151,6 @@ const ListAstrology = ({ astrologerListData }) => {
         <Grid item lg={12} sm={12} md={12} xs={12} style={{ marginTop: 15 }}>
           <MaterialTable
             title="List of Astrologers"
-          
             columns={[
               {
                 title: "S.No",
@@ -167,6 +164,7 @@ const ListAstrology = ({ astrologerListData }) => {
               {
                 title: "Display Name",
                 field: "displayName",
+                searchable: true,
               },
               {
                 title: "Email",
@@ -182,9 +180,9 @@ const ListAstrology = ({ astrologerListData }) => {
                 render: (rowData) => {
                   const balance = Number(rowData.wallet_balance).toFixed(2);
                   return balance;
-                }
+                },
               },
-              
+
               {
                 title: "Status",
                 field: "status",
@@ -193,7 +191,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     className={classes.statusButton}
                     style={{
                       backgroundColor:
-                      rowData.status === "Blocked" ? "#FF7F7F" : "  #90EE90",
+                        rowData.status === "Blocked" ? "#FF7F7F" : "  #90EE90",
                     }}
                     onClick={() => handleClickOpen(rowData)}
                   >
@@ -232,10 +230,10 @@ const ListAstrology = ({ astrologerListData }) => {
                     style={{
                       backgroundColor:
                         rowData.chatStatus === "Online"
-                        ? "#90EE90"
-                        : rowData.chatStatus === "Busy"
-                        ? "#FF7F7F"
-                        : "#D3D3D3", 
+                          ? "#90EE90"
+                          : rowData.chatStatus === "Busy"
+                          ? "#FF7F7F"
+                          : "#D3D3D3",
                     }}
                     onClick={() => handleChangeChatStatus(rowData)}
                   >
@@ -244,50 +242,53 @@ const ListAstrology = ({ astrologerListData }) => {
                 ),
               },
             ]}
-
             // data={astrologerListData}
 
-            data={query =>
+            data={(query) =>
               new Promise((resolve, reject) => {
-                console.log('Query:', query);
+                console.log("Query:", query);
                 const filters = {};
-            
-                query.filters.forEach(item => {
+                query.filters.forEach((item) => {
                   if (item.value.length > 0) {
                     filters[item.column.field] = item.value[0];
                   }
                 });
-            
-                console.log('Filters:', filters);
-            
+
+                console.log("Filters:", filters);
+
                 fetch(api_url + get_all_astrologers, {
-                  method: 'POST',
+                  method: "POST",
                   headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                   },
                   body: JSON.stringify({
                     page: query.page + 1,
                     limit: query.pageSize === 0 ? 10 : query.pageSize,
+                    title: query.search,
                   }),
                 })
-                  .then(response => response.json())
-                  .then(result => {
-                    console.log('Fetch Result:', result.data);
+                  .then((response) => response.json())
+                  .then((result) => {
+                    console.log("Fetch Result:", result.data);
                     resolve({
                       data: result.data.data,
                       page: result.data.pagination.currentPage - 1,
                       totalCount: result.data.pagination.totalCount,
                     });
                   })
-                  .catch(error => {
-                    console.error('Fetch Error:', error);
+                  .catch((error) => {
+                    console.error("Fetch Error:", error);
                     reject(error);
                   });
               })
             }
-
-
-            options={{ ...propStyles.tableStyles,  paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], filtering: false }}
+            options={{
+              ...propStyles.tableStyles,
+              paging: true,
+              pageSize: 10,
+              pageSizeOptions: [10, 20, 50, 100],
+              filtering: false,
+            }}
             style={{ fontSize: "1.2rem" }}
             actions={[
               {
@@ -716,11 +717,11 @@ const ListAstrology = ({ astrologerListData }) => {
                       value={
                         selectedAstro?.skillId.length > 1
                           ? selectedAstro.skillId
-                            .map((skill) => skill.title)
-                            .join(", ")
+                              .map((skill) => skill.title)
+                              .join(", ")
                           : selectedAstro.skillId.length === 1
-                            ? selectedAstro.skillId[0].title
-                            : ""
+                          ? selectedAstro.skillId[0].title
+                          : ""
                       }
                       InputProps={{
                         readOnly: true,
@@ -734,11 +735,11 @@ const ListAstrology = ({ astrologerListData }) => {
                       value={
                         selectedAstro?.remediesId.length > 1
                           ? selectedAstro.remediesId
-                            .map((remedy) => remedy.title)
-                            .join(", ")
+                              .map((remedy) => remedy.title)
+                              .join(", ")
                           : selectedAstro.remediesId.length === 1
-                            ? selectedAstro.remediesId[0].title
-                            : ""
+                          ? selectedAstro.remediesId[0].title
+                          : ""
                       }
                       InputProps={{
                         readOnly: true,
@@ -752,11 +753,11 @@ const ListAstrology = ({ astrologerListData }) => {
                       value={
                         selectedAstro?.expertiseId.length > 1
                           ? selectedAstro.expertiseId
-                            .map((expertise) => expertise.title)
-                            .join(", ")
+                              .map((expertise) => expertise.title)
+                              .join(", ")
                           : selectedAstro.expertiseId.length === 1
-                            ? selectedAstro.expertiseId[0].title
-                            : ""
+                          ? selectedAstro.expertiseId[0].title
+                          : ""
                       }
                       InputProps={{
                         readOnly: true,

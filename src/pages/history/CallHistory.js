@@ -110,27 +110,23 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
             //   { title: "Call ID", field: "_id" },
               {
                 title: "Astrologer Display Name",
-                field: "astrologerId.displayName",
+                field: "astrologerDisplayName",
                 filtering: false,
               },
               {
                 title: "Customer Name",
                 filtering: false,
-                render: (rowData) => {
-                  const firstName = rowData?.customerId?.firstName || "";
-                  const lastName = rowData?.customerId?.lastName || "";
-                  return `${firstName} ${lastName}`;
-                }
+                field: "customerName",
               },
               {
                 title: "Customer Phone Number",
                 filtering: false,
                 render: (rowData) => {
-                  const phoneNumber = rowData?.customerId?.phoneNumber || "";
+                  const phoneNumber = rowData?.phoneNumber || "";
                   return `${phoneNumber}`;
                 }
               },
-              { title: "Call Price", field: "callPrice",filtering: false, },
+              { title: "Call Price", field: "callPrice", filtering: false, },
               { title: "Commission Price", field: "commissionPrice", filtering: false, },
              
               { title: "Deducted Amount", field: "deductedAmount",
@@ -178,10 +174,11 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                 render: (rowData) => (
                   <div>
                     {rowData?.startTime
-                      ? moment(rowData?.startTime).format("DD-MM-YYYY HH:mm:ss A")
+                      ? moment(rowData?.startTime).format("DD-MM-YY HH:mm A")
                       : "N/A"}
                   </div>
                 ),
+                width: 550, 
               },
               {
                 title: "End time",
@@ -189,10 +186,11 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                 render: (rowData) => (
                   <div>
                     {rowData?.endTime ? rowData?.endTime &&
-                      moment(rowData?.endTime).format("DD-MM-YYYY HH:mm:ss A")
+                      moment(rowData?.endTime).format("DD-MM-YY HH:mm A")
                       : "N/A"}
                   </div>
                 ),
+                width:"550px", 
               },
               // { title: "Status", field: "status" },
 
@@ -209,7 +207,7 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
               //     return statusMap[rowData?.status] || "UNKNOWN"; // Provide a default value if status is not found
               //   }
               // },
-              { title: "Status", field: "status", lookup: { COMPLETED: "COMPLETED", REJECTED: "REJECTED", ACCEPTED: "ACCEPTED", CREATED: "CREATED" }, },
+              { title: "Status", field: "status", lookup: { COMPLETED: "COMPLETED", REJECTED: "REJECTED", ACCEPTED: "ACCEPTED", CREATED: "CREATED", ONGOING:"ON GOING"  }, },
 
             ]}
             // data={reverseData}
@@ -236,6 +234,7 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                     page: query.page + 1,
                     limit: query.pageSize === 0 ? 10 : query.pageSize,
                     ...filters,
+                    search: query.search,
                   }),
                 })
                   .then(response => response.json())
@@ -255,7 +254,7 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
             }
           
             options={{ ...propStyles.tableStyles,  paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], filtering: 'true' }}
-            style={{ fontSize: "1.2rem" }}
+            style={{ fontSize: "1.0rem" }}
             actions={[
               // {
               //   icon: "visibility",

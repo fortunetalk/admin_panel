@@ -137,7 +137,7 @@ const DisplayCallDiscussion = ({ dispatch, calllDiscussionData, isLoading }) => 
               {title: "Review",field: "review",},
             ]}
             options={propStyles.tableStyles}
-            style={{ fontSize: "1.4rem" }}
+            style={{ fontSize: "1.0rem" }}
             actions={[
               {
                 icon: "edit",

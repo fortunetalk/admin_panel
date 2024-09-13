@@ -166,13 +166,13 @@ function* getEnquiryAstrologers() {
 
 function* updateAstrologerStatus(action) {
   try {
-    const { payload } = action;
+    const { data, onComplete } = action.payload;
     // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_astrologer_status,
       header: "json",
-      data: payload,
+      data: data,
     });
 
     if (response && response.success) {
@@ -182,10 +182,11 @@ function* updateAstrologerStatus(action) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({
-        type: actionTypes.UPDATE_ASTROLOGER_STATUS,
-        payload: response,
-      });
+      yield call(onComplete);
+      // yield put({
+      //   type: actionTypes.UPDATE_ASTROLOGER_STATUS,
+      //   payload: response,
+      // });
     } else {
       Swal.fire({
         icon: "error",

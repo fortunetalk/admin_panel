@@ -425,6 +425,11 @@ const routes = [
     icon: <BiAbacus />,
     subRoutes: [
       {
+        path: "/earning",
+        name: "Earnings",
+        icon: <BiAbacus />,
+      },
+      {
         path: "/callEarning",
         name: "Call Earning",
         icon: <BiAbacus />,

@@ -90,10 +90,7 @@ const ListAstrology = ({ astrologerListData }) => {
       if (result.isConfirmed) {
         const newStatus = rowData.status === "Active" ? "Blocked" : "Active";
         dispatch(
-          updateAstrologerStatus({
-            astrologerId: rowData._id,
-            status: newStatus,
-          })
+          updateAstrologerStatus({data:{astrologerId: rowData._id, status: newStatus}, onComplete: onRefreshTable  })
         );
       }
     });

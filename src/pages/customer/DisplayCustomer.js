@@ -261,13 +261,13 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
                 title: "Registration Date",
                 field: "createdAt",
                 render: (rowData) =>
-                  moment(rowData.createdAt).format("MMMM Do YYYY, h:mm:ss a"),
+                  moment(rowData.createdAt).format("MMMM Do YYYY, hh:mm:ss A"),
               },
               {
                 title: "Last Login Date",
                 field: "createdAt",
                 render: (rowData) =>
-                  moment(rowData.updatedAt).format("MMMM Do YYYY, h:mm:ss a"),
+                  moment(rowData.updatedAt).format("DD:MM:YYYY, hh:mm A"),
               },
 
               {

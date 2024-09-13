@@ -144,6 +144,7 @@ import DisplayCallDiscussion from "./pages/callDiscussion/DisplayCallDiscussion"
 import AddRechargeHistory from "./pages/recharge/AddRechargeHistory";
 import WaitingList from "./pages/waitingList/WaitingList";
 import WaitingListHistory from "./pages/waitingList/WaitingListHistory";
+import Earning from "./pages/adminEarning/earning";
 
 
 function App() {
@@ -262,10 +263,14 @@ function App() {
           <Route path="/AddHowToUseVideo" element={<AddHowToUseVideo />} />
           <Route path="/displayHowToUse" element={<DisplayHowToUse />} />
           <Route path="/AddHowToUse" element={<AddHowToUse />} />
+
           <Route path="/adminEarning" element={<AdminEarning />} />
+          <Route path="/earning" element={<Earning />} />
           <Route path="/callEarning" element={<CallEarning />} />
           <Route path="/chatEarning" element={<ChatEarning />} />
           <Route path="/videoCallEarning" element={<VideoEarning />} />
+
+
           <Route path="/receiptSummary" element={<ReceiptSummary />} />
           <Route path="/saleSummary" element={<SaleSummary />} />
 

@@ -16,6 +16,7 @@ import Loader from "../../Components/loading/Loader.js";
 import { connect } from "react-redux";
 import { secondsToHMS } from "../../utils/services.js";
 import moment from "moment";
+import { api_url, get_recharge_history } from "../../utils/Constants.js";
 
 const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
     const classes = useStyles();
@@ -28,15 +29,16 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
         customerNumber: "",
         invoiceId: "",
         amount: "",
+        gst:"",
         paymentMethod: "",
         transactionType: "",
         referenceModel: "",
         type: "",
     });
 
-    useEffect(() => {
-        dispatch(HistoryActions.getRechargeHistory());
-    }, [dispatch]);
+    // useEffect(() => {
+    //     dispatch(HistoryActions.getRechargeHistory());
+    // }, [dispatch]);
 
     const handleView = (rowData) => {
         setViewData(true);
@@ -46,6 +48,7 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
             customerNumber: rowData?.customerId?.phoneNumber || "",
             invoiceId: rowData?.invoiceId || "",
             amount: rowData?.amount || "",
+            gst: rowData?.gst || "",
             referenceModel: rowData?.referenceModel || "",
             paymentMethod: rowData?.paymentMethod || "",
             transactionType: rowData?.transactionType || "",
@@ -60,9 +63,8 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
     return (
         <div className={classes.container}>
           {
-            !rechargeHistoryData ? <CircularProgress/> :
           <div className={classes.box}>
-            {rechargeHistoryData && displayTable()}
+            {displayTable()}
             {editModal()}
           </div>
           }
@@ -75,22 +77,35 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                 <Grid item lg={12} sm={12} md={12} xs={12}>
                     <MaterialTable
                         title="Wallet Transactions"
-                        data={rechargeHistoryData}
+                        
                         columns={[
                             {
                                 title: "S.No",
                                 editable: "never",
-                                render: (rowData) => rechargeHistoryData.indexOf(rowData) + 1,
+                                render: (rowData) => rowData.tableData.id + 1,
+                              
                             },
-                            { title: "Customer Id", field: "customerId.customerUniqueId" },
+                            // { title: "Customer Id", field: "customerId.customerUniqueId" },
                             { title: "Customer Name", 
                              render: (rowData)=>{
-                               const firstName = rowData?.customerId?.firstName;
-                               const lastname = rowData?.customerId?.lastName;
+                               const firstName = rowData?.firstName;
+                               const lastname = rowData?.lastName;
                                return `${firstName} ${lastname}`
                              },
                              },
-                             { title: "Customer Number", field: "customerId.phoneNumber" },
+                             { title: "Customer Number", field: "phoneNumber" },
+                             {
+                                title: "Created At",
+                                filtering: false,
+                                render: (rowData) => (
+                                  <div>
+                                    {rowData?.createdAt
+                                      ? moment(rowData?.createdAt).format("DD-MM-YYYY HH:mm A")
+                                      : "N/A"}
+                                  </div>
+                                ),
+                              },
+                            //  { title: "GST", field: "gst" },
                              { 
                                 title: "Amount", 
                                 field: "amount",
@@ -122,13 +137,51 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                             // { title: "ReferenceModel", field: "referenceModel" },
                             { title: "Type", field: "type" },
                         ]}
-                        options={{
-                            ...propStyles.tableStyles,
-                            filtering: false,
-                            pageSize: 10,
-                            pageSizeOptions: [10, 20, 30, 40, 50, 60, 80, 100],
-                        }}
-                        style={{ fontSize: "1.2rem" }}
+                        // data={rechargeHistoryData}
+                        data={query =>
+                            new Promise((resolve, reject) => {
+                              console.log('Query:', query);
+                              const filters = {};
+                          
+                              query.filters.forEach(item => {
+                                if (item.value.length > 0) {
+                                  filters[item.column.field] = item.value[0];
+                                }
+                              });
+                          
+                              console.log('Filters:', filters);
+                          
+                              fetch(api_url + get_recharge_history, {
+                                method: 'POST',
+                                headers: {
+                                  'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                  page: query.page + 1,
+                                  limit: query.pageSize === 0 ? 10 : query.pageSize,
+                                  ...filters,
+                                  search: query.search,
+                                }),
+                              })
+                                .then(response => response.json())
+                                .then(result => {
+                                  console.log('Fetch Result:', result.data);
+                                  resolve({
+                                    data: result.data.data,
+                                    page: result.data.pagination.currentPage - 1,
+                                    totalCount: result.data.pagination.totalCount,
+                                  });
+                                })
+                                .catch(error => {
+                                  console.error('Fetch Error:', error);
+                                  reject(error);
+                                });
+                            })
+                          }
+                        
+                          options={{ ...propStyles.tableStyles,  paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], filtering: false }}
+
+                        style={{ fontSize: "1.0rem" }}
                         actions={[
                             {
                                 icon: "visibility",
@@ -191,6 +244,17 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                         <TextField
                             label="Amount"
                             value={data.amount || "0"}
+                            variant="outlined"
+                            fullWidth
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                        />
+                    </Grid>
+                    <Grid item lg={6} md={6} sm={12} xs={12}>
+                        <TextField
+                            label="GST"
+                            value={data.gst || "0"}
                             variant="outlined"
                             fullWidth
                             InputProps={{

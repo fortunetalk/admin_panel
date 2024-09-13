@@ -104,7 +104,7 @@ const DisplayAstroblog = ({
   const handleUpdate = () => {
     const { _id, title, description, image, status, categoryId } = blogData;
 
-    if (title && description && status) {
+    if (categoryId ) {
       const formData = new FormData();
       formData.append('blogId', _id);
       formData.append('title', title);
@@ -124,10 +124,11 @@ const DisplayAstroblog = ({
       dispatch(updateBlog(formData));
       handleClose();
     } else {
+      handleClose();
       Swal.fire({
         icon: "error",
-        title: "Oops...",
-        text: "All fields are required!",
+        title: "Faild to Update Blog",
+        text: "Category is Required",
       });
     }
   };
@@ -195,6 +196,7 @@ const DisplayAstroblog = ({
                 render: rowData => Array.isArray(appBlogData) ? appBlogData.indexOf(rowData) + 1 : 'N/A'
               },
               { title: "Title", field: "title" },
+              // { title: "Category", field: "blogCategoryId.title" },
               {
                 title: "Image",
                 field: "image",
@@ -219,7 +221,7 @@ const DisplayAstroblog = ({
               },
             ]}
             options={propStyles.tableStyles}
-            style={{ fontSize: "1.4rem" }}
+            style={{ fontSize: "1.0rem" }}
             actions={[
               {
                 icon: "edit",
@@ -408,7 +410,7 @@ const DisplayAstroblog = ({
                 helperText={error?.description}
                 value={blogData?.description}
                 onFocus={() => handleError("description", null)}
-                onChange={setDescription}
+                onChange={(text)=>setBlogData(prev=>({...prev, description: text}))}
                 modules={modules}
                 formats={formats}
                 placeholder="Enter description..."

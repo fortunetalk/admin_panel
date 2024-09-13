@@ -119,21 +119,26 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
               },
               {
                 title: "Astrologer Display Name",
-                field: "astrologerId.displayName",
+                field: "astrologerDisplayName",
                 filtering: false,
               },
               {
                 title: "Customer Name",
-                render: (rowData) => {
-                  const firstName = rowData?.customerId?.firstName || "";
-                  const lastName = rowData?.customerId?.lastName || "";
-                  return `${firstName} ${lastName}`;
-                }
+                field: "customerName",
+                filtering: false,
               },
+              // {
+              //   title: "Customer Name",
+              //   render: (rowData) => {
+              //     const firstName = rowData?.customerId?.firstName || "";
+              //     const lastName = rowData?.customerId?.lastName || "";
+              //     return `${firstName} ${lastName}`;
+              //   }
+              // },
               {
                 title: "Customer Phone Number",
                 render: (rowData) => {
-                  const phoneNumber = rowData?.customerId?.phoneNumber || "";
+                  const phoneNumber = rowData?.phoneNumber || "";
                   return `${phoneNumber}`;
                 }
               },
@@ -174,7 +179,7 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
                 render: (rowData) => (
                   <div>
                     {rowData?.startTime
-                      ? moment(rowData?.startTime).format("DD-MM-YYYY HH:mm:ss A")
+                      ? moment(rowData?.startTime).format("DD-MM-YY HH:mm A")
                       : "N/A"}
                   </div>
                 ),
@@ -184,12 +189,12 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
                 render: (rowData) => (
                   <div>
                     {rowData?.endTime ? rowData?.endTime &&
-                      moment(rowData?.endTime).format("DD-MM-YYYY HH:mm:ss A")
+                      moment(rowData?.endTime).format("DD-MM-YY HH:mm A")
                       : "N/A"}
                   </div>
                 ),
               },
-              { title: "Status", field: "status", lookup: { COMPLETED: "COMPLETED", REJECTED: "REJECTED", ACCEPTED: "ACCEPTED", CREATED: "CREATED" }, },
+              { title: "Status", field: "status", lookup: { COMPLETED: "COMPLETED", REJECTED: "REJECTED", ACCEPTED: "ACCEPTED", CREATED: "CREATED", ONGOING:"ON GOING" }, },
               {
                 title: "View Chat History",
                 field: "status",
@@ -219,6 +224,7 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
                   page: query.page + 1, // MaterialTable uses 0-indexed pages
                   limit: query.pageSize === 0 ? 10 : query.pageSize,
                   ...filters, // Include processed filters
+                  search: query.search,
                 })
 
                 fetch( api_url + get_chat_history, {
@@ -230,6 +236,7 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
                     page: query.page + 1, // MaterialTable uses 0-indexed pages
                     limit: query.pageSize === 0 ? 10 : query.pageSize,
                     ...filters, // Include processed filters
+                    search: query.search,              
                   }), // Convert the request body to JSON
                 })
                   .then(response => response.json())

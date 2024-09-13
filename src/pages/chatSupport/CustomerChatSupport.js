@@ -81,13 +81,13 @@ const CustomerChatSupport = ({ dispatch }) => {
         },
     ];
 
-
     const handleSendMessage = () => {
         if (inputValue.trim()) {
             // Add your logic to send the message
             setInputValue('');
         }
     };
+
 
     return (
         <Grid container spacing={1} >

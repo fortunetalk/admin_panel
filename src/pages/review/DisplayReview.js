@@ -16,10 +16,11 @@ import MaterialTable from "material-table";
 import { Colors } from "../../assets/styles.js";
 import logo_icon from "../../assets/images/logo_icon.png";
 import {
+
   delete_review,
   get_all_astrologers,
   get_all_customers,
-  get_review,
+
   get_skills,
   get_subSkill,
   update_review,
@@ -35,6 +36,7 @@ import Loader from "../../Components/loading/Loader.js";
 import * as ReviewActions from "../../redux/Actions/reviewsActions.js";
 import { connect } from "react-redux";
 import format from "date-fns/format/index.js";
+import { api_url, get_review } from "../../utils/Constants.js";
 
 const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
   const classes = useStyles();
@@ -53,7 +55,7 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
   const [state, setState] = useState({});
 
   useEffect(function () {
-    dispatch(ReviewActions.getAstrologersReviews());
+    // dispatch(ReviewActions.getAstrologersReviews());
     // fetchAllCustomers()
     // fetchAllAstrologers()
   }, []);
@@ -173,25 +175,26 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
 
   const reverseData = Array.isArray(astrologersReviews) ? astrologersReviews.slice().reverse() : [];
 
-  if (!astrologersReviews) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
+  // if (!astrologersReviews) {
+  //   return (
+  //     <Box
+  //       sx={{
+  //         display: 'flex',
+  //         justifyContent: 'center',
+  //         alignItems: 'center',
+  //         height: '100vh',
+  //       }}
+  //     >
+  //       <CircularProgress />
+  //     </Box>
+  //   );
+  // }
 
+  // astrologersReviews &&
   return (
     <div className={classes.container}>
       <div className={classes.box}>
-        {astrologersReviews && displayTable()}
+        { displayTable()}
         {editModal()}
       </div>
     </div>
@@ -205,15 +208,16 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
             title=" All Review"
-            data={reverseData}
+           
             columns={[
               {
                 title: "S.No",
                 editable: "never",
-                render: (rowData) => reverseData.indexOf(rowData) + 1,
+                render: (rowData) => rowData.tableData.id + 1,
+                // render: (rowData) => reverseData.indexOf(rowData) + 1,
               },
-              { title: "User Name", field: "customerId.customerName", filtering: false },
-              { title: "Astrologer Name", field: "astrologerId.displayName", filtering: false },
+              { title: "User Name", field: "customerName", filtering: false },
+              { title: "Astrologer Name", field: "astrologerName", filtering: false },
               { title: "Comments", field: "comments", filtering: false },
               { title: "Rating", field: "rating", filtering: true ,
                 lookup: { 1: "1", 2: "2", 3: "3", 4: "4", 5:"5" },
@@ -242,11 +246,51 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
               }
               
             ]}
-            options={{
-              ...propStyles.tableStyles, // Spread operator to include properties from propStyles.tableStyles
-              filtering: true, // Ensure this is added to the options
-              // Add other options as needed
-            }}
+            // data={reverseData}
+            data={query =>
+              new Promise((resolve, reject) => {
+                console.log("query", query.filters);
+                const filters = {}
+
+                query.filters.map(item => {
+                  if (item.value.length > 0) {
+                    filters[item.column.field] = item.value[0]
+                  }
+                })
+                console.log({
+                  page: query.page + 1, // MaterialTable uses 0-indexed pages
+                  limit: query.pageSize === 0 ? 10 : query.pageSize,
+                  ...filters, 
+                  search: query.search,
+                })
+
+                fetch( api_url + get_review, {
+                  method: 'POST', // Specify the request method
+                  headers: {
+                    'Content-Type': 'application/json', // Set the content type to JSON
+                  },
+                  body: JSON.stringify({
+                    page: query.page + 1, // MaterialTable uses 0-indexed pages
+                    limit: query.pageSize === 0 ? 10 : query.pageSize,
+                    ...filters, 
+                    search: query.search,              
+                  }), // Convert the request body to JSON
+                })
+                  .then(response => response.json())
+                  .then(result => {
+                    console.log(result)
+                    resolve({
+                      data: result.data.data, // Adjust based on your API response
+                      page: result.data.pagination.currentPage - 1, // Adjust for 0-indexed pages
+                      totalCount: result.data.pagination.totalCount, // Total number of rows
+                    })
+                  })
+              })
+
+            }
+
+            options={{ ...propStyles.tableStyles,  paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], filtering: 'true' }}
+
             actions={[
               {
                 icon: "edit",

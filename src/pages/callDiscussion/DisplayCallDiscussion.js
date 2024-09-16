@@ -12,6 +12,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import { connect } from "react-redux";
 import * as Actions from "../../redux/Actions/callDiscussionAction.js";
+import moment from "moment";
 
 const DisplayCallDiscussion = ({ dispatch, calllDiscussionData, isLoading }) => {
   const classes = useStyles();
@@ -132,6 +133,7 @@ const DisplayCallDiscussion = ({ dispatch, calllDiscussionData, isLoading }) => 
               },
               { title: "Admin Name", field: "admin_name" },
               { title: "User Name", field: "user_name" },
+              { title: "Date & Time", field: "createdAt", render: rowData => moment(rowData.createdAt).format('DD MM YYYY, h:mm:ss A') },
               { title: "User Phone No.", field: "phone_number" },
               {title: "Discussion",field: "discussion",},
               {title: "Review",field: "review",},

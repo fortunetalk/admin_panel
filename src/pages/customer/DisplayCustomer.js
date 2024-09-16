@@ -345,12 +345,7 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
                 icon: "delete",
                 tooltip: "Delete Customer",
                 onClick: (event, rowData) =>
-                  dispatch(
-                    CustomerActions.deleteCustomer({
-                      customerId: rowData?._id,
-                      title: rowData?.customerName,
-                    })
-                  ),
+                  dispatch( CustomerActions.deleteCustomer({customerId: rowData?._id, title: rowData?.customerName, })),
               },
               {
                 icon: "add_circle",

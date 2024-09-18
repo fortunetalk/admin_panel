@@ -135,7 +135,7 @@ const DisplayCallDiscussion = ({ dispatch, calllDiscussionData, isLoading }) => 
               { title: "User Name", field: "user_name" },
               { title: "Date & Time", field: "createdAt", render: rowData => moment(rowData.createdAt).format('DD MM YYYY, h:mm:ss A') },
               { title: "User Phone No.", field: "phone_number" },
-              {title: "Discussion",field: "discussion",},
+              { title: "Discussion", field: "discussion",cellStyle: { width: '800px',} }, 
               {title: "Review",field: "review",},
             ]}
             options={propStyles.tableStyles}

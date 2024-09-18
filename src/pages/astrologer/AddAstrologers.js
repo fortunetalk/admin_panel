@@ -1095,6 +1095,10 @@ export const AddAstrologers = ({
                 error={error.rating ? true : false}
                 onFocus={() => handleError("rating", null)}
                 onChange={(e) => updateState({ rating: e.target.value })}
+                inputProps={{
+                  min: 0,
+                  max: 5,
+              }}
               />
             </Grid>
             {/* astrologer container ends here */}

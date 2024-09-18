@@ -2082,6 +2082,10 @@ export const EditAstrologer = ({
             helperText={error?.rating}
             error={error?.rating ? true : false}
             InputLabelProps={{ shrink: true }}
+            inputProps={{
+              min: 0,
+              max: 5,
+          }}
           />
         </Grid>
         <Grid item lg={4} sm={12} md={12} xs={12}>

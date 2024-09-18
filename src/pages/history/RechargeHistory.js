@@ -95,7 +95,7 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                              },
                              { title: "Customer Number", field: "phoneNumber" },
                              {
-                                title: "Created At",
+                                title: "Date",
                                 filtering: false,
                                 render: (rowData) => (
                                   <div>

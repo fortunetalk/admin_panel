@@ -143,7 +143,7 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                 render: (rowData) => (
                   <div>
                     {rowData?.durationInSeconds &&
-                      secondsToHMS(rowData?.durationInSeconds)}
+                      secondsToHMS(rowData?.durationInSeconds) || "N/A"}
                   </div>
                 ),
               },
@@ -207,7 +207,7 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
               //     return statusMap[rowData?.status] || "UNKNOWN"; // Provide a default value if status is not found
               //   }
               // },
-              { title: "Status", field: "status", lookup: { COMPLETED: "COMPLETED", REJECTED: "REJECTED", ACCEPTED: "ACCEPTED", CREATED: "CREATED", ONGOING:"ON GOING"  }, },
+              { title: "Status", field: "status", lookup: { COMPLETED: "COMPLETED", REJECTED: "REJECTED", ACCEPTED: "ACCEPTED", CREATED: "CREATED", ONGOING:"ON GOING", CANCELLED: "CANCELLED"  }, },
 
             ]}
             // data={reverseData}

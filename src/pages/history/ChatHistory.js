@@ -80,7 +80,7 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
   };
 
   const handleClickOpen = (rowData) => {
-    navigate(`/history/fullChatHistory/${rowData.customerId._id}`, { state: { chatId: rowData.chatId } })
+    navigate(`/history/fullChatHistory/${rowData.customerId}`, { state: { chatId: rowData.chatId } })
   };
 
   const filterOptions = chatHistoryData && Array.isArray(chatHistoryData)

@@ -235,6 +235,7 @@ const DisplayCallDiscussion = ({ dispatch, calllDiscussionData, isLoading }) => 
                   <MenuItem value="Good">Good</MenuItem>
                   <MenuItem value="NotGood">Not Good</MenuItem>
                   <MenuItem value="Excelent">Excelent</MenuItem>
+                  <MenuItem value="Average">Average </MenuItem>
                 </Select>
                 <div className={classes.errorstyles}>{error.review}</div>
               </FormControl>

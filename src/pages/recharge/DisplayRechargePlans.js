@@ -51,25 +51,40 @@ const DisplayRechargePlan = ({ dispatch, rechargeHistoryData }) => {
           <MaterialTable
             title="Recharge History Data"
             columns={[
-              {
-                title: "S.No",
-                editable: "never",
-                render: (rowData) => rowData.tableData.id + 1,
-              },
+              // {
+              //   title: "S.No",
+              //   editable: "never",
+              //   render: (rowData) => rowData.tableData.id + 1,
+              // },
+              { title: "Invoice ID", field: "invoiceId", filtering: false },
               { title: "Customer Name", field: "customerName", filtering: false },
               { title: "Customer Number", field: "phoneNumber", filtering: false },
-              { title: "Invoice ID", field: "invoiceId", filtering: false },
-              { title: "Type", field: "type", filtering: false },
+            
+              {
+                title: "Type",
+                field: "type",
+                filtering: false,
+                render: (rowData) => {
+                    switch (rowData.type) {
+                        case "WALLET_RECHARGE":
+                            return "By Customer";
+                        case "WALLET_RECHARGE_BY_ADMIN":
+                            return "By Admin";
+                        default:
+                            return rowData.type; // Return the original type if it doesn't match
+                    }
+                },
+            },
               {
                 title: "Date",
                 field: "createdAt",
-                filtering: true,
+                filtering: false,
                 render: (rowData) => (
                   <div>
                     {rowData?.createdAt && moment(rowData?.createdAt).format("DD-MM-YY HH:mm A")}
                   </div>
                 ),
-                filterComponent: dateFilterComponent,
+                // filterComponent: dateFilterComponent,
               },
               {
                 title: "Amount",
@@ -77,7 +92,7 @@ const DisplayRechargePlan = ({ dispatch, rechargeHistoryData }) => {
                 filtering: false,
                 render: (rowData) => Number(rowData.amount).toFixed(2),
               },
-              { title: "GST", field: "gst", filtering: false },
+              // { title: "GST", field: "gst", filtering: false },
               { title: "Transaction Type", field: "transactionType", filtering: false },
             ]}
             data={query =>
@@ -110,6 +125,7 @@ const DisplayRechargePlan = ({ dispatch, rechargeHistoryData }) => {
                     limit: query.pageSize === 0 ? 10 : query.pageSize,
                     ...filters,
                     search: query.search,
+                    type: "CREDIT"
                   }),
                 })
                   .then(response => response.json())

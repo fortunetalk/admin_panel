@@ -79,12 +79,13 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                         title="Wallet Transactions"
                         
                         columns={[
-                            {
-                                title: "S.No",
-                                editable: "never",
-                                render: (rowData) => rowData.tableData.id + 1,
+                            // {
+                            //     title: "S.No",
+                            //     editable: "never",
+                            //     render: (rowData) => rowData.tableData.id + 1,
                               
-                            },
+                            // },
+                            { title: "InvoiceId", field: "invoiceId" },
                             // { title: "Customer Id", field: "customerId.customerUniqueId" },
                             { title: "Customer Name", 
                              render: (rowData)=>{
@@ -120,7 +121,7 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                                   return `+ ₹${balance}`;
                                 }
                               },
-                            // { title: "InvoiceId", field: "invoiceId" },
+                            
                             // { title: "PaymentMethod", field: "paymentMethod" },
                             { title: "TransactionType",
                                 render: (rowData) => {
@@ -201,7 +202,7 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                 <Grid container spacing={2}>
                     <Grid item lg={12} sm={12} md={12} xs={12}>
                         <div className={classes.headingContainer}>
-                            <div className={classes.heading}>Recharge History Data</div>
+                            <div className={classes.heading}>Wallet Transaction</div>
                             <div onClick={handleClose} className={classes.closeButton}>
                                 <CloseRounded />
                             </div>
@@ -251,10 +252,11 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                             }}
                         />
                     </Grid>
+                    {data.transactionType === "CREDIT" && (
                     <Grid item lg={6} md={6} sm={12} xs={12}>
                         <TextField
                             label="GST"
-                            value={data.gst || "0"}
+                            value={`${data.gst || "0"}%`} 
                             variant="outlined"
                             fullWidth
                             InputProps={{
@@ -262,6 +264,7 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                             }}
                         />
                     </Grid>
+                )}
                     <Grid item lg={6} md={6} sm={12} xs={12}>
                         <TextField
                             label="Invoice ID"

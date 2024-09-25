@@ -20,3 +20,22 @@ export const secondsToHMS = (duration) => {
   
     return uniqueId;
   }
+  
+
+  const indianNumber = Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    currencyDisplay: 'symbol',
+    minimumFractionDigits: 2,
+});
+
+export const showNumber = (value) => {
+    // Check if value is a valid number
+    if (value === null || value === undefined || isNaN(value)) {
+        return 'Invalid Amount'; // or return an empty string or any placeholder
+    }
+    
+    // Format the number
+    return indianNumber.format(Number(value)); // Ensure the value is a number
+};
+

@@ -14,7 +14,7 @@ import Swal from "sweetalert2";
 import * as HistoryActions from "../../redux/Actions/historyActions.js";
 import Loader from "../../Components/loading/Loader.js";
 import { connect } from "react-redux";
-import { secondsToHMS } from "../../utils/services.js";
+import { secondsToHMS, showNumber } from "../../utils/services.js";
 import moment from "moment";
 import { api_url, get_call_history } from "../../utils/Constants.js";
 
@@ -101,13 +101,23 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
           }
             
             columns={[
-              {
-                title: "S.No",
-                editable: "never",
-                render: (rowData) => rowData.tableData.id + 1,
-              },
+              // {
+              //   title: "S.No",
+              //   editable: "never",
+              //   render: (rowData) => rowData.tableData.id + 1,
+              // },
 
             //   { title: "Call ID", field: "_id" },
+            {
+              title: "Transaction Id",
+              field: "transactionId",
+              filtering: false,
+              render: (rowData) => {
+                  const originalId = rowData.transactionId || "";
+                  const uniquePart = originalId.replace("fortunetalk", ""); // Remove common part
+                  return `FT${uniquePart}`; // Prepend "ft"
+              },
+          },
               {
                 title: "Astrologer Display Name",
                 field: "astrologerDisplayName",
@@ -126,8 +136,16 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                   return `${phoneNumber}`;
                 }
               },
-              { title: "Call Price", field: "callPrice", filtering: false, },
-              { title: "Commission Price", field: "commissionPrice", filtering: false, },
+              // { title: "Call Price", field: "callPrice", filtering: false, },
+              {
+                title: "Call Price",
+                field: "callPrice",
+                filtering: false,
+                render: (rowData) => showNumber(rowData.callPrice),
+            },
+              { title: "Commission Price", field: "commissionPrice", filtering: false, 
+                render: (rowData) => showNumber(rowData.commissionPrice),
+              },
              
               { title: "Deducted Amount", field: "deductedAmount",
                 filtering: true,

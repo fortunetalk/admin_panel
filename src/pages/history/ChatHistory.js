@@ -10,7 +10,7 @@ import Swal from "sweetalert2";
 import * as HistoryActions from "../../redux/Actions/historyActions.js";
 import Loader from "../../Components/loading/Loader.js";
 import { connect } from "react-redux";
-import { secondsToHMS } from "../../utils/services.js";
+import { secondsToHMS, showNumber } from "../../utils/services.js";
 import moment from "moment";
 import { api_url, get_chat_history } from "../../utils/Constants.js";
 
@@ -116,11 +116,22 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
             }
 
             columns={[
+              // {
+              //   title: "S.No",
+              //   editable: "never",
+              //   render: (rowData) => rowData.tableData.id + 1,
+              // },
+              
               {
-                title: "S.No",
-                editable: "never",
-                render: (rowData) => rowData.tableData.id + 1,
-              },
+                title: "Transaction Id",
+                field: "transactionId",
+                filtering: false,
+                render: (rowData) => {
+                    const originalId = rowData.transactionId || "";
+                    const uniquePart = originalId.replace("fortunetalk", ""); // Remove common part
+                    return `FT${uniquePart}`; // Prepend "ft"
+                },
+            },
               {
                 title: "Astrologer Display Name",
                 field: "astrologerDisplayName",
@@ -146,8 +157,12 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
                   return `${phoneNumber}`;
                 }
               },
-              { title: "Chat Price", field: "chatPrice", filtering: false, },
-              { title: "Commission Price", field: "commissionPrice", filtering: false, },
+              { title: "Chat Price", field: "chatPrice", filtering: false, 
+                render: (rowData) => showNumber(rowData.chatPrice),
+              },
+              { title: "Commission Price", field: "commissionPrice", filtering: false,
+                render: (rowData) => showNumber(rowData.commissionPrice),
+               },
               // { title: "Total Charge", field: "deductedAmount" },
               {
                 title: "Total Charge",

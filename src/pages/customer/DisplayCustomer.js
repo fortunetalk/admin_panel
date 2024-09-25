@@ -248,7 +248,13 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
                 editable: "never",
                 render: (rowData) => rowData.tableData.id + 1,
               },
-              { title: "Customer ID", field: "customerUniqueId" },
+              { title: "Customer ID", field: "customerUniqueId" ,
+                render: (rowData) => {
+                  const originalId = rowData.customerUniqueId || "";
+                  const uniquePart = originalId.replace("FortuneTalk", ""); // Remove common part
+                  return `FT${uniquePart}`; // Prepend "ft"
+              },
+              },
               { title: "Name", field: "customerName" },
               { title: "Mobile", field: "phoneNumber" },
               { title: "Email", field: "email" },

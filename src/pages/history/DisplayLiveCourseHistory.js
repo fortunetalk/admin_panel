@@ -117,6 +117,7 @@ const DisplayLiveCourseHistory = ({ dispatch, liveCourseHistoryData }) => {
 
             ]}
             options={{ ...propStyles.tableStyles, filtering: false }}
+            style={{ fontSize: "1.2rem" }}
             // actions={[
             //   {
             //     icon: "visibility",

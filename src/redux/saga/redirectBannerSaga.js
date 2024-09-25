@@ -67,7 +67,7 @@ function* getRedirectionBanner() {
     if (response?.success) {
       yield put({
         type: actionTypes.GET_REDIRECTION_BANNER,
-        payload: response.data,
+        payload: response.data.reverse(),
       });
     }
 

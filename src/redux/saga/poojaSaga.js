@@ -68,7 +68,7 @@ function* getPooja() {
     if (response) {
       yield put({
         type: actionTypes.POOJA_LIST,
-        payload: response?.data,
+        payload: response?.data.reverse(),
       });
     }
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });

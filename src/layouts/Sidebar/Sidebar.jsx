@@ -16,6 +16,7 @@ import SidebarMenu from "./SidebarMenu";
 import "./sideBar.css";
 import { connect } from "react-redux";
 
+
 const routes = [
   {
     path: "/",
@@ -124,18 +125,35 @@ const routes = [
     icon: <BiAbacus />,
   },
   {
-    path: "/skills",
-    name: "Skills",
+    path: "/chat-support",
+    name: "Chat Support",
     icon: <BiAbacus />,
     subRoutes: [
       {
-        path: "/displaySkills",
-        name: "Skills",
+        path: "/chat-support-astrologers",
+        name: "Astrologers",
         icon: <BiAbacus />,
       },
       {
-        path: "/displaySubSkills",
-        name: "Sub Skills",
+        path: "/chat-support-customers",
+        name: "Customers",
+        icon: <BiAbacus />,
+      },
+    ],
+  },
+  {
+    path: "/wait-list",
+    name: "Waiting List",
+    icon: <BiAbacus />,
+    subRoutes: [
+      {
+        path: "/display-wait-list",
+        name: "Waiting List ",
+        icon: <BiAbacus />,
+      },
+      {
+        path: "/display-wait-list-history",
+        name: "Waiting List History ",
         icon: <BiAbacus />,
       },
     ],
@@ -178,6 +196,11 @@ const routes = [
         icon: <BiAbacus />,
       },
       {
+        path: "/history/wallet-transaction",
+        name: "Wallet Transaction",
+        icon: <BiAbacus />,
+      },
+      {
         path: "/history/demoClassHistory",
         name: "Demo Class History",
         icon: <BiAbacus />,
@@ -197,11 +220,7 @@ const routes = [
         name: "User's Gift History",
         icon: <BiAbacus />,
       },
-      {
-        path: "/history/RechargeHistory",
-        name: "Recharge History",
-        icon: <BiAbacus />,
-      },
+      
     ],
   },
   {
@@ -248,11 +267,11 @@ const routes = [
         name: "Astrologer Review",
         icon: <BiAbacus />,
       },
-      {
-        path: "/appReviews",
-        name: "App Review",
-        icon: <BiAbacus />,
-      },
+      // {
+      //   path: "/appReviews",
+      //   name: "App Review",
+      //   icon: <BiAbacus />,
+      // },
     ],
   },
   {
@@ -260,7 +279,12 @@ const routes = [
     name: "Gift",
     icon: <BiAbacus />,
   },
-
+  {
+    path: "/call-discussion",
+    name: "User Call Discussion",
+    icon: <BiAbacus />,
+  },
+  
   {
     path: "/displayBlogCategory",
     name: "Blog Category",
@@ -270,6 +294,13 @@ const routes = [
   {
     path: "/displayAstroblog",
     name: "Blog",
+    icon: <BiAbacus />,
+  },
+  
+
+  {
+    path: "/displayAstrologerOffer",
+    name: "Astrologer Offers",
     icon: <BiAbacus />,
   },
   {
@@ -342,7 +373,6 @@ const routes = [
         icon: <BiAbacus />,
       },
 
-
     ],
   },
   {
@@ -378,11 +408,6 @@ const routes = [
     icon: <BiAbacus />,
     subRoutes: [
       {
-        path: "/adminEarning",
-        name: "Admin Earning",
-        icon: <BiAbacus />,
-      },
-      {
         path: "/receiptSummary",
         name: "Receipt Summary",
         icon: <BiAbacus />,
@@ -395,10 +420,42 @@ const routes = [
     ],
   },
   {
+    path: "/earning",
+    name: "Admin Earning",
+    icon: <BiAbacus />,
+    subRoutes: [
+      {
+        path: "/earning",
+        name: "Earnings",
+        icon: <BiAbacus />,
+      },
+      {
+        path: "/callEarning",
+        name: "Call Earning",
+        icon: <BiAbacus />,
+      },
+      {
+        path: "/chatEarning",
+        name: "Chat Earning",
+        icon: <BiAbacus />,
+      },
+      {
+        path: "/videoCallEarning",
+        name: " Video Call Earning",
+        icon: <BiAbacus />,
+      },
+    ],
+  },
+  {
     path: "/setting",
     name: "Setting",
     icon: <BiUser />,
     subRoutes: [
+      {
+        path: "/setting/version-update",
+        name: "Version Update",
+        icon: <BiUserPlus />,
+      },
       {
         path: "/setting/country",
         name: "Country",
@@ -420,6 +477,8 @@ const routes = [
   },
 
 ];
+
+
 
 const inputAnimation = {
   hidden: {
@@ -457,6 +516,7 @@ const showAnimation = {
 
 const SideBar = ({ children, dispatch, isSidebarOpen }) => {
   const [hiddenSidebarWidth, setHiddenSidebarWidth] = useState(0);
+ 
 
   useEffect(() => {
     const handleResize = () => {

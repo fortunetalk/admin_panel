@@ -2,8 +2,8 @@ import { makeStyles } from "@mui/styles";
 import login_background from "./images/login_background.jpg";
 
 export const Colors = {
-  primaryDark: "#60278C",
-  primaryLight: "#60278C",
+  primaryDark: "#10395D",
+  primaryLight: "#10395D",
   white: "#fff",
   whiteDark: "#F5F5F5",
   grayLight: "#ECEAEA",
@@ -92,7 +92,7 @@ export const useStyles = makeStyles({
     marginLeft: 5,
   },
   submitbutton: {
-    background: Colors.primaryLight,
+    background: Colors.primaryDark,
     width: "100%",
     padding: "0.5rem",
     alignItems: "center",
@@ -133,7 +133,7 @@ export const useStyles = makeStyles({
     alignItems: "center",
   },
   uploadImageButton: {
-    background: Colors.dark_Pink,
+    background: Colors.primaryDark,
     width: "100%",
     padding: "0.5rem",
     alignItems: "center",

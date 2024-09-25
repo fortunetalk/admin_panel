@@ -159,7 +159,7 @@ const Country = ({  countryData }) => {
               ...propStyles.tableStyles,
               sorting: true,
             }}
-            style={{ fontSize: "1.4rem" }}
+            style={{ fontSize: "1.0rem" }}
             actions={[
               {
                 icon: "edit",

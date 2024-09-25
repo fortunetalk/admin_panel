@@ -16,6 +16,8 @@ import Loader from "../../Components/loading/Loader.js";
 import { connect } from "react-redux";
 import { secondsToHMS } from "../../utils/services.js";
 import moment from "moment";
+import { api_url, get_call_history } from "../../utils/Constants.js";
+
 
 const ChatHistory = ({ dispatch, callHistoryData }) => {
   const classes = useStyles();
@@ -42,9 +44,9 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
     callId: "",
   });
 
-  useEffect(function () {
-    dispatch(HistoryActions.getCallHistory());
-  }, []);
+  // useEffect(function () {
+  //   dispatch(HistoryActions.getCallHistory());
+  // }, []);
 
   const handleView = (rowData) => {
     setViewData(true);
@@ -52,7 +54,7 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
       transactionId: rowData?.transactionId || "",
       customerId: rowData?.customerId?._id || "",
       astrologerId: rowData?.astrologerId?._id || "",
-      customerName: rowData?.customerId?.firstName || "",
+      customerName: `${rowData?.customerId?.firstName } ${rowData?.customerId?.lastName }`|| "",
       customerEmail: rowData?.customerId?.email || "",
       astrologerName: rowData?.astrologerId?.name || "",
       astrologerDisplayName: rowData?.astrologerId?.displayName || "",
@@ -79,9 +81,9 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
   return (
     <div className={classes.container}>
       {
-        !callHistoryData ? <CircularProgress/> :
+
       <div className={classes.box}>
-        {callHistoryData && displayTable()}
+        {displayTable()}
         {editModal()}
       </div>
       }
@@ -92,23 +94,44 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
       <Grid container spacing={1}>
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
-            title=" Call History"
-            data={reverseData}
+           title={
+            <div>
+              <span style={{ fontWeight: '500', fontSize: '25px', marginRight: '20px' }}>Call History</span>
+            </div>
+          }
+            
             columns={[
               {
                 title: "S.No",
                 editable: "never",
-                render: rowData => Array.isArray(reverseData) ? reverseData.indexOf(rowData) + 1 : 'N/A'
+                render: (rowData) => rowData.tableData.id + 1,
               },
 
             //   { title: "Call ID", field: "_id" },
               {
                 title: "Astrologer Display Name",
-                field: "astrologerId.displayName",
+                field: "astrologerDisplayName",
+                filtering: false,
               },
-              { title: "Customer Name", field: "customerId.firstName" },
-              { title: "Commission Price", field: "commissionPrice" },
+              {
+                title: "Customer Name",
+                filtering: false,
+                field: "customerName",
+              },
+              {
+                title: "Customer Phone Number",
+                filtering: false,
+                render: (rowData) => {
+                  const phoneNumber = rowData?.phoneNumber || "";
+                  return `${phoneNumber}`;
+                }
+              },
+              { title: "Call Price", field: "callPrice", filtering: false, },
+              { title: "Commission Price", field: "commissionPrice", filtering: false, },
+             
               { title: "Deducted Amount", field: "deductedAmount",
+                filtering: true,
+                lookup: { ZEROS: "NO BALANCE", NONZEROS: "HAVE BALANCE", },
                 render: (rowData) => {
                   const balance = Number(rowData.deductedAmount).toFixed(2);
                   return balance;
@@ -116,32 +139,128 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                },
               {
                 title: "Duration",
+                filtering: false,
                 render: (rowData) => (
                   <div>
                     {rowData?.durationInSeconds &&
-                      secondsToHMS(rowData?.durationInSeconds)}
+                      secondsToHMS(rowData?.durationInSeconds) || "N/A"}
                   </div>
                 ),
               },
             
+              // {
+              //   title: "Date",
+              //   render: (rowData) => (
+              //     <div>
+              //       {rowData?.endTime &&
+              //         moment(rowData?.createdAt).format("DD-MM-YYYY")}
+              //     </div>
+              //   ),
+              // },
               {
-                title: "Date",
+                title: "Request Time",
+                filtering: false,
                 render: (rowData) => (
                   <div>
-                    {rowData?.endTime &&
-                      moment(rowData?.createdAt).format("DD-MM-YYYY")}
+                    {rowData?.createdAt
+                      ? moment(rowData?.createdAt).format("DD-MM-YYYY HH:mm:ss A")
+                      : "N/A"}
                   </div>
                 ),
               },
-              { title: "Status", field: "status" },
-            ]}
-            options={{ ...propStyles.tableStyles, filtering: false }}
-            actions={[
               {
-                icon: "visibility",
-                tooltip: "View Chat History",
-                onClick: (event, rowData) => handleView(rowData),
+                title: "Start Time",
+                filtering: false,
+                render: (rowData) => (
+                  <div>
+                    {rowData?.startTime
+                      ? moment(rowData?.startTime).format("DD-MM-YY HH:mm A")
+                      : "N/A"}
+                  </div>
+                ),
+                width: 550, 
               },
+              {
+                title: "End time",
+                filtering: false,
+                render: (rowData) => (
+                  <div>
+                    {rowData?.endTime ? rowData?.endTime &&
+                      moment(rowData?.endTime).format("DD-MM-YY HH:mm A")
+                      : "N/A"}
+                  </div>
+                ),
+                width:"550px", 
+              },
+              // { title: "Status", field: "status" },
+
+              // {
+              //   title: "Status",
+              //   render: (rowData) => {
+              //     const statusMap = {
+              //       TIMEOUT: "MISSED",
+              //       REJECTED: "REJECTED",
+              //       CANCELLED: "CANCELLED",
+              //       COMPLETED: "COMPLETED"
+              //     };
+              
+              //     return statusMap[rowData?.status] || "UNKNOWN"; // Provide a default value if status is not found
+              //   }
+              // },
+              { title: "Status", field: "status", lookup: { COMPLETED: "COMPLETED", REJECTED: "REJECTED", ACCEPTED: "ACCEPTED", CREATED: "CREATED", ONGOING:"ON GOING", CANCELLED: "CANCELLED"  }, },
+
+            ]}
+            // data={reverseData}
+
+            data={query =>
+              new Promise((resolve, reject) => {
+                console.log('Query:', query);
+                const filters = {};
+            
+                query.filters.forEach(item => {
+                  if (item.value.length > 0) {
+                    filters[item.column.field] = item.value[0];
+                  }
+                });
+            
+                console.log('Filters:', filters);
+            
+                fetch(api_url + get_call_history, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    page: query.page + 1,
+                    limit: query.pageSize === 0 ? 10 : query.pageSize,
+                    ...filters,
+                    search: query.search,
+                  }),
+                })
+                  .then(response => response.json())
+                  .then(result => {
+                    console.log('Fetch Result:', result.data);
+                    resolve({
+                      data: result.data.data,
+                      page: result.data.pagination.currentPage - 1,
+                      totalCount: result.data.pagination.totalCount,
+                    });
+                  })
+                  .catch(error => {
+                    console.error('Fetch Error:', error);
+                    reject(error);
+                  });
+              })
+            }
+          
+            options={{ ...propStyles.tableStyles,  paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], filtering: 'true' }}
+            style={{ fontSize: "1.0rem" }}
+            actions={[
+              // {
+              //   icon: "visibility",
+              //   tooltip: "View Chat History",
+              //   onClick: (event, rowData) => handleView(rowData),
+              // },
               {
                 icon: "delete",
                 tooltip: "Delete Chat History",

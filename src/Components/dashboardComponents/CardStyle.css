@@ -1,0 +1,24 @@
+
+.cardBody {
+    /* background-image: linear-gradient(to right, #1e88e5, #42a5f5); */
+    /* background-color: #1C64A3; */
+    background: linear-gradient(to right, #4A90D6, #1C64A3);
+
+    padding: 10px;
+    border-radius: 10px;
+    color: #fff;
+    margin: 5px;
+    cursor: pointer;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    transition: all 0.3s ease;
+    height: 120px;
+}
+
+.cardBody:hover {
+    background-image: linear-gradient(to right, #42a5f5, #1e88e5);
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

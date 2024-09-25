@@ -61,7 +61,7 @@ function* getAllDemoClass() {
     if (response) {
       yield put({
         type: actionTypes.DEMO_CLASS_LIST,
-        payload: response?.data,
+        payload: response?.data.reverse(),
       });
     }
     yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });

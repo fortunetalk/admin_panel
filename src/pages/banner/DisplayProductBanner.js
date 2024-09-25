@@ -160,7 +160,7 @@ const DisplayProductBanner = ({ dispatch, productBannerData }) => {
               )},
             ]}
             options={propStyles.tableStyles}
-            style={{ fontSize: "1.4rem" }}
+            style={{ fontSize: "1.0rem" }}
             actions={[
               {
                 icon: "edit",

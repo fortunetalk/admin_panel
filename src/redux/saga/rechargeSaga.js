@@ -63,7 +63,7 @@ function* getRechargePlan() {
       if (response?.success) {
         yield put({
           type: actionTypes.SET_RECHARGE_PLAN,
-          payload: response?.data,
+          payload: response?.data.reverse(),
         });
       }
   
@@ -273,7 +273,7 @@ function* getFirstRechargeOffer() {
     if (response?.success) { 
       yield put({
         type: actionTypes.SET_FIRST_RECHARGE_OFFER,
-        payload: response?.allFirstRechargeOffer,
+        payload: response?.allFirstRechargeOffer.reverse(),
       });
     }
 

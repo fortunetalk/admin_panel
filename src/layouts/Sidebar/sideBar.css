@@ -20,7 +20,8 @@ main {
 
 /* Sidebar */
 .sidebar {
-  background: #60278C;
+  /* background: #60278C; */
+  background: #10395D;
   color: white;
   height: 100vh;
   overflow-y: auto;
@@ -47,12 +48,13 @@ main {
   align-items: center;
   text-align: center;
   justify-content: center;
-  padding: 1rem 1rem;
+  padding: 0.5rem 0.5rem;
   font-family: 'Philosopher';
   font-weight: 800;
-  font-size: 1.1rem;
+  font-size: 2.5rem;
   color: #fff;
-  background-color: #1B1B45;
+  /* background-color: #1B1B45; */
+  background-color: #10395D;
 
 }
 
@@ -106,15 +108,17 @@ main {
 }
 
 .link:hover {
-  border-right: 4px solid white;
-  background: #FFEDCA;
+  /* border-right: 4px solid white; */
+  /* background: #FFEDCA; */
+  background: #9FAFBE;
   transition: 0.2s cubic-bezier(0.6, -0.28, 0.735, 0.045);
   color: #1B1B45
 }
 
 .active {
-  border-right: 4px solid #1B1B45;
-  background: #FFEDCA;
+  /* border-right: 4px solid #1B1B45; */
+  /* background: #FFEDCA; */
+  background: #9FAFBE;
   color: #1B1B45
 }
 
@@ -126,7 +130,6 @@ main {
 .menu {
   display: flex;
   color: white;
-
   padding: 5px 10px;
   border-right: 4px solid transparent;
   transition: 0.2s cubic-bezier(0.6, -0.28, 0.735, 0.045);
@@ -147,3 +150,4 @@ main {
   padding-left: 20px;
   border-bottom: #1B1B45 1px solid;
 }
+

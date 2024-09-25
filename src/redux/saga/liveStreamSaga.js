@@ -20,7 +20,7 @@ function* getLiveStream() {
     if (response?.success) {
       yield put({
         type: actionTypes.LIVE_STREAM_LIST,
-        payload: response.data,
+        payload: response.data.reverse(),
       });
     }
 

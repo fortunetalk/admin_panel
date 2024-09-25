@@ -38,13 +38,13 @@ function extractErrorMessage(html) {
 
 function* addAstrologer(actions) {
   try {
-    const { payload } = actions;
+    const { data, reset,onAdd } = actions.payload;
     yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + add_astrologer,
       header: "form",
-      data: payload?.data,
+      data: data,
     });
 
     if (response?.success) {
@@ -60,7 +60,8 @@ function* addAstrologer(actions) {
 
 
       yield put({ type: actionTypes.GET_ALL_ASTROLOGER, payload: null });
-      yield call(payload.callback);
+      yield call(reset);
+      yield call(onAdd);
     } else {
       const errorMessage = extractErrorMessage(
         response?.Error?.message || "Failed to add Astrologer"
@@ -92,7 +93,7 @@ function* getAstrologers() {
     if (response.success) {
       yield put({
         type: actionTypes.GET_ALL_ASTROLOGER,
-        payload: response?.data,
+        payload: response?.data.reverse(),
       });
     }
   } catch (e) {
@@ -153,7 +154,7 @@ function* getEnquiryAstrologers() {
     if (response.success) {
       yield put({
         type: actionTypes.SET_ENQUIRY_ASTROLOGERS,
-        payload: response?.enquiredAstrologer,
+        payload: response?.enquiredAstrologer.reverse(),
       });
     }
   } catch (e) {
@@ -165,13 +166,13 @@ function* getEnquiryAstrologers() {
 
 function* updateAstrologerStatus(action) {
   try {
-    const { payload } = action;
+    const { data, onComplete } = action.payload;
     // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_astrologer_status,
       header: "json",
-      data: payload,
+      data: data,
     });
 
     if (response && response.success) {
@@ -181,10 +182,11 @@ function* updateAstrologerStatus(action) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({
-        type: actionTypes.UPDATE_ASTROLOGER_STATUS,
-        payload: response,
-      });
+      yield call(onComplete);
+      // yield put({
+      //   type: actionTypes.UPDATE_ASTROLOGER_STATUS,
+      //   payload: response,
+      // });
     } else {
       Swal.fire({
         icon: "error",
@@ -210,13 +212,13 @@ function* updateAstrologerStatus(action) {
 
 function* updateAstrologerCallStatus(action) {
   try {
-    const { payload } = action;
+    const {  data, onComplete } = action.payload;
     // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_astrologer_call_status,
       header: "json",
-      data: payload,
+      data: data,
     });
 
     if (response && response.success) {
@@ -226,10 +228,9 @@ function* updateAstrologerCallStatus(action) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({
-        type: actionTypes.UPDATE_ASTROLOER_CALL_STATUS,
-        payload: response,
-      });
+      yield call(onComplete);
+      // yield put({ type: actionTypes.UPDATE_ASTROLOER_CALL_STATUS,payload: response, });
+      // yield put({ type: actionTypes.GET_ALL_ASTROLOGER, payload: null });
     } else {
       Swal.fire({
         icon: "error",
@@ -249,19 +250,19 @@ function* updateAstrologerCallStatus(action) {
       timer: 2000,
     });
   } finally {
-    // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
+    yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
+    yield put({ type: actionTypes.GET_ALL_ASTROLOGER, payload: null });
   }
 }
 
 function* updateAstrologerChatStatus(action) {
   try {
-    const { payload } = action;
+    const { data, onComplete } = action?.payload || {};
     // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
-
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_astrologer_chat_status,
       header: "json",
-      data: payload,
+      data: data,
     });
 
     if (response && response.success) {
@@ -271,10 +272,11 @@ function* updateAstrologerChatStatus(action) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({
-        type: actionTypes.UPDATE_ASTROLOGER_CHAT_STATUS,
-        payload: response,
-      });
+      yield call(onComplete)
+      // yield put({
+      //   type: actionTypes.UPDATE_ASTROLOGER_CHAT_STATUS,
+      //   payload: response,
+      // });
     } else {
       Swal.fire({
         icon: "error",
@@ -318,14 +320,14 @@ function* updateEnquiryStatus(actions) {
 }
 
 function* updateAstrologerData(actions) {
-  const { payload } = actions;
+  const { data,onAdd } = actions.payload;
   try {
     // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_astrologer,
       header: "",
-      data: payload,
+      data: data,
     });
 
     if (response.success) {
@@ -336,6 +338,7 @@ function* updateAstrologerData(actions) {
         timer: 2000,
       });
       yield put({ type: actionTypes.GET_ALL_ASTROLOGER, payload: response });
+      yield call(onAdd);
     } else {
       Swal.fire({
         icon: "error",
@@ -716,11 +719,14 @@ function* updateAstrologerGalleryImage(actions) {
 function* updateAstrologerAstrologerType(actions) {
   try {
     const { payload } = actions;
-    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
+    // Debug: Log the payload to ensure it's what you expect
+    console.log('Payload:', payload);
+
+    // Send API request
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + update_astrologer_astrologer_type,
-      header: "application/json",
+      header: 'Json',
       data: payload,
     });
 
@@ -741,11 +747,20 @@ function* updateAstrologerAstrologerType(actions) {
       });
     }
   } catch (e) {
-    console.log(e);
+    console.error('Error:', e.message);
+    
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: e.message || "An unexpected error occurred",
+      showConfirmButton: true,
+    });
   } finally {
+    // Optionally handle loading state
     // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
   }
 }
+
 
 export default function* astrologerSaga() {
   yield takeLeading(actionTypes.GET_ALL_ASTROLOGER, getAstrologers);

@@ -10,3 +10,13 @@ export const secondsToHMS = (duration) => {
   
     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
   }
+  
+  export const getUniqueId = () => {
+    const timestamp = Date.now().toString(16); // Convert current timestamp to hexadecimal
+    const randomString = Math.random().toString(16).substr(2, 8); // Generate a random hexadecimal string
+  
+    // Combine timestamp and random string, and ensure it is 16 characters long
+    const uniqueId = (timestamp + randomString).substr(0, 16);
+  
+    return uniqueId;
+  }

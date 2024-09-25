@@ -34,7 +34,7 @@ function* getCustomerNotification() {
     if (response.success) {
       yield put({
         type: actionTypes.SET_CUSTOMER_NOTIFICATIONS,
-        payload: response.data,
+        payload: response.data.reverse(),
       });
     }
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
@@ -53,7 +53,7 @@ function* getAstrologerNotification() {
     if (response.success) {
       yield put({
         type: actionTypes.SET_ASTROLOGER_NOTIFICATIONS,
-        payload: response.data,
+        payload: response.data.reverse(),
       });
     }
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });

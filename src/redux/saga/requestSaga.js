@@ -18,7 +18,7 @@ function* getAllProfileRequest() {
     if (response) {
       yield put({
         type: actionTypes.GET_ALL_PROFILE_REQUEST,
-        payload: response?.data,
+        payload: response?.data.reverse(),
       });
     }
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
@@ -78,7 +78,7 @@ function* getAllPhoneNumberRequest() {
     if (response) {
       yield put({
         type: actionTypes.GET_ALL_PHONE_NUMBER_REQUEST,
-        payload: response?.data,
+        payload: response?.data.reverse(),
       });
     }
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
@@ -138,7 +138,7 @@ function* getBankRequest() {
     if (response) {
       yield put({
         type: actionTypes.GET_ALL_BANK_REQUEST,
-        payload: response?.data,
+        payload: response?.data.reverse(),
       });
     }
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
@@ -198,7 +198,7 @@ function* getGalleryRequest() {
     if (response) {
       yield put({
         type: actionTypes.GET_ALL_GALLERY_IMAGE_REQUEST,
-        payload: response?.data,
+        payload: response?.data.reverse(),
       });
     }
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });

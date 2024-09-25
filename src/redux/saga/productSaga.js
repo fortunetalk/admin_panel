@@ -68,7 +68,7 @@ function* getProduct() {
     if (response) {
       yield put({
         type: actionTypes.PRODUCT_LIST,
-        payload: response?.data,
+        payload: response?.data.reverse(),
       });
     }
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });

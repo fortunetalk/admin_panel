@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { FaAngleDown } from "react-icons/fa";
 import { connect, useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import * as Actions from "../../redux/Actions/dashboardActions";
 
 const menuAnimation = {
@@ -38,8 +38,83 @@ const menuItemAnimation = {
   }),
 };
 
-const SidebarMenu = ({ route, showAnimation, dispatch, isSidebarOpen }) => {
+// const SidebarMenu = ({ route, showAnimation, dispatch, isSidebarOpen }) => {
+//   const [isMenuOpen, setIsMenuOpen] = useState(false);
+//   const toggleMenu = () => {
+//     setIsMenuOpen(!isMenuOpen);
+//     dispatch(Actions.setIsSidebarOpne(true));
+//   };
+
+//   useEffect(() => {
+//     if (!isSidebarOpen) {
+//       setIsMenuOpen(false);
+//     }
+//   }, [isSidebarOpen]);
+//   return (
+//     <>
+//       <div className="menu" onClick={toggleMenu}>
+//         <div className="menu_item">
+//           <div className="icon">{route.icon}</div>
+//           <AnimatePresence>
+//             {isSidebarOpen && (
+//               <motion.div
+//                 variants={showAnimation}
+//                 initial="hidden"
+//                 animate="show"
+//                 exit="hidden"
+//                 className="link_text"
+//               >
+//                 {route.name}
+//               </motion.div>
+//             )}
+//           </AnimatePresence>
+//         </div>
+//         {isSidebarOpen && (
+//           <motion.div
+//             animate={
+//               isMenuOpen
+//                 ? {
+//                     rotate: -90,
+//                   }
+//                 : { rotate: 0 }
+//             }
+//           >
+//             <FaAngleDown />
+//           </motion.div>
+//         )}
+//       </div>{" "}
+//       <AnimatePresence>
+//         {isMenuOpen && (
+//           <motion.div
+//             variants={menuAnimation}
+//             initial="hidden"
+//             animate="show"
+//             exit="hidden"
+//             className="menu_container"
+//           >
+//             {route.subRoutes.map((subRoute, i) => (
+//               <motion.div variants={menuItemAnimation} key={i} custom={i}>
+//                 <NavLink to={subRoute.path} className="link">
+//                   <div className="icon">{subRoute.icon}</div>
+//                   <motion.div className="link_text">{subRoute.name}</motion.div>
+//                 </NavLink>
+//               </motion.div>
+//             ))}
+//           </motion.div>
+//         )}{" "}
+//       </AnimatePresence>
+//     </>
+//   );
+// };
+
+const SidebarMenu = ({ route, showAnimation, dispatch, isSidebarOpen, isActive }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+
+  const isActivePath = (path) => {
+    return location.pathname === path || location.pathname.startsWith(path);
+  };
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
     dispatch(Actions.setIsSidebarOpne(true));
@@ -50,9 +125,17 @@ const SidebarMenu = ({ route, showAnimation, dispatch, isSidebarOpen }) => {
       setIsMenuOpen(false);
     }
   }, [isSidebarOpen]);
+
+  const menuIsActive = isActive || route.subRoutes.some(subRoute => 
+    location.pathname.startsWith(subRoute.path)
+  );
+
   return (
     <>
-      <div className="menu" onClick={toggleMenu}>
+      <div
+        className={`menu ${menuIsActive ? 'active' : ''}`}
+        onClick={toggleMenu}
+      >
         <div className="menu_item">
           <div className="icon">{route.icon}</div>
           <AnimatePresence>
@@ -62,7 +145,7 @@ const SidebarMenu = ({ route, showAnimation, dispatch, isSidebarOpen }) => {
                 initial="hidden"
                 animate="show"
                 exit="hidden"
-                className="link_text"
+                className={`link_text ${menuIsActive ? 'active' : ''}`}
               >
                 {route.name}
               </motion.div>
@@ -73,16 +156,14 @@ const SidebarMenu = ({ route, showAnimation, dispatch, isSidebarOpen }) => {
           <motion.div
             animate={
               isMenuOpen
-                ? {
-                    rotate: -90,
-                  }
+                ? { rotate: -90 }
                 : { rotate: 0 }
             }
           >
             <FaAngleDown />
           </motion.div>
         )}
-      </div>{" "}
+      </div>
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
@@ -93,19 +174,29 @@ const SidebarMenu = ({ route, showAnimation, dispatch, isSidebarOpen }) => {
             className="menu_container"
           >
             {route.subRoutes.map((subRoute, i) => (
-              <motion.div variants={menuItemAnimation} key={i} custom={i}>
-                <NavLink to={subRoute.path} className="link">
+              <motion.div
+                variants={menuItemAnimation}
+                key={i}
+                custom={i}
+              >
+                <NavLink
+                  to={subRoute.path}
+                  className={`link ${isActivePath(subRoute.path) ? 'active' : ''}`}
+                >
                   <div className="icon">{subRoute.icon}</div>
-                  <motion.div className="link_text">{subRoute.name}</motion.div>
+                  <motion.div className="link_text">
+                    {subRoute.name}
+                  </motion.div>
                 </NavLink>
               </motion.div>
             ))}
           </motion.div>
-        )}{" "}
+        )}
       </AnimatePresence>
     </>
   );
 };
+
 
 const mapStateToProps = (state) => ({
   isSidebarOpen: state.dashboard.isSidebarOpen,

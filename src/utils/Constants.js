@@ -1,14 +1,16 @@
-// export const base_url = "http://165.232.182.110:4000/";
-// export const api_url = "http://165.232.182.110:4000/api/";
-
-export const base_url = "http://localhost:4000/";
-export const api_url = "http://localhost:4000/api/";
-
+// Production Server
 // export const base_url = "http://97.74.83.200:4000/";
 // export const api_url = "http://97.74.83.200:4000/api/";
 
+// Testing Server
+// export const base_url = "http://97.74.83.200:8000/";
+// export const api_url = "http://97.74.83.200:8000/api/";
 
-// admin login 
+// Local Server
+export const base_url = "http://localhost:4000/";
+export const api_url = "http://localhost:4000/api/";
+
+// admin login    
 export const admin_login='admin/login';
 export const admin_logout='admin/logout';
 export const admin_change_password='admin/change_password';
@@ -52,9 +54,24 @@ export const delete_main_expertise = "admin/delete-main-expertise";
 
 export const add_review = "api/admin/add_reviews";
 export const get_review = "admin/get_all_reviews";
-export const update_review = "admin/update-review";
-export const delete_review = "admin/delete-review";
+export const update_review = "admin/review_update";
+export const delete_review = "admin/review-delete";
 export const verify_review = 'admin/verify-review'
+
+// Call Discussions
+
+export const add_call_discussion = "admin/customer/add_discussion";
+export const get_call_discussion = "admin/customer/user_discussion";
+export const update_call_discussion = "admin/customer/update_discussion";
+export const delete_call_discussion = "admin/customer/delete_discussion";
+
+
+// Astrologers Offers
+
+export const add_offers = "admin/offer/create_astrologer_offer";
+export const get_offers = "admin/offer/get_astrologer_offer";
+export const update_offers = "admin/offer/update_astrologer_offer";
+export const delete_offers = "admin/offer/delete_astrologer_offer";
 
 //Astrologer
 export const add_astrologer = "admin/add-astrologers";
@@ -138,6 +155,7 @@ export const get_chat_history = 'admin/chat_history'
 export const delete_chat_history = 'admin/chat_history/delete'
 export const get_admin_earnig_history = 'admin/get_call_report'
 export const get_call_history = 'admin/call_history'
+export const get_chat_message_details = 'admin/get_chat_message_details'
 export const delete_call_history = 'admin/call_history/delete'
 export const get_recharge_history = 'admin/recharge/history'
 export const get_wallet_payments = 'admin/get_wallet_payments'
@@ -197,7 +215,7 @@ export const active_blog_category='admin/active-blog-category'
 //BLOG
 export const create_blog='admin/blog/add'
 export const blog_list='admin/blog'
-export const update_blog='admin/update'
+export const update_blog='admin/blog/update'
 export const update_blog_status='admin/blog/change_status'
 export const delete_blog='admin/blog/delete'
 export const delete_multiple_blog='admin/delete-multiple-blog'
@@ -371,5 +389,7 @@ export const delete_live_stream= 'admin/live_stream/delete'
 
 //recharge
 export const recharge_history_list= 'admin/recharge/history'
+export const recharge_history_add= 'admin/recharge/add'
+export const recharge_history_delete= 'admin/recharge/delete'
 
 export const get_all_country = 'https://api.countrystatecity.in/v1/countries'

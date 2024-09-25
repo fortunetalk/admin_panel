@@ -3,6 +3,7 @@ import {
   api_url,
   delete_review,
   get_review,
+  update_review,
   verify_review,
 } from "../../utils/Constants";
 import { ApiRequest } from "../../utils/apiRequest";
@@ -17,7 +18,7 @@ function* getAstrologersReviews() {
       url: api_url + get_review,
     });
 
-    if (response.success) {
+    if (response?.success) {
       yield put({
         type: actionTypes.SET_ASTROLOGERS_REVIEWS,
         payload: response.data,
@@ -103,6 +104,41 @@ function* deleteAstrologerReview(actions) {
   }
 }
 
+function* updateAstrologerReview(actions) {
+  try {
+    const { payload } = actions;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
+    const response = yield ApiRequest.postRequest({
+      url: api_url + update_review,
+      header: "json",
+      data: payload,
+    });
+
+    if (response.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Review Updated Successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      yield put({ type: actionTypes.GET_ASTROLOGERS_REVIEWS, payload: null });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Review Update Failed",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
+  } catch (e) {
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
+    console.log(e);
+  }
+}
+
 export default function* reviewSaga() {
   yield takeEvery(actionTypes.GET_ASTROLOGERS_REVIEWS, getAstrologersReviews);
   yield takeEvery(actionTypes.SET_APP_REVIEWS, getAppReviews);
@@ -111,4 +147,5 @@ export default function* reviewSaga() {
     verifyAstrologerReview
   );
   yield takeEvery(actionTypes.DELETE_ASTROLOGER_REVIEW, deleteAstrologerReview);
+  yield takeEvery(actionTypes.UPDATE_ASTROLOER_REVIEW, updateAstrologerReview);
 }

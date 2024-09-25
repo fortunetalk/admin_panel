@@ -89,7 +89,7 @@ const TopAstrologers = ({ dispatch, astrologerListData }) => {
     return (
       <Grid container spacing={2}>
         <Grid item lg={12} sm={12} md={12} xs={12} style={{ marginTop: 15 }}>
-          <MaterialTable
+          {/* <MaterialTable
             title="Top Astrologers"
             data={astrologerListData}
             columns={[
@@ -188,7 +188,10 @@ const TopAstrologers = ({ dispatch, astrologerListData }) => {
                   ),
               },
             ]}
-          />
+          /> */}
+          <div >
+          <h3> Coming Soon </h3>
+          </div>
         </Grid>
       </Grid>
     );

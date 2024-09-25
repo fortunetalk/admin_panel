@@ -62,7 +62,7 @@ function* getCustomers() {
     })
 
     if (response?.success) {
-      yield put({ type: actionTypes.SET_ALL_CUSTOMER, payload: response?.data })
+      yield put({ type: actionTypes.SET_ALL_CUSTOMER, payload: response?.data.reverse()})
     }
 
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });

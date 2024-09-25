@@ -51,3 +51,8 @@ export const adminChangePasswordFailure = (error) => ({
     type: actionTypes.ADMIN_CHANGE_PASSWORD_FAILURE,
     error,
 });
+
+export const setApiPayload = (error) => ({
+    type: actionTypes.SET_API_PAYLOAD,
+    error,
+});

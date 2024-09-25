@@ -152,7 +152,7 @@ function* getExperties() {
     if (response?.success) {
       yield put({
         type: actionTypes.GET_ALL_EXPERTIES,
-        payload: response?.data,
+        payload: response?.data.reverse(),
       });
     }
 
@@ -223,6 +223,7 @@ function* updateExpertiseStatus(action) {
       yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
     }
 }
+
 export default function* expertiesSaga() {
   yield takeLeading(actionTypes.GET_ALL_EXPERTIES, getExperties);
   yield takeLeading(actionTypes.GET_ALL_ACTIVE_EXPERTIES, getActiveExperties);

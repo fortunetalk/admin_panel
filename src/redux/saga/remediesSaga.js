@@ -23,7 +23,7 @@ function* getRemedies() {
     if (response?.success) {
       yield put({
         type: actionTypes.GET_ALL_REMEDIES,
-        payload: response.data,
+        payload: response.data.reverse(),
       });
     }
 
@@ -43,7 +43,7 @@ function* getActiveRemedies() {
     if (response?.success) {
       yield put({
         type: actionTypes.GET_ALL_ACTIVE_REMEDIES,
-        payload: response.data,
+        payload: response.data.reverse(),
       });
     }
 

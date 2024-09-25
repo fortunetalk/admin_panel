@@ -70,7 +70,7 @@ function* getSkills() {
       url: api_url + get_skills,
     });
 
-    if (response?.success) {
+    if (response?.success.reverse()) {
       yield put({
         type: actionTypes.GET_ALL_SKILLS,
         payload: response?.data,
@@ -93,7 +93,7 @@ function* getActiveSkills() {
     if (response?.success) {
       yield put({
         type: actionTypes.GET_ALL_ACTIVE_SKILLS,
-        payload: response?.data,
+        payload: response?.data.reverse(),
       });
     }
   } catch (e) {
@@ -270,7 +270,7 @@ function* getSubSkills() {
     if (response?.success) {
       yield put({
         type: actionTypes.SET_ALL_SUB_SKILLS,
-        payload: response?.data,
+        payload: response?.data.reverse(),
       });
     }
   } catch (e) {

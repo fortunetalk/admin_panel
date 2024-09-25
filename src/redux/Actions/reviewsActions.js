@@ -29,3 +29,8 @@ export const deleteAstrologerReivew = (payload) => ({
   type: actionTypes.DELETE_ASTROLOGER_REVIEW,
   payload,
 });
+
+export const updateAstrologerReview = (payload) => ({
+  type: actionTypes.UPDATE_ASTROLOER_REVIEW,
+  payload,
+});

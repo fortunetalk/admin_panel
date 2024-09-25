@@ -68,7 +68,7 @@ function* getAllTestimonial() {
     if (response) {
       yield put({
         type: actionTypes.TESTIMONIAL_LIST,
-        payload: response?.data,
+        payload: response?.data.reverse(),
       });
     }
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });

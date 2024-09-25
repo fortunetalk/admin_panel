@@ -131,6 +131,21 @@ import FullChatHistory from "./pages/history/FullChatHistory";
 import MCQAnswerList from "./pages/courses/MCQAnswerList";
 import AddRechargeByAdmin from "./pages/customer/AddRechargeByAdmin";
 import CustomerRechargeHistory from "./pages/customer/CustomerRechargeHistory";
+import VideoEarning from "./pages/adminEarning/videoEarning";
+import CallEarning from "./pages/adminEarning/callEarning";
+import ChatEarning from "./pages/adminEarning/chatEarning";
+import DisplayAstrologerOffers from "./pages/astrologerOffers/DisplayAstrologerOffers";
+import AddAstrologersOffers from "./pages/astrologerOffers/AddAstrologersOffers";
+import AstrologerChatSupport from "./pages/chatSupport/AstrologerChatSupport";
+import CustomerChatSupport from "./pages/chatSupport/CustomerChatSupport";
+import VersionUpdate from "./pages/setting/versionUpdate/VersionUpdate";
+import AddCallDiscussion from "./pages/callDiscussion/AddCallDiscussion";
+import DisplayCallDiscussion from "./pages/callDiscussion/DisplayCallDiscussion";
+import AddRechargeHistory from "./pages/recharge/AddRechargeHistory";
+import WaitingList from "./pages/waitingList/WaitingList";
+import WaitingListHistory from "./pages/waitingList/WaitingListHistory";
+import Earning from "./pages/adminEarning/earning";
+
 
 function App() {
   return (
@@ -147,6 +162,7 @@ function App() {
           <Route path="/addRechargePlan" element={<AddRechargePlans />} />
           <Route path="/rechargeByAdmin" element={<AddRechargeByAdmin/>} />
           <Route path="/customerRechargeHistory" element={<CustomerRechargeHistory/>} />
+          <Route path="/addRechargeHistory" element={<AddRechargeHistory/>} />
           <Route
             path="/displayRechargePlan"
             element={<DisplayRechargePlans />}
@@ -203,12 +219,20 @@ function App() {
           <Route path="/history/liveClassHistory" element={<LiveClassHistory/>} />
           <Route path="/history/liveCourseHistory" element={<DisplayLiveCourseHistory/>} />
           <Route path="/history/UsersGiftHistory" element={<UsersGiftHistory />} />
-          <Route path="/history/RechargeHistory" element={<RechargeHistory />} />
+          <Route path="/history/wallet-transaction" element={<RechargeHistory />} />
           <Route path="/liveStream" element={<LiveStream />} />
           <Route path="/displayUser" element={<DisplayUser />} />
           <Route path="/AddUser" element={<AddUser />} />
           <Route path="/displayGift" element={<DisplayGift />} />
           <Route path="/AddGift" element={<AddGift />} />
+          <Route path="/call-discussion" element={<DisplayCallDiscussion />} />
+          <Route path="/add-call-discussion" element={<AddCallDiscussion />} />
+
+          <Route path="/displayAstrologerOffer" element={<DisplayAstrologerOffers />} />
+
+          <Route path="/addAstrologerOffer" element={<AddAstrologersOffers />} />
+
+
           <Route path="/displayAstroblog" element={<DisplayAstroblog />} />
           <Route path="/AddAstroblog" element={<AddAstroblog />} />
           <Route path="/appVersion" element={<AddAppverstion />} />
@@ -239,10 +263,18 @@ function App() {
           <Route path="/AddHowToUseVideo" element={<AddHowToUseVideo />} />
           <Route path="/displayHowToUse" element={<DisplayHowToUse />} />
           <Route path="/AddHowToUse" element={<AddHowToUse />} />
+
           <Route path="/adminEarning" element={<AdminEarning />} />
+          <Route path="/earning" element={<Earning />} />
+          <Route path="/callEarning" element={<CallEarning />} />
+          <Route path="/chatEarning" element={<ChatEarning />} />
+          <Route path="/videoCallEarning" element={<VideoEarning />} />
+
+
           <Route path="/receiptSummary" element={<ReceiptSummary />} />
           <Route path="/saleSummary" element={<SaleSummary />} />
 
+          <Route path="/setting/version-update" element={<VersionUpdate/>}/>
           <Route path="/setting/country" element={<Country/>}/>
           <Route path="/setting/country/:countryId" element={<FilteredCountryList/>}/>
           <Route path="/add-country" element={<AddCountry/>}/>
@@ -306,6 +338,15 @@ function App() {
 
           <Route path="/displayWorkshop" element={<DisplayWorkshop/>} />
           <Route path="/addWorkshop" element={<AddWorkshop/>} />
+
+          {/* Chat Support */}
+          <Route path="/chat-support-astrologers" element={<AstrologerChatSupport/>} />
+          <Route path="/chat-support-customers" element={<CustomerChatSupport/>} />
+
+
+          {/* Waiting List */}
+          <Route path="/display-wait-list" element={<WaitingList/>} />
+          <Route path="/display-wait-list-history" element={<WaitingListHistory/>} />
 
 
           <Route

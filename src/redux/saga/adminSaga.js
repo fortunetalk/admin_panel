@@ -90,7 +90,6 @@ function* adminLogout() {
   }
 }
 
-
 function* adminChangePassword(action) {
   try {
     const { payload } = action;

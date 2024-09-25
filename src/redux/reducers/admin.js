@@ -3,7 +3,8 @@ import * as actionTypes from "../actionTypes";
 const initialState = {
     adminData: null,
     isLoading: false,
-    error: null
+    error: null,
+    apiPayload: null,
 };
 
 const admin = (state = initialState, action) => {
@@ -46,6 +47,11 @@ const admin = (state = initialState, action) => {
                 ...state,
                 loading: false,
                 error: error
+            };
+        case actionTypes.SET_API_PAYLOAD:
+            return {
+                ...state,
+                apiPayload: false,
             };
         default:
             return state;

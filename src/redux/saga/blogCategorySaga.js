@@ -15,6 +15,8 @@ function* createBlogCategory(actions) {
       data: payload,
     });
 
+    console.log(response)
+
     if (response.success) {
       Swal.fire({
         icon: "success",
@@ -55,7 +57,7 @@ function* getBlogCategories() {
     });
 
     if (response?.success) {
-      yield put({ type: actionTypes.BLOG_CATEGORY_LIST, payload: response.data });
+      yield put({ type: actionTypes.BLOG_CATEGORY_LIST, payload: response.data.reverse() });
     } else {
       Swal.fire({
         icon: "error",

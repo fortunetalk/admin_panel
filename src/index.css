@@ -1,6 +1,7 @@
 html {
-  font-size: 75.5%;
+  font-size: 80.0%;
   font-family: "Philosopher" !important;
+  color: black ;
 }
 
 @media (max-width: 998px) {

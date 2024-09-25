@@ -16,7 +16,7 @@ import { api_url, get_chat_history } from "../../utils/Constants.js";
 
 
 
-const ChatHistory = ({ dispatch, chatHistoryData }) => {
+const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
   const classes = useStyles();
   const navigate = useNavigate();
 
@@ -49,6 +49,10 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
   useEffect(() => {
     dispatch(HistoryActions.getChatHistory());
   }, [dispatch]);
+
+  useEffect(()=>{
+
+  }, [chatHistoryApiPayload])
 
   const handleView = (rowData) => {
     setViewData(true);
@@ -142,7 +146,7 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
                   return `${phoneNumber}`;
                 }
               },
-              { title: "Chat Price", field: "chatPrice" , filtering: false,},
+              { title: "Chat Price", field: "chatPrice", filtering: false, },
               { title: "Commission Price", field: "commissionPrice", filtering: false, },
               // { title: "Total Charge", field: "deductedAmount" },
               {
@@ -194,7 +198,7 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
                   </div>
                 ),
               },
-              { title: "Status", field: "status", lookup: { COMPLETED: "COMPLETED", REJECTED: "REJECTED", ACCEPTED: "ACCEPTED", CREATED: "CREATED", ONGOING:"ON GOING" }, },
+              { title: "Status", field: "status", lookup: { COMPLETED: "COMPLETED", REJECTED: "REJECTED", ACCEPTED: "ACCEPTED", CREATED: "CREATED", ONGOING: "ON GOING" }, },
               {
                 title: "View Chat History",
                 field: "status",
@@ -220,28 +224,30 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
                     filters[item.column.field] = item.value[0]
                   }
                 })
-                console.log({
-                  page: query.page + 1, // MaterialTable uses 0-indexed pages
-                  limit: query.pageSize === 0 ? 10 : query.pageSize,
-                  ...filters, // Include processed filters
-                  search: query.search,
-                })
 
-                fetch( api_url + get_chat_history, {
+                console.log("chatHistoryApiPayload", chatHistoryApiPayload)
+
+                fetch(api_url + get_chat_history, {
                   method: 'POST', // Specify the request method
                   headers: {
                     'Content-Type': 'application/json', // Set the content type to JSON
                   },
-                  body: JSON.stringify({
-                    page: query.page + 1, // MaterialTable uses 0-indexed pages
+                  body: JSON.stringify(chatHistoryApiPayload ?? {
+                    page: 1, // MaterialTable uses 0-indexed pages
                     limit: query.pageSize === 0 ? 10 : query.pageSize,
                     ...filters, // Include processed filters
-                    search: query.search,              
+                    search: query.search,
                   }), // Convert the request body to JSON
                 })
                   .then(response => response.json())
                   .then(result => {
                     console.log(result)
+                    dispatch(HistoryActions.setChatHistoryApiPayload({
+                      page: query.page + 1, // MaterialTable uses 0-indexed pages
+                      limit: query.pageSize === 0 ? 10 : query.pageSize,
+                      ...filters, // Include processed filters
+                      search: query.search,
+                    }))
                     resolve({
                       data: result.data.data, // Adjust based on your API response
                       page: result.data.pagination.currentPage - 1, // Adjust for 0-indexed pages
@@ -249,10 +255,9 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
                     })
                   })
               })
-
             }
 
-            options={{ ...propStyles.tableStyles,  paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], filtering: 'true' }}
+            options={{ ...propStyles.tableStyles, paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], filtering: 'true' }}
             style={{ fontSize: "1rem" }}
             actions={[
               {
@@ -514,6 +519,8 @@ const ChatHistory = ({ dispatch, chatHistoryData }) => {
 
 const mapStateToProps = (state) => ({
   chatHistoryData: state.history.chatHistoryData || [],  // Default to empty array
+  chatHistoryApiPayload: state.history.chatHistoryApiPayload,  // Default to empty array
+
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

@@ -1,15 +1,14 @@
 // Production Server
-export const base_url = "http://97.74.83.200:4000/";
-export const api_url = "http://97.74.83.200:4000/api/";
+// export const base_url = "http://97.74.83.200:4000/";
+// export const api_url = "http://97.74.83.200:4000/api/";
 
 // Testing Server
 // export const base_url = "http://97.74.83.200:8000/";
 // export const api_url = "http://97.74.83.200:8000/api/";
 
 // Local Server
-// export const base_url = "http://localhost:4000/";
-// export const api_url = "http://localhost:4000/api/";
-
+export const base_url = "http://localhost:4000/";
+export const api_url = "http://localhost:4000/api/";
 
 // admin login    
 export const admin_login='admin/login';
@@ -156,6 +155,7 @@ export const get_chat_history = 'admin/chat_history'
 export const delete_chat_history = 'admin/chat_history/delete'
 export const get_admin_earnig_history = 'admin/get_call_report'
 export const get_call_history = 'admin/call_history'
+export const get_chat_message_details = 'admin/get_chat_message_details'
 export const delete_call_history = 'admin/call_history/delete'
 export const get_recharge_history = 'admin/recharge/history'
 export const get_wallet_payments = 'admin/get_wallet_payments'

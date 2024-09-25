@@ -2,6 +2,7 @@ import * as actionTypes from "../actionTypes";
 
 const initialState = {
   chatHistoryData: null,
+  chatHistoryApiPayload: null,
   chatSummaryData: [],
   callHistoryData: null,
   customerFirebaseID: null,
@@ -34,6 +35,12 @@ const history = (state = initialState, actions) => {
       return {
         ...state,
         chatHistoryData: payload,
+      };
+    }
+    case actionTypes.SET_CHAT_HISTORY_API_PAYLOAD: {
+      return {
+        ...state,
+        chatHistoryApiPayload: payload,
       };
     }
     case actionTypes.DELETE_CHAT_HISTORY: {

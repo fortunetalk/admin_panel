@@ -19,6 +19,10 @@ export const setChatHistory = payload =>({
     type: actionTypes.SET_CHAT_HISTORY,
     payload
 })
+export const setChatHistoryApiPayload = payload =>({
+    type: actionTypes.SET_CHAT_HISTORY_API_PAYLOAD,
+    payload
+})
 export const deleteChatHistory = payload =>({
     type: actionTypes.DELETE_CHAT_HISTORY,
     payload

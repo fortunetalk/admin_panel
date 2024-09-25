@@ -5,6 +5,8 @@ import { useParams, useLocation } from 'react-router-dom';
 import { database } from '../../config/firbase';
 import { ref, onValue } from 'firebase/database';
 import { format } from 'date-fns';
+import { connect } from 'react-redux';
+import * as HistoryActions from '../../redux/Actions/historyActions.js'
 
 const useStyles = makeStyles({
   chatContainer: {
@@ -58,51 +60,59 @@ const useStyles = makeStyles({
   }
 });
 
-const FullChatHistory = () => {
+const FullChatHistory = ({ chatSummaryData, dispatch }) => {
   const classes = useStyles();
   const location = useLocation();
   const { customerId } = useParams();
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    const messagesRef = ref(database, `Messages/${location.state.chatId}`);
-    
-    const handleValueChange = (snapshot) => {
-      const data = snapshot.val();
-      const messagesArray = data ? Object.values(data).map((msg) => {
-        // Handle timestamp
-        const timestamp = msg.addedAt;
-        let formattedDate = '';
+    dispatch(HistoryActions.getChatSummary({ chatId: location.state.chatId, customerId, classes }))
+    return () => {
+      dispatch(HistoryActions.setChatSummary([]))
+    }
+  }, [])
 
-        if (timestamp) {
-          let dateObj = typeof timestamp === 'number' ? new Date(timestamp) : new Date(Date.parse(timestamp));
-          formattedDate = format(dateObj, 'eeee MMM d, yyyy h:mm a'); // Format as "DayOfWeek Month Date, Year h:mm AM/PM"
-        }
+  // useEffect(() => {
+  //   const messagesRef = ref(database, `Messages/${location.state.chatId}`);
 
-        return {
-          position: msg.user._id === customerId ? classes.right : classes.left,
-          text: msg.image ? '' : msg?.text,
-          date: formattedDate,
-          type: msg.image ? 'photo' : (msg.video ? 'video' : (msg.audio ? 'audio' : 'text')),
-          data: {
-            uri: msg.image || msg.video || msg.audio,
-            position: msg.user._id === customerId ? classes.right : classes.left
-          }
-        };
-      }) : [];
-      setMessages(messagesArray);
-    };
 
-    onValue(messagesRef, handleValueChange);
+  //   const handleValueChange = (snapshot) => {
+  //     const data = snapshot.val();
+  //     const messagesArray = data ? Object.values(data).map((msg) => {
+  //       // Handle timestamp
+  //       const timestamp = msg.addedAt;
+  //       let formattedDate = '';
 
-    // return () => {
-    //   ref(database, `Messages/${location.state.chatId}`).off('value', handleValueChange);
-    // };
-  }, [customerId, classes.right, classes.left, location.state.chatId]);
+  //       if (timestamp) {
+  //         let dateObj = typeof timestamp === 'number' ? new Date(timestamp) : new Date(Date.parse(timestamp));
+  //         formattedDate = format(dateObj, 'eeee MMM d, yyyy h:mm a'); // Format as "DayOfWeek Month Date, Year h:mm AM/PM"
+  //       }
+
+  //       return {
+  //         position: msg.user._id === customerId ? classes.right : classes.left,
+  //         text: msg.image ? '' : msg?.text,
+  //         date: formattedDate,
+  //         type: msg.image ? 'photo' : (msg.video ? 'video' : (msg.audio ? 'audio' : 'text')),
+  //         data: {
+  //           uri: msg.image || msg.video || msg.audio,
+  //           position: msg.user._id === customerId ? classes.right : classes.left
+  //         }
+  //       };
+  //     }) : [];
+  //     setMessages(messagesArray);
+  //   };
+
+  //   onValue(messagesRef, handleValueChange);
+
+  //   // return () => {
+  //   //   ref(database, `Messages/${location.state.chatId}`).off('value', handleValueChange);
+  //   // };
+  // }, [customerId, classes.right, classes.left, location.state.chatId]);
 
   return (
     <div className={classes.chatContainer}>
-      {messages.map((message, index) => (
+      {chatSummaryData && chatSummaryData.map((message, index) => (
         <div key={index} className={classes.messageWrapper}>
           <div className={`${classes.message} ${message.position}`}>
             {message.type === 'text' && (
@@ -122,4 +132,11 @@ const FullChatHistory = () => {
   );
 }
 
-export default FullChatHistory;
+const mapStateToProps = (state) => ({
+  chatSummaryData: state.history.chatSummaryData,
+});
+
+const mapDispatchToProps = (dispatch) => ({ dispatch });
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(FullChatHistory);

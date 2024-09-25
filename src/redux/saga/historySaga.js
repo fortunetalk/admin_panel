@@ -17,13 +17,15 @@ import {
   change_live_course_history_status,
   get_register_live_class_history,
   delete_chat_history,
-  delete_call_history
+  delete_call_history,
+  get_chat_message_details
 
 } from "../../utils/Constants";
 import { database, firestore } from "../../config/firbase";
 import { get, onValue, ref } from "firebase/database";
 import { Colors } from "../../assets/styles";
 import { doc, getDoc, collection, orderBy, query, onSnapshot, getDocs } from "firebase/firestore";
+import { format } from 'date-fns';
 
 
 function* getChatHistory() {
@@ -31,7 +33,7 @@ function* getChatHistory() {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
     const response = yield ApiRequest.postRequest({
       url: api_url + get_chat_history,
-      
+
     });
 
 
@@ -135,50 +137,40 @@ function* deleteChatHistory(actions) {
 function* getChatSummary(actions) {
   try {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
-    const { payload } = actions;
-    const customerFirebaseID = yield call(fetchCustomerFirebaseID, payload?.customerID);
-    const astroFirebaseID = yield call(fetchAstroFirebaseID, payload?.astroID)
-    const chatId = `${customerFirebaseID}+${astroFirebaseID}`
-    const messages = yield call(getChatData, chatId)
-    if (messages) {
-      let chatData = messages.map(item => {
-        const user = {
-          id: item?.user?._id.toString().toLocaleLowerCase(),
-          avatar: item?.user?.avatar
-        }
+    const { customerId, chatId, classes } = actions.payload;
+    const response = yield ApiRequest.postRequest({
+      url: api_url + get_chat_message_details,
+      header: "json",
+      data: {
+        chatId
+      },
+    });
 
-        let media = null
+    console.log("response", response)
 
-        if (typeof item?.image != 'undefined') {
-          media = {
-            type: 'image',
-            url: item?.image,
-            size: '',
-            name: ''
-          }
-        }
+    if (response.success) {
+      let chatData = response?.data.map(msg => {
+        const timestamp = msg.createdAt;
+        let formattedDate = '';
 
-        if (typeof item?.file != 'undefined') {
-          media = {
-            type: 'file',
-            url: item?.file?.url,
-            size: '',
-            name: item?.file?.fileType
-          }
-        }
-
-        if (!!media) {
-          return {
-            ...item, createdAt: new Date(item?.createdAt), user, media
-          }
+        if (timestamp) {
+          let dateObj = typeof timestamp === 'number' ? new Date(timestamp) : new Date(Date.parse(timestamp));
+          formattedDate = format(dateObj, 'eeee MMM d, yyyy h:mm a'); // Format as "DayOfWeek Month Date, Year h:mm AM/PM"
         }
         return {
-          ...item, createdAt: new Date(item?.createdAt), user,
-        }
+          position: msg.user._id === customerId ? classes.right : classes.left,
+          text: msg.image ? '' : msg?.text,
+          date: formattedDate,
+          type: msg.image ? 'photo' : (msg.video ? 'video' : (msg.audio ? 'audio' : 'text')),
+          data: {
+            uri: msg.image || msg.video || msg.audio,
+            position: msg.user._id === customerId ? classes.right : classes.left
+          }
+        };
 
       })
-      yield put({ type: actionTypes.SET_CUSTOMER_FIREBASE_ID, payload: customerFirebaseID.toLocaleLowerCase() })
-      yield put({ type: actionTypes.SET_CHAT_SUMMARY, payload: chatData.reverse() })
+      // yield put({ type: actionTypes.SET_CUSTOMER_FIREBASE_ID, payload: customerFirebaseID.toLocaleLowerCase() })
+      yield put({ type: actionTypes.SET_CHAT_SUMMARY, payload: chatData })
     }
     yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   } catch (e) {

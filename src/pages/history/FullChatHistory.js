@@ -2,11 +2,9 @@ import React, { useEffect, useState } from 'react';
 import "react-chat-elements/dist/main.css";
 import { makeStyles } from '@material-ui/core/styles';
 import { useParams, useLocation } from 'react-router-dom';
-import { database } from '../../config/firbase';
-import { ref, onValue } from 'firebase/database';
-import { format } from 'date-fns';
 import { connect } from 'react-redux';
-import * as HistoryActions from '../../redux/Actions/historyActions.js'
+import * as HistoryActions from '../../redux/Actions/historyActions.js';
+import { Modal, Backdrop, Fade } from '@material-ui/core';
 
 const useStyles = makeStyles({
   chatContainer: {
@@ -15,7 +13,7 @@ const useStyles = makeStyles({
     overflowY: 'auto',
     padding: '10px',
     boxSizing: 'border-box',
-    backgroundColor: '#f5f5f5'
+    backgroundColor: '#f5f5f5',
   },
   messageWrapper: {
     display: 'flex',
@@ -51,64 +49,74 @@ const useStyles = makeStyles({
     marginTop: '4px',
     textAlign: 'right',
     marginRight: '10px',
-    marginTop: '4px',
-    marginBottom: '2px', // To provide spacing below the date
   },
   media: {
     maxWidth: '100%',
     borderRadius: '8px',
-  }
+  },
 });
+
+const ImageModal = ({ open, handleClose, imageSrc }) => (
+  <Modal
+    open={open}
+    onClose={handleClose}
+    closeAfterTransition
+    BackdropComponent={Backdrop}
+    BackdropProps={{ timeout: 500 }}
+  >
+    <Fade in={open}>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+        backgroundColor: 'rgba(0,0,0,0.8)',
+        position: 'relative',
+      }}>
+        <img src={imageSrc} alt="Full size" style={{ maxWidth: '90%', maxHeight: '90%' }} />
+        <button
+          onClick={handleClose}
+          style={{
+            position: 'absolute',
+            top: '20px',
+            right: '20px',
+            background: 'none',
+            border: 'none',
+            color: 'white',
+            fontSize: '24px',
+            cursor: 'pointer',
+          }}
+        >
+          &times;
+        </button>
+      </div>
+    </Fade>
+  </Modal>
+);
 
 const FullChatHistory = ({ chatSummaryData, dispatch }) => {
   const classes = useStyles();
   const location = useLocation();
   const { customerId } = useParams();
-  const [messages, setMessages] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const handleImageClick = (imageSrc) => {
+    setSelectedImage(imageSrc);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedImage(null);
+  };
 
   useEffect(() => {
-    dispatch(HistoryActions.getChatSummary({ chatId: location.state.chatId, customerId, classes }))
+    dispatch(HistoryActions.getChatSummary({ chatId: location.state.chatId, customerId, classes }));
     return () => {
-      dispatch(HistoryActions.setChatSummary([]))
-    }
-  }, [])
-
-  // useEffect(() => {
-  //   const messagesRef = ref(database, `Messages/${location.state.chatId}`);
-
-
-  //   const handleValueChange = (snapshot) => {
-  //     const data = snapshot.val();
-  //     const messagesArray = data ? Object.values(data).map((msg) => {
-  //       // Handle timestamp
-  //       const timestamp = msg.addedAt;
-  //       let formattedDate = '';
-
-  //       if (timestamp) {
-  //         let dateObj = typeof timestamp === 'number' ? new Date(timestamp) : new Date(Date.parse(timestamp));
-  //         formattedDate = format(dateObj, 'eeee MMM d, yyyy h:mm a'); // Format as "DayOfWeek Month Date, Year h:mm AM/PM"
-  //       }
-
-  //       return {
-  //         position: msg.user._id === customerId ? classes.right : classes.left,
-  //         text: msg.image ? '' : msg?.text,
-  //         date: formattedDate,
-  //         type: msg.image ? 'photo' : (msg.video ? 'video' : (msg.audio ? 'audio' : 'text')),
-  //         data: {
-  //           uri: msg.image || msg.video || msg.audio,
-  //           position: msg.user._id === customerId ? classes.right : classes.left
-  //         }
-  //       };
-  //     }) : [];
-  //     setMessages(messagesArray);
-  //   };
-
-  //   onValue(messagesRef, handleValueChange);
-
-  //   // return () => {
-  //   //   ref(database, `Messages/${location.state.chatId}`).off('value', handleValueChange);
-  //   // };
-  // }, [customerId, classes.right, classes.left, location.state.chatId]);
+      dispatch(HistoryActions.setChatSummary([]));
+    };
+  }, [dispatch, location.state.chatId, customerId, classes]);
 
   return (
     <div className={classes.chatContainer}>
@@ -119,15 +127,36 @@ const FullChatHistory = ({ chatSummaryData, dispatch }) => {
               <div className={classes.messageText}>{message.text}</div>
             )}
             {(message.type === 'photo' || message.type === 'video') && (
-              <img src={message.data.uri} alt="media" className={classes.media} />
+              <img
+                src={message.data.uri}
+                alt="media"
+                onClick={() => handleImageClick(message.data.uri)}
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '300px',
+                  borderRadius: '8px',
+                  objectFit: 'cover',
+                  cursor: 'pointer',
+                }}
+              />
             )}
             {message.type === 'audio' && (
-              <audio controls src={message.data.audioURL} className={classes.media} />
+              <audio controls className={classes.media}>
+                <source src={message.data.audioURL} type="audio/mpeg" />
+                Your browser does not support the audio tag.
+              </audio>
             )}
-            <div className={classes.messageDate}>{message.date}</div> {/* Date below the message */}
+            <div className={classes.messageDate}>{message.date}</div>
           </div>
         </div>
       ))}
+
+      {/* Image Modal */}
+      <ImageModal
+        open={modalOpen}
+        handleClose={handleCloseModal}
+        imageSrc={selectedImage}
+      />
     </div>
   );
 }
@@ -137,6 +166,5 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(FullChatHistory);

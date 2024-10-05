@@ -54,7 +54,7 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
       transactionId: rowData?.transactionId || "",
       customerId: rowData?.customerId?._id || "",
       astrologerId: rowData?.astrologerId?._id || "",
-      customerName: `${rowData?.customerId?.firstName } ${rowData?.customerId?.lastName }`|| "",
+      customerName: `${rowData?.customerId?.firstName} ${rowData?.customerId?.lastName}` || "",
       customerEmail: rowData?.customerId?.email || "",
       astrologerName: rowData?.astrologerId?.name || "",
       astrologerDisplayName: rowData?.astrologerId?.displayName || "",
@@ -78,14 +78,19 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
 
   const reverseData = Array.isArray(callHistoryData) ? callHistoryData.slice().reverse() : [];
 
+  function transformTransactionId(transactionId) {
+    const parts = transactionId.split("fortunetalk");
+    return `#FTCA${parts[1] || ''}`;
+  }
+
   return (
     <div className={classes.container}>
       {
 
-      <div className={classes.box}>
-        {displayTable()}
-        {editModal()}
-      </div>
+        <div className={classes.box}>
+          {displayTable()}
+          {editModal()}
+        </div>
       }
     </div>
   );
@@ -94,12 +99,12 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
       <Grid container spacing={1}>
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
-           title={
-            <div>
-              <span style={{ fontWeight: '500', fontSize: '25px', marginRight: '20px' }}>Call History</span>
-            </div>
-          }
-            
+            title={
+              <div>
+                <span style={{ fontWeight: '500', fontSize: '25px', marginRight: '20px' }}>Call History</span>
+              </div>
+            }
+
             columns={[
               // {
               //   title: "S.No",
@@ -107,17 +112,14 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
               //   render: (rowData) => rowData.tableData.id + 1,
               // },
 
-            //   { title: "Call ID", field: "_id" },
-            {
-              title: "Transaction Id",
-              field: "transactionId",
-              filtering: false,
-              render: (rowData) => {
-                  const originalId = rowData.transactionId || "";
-                  const uniquePart = originalId.replace("fortunetalk", ""); // Remove common part
-                  return `FT${uniquePart}`; // Prepend "ft"
+              //   { title: "Call ID", field: "_id" },
+              {
+                title: "Call-Id",
+                field: "transactionId",
+                filtering: false,
+                render: (rowData) => transformTransactionId(rowData.transactionId),
+
               },
-          },
               {
                 title: "Astrologer Display Name",
                 field: "astrologerDisplayName",
@@ -131,10 +133,7 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
               {
                 title: "Customer Phone Number",
                 filtering: false,
-                render: (rowData) => {
-                  const phoneNumber = rowData?.phoneNumber || "";
-                  return `${phoneNumber}`;
-                }
+                field: "phoneNumber",
               },
               // { title: "Call Price", field: "callPrice", filtering: false, },
               {
@@ -142,19 +141,21 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                 field: "callPrice",
                 filtering: false,
                 render: (rowData) => showNumber(rowData.callPrice),
-            },
-              { title: "Commission Price", field: "commissionPrice", filtering: false, 
+              },
+              {
+                title: "Commission Price", field: "commissionPrice", filtering: false,
                 render: (rowData) => showNumber(rowData.commissionPrice),
               },
-             
-              { title: "Deducted Amount", field: "deductedAmount",
+
+              {
+                title: "Deducted Amount", field: "deductedAmount",
                 filtering: true,
                 lookup: { ZEROS: "NO BALANCE", NONZEROS: "HAVE BALANCE", },
                 render: (rowData) => {
                   const balance = Number(rowData.deductedAmount).toFixed(2);
                   return balance;
                 }
-               },
+              },
               {
                 title: "Duration",
                 filtering: false,
@@ -165,7 +166,7 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                   </div>
                 ),
               },
-            
+
               // {
               //   title: "Date",
               //   render: (rowData) => (
@@ -196,7 +197,7 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                       : "N/A"}
                   </div>
                 ),
-                width: 550, 
+                width: 550,
               },
               {
                 title: "End time",
@@ -208,7 +209,7 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                       : "N/A"}
                   </div>
                 ),
-                width:"550px", 
+                width: "550px",
               },
               // { title: "Status", field: "status" },
 
@@ -221,11 +222,11 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
               //       CANCELLED: "CANCELLED",
               //       COMPLETED: "COMPLETED"
               //     };
-              
+
               //     return statusMap[rowData?.status] || "UNKNOWN"; // Provide a default value if status is not found
               //   }
               // },
-              { title: "Status", field: "status", lookup: { COMPLETED: "COMPLETED", REJECTED: "REJECTED", ACCEPTED: "ACCEPTED", CREATED: "CREATED", ONGOING:"ON GOING", CANCELLED: "CANCELLED"  }, },
+              { title: "Status", field: "status", lookup: { COMPLETED: "COMPLETED", REJECTED: "REJECTED", ACCEPTED: "ACCEPTED", CREATED: "CREATED", ONGOING: "ON GOING", CANCELLED: "CANCELLED" }, },
 
             ]}
             // data={reverseData}
@@ -234,15 +235,15 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
               new Promise((resolve, reject) => {
                 console.log('Query:', query);
                 const filters = {};
-            
+
                 query.filters.forEach(item => {
                   if (item.value.length > 0) {
                     filters[item.column.field] = item.value[0];
                   }
                 });
-            
+
                 console.log('Filters:', filters);
-            
+
                 fetch(api_url + get_call_history, {
                   method: 'POST',
                   headers: {
@@ -270,8 +271,8 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                   });
               })
             }
-          
-            options={{ ...propStyles.tableStyles,  paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], filtering: 'true' }}
+
+            options={{ ...propStyles.tableStyles, paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], filtering: 'true' }}
             style={{ fontSize: "1.0rem" }}
             actions={[
               // {
@@ -289,7 +290,7 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                     })
                   ),
               },
-          
+
             ]}
           />
         </Grid>

@@ -60,11 +60,11 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
       transactionId: rowData?.transactionId || "",
       customerId: rowData?.customerId?._id || "",
       astrologerId: rowData?.astrologerId?._id || "",
-      customerName: rowData?.customerId?.firstName || "",
-      customerPhoneNumber: rowData?.customerId?.phoneNumber || "",
-      customerEmail: rowData?.customerId?.email || "",
-      astrologerName: rowData?.astrologerId?.name || "",
-      astrologerDisplayName: rowData?.astrologerId?.displayName || "",
+      customerName: rowData?.customerName || "",
+      customerPhoneNumber: rowData?.phoneNumber || "",
+      customerEmail: rowData?.email || "",
+      astrologerName: rowData?.astrologerName || "",
+      astrologerDisplayName: rowData?.astrologerDisplayName || "",
       astrologerEmail: rowData?.astrologerId?.email || "",
       requestTime: new Date(rowData?.createdAt).toLocaleString() || "",
       startTime: new Date(rowData?.startTime).toLocaleString() || "",
@@ -78,6 +78,11 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
       chatId: rowData?.chatId || "",
     });
   };
+
+  function transformTransactionId(transactionId) {
+    const parts = transactionId.split("fortunetalk");
+    return `#FTCH${parts[1] || ''}`;
+  }
 
   const handleClose = () => {
     setViewData(false);
@@ -123,14 +128,10 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
               // },
               
               {
-                title: "Transaction Id",
+                title: "Chat-Id",
                 field: "transactionId",
                 filtering: false,
-                render: (rowData) => {
-                    const originalId = rowData.transactionId || "";
-                    const uniquePart = originalId.replace("fortunetalk", ""); // Remove common part
-                    return `FT${uniquePart}`; // Prepend "ft"
-                },
+                render: (rowData) => transformTransactionId(rowData.transactionId),
             },
               {
                 title: "Astrologer Display Name",
@@ -152,10 +153,9 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
               // },
               {
                 title: "Customer Phone Number",
-                render: (rowData) => {
-                  const phoneNumber = rowData?.phoneNumber || "";
-                  return `${phoneNumber}`;
-                }
+                field: "phoneNumber",
+                filtering: false,
+               
               },
               { title: "Chat Price", field: "chatPrice", filtering: false, 
                 render: (rowData) => showNumber(rowData.chatPrice),
@@ -213,7 +213,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
                   </div>
                 ),
               },
-              { title: "Status", field: "status", lookup: { COMPLETED: "COMPLETED", REJECTED: "REJECTED", ACCEPTED: "ACCEPTED", CREATED: "CREATED", ONGOING: "ON GOING" }, },
+              { title: "Status", field: "status", lookup: { COMPLETED: "COMPLETED", REJECTED: "REJECTED", ACCEPTED: "ACCEPTED", CREATED: "CREATED", ONGOING: "ON GOING", TIMEOUT :"MISSED" }, },
               {
                 title: "View Chat History",
                 field: "status",
@@ -231,44 +231,39 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
 
             data={query =>
               new Promise((resolve, reject) => {
-                console.log("query", query.filters);
-                const filters = {}
-
-                query.filters.map(item => {
+                const filters = {};
+                query.filters.forEach(item => {
                   if (item.value.length > 0) {
-                    filters[item.column.field] = item.value[0]
+                    filters[item.column.field] = item.value[0];
                   }
-                })
-
-                console.log("chatHistoryApiPayload", chatHistoryApiPayload)
-
+                });
+            
                 fetch(api_url + get_chat_history, {
-                  method: 'POST', // Specify the request method
+                  method: 'POST',
                   headers: {
-                    'Content-Type': 'application/json', // Set the content type to JSON
+                    'Content-Type': 'application/json',
                   },
-                  body: JSON.stringify(chatHistoryApiPayload ?? {
-                    page: 1, // MaterialTable uses 0-indexed pages
+                  body: JSON.stringify({
+                    page: query.page + 1,
                     limit: query.pageSize === 0 ? 10 : query.pageSize,
-                    ...filters, // Include processed filters
+                    ...filters,
                     search: query.search,
-                  }), // Convert the request body to JSON
+                  }),
                 })
                   .then(response => response.json())
                   .then(result => {
-                    console.log(result)
-                    dispatch(HistoryActions.setChatHistoryApiPayload({
-                      page: query.page + 1, // MaterialTable uses 0-indexed pages
-                      limit: query.pageSize === 0 ? 10 : query.pageSize,
-                      ...filters, // Include processed filters
-                      search: query.search,
-                    }))
+                    const processedData = result?.data?.data.map(item => ({
+                      ...item,
+                      deductedAmount: item.deductedAmount ? Number(item.deductedAmount).toFixed(2) : '0.00',
+                    }));
+            
                     resolve({
-                      data: result.data.data, // Adjust based on your API response
-                      page: result.data.pagination.currentPage - 1, // Adjust for 0-indexed pages
-                      totalCount: result.data.pagination.totalCount, // Total number of rows
-                    })
+                      data: processedData,
+                      page: result?.data?.pagination?.currentPage - 1,
+                      totalCount: result?.data?.pagination?.totalCount,
+                    });
                   })
+                  .catch(error => reject(error));
               })
             }
 
@@ -312,7 +307,8 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
               label="Chat ID"
-              value={data.chatId}
+              // value={data.chatId}
+              value={transformTransactionId(data.transactionId)}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -320,39 +316,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
               }}
             />
           </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Transaction ID"
-              value={data.transactionId}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Customer ID"
-              value={data.customerId}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Astrologer ID"
-              value={data.astrologerId}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
+         
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
               label="Customer Name"
@@ -364,6 +328,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
               }}
             />
           </Grid>
+
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
               label="Customer Phone Number"
@@ -375,17 +340,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
               }}
             />
           </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Customer Email"
-              value={data.customerEmail}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
+          
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
               label="Astrologer Name"
@@ -408,17 +363,8 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
               }}
             />
           </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Astrologer Email"
-              value={data.astrologerEmail}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
+
+
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
               label="Request Time"

@@ -160,13 +160,13 @@ const ListAstrology = ({ astrologerListData }) => {
             tableRef={tableRef}
             title="List of Astrologers"
             columns={[
+              // {
+              //   title: "S.No",
+              //   editable: "never",
+              //   render: (rowData) => rowData.tableData.id + 1,
+              // },
               {
-                title: "S.No",
-                editable: "never",
-                render: (rowData) => rowData.tableData.id + 1,
-              },
-              {
-                title: "Unique ID",
+                title: "Astrologer Id",
                 field: "astroUniqueId",
               },
               {

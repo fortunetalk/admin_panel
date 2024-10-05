@@ -43,9 +43,9 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
     const handleView = (rowData) => {
         setViewData(true);
         setData({
-            customerId: rowData?.customerId?.customerUniqueId || "",
-            customerName: rowData?.customerId?.firstName || "",
-            customerNumber: rowData?.customerId?.phoneNumber || "",
+            customerId: rowData?._id || "",
+            customerName: rowData?.customerName || "",
+            customerNumber: rowData?.phoneNumber || "",
             invoiceId: rowData?.invoiceId || "",
             amount: rowData?.amount || "",
             gst: rowData?.gst || "",
@@ -85,16 +85,18 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                             //     render: (rowData) => rowData.tableData.id + 1,
                               
                             // },
-                            { title: "InvoiceId", field: "invoiceId" },
+                            { title: "InvoiceId",
+                              field: "invoiceId",
+                              filtering: false ,
+                            
+                            },
                             // { title: "Customer Id", field: "customerId.customerUniqueId" },
                             { title: "Customer Name", 
-                             render: (rowData)=>{
-                               const firstName = rowData?.firstName;
-                               const lastname = rowData?.lastName;
-                               return `${firstName} ${lastname}`
+                                filtering: false,
+                                field: "customerName",
+
                              },
-                             },
-                             { title: "Customer Number", field: "phoneNumber" },
+                             { title: "Customer Number", filtering: false, field: "phoneNumber" },
                              {
                                 title: "Date",
                                 filtering: false,
@@ -107,23 +109,40 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                                 ),
                               },
                             //  { title: "GST", field: "gst" },
-                             { 
-                                title: "Amount", 
+                            //  { 
+                            //     title: "Amount", 
+                            //     field: "amount",
+                            //     render: (rowData) => {
+                            //       const balance = Number(rowData.amount).toFixed(2);
+                            //       if (rowData.amount === 0) {
+                            //         return `₹ 0.00`;
+                            //       }
+                            //       if (rowData?.transactionType === "DEBIT") {
+                            //         return `- ₹${balance}`;
+                            //       }
+                            //       return `+ ₹${balance}`;
+                            //     }
+                            //   },
+                              {
+                                title: "Amount",
                                 field: "amount",
+                                filtering: true,
+                                lookup: { unpaid: "NO BALANCE", paid: "HAVE BALANCE", },
                                 render: (rowData) => {
-                                  const balance = Number(rowData.amount).toFixed(2);
-                                  if (rowData.amount === 0) {
-                                    return `₹ 0.00`;
+                                    const balance = Number(rowData.amount).toFixed(2);
+                                    if (rowData.amount === 0) {
+                                      return `₹ 0.00`;
+                                    }
+                                    if (rowData?.transactionType === "DEBIT") {
+                                      return `- ₹${balance}`;
+                                    }
+                                    return `+ ₹${balance}`;
                                   }
-                                  if (rowData?.transactionType === "DEBIT") {
-                                    return `- ₹${balance}`;
-                                  }
-                                  return `+ ₹${balance}`;
-                                }
                               },
                             
                             // { title: "PaymentMethod", field: "paymentMethod" },
                             { title: "TransactionType",
+                                filtering: false,
                                 render: (rowData) => {
                                    
                                     if (rowData?.transactionType=="DEBIT"){
@@ -136,9 +155,9 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                                   }
                             },
                             // { title: "ReferenceModel", field: "referenceModel" },
-                            { title: "Type", field: "type" },
+                            { title: "Type", field: "type", filtering: false },
                         ]}
-                        // data={rechargeHistoryData}
+
                         data={query =>
                             new Promise((resolve, reject) => {
                               console.log('Query:', query);
@@ -180,7 +199,7 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                             })
                           }
                         
-                          options={{ ...propStyles.tableStyles,  paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], filtering: false }}
+                          options={{ ...propStyles.tableStyles,  paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], filtering: true }}
 
                         style={{ fontSize: "1.0rem" }}
                         actions={[
@@ -208,7 +227,7 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                             </div>
                         </div>
                     </Grid>
-                    <Grid item lg={6} md={6} sm={12} xs={12}>
+                    {/* <Grid item lg={6} md={6} sm={12} xs={12}>
                         <TextField
                             label="Customer ID"
                             value={data.customerId}
@@ -218,7 +237,7 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                                 readOnly: true,
                             }}
                         />
-                    </Grid>
+                    </Grid> */}
                     <Grid item lg={6} md={6} sm={12} xs={12}>
                         <TextField
                             label="Customer Name"

@@ -278,7 +278,7 @@ function* getDemoClassHistory() {
     if (response?.success) {
       yield put({
         type: actionTypes.GET_DEMO_CLASS_HISTORY,
-        payload: response?.data,
+        payload: response?.data.reverse(),
       });
     }
 

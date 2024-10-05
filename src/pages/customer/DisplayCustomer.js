@@ -23,14 +23,15 @@ import { connect } from "react-redux";
 import * as CustomerActions from "../../redux/Actions/customerActions.js";
 import Loader from "../../Components/loading/Loader.js";
 import { api_url, get_all_customers } from "../../utils/Constants.js";
+import { useRef } from "react";
 
 const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
   const classes = useStyles();
   const navigate = useNavigate();
-
-
+  const tableRef = useRef(null);
   const [open, setOpen] = useState(false);
   const [viewData, setViewData] = useState(false);
+  const [chatCallUpdate, setChatCallUpdate] = useState(false);
   const [profilePicture, setProfilePicture] = useState({
     file: "",
     bytes: "",
@@ -61,6 +62,15 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
     status: "",
     profilePicture: { file: "", bytes: "" },
     referCode: "",
+  });
+
+  const onRefreshTable = () => {
+    tableRef.current && tableRef.current.onQueryChange()
+  }
+
+  const [countData, setCountData] = useState({
+    customerId: "",
+    chatCallCount: "",
   });
 
   // useEffect(
@@ -124,6 +134,14 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
     });
   };
 
+  const handelCountUpdate= ( rowData) =>{
+    setChatCallUpdate (true);
+    setCountData({
+      customerId: rowData?._id || "",
+      chatCallCount: rowData?.chatCallCount || "",
+    });
+  };
+
   const handleError = (input, value) => {
     setError((prev) => ({ ...prev, [input]: value }));
   };
@@ -131,6 +149,7 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
   const handleClose = () => {
     setViewData(false);
     setOpen(false);
+    setChatCallUpdate(false);
   };
 
   const handleSubmit = () => {
@@ -151,6 +170,16 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
 
       dispatch(CustomerActions.updateCustomer(formPayload));
       setOpen(false);
+  };
+
+  const handleCountUpdate = () => {
+
+    const formPayload = new FormData();
+      formPayload.append("customerId", countData.customerId);
+      formPayload.append("chatCallCount", countData.chatCallCount);
+    
+      dispatch(CustomerActions.updateChatCallCount({formPayload, onComplete: onRefreshTable}));
+      setChatCallUpdate(false);
   };
 
   const handleView = (rowData) => {
@@ -230,6 +259,7 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
           { displayTable()}
           {editModal()}
           {viewModal()}
+          {chatCallModal()}
         </div>
 
     </div>
@@ -240,14 +270,14 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
       <Grid container spacing={1}>
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
+           tableRef={tableRef}
             title="Customer"
-           
             columns={[
-              {
-                title: "S.No",
-                editable: "never",
-                render: (rowData) => rowData.tableData.id + 1,
-              },
+              // {
+              //   title: "S.No",
+              //   editable: "never",
+              //   render: (rowData) => rowData.tableData.id + 1,
+              // },
               { title: "Customer ID", field: "customerUniqueId" ,
                 render: (rowData) => {
                   const originalId = rowData.customerUniqueId || "";
@@ -274,6 +304,10 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
                 field: "createdAt",
                 render: (rowData) =>
                   moment(rowData.updatedAt).format("DD:MM:YYYY, hh:mm A"),
+              },
+              {
+                title: "Chat/Call Count",
+                field: "chatCallCount",
               },
 
               {
@@ -362,6 +396,11 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
                 icon: "history",
                 tooltip: "View Customer History",
                 onClick: (event, rowData) => viewCustomerHistory(rowData),
+              },
+              {
+                icon: "access_time", // Use an icon that represents time
+                tooltip: "Chat/Call Count",
+                onClick: (event, rowData) => handelCountUpdate(rowData),
               },
               {
                 icon: () => (
@@ -854,6 +893,61 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
       <div>
         <Dialog open={open}>
           <DialogContent>{showEditForm()}</DialogContent>
+        </Dialog>
+      </div>
+    );
+  }
+
+
+  function chatCallModal() {
+    const chatCallForm = () => {
+      return (
+        <Grid container spacing={2}>
+          <Grid item lg={12} sm={12} md={12} xs={12}>
+            <div className={classes.headingContainer}>
+              <div className={classes.heading}>Update Call/Chat Count</div>
+              <div onClick={handleClose} className={classes.closeButton}>
+                <CloseRounded />
+              </div>
+            </div>
+          </Grid>
+
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <TextField
+              label="Chat/Call Count"
+              type="number"
+              helperText={error.chatCallCount}
+              value={countData.chatCallCount || 0}
+              onChange={(event) =>
+                setCountData((prevCountData) => ({
+                  ...prevCountData,
+                  chatCallCount: event.target.value,
+                }))
+              }
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+
+
+          <Grid item lg={6} sm={6} md={6} xs={6}>
+            <div onClick={handleCountUpdate} className={classes.submitbutton}>
+              {isLoading ? <CircularProgress size={24} /> : "Update"}
+            </div>
+          </Grid>
+          <Grid item lg={6} sm={6} md={6} xs={6}>
+            <div onClick={handleClose} className={classes.denyButton}>
+              Cancel
+            </div>
+          </Grid>
+        </Grid>
+      );
+    };
+
+    return (
+      <div>
+        <Dialog open={chatCallUpdate}>
+          <DialogContent>{chatCallForm()}</DialogContent>
         </Dialog>
       </div>
     );

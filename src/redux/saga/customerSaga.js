@@ -1,7 +1,7 @@
 import { call, put, race, takeEvery, takeLeading } from "redux-saga/effects";
 import * as actionTypes from "../actionTypes";
 import { ApiRequest } from "../../utils/apiRequest";
-import { api_url, add_customer,change_customer_status, delete_customer, get_all_customers, update_customer, recharge_by_admin, admin_recharge_history } from "../../utils/Constants";
+import { api_url, add_customer,change_customer_status, delete_customer, get_all_customers, update_customer, recharge_by_admin, admin_recharge_history, update_chat_call_count } from "../../utils/Constants";
 import Swal from "sweetalert2";
 import { Colors } from "../../assets/styles";
 
@@ -280,6 +280,52 @@ function* rechargeHistory(actions) {
   }
 }
 
+
+function* updateChatCallCount(actions) {
+  try {
+    const { formPayload, onComplete } = actions.payload;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
+    const response = yield ApiRequest.postRequest({
+      url: api_url + update_chat_call_count,
+      header: "application/json",
+      data: formPayload,
+    });
+
+    // Check if the response was successful
+    if (response?.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Chat/Call Count Updated Successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      yield put({ type: actionTypes.GET_ALL_CUSTOMER, payload: response.data });
+      yield call(onComplete);
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Warning",
+        text: response?.message || "Failed to update chat/call count",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+  } catch (e) {
+    console.log(e);
+    Swal.fire({
+      icon: "error",
+      title: "Server Error",
+      text: "An error occurred while updating the customer",
+      showConfirmButton: false,
+      timer: 2000,
+    });
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+  }
+}
+
 export default function* customerSaga() {
   yield takeLeading(actionTypes.ADD_CUSTOMER, addCustomer)
   yield takeLeading(actionTypes.GET_ALL_CUSTOMER, getCustomers)
@@ -288,4 +334,5 @@ export default function* customerSaga() {
   yield takeLeading(actionTypes.UPDATE_CUSTOMER, updateCustomer)
   yield takeLeading(actionTypes.ADD_RECHARGE_BY_ADMIN, addRecharge)
   yield takeLeading(actionTypes.CUSTOMER_RECHARGE_HISTORY_LIST, rechargeHistory)
+  yield takeLeading(actionTypes.UPDATE_CHAT_CALL_COUNT, updateChatCallCount)
 }

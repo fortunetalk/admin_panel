@@ -1,10 +1,10 @@
 // Production Server
-// export const base_url = "http://97.74.83.200:4000/";
-// export const api_url = "http://97.74.83.200:4000/api/";
+export const base_url = "http://97.74.83.200:4000/";
+export const api_url = "http://97.74.83.200:4000/api/";
 
 // Testing Server
-export const base_url = "http://97.74.83.200:8000/";
-export const api_url = "http://97.74.83.200:8000/api/";
+// export const base_url = "http://97.74.83.200:8000/";
+// export const api_url = "http://97.74.83.200:8000/api/";
 
 // Local Server
 // export const base_url = "http://localhost:4000/";
@@ -127,6 +127,7 @@ export const customer_call_history = "customers/customers-call-history"
 export const customer_payment_history = "admin/customers-payment-list"
 export const recharge_by_admin = "admin/recharge_by_admin"
 export const admin_recharge_history = "admin/admin_recharge_history"
+export const update_chat_call_count = "admin/customer/update_chat_call_count"
 
 export const add_customer_recharge = 'admin/recharge-customer-wallet'
 

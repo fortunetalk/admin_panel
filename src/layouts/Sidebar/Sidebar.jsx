@@ -264,7 +264,7 @@ const routes = [
     subRoutes: [
       {
         path: "/displayReview",
-        name: "Astrologer Review",
+        name: "Customer Review",
         icon: <BiAbacus />,
       },
       // {
@@ -444,6 +444,19 @@ const routes = [
         name: " Video Call Earning",
         icon: <BiAbacus />,
       },
+    ],
+  },
+  {
+    path: "/international",
+    name: "International",
+    icon: <BiAbacus />,
+    subRoutes: [
+      {
+        path: "/international-prices",
+        name: "International Prices",
+        icon: <BiAbacus />,
+      },
+     
     ],
   },
   {

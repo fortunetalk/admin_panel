@@ -145,6 +145,8 @@ import AddRechargeHistory from "./pages/recharge/AddRechargeHistory";
 import WaitingList from "./pages/waitingList/WaitingList";
 import WaitingListHistory from "./pages/waitingList/WaitingListHistory";
 import Earning from "./pages/adminEarning/earning";
+import InternationalPricing from "./pages/international/pricing/InternationalPricing";
+import AddInternationalPricing from "./pages/international/pricing/AddInternationalPricing";
 
 
 function App() {
@@ -176,7 +178,6 @@ function App() {
             element={<AddFirstRechargeOffer />}
           />
         
-
           <Route path="/displayRemedise" element={<DisplayRemedies />} />
           <Route path="/AddRemedies" element={<AddRemedies />} />
           <Route path="/displayExpertise" element={<DisplayExpertise />} />
@@ -373,6 +374,11 @@ function App() {
           <Route path="/galleryRequest" element={<GalleryRequest/>} />
         
           <Route path="chatSummary" element={<ChatSummary />} />
+
+         {/* International  Pages */}
+         <Route path="/international-prices" element={<InternationalPricing />} />
+         <Route path="/add-international-prices" element={<AddInternationalPricing />} />
+
         </Route>
         <Route path="/login" element={<Login />} />
        

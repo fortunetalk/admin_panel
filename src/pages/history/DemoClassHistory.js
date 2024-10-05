@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import * as HistoryActions from "../../redux/Actions/historyActions.js";
 import Loader from "../../Components/loading/Loader.js";
 import { connect } from "react-redux";
+import moment from "moment/moment.js";
 
 const DemoClassHistory = ({ dispatch, demoClassHistoryData }) => {
   const classes = useStyles();
@@ -50,7 +51,7 @@ const DemoClassHistory = ({ dispatch, demoClassHistoryData }) => {
     setDescription(rowData?.demoClassId.description);
     setLearn(rowData?.demoClassId.learn);
     setCourseContent(rowData?.demoClassId.courseContent);
-    setTime(rowData?.demoClassId.time);
+    setTime(rowData?.time);
     setSessionTime(rowData?.demoClassId.sessionTime);
     setGoogleMeet(rowData?.demoClassId.googleMeet);
     setClassStatus(rowData?.demoClassId.classStatus);
@@ -114,12 +115,14 @@ const DemoClassHistory = ({ dispatch, demoClassHistoryData }) => {
               },
               {
                 title: "Course Name",
-                field: "courseId.title",
+                field: "title",
+                render: rowData => rowData.demoClassId.courseId?.title ,
               },
               { title: "Class Name", field: "demoClassId.className" },
               {
                 title: "Astrologer Display Name",
-                field: "astrologerId.displayName",
+                field: "displayName",
+                render: rowData => rowData.demoClassId.astrologerId?.displayName ,
               },
               {
                 title: "Customer Name",
@@ -129,6 +132,20 @@ const DemoClassHistory = ({ dispatch, demoClassHistoryData }) => {
                 title: "Mobile Number",
                 field: "mobileNumber",
               },
+              {
+                title: "Date",
+                field: "date",
+                render: rowData => moment(rowData.date).format('MMMM Do YYYY'),
+              },
+              {
+                title: "Time",
+                render: rowData => {
+                    const timeValue = rowData.demoClassId.time;
+                    console.log("timeValue", timeValue);
+                    return timeValue;
+                  
+                },
+            },
 
               { title: "Status", field: "status", render: rowData => (
                 <div className={classes.statusButton}

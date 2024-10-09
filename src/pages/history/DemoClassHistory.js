@@ -116,13 +116,13 @@ const DemoClassHistory = ({ dispatch, demoClassHistoryData }) => {
               {
                 title: "Course Name",
                 field: "title",
-                render: rowData => rowData.demoClassId.courseId?.title ,
+                render: rowData => rowData?.demoClassId?.courseId?.title ,
               },
               { title: "Class Name", field: "demoClassId.className" },
               {
                 title: "Astrologer Display Name",
                 field: "displayName",
-                render: rowData => rowData.demoClassId.astrologerId?.displayName ,
+                render: rowData => rowData?.demoClassId?.astrologerId?.displayName ,
               },
               {
                 title: "Customer Name",
@@ -140,7 +140,7 @@ const DemoClassHistory = ({ dispatch, demoClassHistoryData }) => {
               {
                 title: "Time",
                 render: rowData => {
-                    const timeValue = rowData.demoClassId.time;
+                    const timeValue = rowData?.demoClassId?.time;
                     console.log("timeValue", timeValue);
                     return timeValue;
                   

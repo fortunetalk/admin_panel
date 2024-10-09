@@ -216,7 +216,6 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
               { title: "Status", field: "status", lookup: { COMPLETED: "COMPLETED", REJECTED: "REJECTED", ACCEPTED: "ACCEPTED", CREATED: "CREATED", ONGOING: "ON GOING", TIMEOUT :"MISSED" }, },
               {
                 title: "View Chat History",
-                field: "status",
                 filtering: false,
                 render: rowData => (
                   <div className={classes.statusButton}
@@ -224,7 +223,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
                     onClick={() => handleClickOpen(rowData)}>
                     View Chat
                   </div>
-                )
+                ) 
               },
             ]}
 
@@ -267,7 +266,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
               })
             }
 
-            options={{ ...propStyles.tableStyles, paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], filtering: 'true' }}
+            options={{ ...propStyles.tableStyles, paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100, 500, 1000], filtering: 'true' }}
             style={{ fontSize: "1rem" }}
             actions={[
               {

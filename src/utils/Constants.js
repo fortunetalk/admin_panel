@@ -7,8 +7,8 @@ export const api_url = "http://97.74.83.200:4000/api/";
 // export const api_url = "http://97.74.83.200:8000/api/";
 
 // Local Server
-// export const base_url = "http://localhost:4000/";
-// export const api_url = "http://localhost:4000/api/";
+// export const base_url = "http://localhost:8000/";
+// export const api_url = "http://localhost:8000/api/";
 
 // admin login    
 export const admin_login='admin/login';
@@ -392,5 +392,13 @@ export const delete_live_stream= 'admin/live_stream/delete'
 export const recharge_history_list= 'admin/recharge/history'
 export const recharge_history_add= 'admin/recharge/add'
 export const recharge_history_delete= 'admin/recharge/delete'
+ 
+// International Prices
+
+export const create_international_price= 'admin/international_prices/create_international_price'
+export const get_international_price= 'admin/international_prices/get_international_price'
+export const update_international_price= 'admin/international_prices/update_international_price'
+export const delete_international_price= 'admin/international_prices/delete_international_price'
+
 
 export const get_all_country = 'https://api.countrystatecity.in/v1/countries'

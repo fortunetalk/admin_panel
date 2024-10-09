@@ -9,6 +9,7 @@ import {
   Select,
   MenuItem,
   CircularProgress,
+  Typography,
 
 } from "@mui/material";
 import DvrIcon from "@mui/icons-material/Dvr";
@@ -19,6 +20,8 @@ import * as DemoActions from "../../redux/Actions/demoClassActions.js";
 import * as CourseActions from "../../redux/Actions/courseActions.js";
 import * as AstrologerActions from "../../redux/Actions/astrologerActions.js";
 import Loader from "../../Components/loading/Loader.js";
+import moment from "moment";
+import { Button } from "react-bootstrap";
 
 const AddDemoClass = ({ isLoading, dispatch, activeAstrologerData, activeCourseData }) => {
   const navigate = useNavigate();
@@ -39,12 +42,31 @@ const AddDemoClass = ({ isLoading, dispatch, activeAstrologerData, activeCourseD
   const [file, setFile] = useState(null);
   const [video, setVideo] = useState({ file: '', bytes: null });
   const [pdf, setPdf] = useState({ file: '', bytes: null });
+  const [fields, setFields] = useState([{ id: Date.now(), value: '' }]);
+
 
   useEffect(function () {
     dispatch(CourseActions.getActiveCourseData());
     dispatch(AstrologerActions.getAllActiveAstrologer());
   }, []);
 
+  // Handle change for a specific input field
+  const handleFieldChange = (event, id) => {
+    const updatedFields = fields.map((field) =>
+      field.id === id ? { ...field, value: event.target.value } : field
+    );
+    setFields(updatedFields);
+  };
+
+  // Add new input field when button is clicked
+  const handleAddMore = () => {
+    setFields([...fields, { id: Date.now(), value: '' }]);
+  };
+
+  // Remove an input field by its id
+  const handleRemoveField = (id) => {
+    setFields(fields.filter((field) => field.id !== id));
+  };
 
   const handleError = (input, value) => {
     setError((prev) => ({ ...prev, [input]: value }));
@@ -125,10 +147,7 @@ const AddDemoClass = ({ isLoading, dispatch, activeAstrologerData, activeCourseD
       handleError("video", "Video is required");
       isValid = false;
     }
-    if (!learn) {
-      handleError("learn", "This field is required");
-      isValid = false;
-    }
+
     if (!courseContent) {
       handleError("courseContent", "This field is required");
       isValid = false;
@@ -143,12 +162,13 @@ const AddDemoClass = ({ isLoading, dispatch, activeAstrologerData, activeCourseD
   const handleSubmit = async () => {
     if (validation()) {
       var formData = new FormData();
+      const refinedData = fields.filter(item=>item.value.length != 0)
       formData.append("astrologerId", astrologerId);
       formData.append("courseId", courseId);
       formData.append("className", className);
       formData.append("description", description);
       formData.append("status", status);
-      formData.append("learn", learn);
+      formData.append("learn", JSON.stringify(refinedData));
       formData.append("courseContent", courseContent);
       formData.append("date", date);
       formData.append("time", time);
@@ -328,19 +348,42 @@ const AddDemoClass = ({ isLoading, dispatch, activeAstrologerData, activeCourseD
             />
           </Grid>
 
-          <Grid item lg={12} md={12} sm={12} xs={12}>
-            <TextField
-              fullWidth
-              label="Learn"
-              id="fullWidth"
-              value={learn}
-              multiline
-              rows={4}
-              onFocus={() => handleError("learn", null)}
-              onChange={(event) => setLearn(event.target.value)}
-              helperText={error.learn}
-              error={error.learn ? true : false}
-            />
+          <Grid item xs={12}>
+            <Typography variant="h5" gutterBottom>
+              Course Content
+            </Typography>
+            {fields.map((field) => (
+              <Grid item xs={12} key={field.id} style={{ marginBottom: '8px' }}>
+                <TextField
+                  fullWidth
+                  label={`Enter here...`}
+                  value={field.value}
+                  onFocus={() => setError({ learn: null })}
+                  onChange={(event) => handleFieldChange(event, field.id)}
+                  helperText={error.learn}
+                  error={Boolean(error.learn)}
+                />
+              </Grid>
+            ))}
+
+            {/* Add New Field Button */}
+            <Grid item xs={12}>
+              <Grid container spacing={2}>
+                <Grid item xs={10}>
+                  {/* Optional for a description or additional text */}
+                </Grid>
+                <Grid item xs={2}>
+                  <div
+                    variant="contained"
+                    color="primary"
+                    onClick={handleAddMore}
+                    className={classes.submitbutton}
+                  >
+                    Add More
+                  </div>
+                </Grid>
+              </Grid>
+            </Grid>
           </Grid>
 
           <Grid item lg={12} md={12} sm={12} xs={12}>
@@ -361,7 +404,7 @@ const AddDemoClass = ({ isLoading, dispatch, activeAstrologerData, activeCourseD
           <Grid item lg={12} md={12} sm={12} xs={12}>
             <TextField
               fullWidth
-              label="Course Content"
+              label="Learn and Earn"
               id="fullWidth"
               value={courseContent}
               multiline
@@ -449,7 +492,7 @@ const AddDemoClass = ({ isLoading, dispatch, activeAstrologerData, activeCourseD
           </Grid>
 
           <Grid item lg={6} sm={6} md={6} xs={6}>
-           
+
             <div onClick={handleSubmit} className={classes.submitbutton}>
               {isLoading ? <CircularProgress size={24} /> : " Submit"}
 

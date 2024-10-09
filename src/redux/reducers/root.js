@@ -44,6 +44,7 @@ import astrologerTrainingBanner from "./astrologerTrainingBanner";
 import offers from "./offers";
 import callDiscussion from "./callDiscussion";
 import chatSupport from "./chatSupportReducer";
+import internationalPricing from "./internationalPricing";
 
 const rootReducer = combineReducers({
   admin,
@@ -89,7 +90,8 @@ const rootReducer = combineReducers({
   astrologerTrainingBanner,
   offers,
   callDiscussion,
-  chatSupport
+  chatSupport,
+  internationalPricing,
 });
 
 // const appReducer = (state, action) => {

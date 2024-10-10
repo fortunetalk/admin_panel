@@ -14,6 +14,8 @@ import DvrIcon from "@mui/icons-material/Dvr";
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import * as Actions from "../../redux/Actions/notificationActions.js";
+import EmojiPicker from 'emoji-picker-react';
+import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions'; // Import the emoji icon
 
 const AddCustomerNotification = ({ dispatch, isLoading }) => {
   const classes = useStyles();
@@ -25,6 +27,7 @@ const AddCustomerNotification = ({ dispatch, isLoading }) => {
   const [icon, setIcon] = useState({ file: '', bytes: null });
   const [file, setFile] = useState(null);
   const [customerType, setCustomerType] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false); // To control visibility of the emoji picker
 
   const handleError = (field, message) => {
     setError((prevError) => ({ ...prevError, [field]: message }));
@@ -85,6 +88,12 @@ const AddCustomerNotification = ({ dispatch, isLoading }) => {
     setFile(null);
     setCustomerType("");
   }, []);
+
+  const onEmojiClick = (emojiData, event) => {
+    console.log("emojiObject", emojiData);
+    setDescriptionText((prev) => prev + emojiData.emoji);
+  };
+
 
   return (
     <div className={classes.container}>
@@ -154,7 +163,7 @@ const AddCustomerNotification = ({ dispatch, isLoading }) => {
           <Grid item lg={2} sm={6} md={2} xs={6}>
             <Avatar src={icon.file} style={{ width: 56, height: 56 }} />
           </Grid>
-          <Grid item lg={12} sm={6} md={6} xs={6}>
+          <Grid item lg={12} sm={12} md={12} xs={12}>
             <TextField
               id="outlined-description-static"
               label="Description"
@@ -166,7 +175,43 @@ const AddCustomerNotification = ({ dispatch, isLoading }) => {
               variant="outlined"
               error={!!error.description}
               helperText={error.description}
+              onFocus={() => setShowEmojiPicker(false)} // Hide emoji picker when typing
+              style={{ marginBottom: '8px' }} // Margin for spacing
             />
+
+
+          </Grid>
+
+          <Grid item lg={12} sm={12} md={12} xs={12}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginBottom: '8px' }}>
+              <button
+                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                style={{
+                  backgroundColor: '#10395D', // Primary color
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '8px',
+                  padding: '8px 12px',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.3s',
+                  marginRight: '8px' // Space between button and emoji picker
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#10395D')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#10395D')}
+              >
+                <EmojiEmotionsIcon style={{ marginRight: '4px', fontSize: '18px', color: '#FFFF00' }} /> {/* Icon with margin */}
+              Emoji
+              </button>
+            </div>
+
+            {showEmojiPicker && (
+              <div style={{ width: '100%' }}>
+                <EmojiPicker
+                  onEmojiClick={onEmojiClick}
+                  width= '100%'
+                />
+              </div>
+            )}
           </Grid>
           <Grid item lg={6} sm={6} md={6} xs={6}>
             <div onClick={handleSubmit} className={classes.submitbutton}>
@@ -185,9 +230,9 @@ const AddCustomerNotification = ({ dispatch, isLoading }) => {
 };
 
 const mapStateToProps = (state) => ({
-    isLoading: state.notification.isLoading,
-  });
-  
-  const mapDispatchToProps = (dispatch) => ({ dispatch });
+  isLoading: state.notification.isLoading,
+});
+
+const mapDispatchToProps = (dispatch) => ({ dispatch });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddCustomerNotification);

@@ -43,10 +43,16 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
     dispatch(AstrologerActions.getAllActiveAstrologer());
   }, []);
 
+  // function fillCourseList() {
+  //   return activeCourseData.map((item) => {
+  //     return <MenuItem value={item._id}>{item.title}</MenuItem>;
+  //   });
+  // }
+
   function fillCourseList() {
-    return activeCourseData.map((item) => {
-      return <MenuItem value={item._id}>{item.title}</MenuItem>;
-    });
+    return activeCourseData.map((item) => (
+      <MenuItem key={item._id} value={item._id}>{item.title}</MenuItem>
+    ));
   }
 
   function fillAstrologerList() {
@@ -60,8 +66,8 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
     const formattedDate = new Date(rowData?.date).toISOString().split("T")[0];
     setDate(formattedDate);
     setDemoClassId(rowData?._id)
-    setcourseId(rowData?.courseId?.title);
-    setAstrologerId(rowData?.astrologerId?.displayName);
+    setcourseId(rowData?.courseId?._id); 
+    setAstrologerId(rowData?.astrologerId?._id);
     setclassName(rowData?.className);
     setStatus(rowData?.status);
     setDescription(rowData?.description);
@@ -70,8 +76,9 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
     setTime(rowData?.time);
     setSessionTime(rowData?.sessionTime);
     setGoogleMeet(rowData?.googleMeet);
-    setIcon(rowData?.image);
-    setVideo(rowData?.video);
+    setIcon({ file: rowData?.image, bytes: null });
+    setVideo({ file: rowData?.video , bytes: null });
+    setPdf({ file: rowData?.pdf , bytes: null });
   };
 
   const handleView = (rowData) => {
@@ -150,7 +157,7 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
       var formData = new FormData();
       formData.append("demoClassId", demoClassId);
       formData.append("astrologerId", astrologerId);
-      formData.append("courseId", courseId.title);
+      formData.append("courseId", courseId);
       formData.append("className", className);
       formData.append("description", description);
       formData.append("status", status);
@@ -469,12 +476,20 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
                 onChange={(e) => setcourseId(e.target.value)}
                 error={error.courseId ? true : false}
               >
-                <MenuItem disabled value={null}>-Select Course-</MenuItem>
-                {activeCourseData && fillCourseList()}
+                <MenuItem disabled value={null}>
+                -Select your Course-
+              </MenuItem>
+              {activeCourseData?.map((item) => (
+                <MenuItem key={item.id} value={item._id}>
+                  {item.title}
+                </MenuItem>
+              ))}
+
               </Select>
             </FormControl>
             <div className={classes.errorstyles}>{error.courseId}</div>
           </Grid>
+
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <FormControl fullWidth>
               <InputLabel id="astrologer-select-label">Select Astrologer</InputLabel>

@@ -178,17 +178,19 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
               // },
               {
                 title: "Request Time",
+                field: "createdAt",
                 filtering: false,
                 render: (rowData) => (
                   <div>
                     {rowData?.createdAt
-                      ? moment(rowData?.createdAt).format("DD-MM-YYYY HH:mm:ss A")
+                      ? moment(rowData?.createdAt).format("DD-MM-YYYY HH:mm A")
                       : "N/A"}
                   </div>
                 ),
               },
               {
                 title: "Start Time",
+                field: "startTime",
                 filtering: false,
                 render: (rowData) => (
                   <div>
@@ -197,10 +199,10 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                       : "N/A"}
                   </div>
                 ),
-                width: 550,
               },
               {
                 title: "End time",
+                field: "endTime",
                 filtering: false,
                 render: (rowData) => (
                   <div>
@@ -209,7 +211,7 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                       : "N/A"}
                   </div>
                 ),
-                width: "550px",
+                 export: rowData => moment(rowData.endTime).format("DD-MM-YYYY HH:mm A"),
               },
               // { title: "Status", field: "status" },
 

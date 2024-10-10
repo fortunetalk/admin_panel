@@ -66,10 +66,12 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
       astrologerName: rowData?.astrologerName || "",
       astrologerDisplayName: rowData?.astrologerDisplayName || "",
       astrologerEmail: rowData?.astrologerId?.email || "",
-      requestTime: new Date(rowData?.createdAt).toLocaleString() || "",
+      requestTime: rowData?.createdAt? moment(rowData?.createdAt).format("DD-MM-YYYY HH:mm:ss A"): "N/A" || "N/A",
       startTime: new Date(rowData?.startTime).toLocaleString() || "",
+      // startTime: rowData?.startTime || "NA",
+      // startTime: rowData?.startTime? moment(rowData?.startTime).format("DD-MM-YY HH:mm A")  : "N/A",
       endTime: new Date(rowData?.endTime).toLocaleString() || "",
-      durationInSeconds: rowData?.durationInSeconds || "",
+      durationInSeconds: rowData?.durationInSeconds && secondsToHMS(rowData?.durationInSeconds) || "",
       chatPrice: rowData?.chatPrice || "",
       commissionPrice: rowData?.commissionPrice || "",
       status: rowData?.status || "",
@@ -143,14 +145,6 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
                 field: "customerName",
                 filtering: false,
               },
-              // {
-              //   title: "Customer Name",
-              //   render: (rowData) => {
-              //     const firstName = rowData?.customerId?.firstName || "";
-              //     const lastName = rowData?.customerId?.lastName || "";
-              //     return `${firstName} ${lastName}`;
-              //   }
-              // },
               {
                 title: "Customer Phone Number",
                 field: "phoneNumber",
@@ -163,7 +157,6 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
               { title: "Commission Price", field: "commissionPrice", filtering: false,
                 render: (rowData) => showNumber(rowData.commissionPrice),
                },
-              // { title: "Total Charge", field: "deductedAmount" },
               {
                 title: "Total Charge",
                 field: "deductedAmount",
@@ -172,29 +165,33 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
                 render: rowData => {
                   const amount = Number(rowData.deductedAmount).toFixed(2);
                   return `₹ ${amount}`;
-                }
+                },
+                export: rowData => {
+                  // Ensure the amount is formatted correctly for CSV
+                  return Number(rowData.deductedAmount).toFixed(2); // or just return rowData.deductedAmount
+                },
               },
               {
                 title: "Duration",
-                render: (rowData) => (
-                  <div>
-                    {rowData?.durationInSeconds &&
-                      secondsToHMS(rowData?.durationInSeconds)}
-                  </div>
-                ),
+                field: "durationInSeconds",
+                filtering: false,
               },
               {
                 title: "Request Time",
+                field: "createdAt",
+                filtering: false,
                 render: (rowData) => (
                   <div>
                     {rowData?.createdAt
-                      ? moment(rowData?.createdAt).format("DD-MM-YYYY HH:mm:ss A")
+                      ? moment(rowData?.createdAt).format("DD-MM-YYYY HH:mm A")
                       : "N/A"}
                   </div>
                 ),
               },
               {
                 title: "Start Time",
+                field: "startTime",
+                filtering: false,
                 render: (rowData) => (
                   <div>
                     {rowData?.startTime
@@ -205,6 +202,8 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
               },
               {
                 title: "End time",
+                field: "endTime",
+                filtering: false,
                 render: (rowData) => (
                   <div>
                     {rowData?.endTime ? rowData?.endTime &&
@@ -212,6 +211,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
                       : "N/A"}
                   </div>
                 ),
+                 export: rowData => moment(rowData.endTime).format("DD-MM-YYYY HH:mm A"),
               },
               { title: "Status", field: "status", lookup: { COMPLETED: "COMPLETED", REJECTED: "REJECTED", ACCEPTED: "ACCEPTED", CREATED: "CREATED", ONGOING: "ON GOING", TIMEOUT :"MISSED" }, },
               {
@@ -253,7 +253,6 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
                   .then(result => {
                     const processedData = result?.data?.data.map(item => ({
                       ...item,
-                      deductedAmount: item.deductedAmount ? Number(item.deductedAmount).toFixed(2) : '0.00',
                     }));
             
                     resolve({
@@ -266,7 +265,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
               })
             }
 
-            options={{ ...propStyles.tableStyles, paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100, 500, 1000], filtering: 'true' }}
+            options={{ ...propStyles.tableStyles, paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100, 500, 1000], filtering: 'true', exportButton: true, }}
             style={{ fontSize: "1rem" }}
             actions={[
               {

@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useStyles, propStyles } from "../../assets/styles.js";
-import {
-  Grid,
-  TextField,
-  CircularProgress
-} from "@mui/material";
+import { Grid, TextField, CircularProgress } from "@mui/material";
 import MaterialTable from "material-table";
 import { useNavigate } from "react-router-dom";
 import Dialog from "@mui/material/Dialog";
@@ -17,7 +13,6 @@ import { connect } from "react-redux";
 import { secondsToHMS, showNumber } from "../../utils/services.js";
 import moment from "moment";
 import { api_url, get_call_history } from "../../utils/Constants.js";
-
 
 const ChatHistory = ({ dispatch, callHistoryData }) => {
   const classes = useStyles();
@@ -54,7 +49,9 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
       transactionId: rowData?.transactionId || "",
       customerId: rowData?.customerId?._id || "",
       astrologerId: rowData?.astrologerId?._id || "",
-      customerName: `${rowData?.customerId?.firstName} ${rowData?.customerId?.lastName}` || "",
+      customerName:
+        `${rowData?.customerId?.firstName} ${rowData?.customerId?.lastName}` ||
+        "",
       customerEmail: rowData?.customerId?.email || "",
       astrologerName: rowData?.astrologerId?.name || "",
       astrologerDisplayName: rowData?.astrologerId?.displayName || "",
@@ -76,17 +73,18 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
     setViewData(false);
   };
 
-  const reverseData = Array.isArray(callHistoryData) ? callHistoryData.slice().reverse() : [];
+  const reverseData = Array.isArray(callHistoryData)
+    ? callHistoryData.slice().reverse()
+    : [];
 
   function transformTransactionId(transactionId) {
     const parts = transactionId.split("fortunetalk");
-    return `#FTCA${parts[1] || ''}`;
+    return `#FTCA${parts[1] || ""}`;
   }
 
   return (
     <div className={classes.container}>
       {
-
         <div className={classes.box}>
           {displayTable()}
           {editModal()}
@@ -101,10 +99,17 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
           <MaterialTable
             title={
               <div>
-                <span style={{ fontWeight: '500', fontSize: '25px', marginRight: '20px' }}>Call History</span>
+                <span
+                  style={{
+                    fontWeight: "500",
+                    fontSize: "25px",
+                    marginRight: "20px",
+                  }}
+                >
+                  Call History
+                </span>
               </div>
             }
-
             columns={[
               // {
               //   title: "S.No",
@@ -117,8 +122,8 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                 title: "Call-Id",
                 field: "transactionId",
                 filtering: false,
-                render: (rowData) => transformTransactionId(rowData.transactionId),
-
+                render: (rowData) =>
+                  transformTransactionId(rowData.transactionId),
               },
               {
                 title: "Astrologer Display Name",
@@ -143,26 +148,30 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                 render: (rowData) => showNumber(rowData.callPrice),
               },
               {
-                title: "Commission Price", field: "commissionPrice", filtering: false,
+                title: "Commission Price",
+                field: "commissionPrice",
+                filtering: false,
                 render: (rowData) => showNumber(rowData.commissionPrice),
               },
 
               {
-                title: "Deducted Amount", field: "deductedAmount",
+                title: "Deducted Amount",
+                field: "deductedAmount",
                 filtering: true,
-                lookup: { ZEROS: "NO BALANCE", NONZEROS: "HAVE BALANCE", },
+                lookup: { ZEROS: "NO BALANCE", NONZEROS: "HAVE BALANCE" },
                 render: (rowData) => {
                   const balance = Number(rowData.deductedAmount).toFixed(2);
                   return balance;
-                }
+                },
               },
               {
                 title: "Duration",
                 filtering: false,
                 render: (rowData) => (
                   <div>
-                    {rowData?.durationInSeconds &&
-                      secondsToHMS(rowData?.durationInSeconds) || "N/A"}
+                    {(rowData?.durationInSeconds &&
+                      secondsToHMS(rowData?.durationInSeconds)) ||
+                      "N/A"}
                   </div>
                 ),
               },
@@ -206,12 +215,14 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                 filtering: false,
                 render: (rowData) => (
                   <div>
-                    {rowData?.endTime ? rowData?.endTime &&
-                      moment(rowData?.endTime).format("DD-MM-YY HH:mm A")
+                    {rowData?.endTime
+                      ? rowData?.endTime &&
+                        moment(rowData?.endTime).format("DD-MM-YY HH:mm A")
                       : "N/A"}
                   </div>
                 ),
-                 export: rowData => moment(rowData.endTime).format("DD-MM-YYYY HH:mm A"),
+                export: (rowData) =>
+                  moment(rowData.endTime).format("DD-MM-YYYY HH:mm A"),
               },
               // { title: "Status", field: "status" },
 
@@ -228,28 +239,38 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
               //     return statusMap[rowData?.status] || "UNKNOWN"; // Provide a default value if status is not found
               //   }
               // },
-              { title: "Status", field: "status", lookup: { COMPLETED: "COMPLETED", REJECTED: "REJECTED", ACCEPTED: "ACCEPTED", CREATED: "CREATED", ONGOING: "ON GOING", CANCELLED: "CANCELLED" }, },
-
+              {
+                title: "Status",
+                field: "status",
+                lookup: {
+                  COMPLETED: "COMPLETED",
+                  REJECTED: "REJECTED",
+                  ACCEPTED: "ACCEPTED",
+                  CREATED: "CREATED",
+                  ONGOING: "ON GOING",
+                  CANCELLED: "CANCELLED",
+                },
+              },
             ]}
             // data={reverseData}
 
-            data={query =>
+            data={(query) =>
               new Promise((resolve, reject) => {
-                console.log('Query:', query);
+                console.log("Query:", query);
                 const filters = {};
 
-                query.filters.forEach(item => {
+                query.filters.forEach((item) => {
                   if (item.value.length > 0) {
                     filters[item.column.field] = item.value[0];
                   }
                 });
 
-                console.log('Filters:', filters);
+                console.log("Filters:", filters);
 
                 fetch(api_url + get_call_history, {
-                  method: 'POST',
+                  method: "POST",
                   headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                   },
                   body: JSON.stringify({
                     page: query.page + 1,
@@ -258,23 +279,28 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                     search: query.search,
                   }),
                 })
-                  .then(response => response.json())
-                  .then(result => {
-                    console.log('Fetch Result:', result.data);
+                  .then((response) => response.json())
+                  .then((result) => {
+                    console.log("Fetch Result:", result.data);
                     resolve({
                       data: result.data.data,
                       page: result.data.pagination.currentPage - 1,
                       totalCount: result.data.pagination.totalCount,
                     });
                   })
-                  .catch(error => {
-                    console.error('Fetch Error:', error);
+                  .catch((error) => {
+                    console.error("Fetch Error:", error);
                     reject(error);
                   });
               })
             }
-
-            options={{ ...propStyles.tableStyles, paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], filtering: 'true' }}
+            options={{
+              ...propStyles.tableStyles,
+              paging: true,
+              pageSize: 10,
+              pageSizeOptions: [10, 20, 50, 100],
+              filtering: "true",
+            }}
             style={{ fontSize: "1.0rem" }}
             actions={[
               // {
@@ -292,7 +318,6 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                     })
                   ),
               },
-
             ]}
           />
         </Grid>

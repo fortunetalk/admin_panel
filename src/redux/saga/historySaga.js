@@ -138,6 +138,7 @@ function* getChatSummary(actions) {
   try {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
     const { customerId, chatId, classes } = actions.payload;
+    console.log(customerId)
     const response = yield ApiRequest.postRequest({
       url: api_url + get_chat_message_details,
       header: "json",
@@ -149,6 +150,7 @@ function* getChatSummary(actions) {
     console.log("response", response)
 
     if (response.success) {
+      console.log(response.data)
       let chatData = response?.data.map(msg => {
         const timestamp = msg.createdAt;
         let formattedDate = '';

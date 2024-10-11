@@ -13,6 +13,7 @@ import * as AstrologerActions from "../../redux/Actions/astrologerActions.js";
 import * as DemoClassActions from "../../redux/Actions/demoClassActions.js";
 import { connect } from "react-redux";
 import CloseIcon from '@mui/icons-material/Close'; // Import the close icon
+import moment from "moment";
 
 const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activeCourseData, }) => {
   const classes = useStyles();
@@ -298,7 +299,9 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
               {
                 title: "Date and Time",
                 field: "date",
-                render: (rowData) => formatDate(rowData.date, rowData.time),
+                render: (rowData) => {
+                  return moment(rowData.date).format('MMMM Do YYYY, h:mm A'); // Format as needed
+                },
               },
 
               { title: "Session Time", field: "sessionTime" },
@@ -444,8 +447,6 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
       </Grid>
     );
   }
-
-
 
   function editModal() {
     const showEditForm = () => {

@@ -41,15 +41,6 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
     chatId: "",
   });
 
-  const [filter, setFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-
-  useEffect(() => {
-    dispatch(HistoryActions.getChatHistory());
-  }, [dispatch]);
-
-  useEffect(() => {}, [chatHistoryApiPayload]);
-
   const handleView = (rowData) => {
     setViewData(true);
     setData({
@@ -96,20 +87,6 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
       state: { chatId: rowData.chatId },
     });
   };
-
-  const filterOptions =
-    chatHistoryData && Array.isArray(chatHistoryData)
-      ? Array.from(
-          new Set(
-            chatHistoryData.map((data) => data.astrologerId?.displayName || "")
-          )
-        )
-      : [];
-
-  const statusOptions =
-    chatHistoryData && Array.isArray(chatHistoryData)
-      ? Array.from(new Set(chatHistoryData.map((data) => data.status || "")))
-      : [];
 
   return (
     <div className={classes.container}>
@@ -338,12 +315,10 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
                 })
                   .then((response) => response.json())
                   .then((result) => {
-                    const processedData = result?.data?.data.map((item) => ({
-                      ...item,
-                    }));
+                    console.log(result?.data);
 
                     resolve({
-                      data: processedData,
+                      data: result?.data?.data,
                       page: result?.data?.pagination?.currentPage - 1,
                       totalCount: result?.data?.pagination?.totalCount,
                     });
@@ -353,12 +328,13 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
             }
             options={{
               ...propStyles.tableStyles,
-              page: 2,
               paging: true,
-              pageSize: 10,
-              pageSizeOptions: [10, 20, 50, 100, 500, 1000],
+              pageSize: chatHistoryApiPayload
+                ? chatHistoryApiPayload?.pageSize
+                : 10,
+              pageSizeOptions: [10, 20, 50, 100],
               filtering: "true",
-              exportButton: true,
+              // exportButton: true,
             }}
             style={{ fontSize: "1rem" }}
             actions={[

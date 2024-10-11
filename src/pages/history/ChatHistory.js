@@ -216,6 +216,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
               { title: "Status", field: "status", lookup: { COMPLETED: "COMPLETED", REJECTED: "REJECTED", ACCEPTED: "ACCEPTED", CREATED: "CREATED", ONGOING: "ON GOING", TIMEOUT :"MISSED" }, },
               {
                 title: "View Chat History",
+                field: "viewChat", 
                 filtering: false,
                 render: rowData => (
                   <div className={classes.statusButton}

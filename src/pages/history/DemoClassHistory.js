@@ -133,6 +133,11 @@ const DemoClassHistory = ({ dispatch, demoClassHistoryData }) => {
                 field: "mobileNumber",
               },
               {
+                title: "Schedule Date ",
+                field: "createdAt",
+                render: rowData => moment(rowData.createdAt).format('MMMM Do YYYY'),
+              },
+              {
                 title: "Date",
                 field: "date",
                 render: rowData => moment(rowData.date).format('MMMM Do YYYY'),
@@ -282,6 +287,17 @@ const DemoClassHistory = ({ dispatch, demoClassHistoryData }) => {
               </Grid>
     
     
+              {/* <Grid item lg={6} md={6} sm={12} xs={12}>
+                <TextField
+                  label=" schedule "
+                  value={date}
+                  variant="outlined"
+                  fullWidth
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid> */}
               <Grid item lg={6} md={6} sm={12} xs={12}>
                 <TextField
                   label="Date"

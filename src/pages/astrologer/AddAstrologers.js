@@ -153,6 +153,13 @@ export const AddAstrologers = ({
     countryValue: [],
   });
 
+  const [exclusive, setExclusive] = useState("exclusive");
+  const [exclusiveOne, setExclusiveOne] = useState("");
+  const [chatPrice, setChatPrice] = useState("");
+  const [companyChatPrice, setCompanyChatPrice] = useState("");
+  const [displayChatPrice, setDisplayChatPrice] = useState("");
+
+
   const [profilePhoto, setprofilePhoto] = useState({
     file: logo_icon,
     bytes: "",
@@ -212,7 +219,7 @@ export const AddAstrologers = ({
     }
     handleError("countryValue", null);
   };
-  
+
 
   const handleRemedies = (item) => {
     if (remedies.some((selectedItem) => selectedItem === item._id)) {
@@ -484,7 +491,7 @@ export const AddAstrologers = ({
     return isValid;
   };
 
-  const onAdd =()=>{
+  const onAdd = () => {
     navigate('/astrologers/displayAstrologer')
   }
 
@@ -565,7 +572,7 @@ export const AddAstrologers = ({
           data: formData,
           reset: handleReset,
           onAdd: onAdd,
-          
+
         })
       );
       // navigate('/astrologers/displayAstrologer')
@@ -691,13 +698,14 @@ export const AddAstrologers = ({
     expertise,
     remedies,
     callPrice,
-    chatPrice,
+    // chatPrice,
+    // displayChatPrice,
     educationQualification,
     indiaDisplayPrice,
     astrologerCallPrice,
     companyCallPrice,
     astrologerChatPrice,
-    companyChatPrice,
+    // companyChatPrice,
     liveVideoPrice,
     companyLiveVideoPrice,
     liveCallPrice,
@@ -721,6 +729,39 @@ export const AddAstrologers = ({
     return formattedDate;
   };
 
+const handleChange = (name, value) => {
+  switch (name) {
+    case "exclusive":
+      setExclusive(value);
+      setExclusiveOne(""); // Reset exclusiveOne when exclusive changes
+      break;
+    case "exclusiveOne":
+      setExclusiveOne(value);
+      if (value === "fifty") {
+        // If "fifty" is selected, set prices based on displayChatPrice later
+        // You can optionally set initial values if needed
+      } else if (value === "fiftyFive") {
+        setChatPrice(55);
+        setCompanyChatPrice(50); // Adjust if necessary
+      }
+      break;
+    case "displayChatPrice":
+      setDisplayChatPrice(value);
+      if (exclusive === "exclusive" && exclusiveOne === "fifty") {
+        const displayPrice = parseFloat(value);
+        if (!isNaN(displayPrice)) {
+          const halfPrice = displayPrice / 2;
+          setChatPrice(halfPrice);
+          setCompanyChatPrice(halfPrice);
+        }
+      }
+      break;
+    // Handle other cases...
+    default:
+      break;
+  }
+};
+
   useEffect(() => {
     if (country) {
       dispatch(SettingActions.countryStateList({ countryId: country }));
@@ -735,7 +776,7 @@ export const AddAstrologers = ({
 
 
   const callPriceInt = parseFloat(callPrice);
-  const companyCallPriceInt = parseFloat(companyCallPrice);  
+  const companyCallPriceInt = parseFloat(companyCallPrice);
 
   const chatPriceInt = parseFloat(chatPrice);
   const companyChatPriceInt = parseFloat(companyChatPrice);
@@ -1098,41 +1139,41 @@ export const AddAstrologers = ({
                 inputProps={{
                   min: 0,
                   max: 5,
-              }}
+                }}
               />
             </Grid>
             {/* astrologer container ends here */}
 
             <Grid item lg={4} sm={12} md={12} xs={12}>
-      <FormControl component="fieldset">
-        <FormLabel component="legend">Preferred Days</FormLabel>
-        <FormGroup aria-label="position" row>
-          {preferredDaysList.map((item) => (
-            <div key={item} className={classes.chips}>
-              <FormControlLabel
-                value={item}
-                className={classes.checkbox}
-                control={
-                  <Checkbox
-                    checked={
-                      item === "All"
-                        ? preferredDays.length === preferredDaysList.length - 1
-                        : preferredDays.includes(item)
-                    }
-                    onChange={() => handlePreferredDays(item)}
-                  />
-                }
-                label={item}
-                labelPlacement="end"
-              />
-            </div>
-          ))}
-        </FormGroup>
-      </FormControl>
-      {error.preferredDays && (
-        <div className={classes.errorstyles}>{error.preferredDays}</div>
-      )}
-    </Grid>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Preferred Days</FormLabel>
+                <FormGroup aria-label="position" row>
+                  {preferredDaysList.map((item) => (
+                    <div key={item} className={classes.chips}>
+                      <FormControlLabel
+                        value={item}
+                        className={classes.checkbox}
+                        control={
+                          <Checkbox
+                            checked={
+                              item === "All"
+                                ? preferredDays.length === preferredDaysList.length - 1
+                                : preferredDays.includes(item)
+                            }
+                            onChange={() => handlePreferredDays(item)}
+                          />
+                        }
+                        label={item}
+                        labelPlacement="end"
+                      />
+                    </div>
+                  ))}
+                </FormGroup>
+              </FormControl>
+              {error.preferredDays && (
+                <div className={classes.errorstyles}>{error.preferredDays}</div>
+              )}
+            </Grid>
 
             <Grid item lg={4} sm={12} md={12} xs={12}>
               <FormControl component="fieldset">
@@ -1448,34 +1489,98 @@ export const AddAstrologers = ({
                 error={error.companyCallPrice ? true : false}
               />
             </Grid>
-            <Grid item lg={4} sm={12} md={12} xs={12}>
-              <TextField
-                type="number"
-                label="Chat Price"
-                inputMode="numeric"
-                value={chatPrice}
-                variant="outlined"
-                fullWidth
-                onChange={(e) => updateState({ chatPrice: e.target.value })}
-                helperText={error.chatPrice}
-                error={error.chatPrice ? true : false}
-              />
-            </Grid>
-            <Grid item lg={4} sm={12} md={12} xs={12}>
-              <TextField
-                type="number"
-                label="Company Chat Price"
-                inputMode="numeric"
-                value={companyChatPrice}
-                variant="outlined"
-                fullWidth
-                onChange={(e) =>
-                  updateState({ companyChatPrice: e.target.value })
-                }
-                helperText={error.companyChatPrice}
-                error={error.companyChatPrice ? true : false}
-              />
-            </Grid>
+
+            <Grid item lg={4} md={12} sm={12} xs={12}>
+  <FormControl fullWidth>
+    <InputLabel id="demo-simple-select-label">Type</InputLabel>
+    <Select
+      labelId="demo-simple-select-label"
+      id="demo-simple-select"
+      label="exclusive"
+      value={exclusive}
+      error={!!error.exclusive}
+      onFocus={() => handleError("exclusive", null)}
+      onChange={(e) => handleChange("exclusive", e.target.value)}
+    >
+      <MenuItem disabled value="">
+        -Select Option-
+      </MenuItem>
+      <MenuItem value="exclusive">Exclusive</MenuItem>
+      <MenuItem value="nonExclusive">Non Exclusive</MenuItem>
+    </Select>
+    {error.exclusive && (
+      <div className={classes.errorstyles}>{error.exclusive}</div>
+    )}
+  </FormControl>
+</Grid>
+
+{/* Conditionally render exclusiveOne based on exclusive selection */}
+{exclusive === "exclusive" && (
+  <Grid item lg={4} md={12} sm={12} xs={12}>
+    <FormControl fullWidth>
+      <InputLabel id="exclusive-one-label">Exclusive</InputLabel>
+      <Select
+        labelId="exclusive-one-label"
+        id="exclusive-one-select"
+        label="exclusiveOne"
+        value={exclusiveOne}
+        error={!!error.exclusiveOne}
+        onFocus={() => handleError("exclusiveOne", null)}
+        onChange={(e) => handleChange("exclusiveOne", e.target.value)}
+      >
+        <MenuItem disabled value="">
+          -Select Option-
+        </MenuItem>
+        <MenuItem value="fifty">50</MenuItem>
+        <MenuItem value="fiftyFive">55</MenuItem>
+      </Select>
+      {error.exclusiveOne && (
+        <div className={classes.errorstyles}>{error.exclusiveOne}</div>
+      )}
+    </FormControl>
+  </Grid>
+)}
+
+<Grid item lg={4} sm={12} md={12} xs={12}>
+  <TextField
+    fullWidth
+    label="Display Chat Price"
+    value={displayChatPrice}
+    onChange={(e) => setDisplayChatPrice(e.target.value)} // handle display chat price change
+  />
+</Grid>
+<Grid item lg={4} sm={12} md={12} xs={12}>
+  <TextField
+    type="number"
+    label="Chat Price"
+    inputMode="numeric"
+    value={chatPrice}
+    variant="outlined"
+    fullWidth
+    onChange={(e) => updateState({ chatPrice: e.target.value })}
+    helperText={error.chatPrice}
+    error={!!error.chatPrice}
+    InputProps={{
+      readOnly: true,
+    }}
+  />
+</Grid>
+<Grid item lg={4} sm={12} md={12} xs={12}>
+  <TextField
+    type="number"
+    label="Company Chat Price"
+    inputMode="numeric"
+    value={companyChatPrice}
+    variant="outlined"
+    fullWidth
+    onChange={(e) => updateState({ companyChatPrice: e.target.value })}
+    helperText={error.companyChatPrice}
+    error={!!error.companyChatPrice}
+    InputProps={{
+      readOnly: true,
+    }}
+  />
+</Grid>
             <Grid item lg={4} sm={12} md={12} xs={12}>
               <TextField
                 type="number"
@@ -1544,16 +1649,7 @@ export const AddAstrologers = ({
                 }}
               />
             </Grid>
-            <Grid item lg={4} sm={12} md={12} xs={12}>
-              <TextField
-                fullWidth
-                label="Display Chat Price"
-                value={chatPriceInt + companyChatPriceInt}
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-            </Grid>
+
             <Grid item lg={4} sm={12} md={12} xs={12}>
               <TextField
                 fullWidth

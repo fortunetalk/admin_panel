@@ -114,3 +114,12 @@ export const getRegisterLiveClassHistory = payload =>({
     type: actionTypes.GET_REGISTER_LIVE_CLASS_HISTORY,
     payload
 })
+
+export const getDownloadChatHistory = payload =>({
+    type: actionTypes.GET_DOWNLOAD_CHAT_HISTORY,
+    payload
+})
+export const setDownloadChatHistory = payload =>({
+    type: actionTypes.SET_DOWNLOAD_CHAT_HISTORY,
+    payload
+})

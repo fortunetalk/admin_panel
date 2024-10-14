@@ -298,7 +298,7 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
               ...propStyles.tableStyles,
               paging: true,
               pageSize: 10,
-              pageSizeOptions: [10, 20, 50, 100],
+              pageSizeOptions: [10, 20, 50, 100, 500, 1000],
               filtering: "true",
             }}
             style={{ fontSize: "1.0rem" }}

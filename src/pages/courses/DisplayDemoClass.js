@@ -74,7 +74,7 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
     setDescription(rowData?.description);
     setLearn(rowData?.learn);
     setCourseContent(rowData?.courseContent);
-    setTime(rowData?.time);
+    setTime ( moment (rowData?.time).format("HH:mm"));
     setSessionTime(rowData?.sessionTime);
     setGoogleMeet(rowData?.googleMeet);
     setIcon({ file: rowData?.image, bytes: null });
@@ -94,7 +94,7 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
     setDescription(rowData?.description);
     setLearn(rowData?.learn);
     setCourseContent(rowData?.courseContent);
-    setTime(rowData?.time);
+    setTime ( moment (rowData?.time).format("HH:mm:ss:A"));
     setSessionTime(rowData?.sessionTime);
     setGoogleMeet(rowData?.googleMeet);
     setIcon(rowData?.image);
@@ -297,11 +297,18 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
               { title: "Class Name", field: "className" },
 
               {
-                title: "Date and Time",
+                title: "Date",
                 field: "date",
                 render: (rowData) => {
-                  return moment(rowData.date).format('MMMM Do YYYY, h:mm A'); // Format as needed
+                  return moment(rowData.date).format('MMMM Do YYYY'); // Format as needed
                 },
+              },
+              {
+                title: "Time",
+                field: "time",
+                render: (rowData) => {
+                  return moment(rowData.time).format('hh:mm A'); // Outputs: 04:30 PM
+              },
               },
 
               { title: "Session Time", field: "sessionTime" },

@@ -48,6 +48,7 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
   const [rating, setRating] = useState("");
   const [comment, setComment] = useState("");
   const [description, setDescription] = useState("");
+  const [reviewFor, setReviewFor] = useState("");
   const [reviewId, setReviewId] = useState();
   const [open, setOpen] = useState();
   const [error, setError] = useState({});
@@ -66,6 +67,7 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
     setCustomer(rowData?.customer?._id);
     setComment(rowData?.comments);
     setDescription(rowData?.description);
+    setDescription(rowData?.reviewFor);
     setRating(rowData?.rating);
     
   };
@@ -92,6 +94,7 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
       "rating": rating,
       "comments": comment,
       "description": description,
+      "reviewFor": reviewFor,
     }
 
     dispatch(ReviewActions.updateAstrologerReview({body, onComplete: onRefreshTable}))
@@ -158,6 +161,7 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
               // { title: "Astrologer Name", field: "astrologerName", filtering: false },
               { title: "Comments", field: "comments", filtering: false },
               { title: "Description", field: "description", filtering: false },
+              { title: "Review Type", field: "reviewFor", filtering: false },
               {
                 title: "Rating", field: "rating", filtering: true,
                 lookup: { 1: "1", 2: "2", 3: "3", 4: "4", 5: "5" },
@@ -303,6 +307,18 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
               onChange={(e) => setDescription(e.target.value)}
               error={error.description ? true : false}
               helperText={error.description}
+            />
+          </Grid>
+          <Grid item lg={12} sm={6} md={6} xs={6}>
+            <TextField
+              id="outlined-multiline-static"
+              label="Review For"
+              fullWidth
+              InputLabelProps={{ shrink: true }}
+              value={reviewFor}
+              onChange={(e) => setReviewFor(e.target.value)}
+              error={error.reviewFor ? true : false}
+              helperText={error.reviewFor}
             />
           </Grid>
 

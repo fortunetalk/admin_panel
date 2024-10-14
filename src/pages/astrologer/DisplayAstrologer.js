@@ -166,8 +166,12 @@ const ListAstrology = ({ astrologerListData }) => {
               //   render: (rowData) => rowData.tableData.id + 1,
               // },
               {
-                title: "Astrologer Id",
+                title: " OLD Astrologer Id",
                 field: "astroUniqueId",
+              },
+              {
+                title: "Astrologer Id",
+                field: "astrologerID",
               },
               {
                 title: "Display Name",
@@ -294,7 +298,7 @@ const ListAstrology = ({ astrologerListData }) => {
               ...propStyles.tableStyles,
               paging: true,
               pageSize: 10,
-              pageSizeOptions: [10, 20, 50, 100],
+              pageSizeOptions: [10, 20, 50, 100, 500, 1000],
               filtering: false,
               
             }}
@@ -359,6 +363,16 @@ const ListAstrology = ({ astrologerListData }) => {
                       fullWidth
                       label="Name"
                       value={selectedAstro?.name}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Password"
+                      value={selectedAstro?.plainPassword}
                       InputProps={{
                         readOnly: true,
                       }}

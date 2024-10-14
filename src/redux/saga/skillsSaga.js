@@ -63,16 +63,16 @@ function* createSkill(actions) {
   }
 }
 
-function* getSkills() {
+function* getSkillData() {
   try {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
     const response = yield ApiRequest.getRequest({
       url: api_url + get_skills,
     });
 
-    if (response?.success.reverse()) {
+    if (response?.success) {
       yield put({
-        type: actionTypes.GET_ALL_SKILLS,
+        type: actionTypes.SET_ALL_SKILLS,
         payload: response?.data,
       });
     }
@@ -407,7 +407,7 @@ function* updateSubSkillStatus(action) {
 }
 
 export default function* skillsSaga() {
-  yield takeLeading(actionTypes.GET_ALL_SKILLS, getSkills);
+  yield takeLeading(actionTypes.GET_ALL_SKILLS, getSkillData);
   yield takeLeading(actionTypes.GET_ALL_ACTIVE_SKILLS, getActiveSkills);
   yield takeLeading(actionTypes.CREATE_SKILL, createSkill);
   yield takeLeading(actionTypes.UPDATE_SKILL, updateSkill);

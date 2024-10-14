@@ -278,41 +278,48 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
               //   editable: "never",
               //   render: (rowData) => rowData.tableData.id + 1,
               // },
-              { title: "Customer ID", field: "customerUniqueId" ,
+              { title: "Customer ID", field: "customerUniqueId" , filtering: false,
                 render: (rowData) => {
                   const originalId = rowData.customerUniqueId || "";
                   const uniquePart = originalId.replace("FortuneTalk", ""); // Remove common part
                   return `FT${uniquePart}`; // Prepend "ft"
               },
               },
-              { title: "Name", field: "customerName" },
-              { title: "Mobile", field: "phoneNumber" },
-              { title: "Email", field: "email" },
+              { title: "Name", field: "customerName",  filtering: false, },
+              { title: "Mobile", field: "phoneNumber",  filtering: false,},
+              { title: "Email", field: "email", filtering: false, },
               {
                 title: "Walllet",
+                filtering: false,
                 render: (rowData) =>
                   parseFloat(rowData.walletBalance.toFixed(2)),
               },
               {
                 title: "Registration Date",
                 field: "createdAt",
+                filtering: false,
                 render: (rowData) =>
                   moment(rowData.createdAt).format("MMMM Do YYYY, hh:mm:ss A"),
               },
               {
                 title: "Last Login Date",
                 field: "createdAt",
+                filtering: false,
                 render: (rowData) =>
                   moment(rowData.updatedAt).format("DD:MM:YYYY, hh:mm A"),
               },
-              {
-                title: "Chat/Call Count",
-                field: "chatCallCount",
-              },
+              // {
+              //   title: "Chat/Call Count",
+              //   field: "chatCallCount",
+              // },
 
               {
                 title: "Status",
                 field: "status",
+                lookup: {
+                  Active: "Active",
+                  Blocked: "Blocked",
+                },
                 render: (rowData) => (
                   <div
                     className={classes.statusButton}
@@ -368,7 +375,7 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
               })
             }
 
-            options={{ ...propStyles.tableStyles,  paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100],}}
+            options={{ ...propStyles.tableStyles,  paging: true, pageSize: 10,  pageSizeOptions: [10, 20, 50, 100, 500, 1000],  filtering: "true",}}
             style={{ fontSize: "1.0rem" }}
             actions={[
               {
@@ -397,11 +404,11 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
                 tooltip: "View Customer History",
                 onClick: (event, rowData) => viewCustomerHistory(rowData),
               },
-              {
-                icon: "access_time", // Use an icon that represents time
-                tooltip: "Chat/Call Count",
-                onClick: (event, rowData) => handelCountUpdate(rowData),
-              },
+              // {
+              //   icon: "access_time", // Use an icon that represents time
+              //   tooltip: "Chat/Call Count",
+              //   onClick: (event, rowData) => handelCountUpdate(rowData),
+              // },
               {
                 icon: () => (
                   <div className={classes.addButton}>
@@ -912,7 +919,7 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
             </div>
           </Grid>
 
-          <Grid item lg={12} md={12} sm={12} xs={12}>
+          {/* <Grid item lg={12} md={12} sm={12} xs={12}>
             <TextField
               label="Chat/Call Count"
               type="number"
@@ -927,7 +934,7 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
               variant="outlined"
               fullWidth
             />
-          </Grid>
+          </Grid> */}
 
 
           <Grid item lg={6} sm={6} md={6} xs={6}>

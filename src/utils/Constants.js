@@ -1,14 +1,14 @@
 // Production Server
-// export const base_url = "http://97.74.83.200:4000/";
-// export const api_url = "http://97.74.83.200:4000/api/";
+export const base_url = "http://97.74.83.200:4000/";
+export const api_url = "http://97.74.83.200:4000/api/";
 
 // Testing Server
 // export const base_url = "http://97.74.83.200:8000/";
 // export const api_url = "http://97.74.83.200:8000/api/";
 
 // Local Server
-export const base_url = "http://localhost:8000/";
-export const api_url = "http://localhost:8000/api/";
+// export const base_url = "http://localhost:4000/";
+// export const api_url = "http://localhost:4000/api/";
 
 // admin login    
 export const admin_login='admin/login';
@@ -392,6 +392,10 @@ export const delete_live_stream= 'admin/live_stream/delete'
 export const recharge_history_list= 'admin/recharge/history'
 export const recharge_history_add= 'admin/recharge/add'
 export const recharge_history_delete= 'admin/recharge/delete'
+
+//download CSV
+export const download_chat_history= 'admin/download/chat_history'
+
  
 // International Prices
 

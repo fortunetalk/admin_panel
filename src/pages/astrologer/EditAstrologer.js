@@ -21,6 +21,9 @@ import {
   ListItemText,
   Box
 } from "@mui/material";
+import {  InputAdornment, IconButton } from '@mui/material';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 import { useNavigate, useParams } from "react-router-dom";
 import { Colors } from "../../assets/styles.js";
@@ -187,6 +190,11 @@ export const EditAstrologer = ({
     }
   }, [astrologerId]);
 
+  const [showPassword, setShowPassword] = useState(false);
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
 
   useEffect(() => {
@@ -1017,217 +1025,7 @@ export const EditAstrologer = ({
               Update Available Countries
             </Button>
           </Grid>
-          <Grid
-            item
-            lg={2}
-            sm={2}
-            md={2}
-            xs={2}
-            className={classes.uploadContainer}
-          >
-            <Grid
-              component="label"
-              onClick={handleProfile}
-              className={classes.uploadImageButton}
-            >
-              Change Profile Photo
-              <input
-                onChange={handleProfile}
-                hidden
-                accept="image/*"
-                type="file"
-              />
-            </Grid>
-          </Grid>
-          <Grid item lg={1} sm={1} md={1} xs={1}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleUploadProfileImage}
-            >
-              Update Image
-            </Button>
-          </Grid>
-          <Grid item lg={1} sm={1} md={1} xs={1}>
-            <Avatar
-              color={Colors.primaryDark}
-              src={profilePhoto.file}
-              style={{ width: 56, height: 56 }}
-            />
-          </Grid>
-          <Grid
-            item
-            lg={2}
-            sm={2}
-            md={2}
-            xs={2}
-            className={classes.uploadContainer}
-          >
-            <Grid
-              component="label"
-              onClick={handlebankProof}
-              className={classes.uploadImageButton}
-            >
-              Change Bank Proof
-              <input
-                onChange={handlebankProof}
-                hidden
-                accept="image/*"
-                type="file"
-              />
-            </Grid>
-          </Grid>
-          <Grid item lg={1} sm={1} md={1} xs={1}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleUploadBankProofImage}
-            >
-              Update Image
-            </Button>
-          </Grid>
-
-          <Grid item lg={1} sm={1} md={1} xs={1}>
-            <Avatar
-              color={Colors.primaryDark}
-              src={bankProof.file}
-              style={{ width: 56, height: 56 }}
-            />
-          </Grid>
-          <Grid
-            item
-            lg={3}
-            sm={3}
-            md={3}
-            xs={3}
-            className={classes.uploadContainer}
-          >
-            <Grid
-              component="label"
-              onClick={handleidProof}
-              className={classes.uploadImageButton}
-            >
-              Change Id Proof
-              <input
-                onChange={handleidProof}
-                hidden
-                accept="image/*"
-                type="file"
-              />
-            </Grid>
-          </Grid>
-          <Grid item lg={1} sm={1} md={1} xs={1}>
-            <Avatar
-              color={Colors.primaryDark}
-              src={idProof.file}
-              style={{ width: 56, height: 56 }}
-            />
-          </Grid>
-
-          <Grid item lg={3} sm={12} md={12} xs={12}>
-            <TextField
-              label="Bank Account Number"
-              value={bankAcountNumber}
-              variant="outlined"
-              fullWidth
-              type="number"
-              onFocus={() => handleError("bankAcountNumber", null)}
-              onChange={(e) =>
-                updateState({ bankAcountNumber: e.target.value })
-              }
-              helperText={error?.bankAcountNumber}
-              error={error?.bankAcountNumber ? true : false}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item lg={3} sm={12} md={12} xs={12}>
-            <TextField
-              label="Enter Bank Name"
-              value={bankName}
-              variant="outlined"
-              fullWidth
-              onChange={(e) => updateState({ bankName: e.target.value })}
-              helperText={error?.bankName}
-              error={!!error?.bankName ? true : false}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item lg={3} md={12} sm={12} xs={12}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                Account Type
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Account Type"
-                value={accountType}
-                onFocus={() => handleError("accountType", null)}
-                onChange={(e) => updateState({ accountType: e.target.value })}
-                helperText={error?.accountType}
-                error={error?.accountType ? true : false}
-                InputLabelProps={{ shrink: true }}
-              >
-                <div className={classes.errorstyles}>{error?.accountType}</div>
-                <MenuItem value="">-Select Account type-</MenuItem>
-                <MenuItem value="saving">Saving</MenuItem>
-                <MenuItem value="current">Current</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item lg={3} sm={12} md={12} xs={12}>
-            <TextField
-              label="Enter IFSC Code"
-              value={ifscCode}
-              variant="outlined"
-              fullWidth
-              onChange={(e) => updateState({ ifscCode: e.target.value })}
-              helperText={error?.ifscCode}
-              error={error?.ifscCode ? true : false}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-
-          <Grid item lg={4} sm={12} md={12} xs={12}>
-            <TextField
-              label="Account Holder Name"
-              value={accountHolderName}
-              variant="outlined"
-              fullWidth
-              onChange={(e) =>
-                updateState({ accountHolderName: e.target.value })
-              }
-              helperText={error?.accountHolderName}
-              error={error?.accountHolderName ? true : false}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item lg={4} sm={12} md={12} xs={12}>
-            <TextField
-              label="PAN card Number"
-              value={panNumber}
-              variant="outlined"
-              fullWidth
-              onChange={(e) => updateState({ panNumber: e.target.value })}
-              helperText={error?.panNumber}
-              error={error?.panNumber ? true : false}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item lg={4} sm={12} md={12} xs={12}>
-            <TextField
-              type="number"
-              label="Adhar card Number"
-              inputMode="numeric"
-              value={addharNumber}
-              variant="outlined"
-              fullWidth
-              onChange={(e) => updateState({ addharNumber: e.target.value })}
-              helperText={error?.addharNumber}
-              error={error?.addharNumber ? true : false}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
+       
           <Grid item lg={4} sm={12} md={12} xs={12}>
             <TextField
               type="text"
@@ -1732,6 +1530,218 @@ export const EditAstrologer = ({
             </Dialog>
           </Grid>
 
+          <Grid
+            item
+            lg={2}
+            sm={2}
+            md={2}
+            xs={2}
+            className={classes.uploadContainer}
+          >
+            <Grid
+              component="label"
+              onClick={handleProfile}
+              className={classes.uploadImageButton}
+            >
+              Change Profile Photo
+              <input
+                onChange={handleProfile}
+                hidden
+                accept="image/*"
+                type="file"
+              />
+            </Grid>
+          </Grid>
+          <Grid item lg={1} sm={1} md={1} xs={1}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleUploadProfileImage}
+            >
+              Update Image
+            </Button>
+          </Grid>
+          <Grid item lg={1} sm={1} md={1} xs={1}>
+            <Avatar
+              color={Colors.primaryDark}
+              src={profilePhoto.file}
+              style={{ width: 56, height: 56 }}
+            />
+          </Grid>
+          <Grid
+            item
+            lg={2}
+            sm={2}
+            md={2}
+            xs={2}
+            className={classes.uploadContainer}
+          >
+            <Grid
+              component="label"
+              onClick={handlebankProof}
+              className={classes.uploadImageButton}
+            >
+              Change Bank Proof
+              <input
+                onChange={handlebankProof}
+                hidden
+                accept="image/*"
+                type="file"
+              />
+            </Grid>
+          </Grid>
+          <Grid item lg={1} sm={1} md={1} xs={1}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleUploadBankProofImage}
+            >
+              Update Image
+            </Button>
+          </Grid>
+
+          <Grid item lg={1} sm={1} md={1} xs={1}>
+            <Avatar
+              color={Colors.primaryDark}
+              src={bankProof.file}
+              style={{ width: 56, height: 56 }}
+            />
+          </Grid>
+          <Grid
+            item
+            lg={3}
+            sm={3}
+            md={3}
+            xs={3}
+            className={classes.uploadContainer}
+          >
+            <Grid
+              component="label"
+              onClick={handleidProof}
+              className={classes.uploadImageButton}
+            >
+              Change Id Proof
+              <input
+                onChange={handleidProof}
+                hidden
+                accept="image/*"
+                type="file"
+              />
+            </Grid>
+          </Grid>
+          <Grid item lg={1} sm={1} md={1} xs={1}>
+            <Avatar
+              color={Colors.primaryDark}
+              src={idProof.file}
+              style={{ width: 56, height: 56 }}
+            />
+          </Grid>
+
+          <Grid item lg={3} sm={12} md={12} xs={12}>
+            <TextField
+              label="Bank Account Number"
+              value={bankAcountNumber}
+              variant="outlined"
+              fullWidth
+              type="number"
+              onFocus={() => handleError("bankAcountNumber", null)}
+              onChange={(e) =>
+                updateState({ bankAcountNumber: e.target.value })
+              }
+              helperText={error?.bankAcountNumber}
+              error={error?.bankAcountNumber ? true : false}
+              InputLabelProps={{ shrink: true }}
+            />
+          </Grid>
+          <Grid item lg={3} sm={12} md={12} xs={12}>
+            <TextField
+              label="Enter Bank Name"
+              value={bankName}
+              variant="outlined"
+              fullWidth
+              onChange={(e) => updateState({ bankName: e.target.value })}
+              helperText={error?.bankName}
+              error={!!error?.bankName ? true : false}
+              InputLabelProps={{ shrink: true }}
+            />
+          </Grid>
+          <Grid item lg={3} md={12} sm={12} xs={12}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">
+                Account Type
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Account Type"
+                value={accountType}
+                onFocus={() => handleError("accountType", null)}
+                onChange={(e) => updateState({ accountType: e.target.value })}
+                helperText={error?.accountType}
+                error={error?.accountType ? true : false}
+                InputLabelProps={{ shrink: true }}
+              >
+                <div className={classes.errorstyles}>{error?.accountType}</div>
+                <MenuItem value="">-Select Account type-</MenuItem>
+                <MenuItem value="saving">Saving</MenuItem>
+                <MenuItem value="current">Current</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item lg={3} sm={12} md={12} xs={12}>
+            <TextField
+              label="Enter IFSC Code"
+              value={ifscCode}
+              variant="outlined"
+              fullWidth
+              onChange={(e) => updateState({ ifscCode: e.target.value })}
+              helperText={error?.ifscCode}
+              error={error?.ifscCode ? true : false}
+              InputLabelProps={{ shrink: true }}
+            />
+          </Grid>
+
+          <Grid item lg={4} sm={12} md={12} xs={12}>
+            <TextField
+              label="Account Holder Name"
+              value={accountHolderName}
+              variant="outlined"
+              fullWidth
+              onChange={(e) =>
+                updateState({ accountHolderName: e.target.value })
+              }
+              helperText={error?.accountHolderName}
+              error={error?.accountHolderName ? true : false}
+              InputLabelProps={{ shrink: true }}
+            />
+          </Grid>
+          <Grid item lg={4} sm={12} md={12} xs={12}>
+            <TextField
+              label="PAN card Number"
+              value={panNumber}
+              variant="outlined"
+              fullWidth
+              onChange={(e) => updateState({ panNumber: e.target.value })}
+              helperText={error?.panNumber}
+              error={error?.panNumber ? true : false}
+              InputLabelProps={{ shrink: true }}
+            />
+          </Grid>
+          <Grid item lg={4} sm={12} md={12} xs={12}>
+            <TextField
+              type="number"
+              label="Adhar card Number"
+              inputMode="numeric"
+              value={addharNumber}
+              variant="outlined"
+              fullWidth
+              onChange={(e) => updateState({ addharNumber: e.target.value })}
+              helperText={error?.addharNumber}
+              error={error?.addharNumber ? true : false}
+              InputLabelProps={{ shrink: true }}
+            />
+          </Grid>
+
           <Grid item lg={6} sm={6} md={6} xs={6}>
             <div
               onClick={() => handleSubmit()}
@@ -1865,7 +1875,7 @@ export const EditAstrologer = ({
 
           </FormControl>
         </Grid>
-        <Grid item lg={4} sm={12} md={12} xs={12}>
+        {/* <Grid item lg={4} sm={12} md={12} xs={12}>
           <TextField
             label="Password"
             type="password"
@@ -1877,7 +1887,33 @@ export const EditAstrologer = ({
             helperText={error?.password}
             InputLabelProps={{ shrink: true }}
           />
-        </Grid>
+        </Grid> */}
+         <Grid item lg={4} sm={12} md={12} xs={12}>
+      <TextField
+        label="Password"
+        type={showPassword ? 'text' : 'password'}
+        value={password}
+        variant="outlined"
+        fullWidth
+        onFocus={() => handleError("password", null)}
+        onChange={(e) => updateState({ password: e.target.value })}
+        helperText={error?.password}
+        error={!!error?.password}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                onClick={toggleShowPassword}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+        InputLabelProps={{ shrink: true }}
+      />
+    </Grid>
         <Grid item lg={4} sm={12} md={12} xs={12}>
           <TextField
             type="date"

@@ -23,7 +23,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Colors } from "../../assets/styles.js";
 import logo_icon from "../../assets/images/logo_icon.png";
-
+import { InputAdornment, IconButton } from '@mui/material';
 import { connect, useDispatch } from "react-redux";
 import * as AstrologerActions from "../../redux/Actions/astrologerActions.js";
 import * as ExpertiesActions from "../../redux/Actions/expertiesActions.js";
@@ -31,6 +31,8 @@ import * as SkillActions from "../../redux/Actions/skillsActions.js";
 import * as RemedyActions from "../../redux/Actions/remediesActions.js";
 import * as SettingActions from "../../redux/Actions/settingActions.js";
 import Loader from "../../Components/loading/Loader.js";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const preferredDaysList = ["Mon", "Tues", "Wed", "Thu", "Fri", "Sat", "Sun", "All"];
 const languages = [
@@ -154,10 +156,17 @@ export const AddAstrologers = ({
   });
 
   const [exclusive, setExclusive] = useState("exclusive");
-  const [exclusiveOne, setExclusiveOne] = useState("");
+  const [exclusiveOne, setExclusiveOne] = useState("fifty");
+  const [exclusiveTwo, setExclusiveTwo] = useState("");
   const [chatPrice, setChatPrice] = useState("");
   const [companyChatPrice, setCompanyChatPrice] = useState("");
   const [displayChatPrice, setDisplayChatPrice] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+ 
 
 
   const [profilePhoto, setprofilePhoto] = useState({
@@ -537,6 +546,7 @@ export const AddAstrologers = ({
       formData.append("liveCallPrice", liveCallPrice);
       formData.append("companyLiveCallPrice", companyLiveCallPrice);
       formData.append("status", "Active");
+      formData.append("exclusiveType", "exclusive");
       // formData.append("working", working);
       formData.append("profileImage", profilePhoto.bytes);
       formData.append("bankProofImage", bankProof.bytes);
@@ -729,38 +739,7 @@ export const AddAstrologers = ({
     return formattedDate;
   };
 
-const handleChange = (name, value) => {
-  switch (name) {
-    case "exclusive":
-      setExclusive(value);
-      setExclusiveOne(""); // Reset exclusiveOne when exclusive changes
-      break;
-    case "exclusiveOne":
-      setExclusiveOne(value);
-      if (value === "fifty") {
-        // If "fifty" is selected, set prices based on displayChatPrice later
-        // You can optionally set initial values if needed
-      } else if (value === "fiftyFive") {
-        setChatPrice(55);
-        setCompanyChatPrice(50); // Adjust if necessary
-      }
-      break;
-    case "displayChatPrice":
-      setDisplayChatPrice(value);
-      if (exclusive === "exclusive" && exclusiveOne === "fifty") {
-        const displayPrice = parseFloat(value);
-        if (!isNaN(displayPrice)) {
-          const halfPrice = displayPrice / 2;
-          setChatPrice(halfPrice);
-          setCompanyChatPrice(halfPrice);
-        }
-      }
-      break;
-    // Handle other cases...
-    default:
-      break;
-  }
-};
+
 
   useEffect(() => {
     if (country) {
@@ -786,6 +765,56 @@ const handleChange = (name, value) => {
 
   const liveCallPriceInt = parseFloat(liveCallPrice);
   const companyLiveCallPriceInt = parseFloat(companyLiveCallPrice);
+
+
+
+  const handleChange = (name, value) => {
+    switch (name) {
+      case "exclusive":
+        setExclusive(value);
+        setExclusiveOne(""); // Reset exclusiveOne when exclusive changes
+        setExclusiveTwo(""); // Reset exclusiveTwo when exclusive changes
+        setChatPrice("");
+        setCompanyChatPrice("");
+        break;
+      case "exclusiveOne":
+        setExclusiveOne(value);
+        calculatePrices(value, displayChatPrice, "exclusive");
+        break;
+      case "exclusiveTwo":
+        setExclusiveTwo(value);
+        calculatePrices(value, displayChatPrice, "nonExclusive");
+        break;
+      case "displayChatPrice":
+        setDisplayChatPrice(value);
+        // Calculate prices for both exclusive and non-exclusive selections
+        calculatePrices(exclusiveOne, value, "exclusive");
+        calculatePrices(exclusiveTwo, value, "nonExclusive");
+        break;
+      default:
+        break;
+    }
+  };
+  
+  const calculatePrices = (selection, displayPrice, type) => {
+    const displayValue = parseFloat(displayPrice);
+    if (!isNaN(displayValue) && selection) {
+      let percentage;
+      if (type === "exclusive") {
+        percentage = selection === "fifty" ? 0.5 : 0.55;
+      } else if (type === "nonExclusive") {
+        percentage = selection === "fourty" ? 0.4 : 0.45;
+      }
+      if (percentage !== undefined) {
+        setChatPrice((displayValue * percentage).toFixed(2));
+        setCompanyChatPrice((displayValue * (1 - percentage)).toFixed(2));
+      }
+    }
+  };
+  
+
+
+
 
   return (
     <>
@@ -897,7 +926,7 @@ const handleChange = (name, value) => {
                 )}
               </FormControl>
             </Grid>
-            <Grid item lg={4} sm={12} md={12} xs={12}>
+            {/* <Grid item lg={4} sm={12} md={12} xs={12}>
               <TextField
                 label="Password"
                 type="password"
@@ -909,7 +938,33 @@ const handleChange = (name, value) => {
                 helperText={error.password}
                 error={error.password ? true : false}
               />
-            </Grid>
+            </Grid> */}
+             <Grid item lg={4} sm={12} md={12} xs={12}>
+      <TextField
+        label="Password"
+        type={showPassword ? 'text' : 'password'}
+        value={password}
+        variant="outlined"
+        fullWidth
+        onFocus={() => handleError("password", null)}
+        onChange={(e) => updateState({ password: e.target.value })}
+        helperText={error.password}
+        error={!!error.password}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                onClick={toggleShowPassword}
+                edge="end"
+              >
+                {/* {showPassword ? <VisibilityOff /> : <Visibility />} */}
+                {showPassword ? <Visibility /> : <VisibilityOff />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+      />
+    </Grid>
             <Grid item lg={4} sm={12} md={12} xs={12}>
               <TextField
                 type="date"
@@ -1242,196 +1297,7 @@ const handleChange = (name, value) => {
               )}
             </Grid>
 
-            <Grid
-              item
-              lg={3}
-              sm={3}
-              md={3}
-              xs={3}
-              className={classes.uploadContainer}
-            >
-              <Grid
-                component="label"
-                onClick={handleProfile}
-                className={classes.uploadImageButton}
-              >
-                Upload Profile Photo
-                <input
-                  onChange={handleProfile}
-                  hidden
-                  accept="image/*"
-                  type="file"
-                />
-              </Grid>
-              <div className={classes.errorstyles}>{error.profilePhoto}</div>
-            </Grid>
-            <Grid item lg={1} sm={1} md={1} xs={1}>
-              <Avatar
-                color={Colors.primaryDark}
-                src={profilePhoto.file}
-                style={{ width: 56, height: 56 }}
-              />
-            </Grid>
-            <Grid
-              item
-              lg={3}
-              sm={3}
-              md={3}
-              xs={3}
-              className={classes.uploadContainer}
-            >
-              <Grid
-                component="label"
-                onClick={handlebankProof}
-                className={classes.uploadImageButton}
-              >
-                Upload Bank Proof
-                <input
-                  onChange={handlebankProof}
-                  hidden
-                  accept="image/*"
-                  type="file"
-                />
-              </Grid>
-              <div className={classes.errorstyles}>{error.bankProof}</div>
-            </Grid>
-            <Grid item lg={1} sm={1} md={1} xs={1}>
-              <Avatar
-                color={Colors.primaryDark}
-                src={bankProof.file}
-                style={{ width: 56, height: 56 }}
-              />
-            </Grid>
-            <Grid
-              item
-              lg={3}
-              sm={3}
-              md={3}
-              xs={3}
-              className={classes.uploadContainer}
-            >
-              <Grid
-                component="label"
-                onClick={handleidProof}
-                className={classes.uploadImageButton}
-              >
-                Upload Id Proof
-                <input
-                  onChange={handleidProof}
-                  hidden
-                  accept="image/*"
-                  type="file"
-                />
-              </Grid>
-              <div className={classes.errorstyles}>{error.idProof}</div>
-            </Grid>
-            <Grid item lg={1} sm={1} md={1} xs={1}>
-              <Avatar
-                color={Colors.primaryDark}
-                src={idProof.file}
-                style={{ width: 56, height: 56 }}
-              />
-            </Grid>
-
-            <Grid item lg={3} sm={12} md={12} xs={12}>
-              <TextField
-                label="Bank Account Number"
-                value={bankAccountNumber}
-                variant="outlined"
-                fullWidth
-                type="number"
-                onFocus={() => handleError("bankAccountNumber", null)}
-                onChange={(e) =>
-                  updateState({ bankAccountNumber: e.target.value })
-                }
-                helperText={error.bankAccountNumber}
-                error={error.bankAccountNumber ? true : false}
-              />
-            </Grid>
-            <Grid item lg={3} sm={12} md={12} xs={12}>
-              <TextField
-                label="Enter Bank Name"
-                value={bankName}
-                variant="outlined"
-                fullWidth
-                onChange={(e) => updateState({ bankName: e.target.value })}
-                helperText={error.bankName}
-                error={!!error.bankName ? true : false}
-              />
-            </Grid>
-            <Grid item lg={3} md={12} sm={12} xs={12}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">
-                  Account Type
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="Account Type"
-                  value={accountType}
-                  onFocus={() => handleError("accountType", null)}
-                  onChange={(e) => updateState({ accountType: e.target.value })}
-                  helperText={error.accountType}
-                  error={error.accountType ? true : false}
-                >
-                  <div className={classes.errorstyles}>{error.accountType}</div>
-                  <MenuItem disabled value={null}>
-                    -Select Account type-
-                  </MenuItem>
-                  <MenuItem value="saving">Saving</MenuItem>
-                  <MenuItem value="current">Current</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item lg={3} sm={12} md={12} xs={12}>
-              <TextField
-                label="Enter IFSC Code"
-                value={ifscCode}
-                variant="outlined"
-                fullWidth
-                onChange={(e) => updateState({ ifscCode: e.target.value })}
-                helperText={error.ifscCode}
-                error={error.ifscCode ? true : false}
-              />
-            </Grid>
-
-            <Grid item lg={4} sm={12} md={12} xs={12}>
-              <TextField
-                label="Account Holder Name"
-                value={accountHolderName}
-                variant="outlined"
-                fullWidth
-                onChange={(e) =>
-                  updateState({ accountHolderName: e.target.value })
-                }
-                helperText={error.accountHolderName}
-                error={error.accountHolderName ? true : false}
-              />
-            </Grid>
-            <Grid item lg={4} sm={12} md={12} xs={12}>
-              <TextField
-                label="PAN card Number"
-                value={panNumber}
-                variant="outlined"
-                fullWidth
-                onChange={(e) => updateState({ panNumber: e.target.value })}
-                helperText={error.panNumber}
-                error={error.panNumber ? true : false}
-              />
-            </Grid>
-            <Grid item lg={4} sm={12} md={12} xs={12}>
-              <TextField
-                type="number"
-                label="Adhar card Number"
-                inputMode="numeric"
-                value={aadharNumber}
-                variant="outlined"
-                fullWidth
-                onChange={(e) => updateState({ aadharNumber: e.target.value })}
-                helperText={error.aadharNumber}
-                error={error.aadharNumber ? true : false}
-              />
-            </Grid>
+     
             <Grid item lg={4} sm={12} md={12} xs={12}>
               <TextField
                 type="text"
@@ -1490,97 +1356,122 @@ const handleChange = (name, value) => {
               />
             </Grid>
 
+       
             <Grid item lg={4} md={12} sm={12} xs={12}>
-  <FormControl fullWidth>
-    <InputLabel id="demo-simple-select-label">Type</InputLabel>
-    <Select
-      labelId="demo-simple-select-label"
-      id="demo-simple-select"
-      label="exclusive"
-      value={exclusive}
-      error={!!error.exclusive}
-      onFocus={() => handleError("exclusive", null)}
-      onChange={(e) => handleChange("exclusive", e.target.value)}
-    >
-      <MenuItem disabled value="">
-        -Select Option-
-      </MenuItem>
-      <MenuItem value="exclusive">Exclusive</MenuItem>
-      <MenuItem value="nonExclusive">Non Exclusive</MenuItem>
-    </Select>
-    {error.exclusive && (
-      <div className={classes.errorstyles}>{error.exclusive}</div>
-    )}
-  </FormControl>
-</Grid>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Type</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={exclusive}
+            error={!!error.exclusive}
+            onFocus={() => handleError("exclusive", null)}
+            onChange={(e) => handleChange("exclusive", e.target.value)}
+          >
+            <MenuItem disabled value="">
+              -Select Option-
+            </MenuItem>
+            <MenuItem value="exclusive">Exclusive</MenuItem>
+            <MenuItem value="nonExclusive">Non Exclusive</MenuItem>
+          </Select>
+          {error.exclusive && (
+            <div className={classes.errorstyles}>{error.exclusive}</div>
+          )}
+        </FormControl>
+      </Grid>
 
-{/* Conditionally render exclusiveOne based on exclusive selection */}
-{exclusive === "exclusive" && (
-  <Grid item lg={4} md={12} sm={12} xs={12}>
-    <FormControl fullWidth>
-      <InputLabel id="exclusive-one-label">Exclusive</InputLabel>
-      <Select
-        labelId="exclusive-one-label"
-        id="exclusive-one-select"
-        label="exclusiveOne"
-        value={exclusiveOne}
-        error={!!error.exclusiveOne}
-        onFocus={() => handleError("exclusiveOne", null)}
-        onChange={(e) => handleChange("exclusiveOne", e.target.value)}
-      >
-        <MenuItem disabled value="">
-          -Select Option-
-        </MenuItem>
-        <MenuItem value="fifty">50</MenuItem>
-        <MenuItem value="fiftyFive">55</MenuItem>
-      </Select>
-      {error.exclusiveOne && (
-        <div className={classes.errorstyles}>{error.exclusiveOne}</div>
+      {exclusive === "exclusive" && (
+        <Grid item lg={4} md={12} sm={12} xs={12}>
+          <FormControl fullWidth>
+            <InputLabel id="exclusive-one-label">Exclusive</InputLabel>
+            <Select
+              labelId="exclusive-one-label"
+              id="exclusive-one-select"
+              value={exclusiveOne}
+              error={!!error.exclusiveOne}
+              onFocus={() => handleError("exclusiveOne", null)}
+              onChange={(e) => handleChange("exclusiveOne", e.target.value)}
+            >
+              <MenuItem disabled value="">
+                -Select Option-
+              </MenuItem>
+              <MenuItem value="fifty">50</MenuItem>
+              <MenuItem value="fiftyFive">55</MenuItem>
+            </Select>
+            {error.exclusiveOne && (
+              <div className={classes.errorstyles}>{error.exclusiveOne}</div>
+            )}
+          </FormControl>
+        </Grid>
       )}
-    </FormControl>
-  </Grid>
-)}
 
-<Grid item lg={4} sm={12} md={12} xs={12}>
-  <TextField
-    fullWidth
-    label="Display Chat Price"
-    value={displayChatPrice}
-    onChange={(e) => setDisplayChatPrice(e.target.value)} // handle display chat price change
-  />
-</Grid>
-<Grid item lg={4} sm={12} md={12} xs={12}>
-  <TextField
-    type="number"
-    label="Chat Price"
-    inputMode="numeric"
-    value={chatPrice}
-    variant="outlined"
-    fullWidth
-    onChange={(e) => updateState({ chatPrice: e.target.value })}
-    helperText={error.chatPrice}
-    error={!!error.chatPrice}
-    InputProps={{
-      readOnly: true,
-    }}
-  />
-</Grid>
-<Grid item lg={4} sm={12} md={12} xs={12}>
-  <TextField
-    type="number"
-    label="Company Chat Price"
-    inputMode="numeric"
-    value={companyChatPrice}
-    variant="outlined"
-    fullWidth
-    onChange={(e) => updateState({ companyChatPrice: e.target.value })}
-    helperText={error.companyChatPrice}
-    error={!!error.companyChatPrice}
-    InputProps={{
-      readOnly: true,
-    }}
-  />
-</Grid>
+      {exclusive === "nonExclusive" && (
+        <Grid item lg={4} md={12} sm={12} xs={12}>
+          <FormControl fullWidth>
+            <InputLabel id="exclusive-two-label">Non-Exclusive</InputLabel>
+            <Select
+              labelId="exclusive-two-label"
+              id="exclusive-two-select"
+              value={exclusiveTwo}
+              error={!!error.exclusiveTwo}
+              onFocus={() => handleError("exclusiveTwo", null)}
+              onChange={(e) => handleChange("exclusiveTwo", e.target.value)}
+            >
+              <MenuItem disabled value="">
+                -Select Option-
+              </MenuItem>
+              <MenuItem value="fourty">40</MenuItem>
+              <MenuItem value="fourtyFive">45</MenuItem>
+            </Select>
+            {error.exclusiveTwo && (
+              <div className={classes.errorstyles}>{error.exclusiveTwo}</div>
+            )}
+          </FormControl>
+        </Grid>
+      )}
+
+      <Grid item lg={4} sm={12} md={12} xs={12}>
+        <TextField
+          fullWidth
+          label="Display Chat Price"
+          value={displayChatPrice}
+          onChange={(e) => handleChange("displayChatPrice", e.target.value)}
+        />
+      </Grid>
+      <Grid item lg={4} sm={12} md={12} xs={12}>
+        <TextField
+          type="number"
+          label="Chat Price"
+          inputMode="numeric"
+          value={chatPrice}
+          variant="outlined"
+          fullWidth
+          onChange={(e) => setChatPrice(e.target.value)} // Optional, could be readonly
+          helperText={error.chatPrice}
+          error={!!error.chatPrice}
+          InputProps={{
+            readOnly: true,
+          }}
+        />
+      </Grid>
+      <Grid item lg={4} sm={12} md={12} xs={12}>
+        <TextField
+          type="number"
+          label="Company Chat Price"
+          inputMode="numeric"
+          value={companyChatPrice}
+          variant="outlined"
+          fullWidth
+          onChange={(e) => setCompanyChatPrice(e.target.value)} // Optional, could be readonly
+          helperText={error.companyChatPrice}
+          error={!!error.companyChatPrice}
+          InputProps={{
+            readOnly: true,
+          }}
+        />
+      </Grid>
+
+
             <Grid item lg={4} sm={12} md={12} xs={12}>
               <TextField
                 type="number"
@@ -1848,6 +1739,197 @@ const handleChange = (name, value) => {
               {error.expertise && (
                 <div className={classes.errorstyles}>{error.expertise}</div>
               )}
+            </Grid>
+
+            <Grid
+              item
+              lg={3}
+              sm={3}
+              md={3}
+              xs={3}
+              className={classes.uploadContainer}
+            >
+              <Grid
+                component="label"
+                onClick={handleProfile}
+                className={classes.uploadImageButton}
+              >
+                Upload Profile Photo
+                <input
+                  onChange={handleProfile}
+                  hidden
+                  accept="image/*"
+                  type="file"
+                />
+              </Grid>
+              <div className={classes.errorstyles}>{error.profilePhoto}</div>
+            </Grid>
+            <Grid item lg={1} sm={1} md={1} xs={1}>
+              <Avatar
+                color={Colors.primaryDark}
+                src={profilePhoto.file}
+                style={{ width: 56, height: 56 }}
+              />
+            </Grid>
+            <Grid
+              item
+              lg={3}
+              sm={3}
+              md={3}
+              xs={3}
+              className={classes.uploadContainer}
+            >
+              <Grid
+                component="label"
+                onClick={handlebankProof}
+                className={classes.uploadImageButton}
+              >
+                Upload Bank Proof
+                <input
+                  onChange={handlebankProof}
+                  hidden
+                  accept="image/*"
+                  type="file"
+                />
+              </Grid>
+              <div className={classes.errorstyles}>{error.bankProof}</div>
+            </Grid>
+            <Grid item lg={1} sm={1} md={1} xs={1}>
+              <Avatar
+                color={Colors.primaryDark}
+                src={bankProof.file}
+                style={{ width: 56, height: 56 }}
+              />
+            </Grid>
+            <Grid
+              item
+              lg={3}
+              sm={3}
+              md={3}
+              xs={3}
+              className={classes.uploadContainer}
+            >
+              <Grid
+                component="label"
+                onClick={handleidProof}
+                className={classes.uploadImageButton}
+              >
+                Upload Id Proof
+                <input
+                  onChange={handleidProof}
+                  hidden
+                  accept="image/*"
+                  type="file"
+                />
+              </Grid>
+              <div className={classes.errorstyles}>{error.idProof}</div>
+            </Grid>
+            <Grid item lg={1} sm={1} md={1} xs={1}>
+              <Avatar
+                color={Colors.primaryDark}
+                src={idProof.file}
+                style={{ width: 56, height: 56 }}
+              />
+            </Grid>
+
+            <Grid item lg={3} sm={12} md={12} xs={12}>
+              <TextField
+                label="Bank Account Number"
+                value={bankAccountNumber}
+                variant="outlined"
+                fullWidth
+                type="number"
+                onFocus={() => handleError("bankAccountNumber", null)}
+                onChange={(e) =>
+                  updateState({ bankAccountNumber: e.target.value })
+                }
+                helperText={error.bankAccountNumber}
+                error={error.bankAccountNumber ? true : false}
+              />
+            </Grid>
+            <Grid item lg={3} sm={12} md={12} xs={12}>
+              <TextField
+                label="Enter Bank Name"
+                value={bankName}
+                variant="outlined"
+                fullWidth
+                onChange={(e) => updateState({ bankName: e.target.value })}
+                helperText={error.bankName}
+                error={!!error.bankName ? true : false}
+              />
+            </Grid>
+            <Grid item lg={3} md={12} sm={12} xs={12}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">
+                  Account Type
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="Account Type"
+                  value={accountType}
+                  onFocus={() => handleError("accountType", null)}
+                  onChange={(e) => updateState({ accountType: e.target.value })}
+                  helperText={error.accountType}
+                  error={error.accountType ? true : false}
+                >
+                  <div className={classes.errorstyles}>{error.accountType}</div>
+                  <MenuItem disabled value={null}>
+                    -Select Account type-
+                  </MenuItem>
+                  <MenuItem value="saving">Saving</MenuItem>
+                  <MenuItem value="current">Current</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item lg={3} sm={12} md={12} xs={12}>
+              <TextField
+                label="Enter IFSC Code"
+                value={ifscCode}
+                variant="outlined"
+                fullWidth
+                onChange={(e) => updateState({ ifscCode: e.target.value })}
+                helperText={error.ifscCode}
+                error={error.ifscCode ? true : false}
+              />
+            </Grid>
+
+            <Grid item lg={4} sm={12} md={12} xs={12}>
+              <TextField
+                label="Account Holder Name"
+                value={accountHolderName}
+                variant="outlined"
+                fullWidth
+                onChange={(e) =>
+                  updateState({ accountHolderName: e.target.value })
+                }
+                helperText={error.accountHolderName}
+                error={error.accountHolderName ? true : false}
+              />
+            </Grid>
+            <Grid item lg={4} sm={12} md={12} xs={12}>
+              <TextField
+                label="PAN card Number"
+                value={panNumber}
+                variant="outlined"
+                fullWidth
+                onChange={(e) => updateState({ panNumber: e.target.value })}
+                helperText={error.panNumber}
+                error={error.panNumber ? true : false}
+              />
+            </Grid>
+            <Grid item lg={4} sm={12} md={12} xs={12}>
+              <TextField
+                type="number"
+                label="Adhar card Number"
+                inputMode="numeric"
+                value={aadharNumber}
+                variant="outlined"
+                fullWidth
+                onChange={(e) => updateState({ aadharNumber: e.target.value })}
+                helperText={error.aadharNumber}
+                error={error.aadharNumber ? true : false}
+              />
             </Grid>
             <Grid item lg={6} sm={6} md={6} xs={6}>
               <div onClick={handleSubmit} className={classes.submitbutton}>

@@ -141,18 +141,33 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                               },
                             
                             // { title: "PaymentMethod", field: "paymentMethod" },
-                            { title: "TransactionType",
+                            // { title: "TransactionType",
+                            //     filtering: false,
+                            //     render: (rowData) => {
+                                   
+                            //         if (rowData?.transactionType=="DEBIT"){
+                            //             return `Deducted`;
+                            //         }
+                            //         else{
+                            //             return `Credited`;
+                            //         }
+                                    
+                            //       }
+                            // },
+                            {
+                                title: "TransactionType",
                                 filtering: false,
                                 render: (rowData) => {
-                                   
-                                    if (rowData?.transactionType=="DEBIT"){
-                                        return `Deducted`;
-                                    }
-                                    else{
-                                        return `Credited`;
-                                    }
-                                    
-                                  }
+                                    const transactionType = rowData?.transactionType;
+                                    const text = transactionType === "DEBIT" ? 'Deducted' : 'Credited';
+                                    const color = transactionType === "CREDIT" ? 'green' : 'red';
+                            
+                                    return (
+                                        <span style={{ color }}>
+                                            {text}
+                                        </span>
+                                    );
+                                }
                             },
                             // { title: "ReferenceModel", field: "referenceModel" },
                             { title: "Type", field: "type", filtering: false },
@@ -199,7 +214,7 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                             })
                           }
                         
-                          options={{ ...propStyles.tableStyles,  paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], filtering: true }}
+                          options={{ ...propStyles.tableStyles,  paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100, 500, 1000], filtering: true }}
 
                         style={{ fontSize: "1.0rem" }}
                         actions={[

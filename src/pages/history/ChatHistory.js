@@ -1,6 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useStyles, propStyles } from "../../assets/styles.js";
-import { Grid, TextField, CircularProgress } from "@mui/material";
+import {
+  Grid,
+  Button,
+  TextField,
+  Select,
+  Avatar,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Checkbox,
+  FormGroup,
+  FormControlLabel,
+  FormLabel,
+  ListItemText,
+  CircularProgress,
+} from "@mui/material";
 import MaterialTable from "material-table";
 import { useNavigate } from "react-router-dom";
 import Dialog from "@mui/material/Dialog";
@@ -13,11 +28,16 @@ import { connect } from "react-redux";
 import { secondsToHMS, showNumber } from "../../utils/services.js";
 import moment from "moment";
 import { api_url, get_chat_history } from "../../utils/Constants.js";
+import { CSVLink, CSVDownload } from "react-csv";
+import DownloadIcon from '@mui/icons-material/Download';
 
-const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
+
+const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData }) => {
+  console.log("csvData", csvData);
   const classes = useStyles();
   const navigate = useNavigate();
-
+  const tableRef = useRef(null);
+  const [singelDate, SetSingelDate] = useState();
   const [viewData, setViewData] = useState(false);
   const [data, setData] = useState({
     transactionId: "",
@@ -40,6 +60,16 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
     maxduration: "",
     chatId: "",
   });
+  const [showModal, setShowModal] = useState(false);
+
+  const [searchType, setSearchType] = useState("");
+  const [isCustomSelected, setIsCustomSelected] = useState(false);
+  const [customSelection, setCustomSelection] = useState(""); // State for custom dropdown selection
+  const [singleDate, setSingleDate] = useState(""); // State for single date
+  const [startDate, setStartDate] = useState(""); // State for start date
+  const [endDate, setEndDate] = useState(""); // State for end date
+
+
 
   const handleView = (rowData) => {
     setViewData(true);
@@ -72,6 +102,9 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
       chatId: rowData?.chatId || "",
     });
   };
+  const openDownloadModal = () => {
+    setShowModal(true);
+  };
 
   function transformTransactionId(transactionId) {
     const parts = transactionId.split("fortunetalk");
@@ -80,7 +113,62 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
 
   const handleClose = () => {
     setViewData(false);
+    setShowModal(false);
   };
+
+  const handleFirstDropdownChange = (event) => {
+    const value = event.target.value;
+    setSearchType(value);
+    setIsCustomSelected(value === "Custom");
+    // Reset custom selection and dates when changing the main dropdown
+    setCustomSelection("");
+    setSingleDate("");
+    setStartDate("");
+    setEndDate("");
+  };
+
+  const handleCustomDropdownChange = (event) => {
+    const value = event.target.value;
+    setCustomSelection(value);
+    // Reset dates when changing custom selection
+    setSingleDate("");
+    setStartDate("");
+    setEndDate("");
+  };
+
+  // Your existing handleDownload remains unchanged
+  const handleGet = () => {
+    try {
+      if (!searchType) {
+        alert("Please select a search type."); // You can replace this with a more user-friendly notification
+        return; // Prevent further execution if searchType is not selected
+      }
+
+      let searchDate = '';
+
+      if (singleDate) {
+        searchDate = singleDate; // Only send singleDate
+      } else if (startDate && endDate) {
+        searchDate = `${startDate},${endDate}`; // Send startDate and endDate
+      }
+
+      const payload = {
+        searchType: searchType,
+        searchDate: searchDate // This will be an empty string if neither condition is met
+      };
+
+      console.log("payload", payload);
+      dispatch(HistoryActions.getDownloadChatHistory({ payload }));
+    } catch (e) {
+      console.log(e);
+    }
+
+  };
+
+  // const handleDownload = () => {
+  //   <CSVLink data={csvData}>Download me</CSVLink>;
+  // };
+
 
   const handleClickOpen = (rowData) => {
     navigate(`/history/fullChatHistory/${rowData.customerId}`, {
@@ -88,11 +176,16 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
     });
   };
 
+  const onRefreshTable = () => {
+    tableRef.current && tableRef.current.onQueryChange();
+  };
+
   return (
     <div className={classes.container}>
       <div className={classes.box}>
         {displayTable()}
         {editModal()}
+        {downloadModal()}
       </div>
     </div>
   );
@@ -102,19 +195,40 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
       <Grid container spacing={1}>
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
+            tableRef={tableRef}
+
+
             title={
-              <div>
-                <span
-                  style={{
-                    fontWeight: "500",
-                    fontSize: "25px",
-                    marginRight: "20px",
-                  }}
-                >
-                  Chat History
-                </span>
-              </div>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <span
+                style={{
+                  fontWeight: "500",
+                  fontSize: "25px",
+                  marginRight: "20px", // This adds space to the right of the title
+                }}
+              >
+                Chat History
+              </span>
+              <button
+                style={{
+                  padding: "8px 16px",
+                  backgroundColor: "#10395D",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  marginLeft: "20px", // This adds space to the left of the button
+                  display: "flex",
+                  alignItems: "center", // Center the icon and text vertically
+                }}
+                onClick={openDownloadModal}
+              >
+                <DownloadIcon style={{ marginRight: "8px", color: "white" }} /> {/* Add icon here */}
+                Download CSV
+              </button>
+            </div>
             }
+
             columns={[
               // {
               //   title: "S.No",
@@ -160,6 +274,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
                 title: "Total Charge",
                 field: "deductedAmount",
                 filtering: true,
+                defaultFilter: chatHistoryApiPayload?.filters?.deductedAmount ? [chatHistoryApiPayload?.filters?.deductedAmount] : [],
                 lookup: { ZEROS: "NO BALANCE", NONZEROS: "HAVE BALANCE" },
                 render: (rowData) => {
                   const amount = Number(rowData.deductedAmount).toFixed(2);
@@ -207,7 +322,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
                   <div>
                     {rowData?.endTime
                       ? rowData?.endTime &&
-                        moment(rowData?.endTime).format("DD-MM-YY HH:mm A")
+                      moment(rowData?.endTime).format("DD-MM-YY HH:mm A")
                       : "N/A"}
                   </div>
                 ),
@@ -217,6 +332,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
               {
                 title: "Status",
                 field: "status",
+                // defaultFilter: chatHistoryApiPayload?.filters?.status ? [chatHistoryApiPayload?.filters?.status] : [],
                 lookup: {
                   COMPLETED: "COMPLETED",
                   REJECTED: "REJECTED",
@@ -224,11 +340,12 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
                   CREATED: "CREATED",
                   ONGOING: "ON GOING",
                   TIMEOUT: "MISSED",
+                  CUSTOMER_NOT_AVAILABLE: "CUSTOMER NOT AVAILABLE",
                 },
               },
               {
                 title: "View Chat History",
-                field: "viewChat", 
+                field: "viewChat",
                 filtering: false,
                 render: (rowData) => (
                   <div
@@ -250,15 +367,17 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
                   }
                 });
 
-                dispatch(
-                  HistoryActions.setChatHistoryApiPayload({
-                    page: query.page + 1,
-                    pageSize: query.pageSize,
-                    filters: filters,
-                    search: query.search,
-                  })
-                );
-
+                if (!(query.page === 0 && chatHistoryApiPayload)) {
+                  dispatch(
+                    HistoryActions.setChatHistoryApiPayload({
+                      page: query.page + 1,
+                      pageSize: query.pageSize,
+                      filters: filters,
+                      search: query.search,
+                    })
+                  );
+                } else {
+                }
                 if (
                   query.page === 0 &&
                   chatHistoryApiPayload &&
@@ -268,6 +387,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
                 }
 
                 console.log(query, "query");
+                console.log(chatHistoryApiPayload, "chatHistoryApiPayload");
 
                 console.log({
                   page:
@@ -283,8 +403,8 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
                   ...filters,
                   search:
                     query.page == 0 &&
-                    chatHistoryApiPayload &&
-                    query.search.length == 0
+                      chatHistoryApiPayload &&
+                      query.search.length == 0
                       ? chatHistoryApiPayload?.search
                       : query.search,
                 });
@@ -308,8 +428,8 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
                     ...filters,
                     search:
                       query.page == 0 &&
-                      chatHistoryApiPayload &&
-                      query.search.length == 0
+                        chatHistoryApiPayload &&
+                        query.search.length == 0
                         ? chatHistoryApiPayload?.search
                         : query.search,
                   }),
@@ -317,7 +437,17 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
                   .then((response) => response.json())
                   .then((result) => {
                     console.log(result?.data);
-
+                    if (
+                      result?.data?.data.length == 0 &&
+                      result?.data?.pagination?.currentPage != 1
+                    ) {
+                      onRefreshTable();
+                      resolve({
+                        data: result?.data?.data,
+                        page: 0,
+                        totalCount: result?.data?.pagination?.totalCount,
+                      });
+                    }
                     resolve({
                       data: result?.data?.data,
                       page: result?.data?.pagination?.currentPage - 1,
@@ -333,7 +463,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
               pageSize: chatHistoryApiPayload
                 ? chatHistoryApiPayload?.pageSize
                 : 10,
-              pageSizeOptions: [10, 20, 50, 100],
+              pageSizeOptions: [10, 20, 50, 100, 500, 1000],
               filtering: "true",
               // exportButton: true,
             }}
@@ -354,6 +484,11 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
                     })
                   ),
               },
+              // {
+              //   icon: "download",
+              //   tooltip: "Download Chat History",
+              //   onClick: (event, rowData) => openDownloadModal(rowData),
+              // },
             ]}
           />
         </Grid>
@@ -544,11 +679,148 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
       </div>
     );
   }
+
+  function downloadModal() {
+
+    const showDownloadForm = () => {
+      return (
+
+        <Grid container spacing={2}>
+          <Grid item lg={12} sm={12} md={12} xs={12}>
+            <div className={classes.headingContainer}>
+              <div className={classes.heading}>Download CSV</div>
+              <div onClick={handleClose} className={classes.closeButton}>
+                <CloseRounded />
+              </div>
+            </div>
+          </Grid>
+
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <FormControl fullWidth>
+              <InputLabel id="first-dropdown-label">CSV Download</InputLabel>
+              <Select
+                labelId="first-dropdown-label"
+                id="first-dropdown"
+                value={searchType}
+                onChange={handleFirstDropdownChange}
+              >
+                <MenuItem disabled value="">
+                  -Select Option-
+                </MenuItem>
+                {/* <MenuItem value="Custom">Custom</MenuItem> */}
+                <MenuItem value="Single">Single</MenuItem>
+                <MenuItem value="Between">Between</MenuItem>
+                <MenuItem value="oneMonth">1 Month</MenuItem>
+                <MenuItem value="threeMonths">3 Months</MenuItem>
+                <MenuItem value="sixMonths">6 Months</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+
+          {/* {isCustomSelected && (
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <FormControl fullWidth>
+              <InputLabel id="custom-dropdown-label">Custom</InputLabel>
+              <Select
+                labelId="custom-dropdown-label"
+                id="custom-dropdown"
+                value={customSelection}
+                onChange={handleCustomDropdownChange}
+              >
+                <MenuItem disabled value="">
+                  -Select Option-
+                </MenuItem>
+                <MenuItem value="Single">Single</MenuItem>
+                <MenuItem value="Between">Between</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        )} */}
+
+          {searchType === "Single" && (
+            <Grid item lg={12} sm={12} md={6} xs={12}>
+              <TextField
+                type="date"
+                value={singleDate}
+                variant="outlined"
+                fullWidth
+                onChange={(event) => setSingleDate(event.target.value)}
+                inputProps={{
+                  min: '1900-01-01', // Set a minimum date as needed
+                  max: new Date().toISOString().split("T")[0], // Prevent future date selection
+                }}
+              />
+            </Grid>
+          )}
+
+          {searchType === "Between" && (
+            <>
+              <Grid item lg={6} sm={12} md={6} xs={12}>
+                <TextField
+                  type="date"
+                  value={startDate}
+                  variant="outlined"
+                  fullWidth
+                  onChange={(event) => setStartDate(event.target.value)}
+                  inputProps={{
+                    min: '1900-01-01', // Set a minimum date as needed
+                    max: new Date().toISOString().split("T")[0], // Prevent future date selection
+                  }}
+                />
+              </Grid>
+              <Grid item lg={6} sm={12} md={6} xs={12}>
+                <TextField
+                  type="date"
+                  value={endDate}
+                  variant="outlined"
+                  fullWidth
+                  onChange={(event) => setEndDate(event.target.value)}
+                  inputProps={{
+                    min: '1900-01-01', // Set a minimum date as needed
+                    max: new Date().toISOString().split("T")[0], // Prevent future date selection
+                  }}
+                />
+              </Grid>
+            </>
+          )}
+
+          <Grid item lg={4} sm={6} md={6} xs={6}>
+            <div onClick={handleGet} className={classes.submitbutton}>
+              Submit
+            </div>
+          </Grid>
+          {csvData && (
+            <Grid item lg={4} sm={6} md={6} xs={6}>
+              {/* <div onClick={handleDownload} className={classes.submitbutton}>
+            Download
+          </div> */}
+              <CSVLink className={classes.submitbutton} data={csvData}>Download </CSVLink>;
+            </Grid>
+          )}
+          <Grid item lg={4} sm={6} md={6} xs={6}>
+            <div onClick={handleClose} className={classes.denyButton}>
+              Cancel
+            </div>
+          </Grid>
+        </Grid>
+      );
+    };
+
+    return (
+      <div>
+        <Dialog open={showModal}>
+          <DialogContent>{showDownloadForm()}</DialogContent>
+        </Dialog>
+      </div>
+    );
+  }
+
 };
 
 const mapStateToProps = (state) => ({
   chatHistoryData: state.history.chatHistoryData || [], // Default to empty array
   chatHistoryApiPayload: state.history.chatHistoryApiPayload, // Default to empty array
+  csvData: state.history.csvData,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

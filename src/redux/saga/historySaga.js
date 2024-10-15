@@ -20,7 +20,9 @@ import {
   delete_call_history,
   get_chat_message_details,
   download_chat_history,
-  download_call_history
+  download_call_history,
+  update_admin_chat_review,
+  update_admin_call_review
 
 } from "../../utils/Constants";
 import { database, firestore } from "../../config/firbase";
@@ -623,6 +625,77 @@ function* getDownloadCallHistory(action) {
   }
 }
 
+function* updateAdminChatReview(actions) {
+  const {reviewData , onRefreshTable } = actions.payload;
+  try {
+    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
+    const response = yield call(ApiRequest.postRequest, {
+      url: api_url + update_admin_chat_review,
+      header: "json",
+      data: reviewData,
+    });
+
+    if (response.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Review Updated Successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      // yield put({ type: actionTypes.GET_ALL_ASTROLOGER, payload: response });
+      yield call(onRefreshTable);
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Failed to update Reviews",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  } finally {
+    // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
+  }
+}
+function* updateAdminCallReview(actions) {
+  const {reviewData} = actions.payload;
+  try {
+    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
+    const response = yield call(ApiRequest.postRequest, {
+      url: api_url + update_admin_call_review,
+      header: "json",
+      data: reviewData,
+    });
+
+    if (response.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Review Updated Successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      // yield put({ type: actionTypes.GET_ALL_ASTROLOGER, payload: response });
+      // yield call(onRefreshTable);
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Failed to update Reviews",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  } finally {
+    // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
+  }
+}
+
 
 
 export default function* historySaga() {
@@ -643,4 +716,6 @@ export default function* historySaga() {
   yield takeLeading(actionTypes.GET_REGISTER_LIVE_CLASS_HISTORY, getRegisterLiveClassHistory)
   yield takeLeading(actionTypes.GET_DOWNLOAD_CHAT_HISTORY, getDownloadChatHistory)
   yield takeLeading(actionTypes.GET_DOWNLOAD_CALL_HISTORY, getDownloadCallHistory)
+  yield takeLeading(actionTypes.UPDATE_ADMIN_CHAT_REVIEW, updateAdminChatReview)
+  yield takeLeading(actionTypes.UPDATE_ADMIN_CALL_REVIEW, updateAdminCallReview)
 }

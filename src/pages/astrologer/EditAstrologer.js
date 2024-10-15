@@ -99,9 +99,9 @@ export const EditAstrologer = ({
   stateCityData,
   countryValueData,
 }) => {
+  console.log(astrologerData?.remediesId, "remdeiseId")
   var classes = useStyles();
   const { astrologerId } = useParams();
-
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -190,6 +190,13 @@ export const EditAstrologer = ({
     }
   }, [astrologerId]);
 
+  useEffect(() => {
+    dispatch(SkillActions.getActiveSkillData());
+    dispatch(ExpertiesActions.getActiveExpertiesData());
+    dispatch(RemedyActions.getActiveRemediesData());
+    dispatch(SettingActions.getCountries());
+  }, []);
+
   const [showPassword, setShowPassword] = useState(false);
 
   const toggleShowPassword = () => {
@@ -253,15 +260,6 @@ export const EditAstrologer = ({
     }
   }, [astrologerData]);
 
-
-
-  useEffect(() => {
-    dispatch(SkillActions.getActiveSkillData());
-
-    dispatch(ExpertiesActions.getActiveExpertiesData());
-    dispatch(RemedyActions.getActiveRemediesData());
-    dispatch(SettingActions.getCountries());
-  }, []);
   if (astrologerData?.galleryImages) {
     setGalleryImages(
       astrologerData.galleryImages.map((image) => ({ file: image, bytes: "" }))
@@ -1561,6 +1559,7 @@ export const EditAstrologer = ({
               Update Image
             </Button>
           </Grid>
+
           <Grid item lg={1} sm={1} md={1} xs={1}>
             <Avatar
               color={Colors.primaryDark}

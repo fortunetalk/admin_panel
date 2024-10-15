@@ -63,10 +63,36 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
   const [singleDate, setSingleDate] = useState(""); // State for single date
   const [startDate, setStartDate] = useState(""); // State for start date
   const [endDate, setEndDate] = useState(""); // State for end date
+  const [review, setReview] = useState(false);
+  const [reviewData, setReviewData] = useState({
+    callReviewFromAdmin: '',
+    callConcernFromAdmin:'',
+    callHistoryId: '',
+  });
 
   // useEffect(function () {
   //   dispatch(HistoryActions.getCallHistory());
   // }, []);
+
+  const handleReview = (rowData) => {
+    setReview(true);
+    setReviewData({
+      callReviewFromAdmin: rowData.callReviewFromAdmin,
+      callConcernFromAdmin: rowData.callConcernFromAdmin,
+      callHistoryId: rowData._id
+    })
+  };
+
+  const handleUpdateReview = () => {
+    console.log("hiii handleUpdateReview",reviewData)
+    try {
+      dispatch(HistoryActions.updateAdminCallReview({reviewData}));
+      setReview(false);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
 
   const handleView = (rowData) => {
     setViewData(true);
@@ -74,14 +100,11 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
       transactionId: rowData?.transactionId || "",
       customerId: rowData?.customerId?._id || "",
       astrologerId: rowData?.astrologerId?._id || "",
-      customerName:
-        `${rowData?.customerId?.firstName} ${rowData?.customerId?.lastName}` ||
-        "",
+      customerName: `${rowData?.customerId?.firstName} ${rowData?.customerId?.lastName}` ||  "",
       customerEmail: rowData?.customerId?.email || "",
       astrologerName: rowData?.astrologerId?.name || "",
       astrologerDisplayName: rowData?.astrologerId?.displayName || "",
       astrologerEmail: rowData?.astrologerId?.email || "",
-
       startTime: new Date(rowData?.startTime).toLocaleString() || "",
       endTime: new Date(rowData?.endTime).toLocaleString() || "",
       durationInSeconds: rowData?.durationInSeconds || "",
@@ -91,6 +114,8 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
       deductedAmount: rowData?.deductedAmount || "",
       callType: rowData?.callType || "",
       callId: rowData?.callId || "",
+      callReviewFromAdmin: rowData?.callReviewFromAdmin || "",
+      callConcernFromAdmin: rowData?.callConcernFromAdmin || "",
     });
   };
 
@@ -113,6 +138,7 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
   const handleClose = () => {
     setViewData(false);
     setShowModal(false);
+    setReview(false);
   };
 
   const handleGet = () => {
@@ -169,6 +195,7 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
           {displayTable()}
           {editModal()}
           {downloadModal()}
+          {reviewModal()}
         </div>
       }
     </div>
@@ -335,6 +362,16 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
                 export: (rowData) =>
                   moment(rowData.endTime).format("DD-MM-YYYY HH:mm A"),
               },
+              {
+                title: "Review-Rating ",
+                field: "callReviewFromAdmin",
+                filtering: false,
+              },
+              {
+                title: "Review-Concern ",
+                field: "callConcernFromAdmin",
+                filtering: false,
+              },
               // { title: "Status", field: "status" },
 
               // {
@@ -414,11 +451,11 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
             }}
             style={{ fontSize: "1.0rem" }}
             actions={[
-              // {
-              //   icon: "visibility",
-              //   tooltip: "View Chat History",
-              //   onClick: (event, rowData) => handleView(rowData),
-              // },
+              {
+                icon: "visibility",
+                tooltip: "View Chat History",
+                onClick: (event, rowData) => handleView(rowData),
+              },
               {
                 icon: "delete",
                 tooltip: "Delete Chat History",
@@ -428,6 +465,11 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
                       callId: rowData?._id,
                     })
                   ),
+              },
+              {
+                icon: "add",
+                tooltip: "Add review",
+                onClick: (event, rowData) => handleReview(rowData),
               },
             ]}
           />
@@ -789,7 +831,96 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
       </div>
     );
   }
+
+  function reviewModal() {
+
+    const reviewForm = () => {
+      return (
+
+        <Grid container spacing={2}>
+          <Grid item lg={12} sm={12} md={12} xs={12}>
+            <div className={classes.headingContainer}>
+              <div className={classes.heading}>Add Review </div>
+              <div onClick={handleClose} className={classes.closeButton}>
+                <CloseRounded />
+              </div>
+            </div>
+          </Grid>
+
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <FormControl fullWidth>
+              <InputLabel id="first-dropdown-label">Rating</InputLabel>
+              <Select
+                labelId="first-dropdown-label"
+                id="first-dropdown"
+                value={reviewData?.callReviewFromAdmin}
+                onChange={(event) => setReviewData(prev=>{
+                  const updatedData = {...prev};
+                  updatedData.callReviewFromAdmin = event.target.value;
+                  return updatedData;
+                })} 
+              >
+                <MenuItem disabled value="">
+                  -Select Option-
+                </MenuItem>
+                <MenuItem value="Poor">Poor</MenuItem>
+                <MenuItem value="Average">Average</MenuItem>
+                <MenuItem value="Good">Good</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <FormControl fullWidth>
+              <InputLabel id="first-dropdown-label">Concern</InputLabel>
+              <Select
+                labelId="first-dropdown-label"
+                id="first-dropdown"
+                value={reviewData?.callConcernFromAdmin}
+                onChange={(event) => setReviewData(prev=>{
+                  const updatedData = {...prev};
+                  updatedData.callConcernFromAdmin = event.target.value;
+                  return updatedData;
+                })} 
+              >
+                <MenuItem disabled value="">
+                  -Select Option-
+                </MenuItem>
+                <MenuItem value="Marriage">Marriage</MenuItem>
+                <MenuItem value="Career">Career</MenuItem>
+                <MenuItem value="Buisness">Buisness</MenuItem>
+                <MenuItem value="Relationship">Relationship</MenuItem>
+                <MenuItem value="Education">Education</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item lg={6} sm={6} md={6} xs={6}>
+            <div onClick={handleUpdateReview} className={classes.submitbutton}>
+            {/* {isLoading ? <CircularProgress size={24} /> : " Submit"} */}
+              Submit
+            </div>
+          </Grid>
+          <Grid item lg={6} sm={6} md={6} xs={6}>
+            <div onClick={handleClose} className={classes.denyButton}>
+              Cancel
+            </div>
+          </Grid>
+        </Grid>
+      );
+    };
+
+    return (
+      <div>
+        <Dialog open={review}>
+          <DialogContent>{reviewForm()}</DialogContent>
+        </Dialog>
+      </div>
+    );
+  }
+
 };
+
+
 
 const mapStateToProps = (state) => ({
   callHistoryData: state.history.callHistoryData,

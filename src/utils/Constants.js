@@ -397,6 +397,10 @@ export const recharge_history_delete= 'admin/recharge/delete'
 export const download_chat_history= 'admin/download/chat_history'
 export const download_call_history= 'admin/download/call_history'
 
+//Chat Review
+export const update_admin_chat_review= 'admin/update_admin_chat_review'
+export const update_admin_call_review= 'admin/update_admin_call_review'
+
 
 
 

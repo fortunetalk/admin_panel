@@ -39,6 +39,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
   const tableRef = useRef(null);
   const [singelDate, SetSingelDate] = useState();
   const [viewData, setViewData] = useState(false);
+  const [review, setReview] = useState(false);
   const [data, setData] = useState({
     transactionId: "",
     customerId: "",
@@ -61,15 +62,28 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
     chatId: "",
   });
   const [showModal, setShowModal] = useState(false);
-
   const [searchType, setSearchType] = useState("");
   const [isCustomSelected, setIsCustomSelected] = useState(false);
   const [customSelection, setCustomSelection] = useState(""); // State for custom dropdown selection
   const [singleDate, setSingleDate] = useState(""); // State for single date
   const [startDate, setStartDate] = useState(""); // State for start date
   const [endDate, setEndDate] = useState(""); // State for end date
+  const [reviewData, setReviewData] = useState({
+    chatReviewFromAdmin: '',
+    chatConcernFromAdmin:'',
+    chatHistoryId: ''
+    
+  }); // State for end date
   const [isLoading, setIsLoading] = useState(false);
 
+  const handleReview = (rowData) => {
+    setReview(true);
+    setReviewData({
+      chatReviewFromAdmin: rowData.chatReviewFromAdmin,
+      chatConcernFromAdmin: rowData.chatConcernFromAdmin,
+      chatHistoryId: rowData._id
+    })
+  };
 
   const handleView = (rowData) => {
     setViewData(true);
@@ -100,8 +114,11 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
       deductedAmount: rowData?.deductedAmount || "",
       maxduration: rowData?.maxduration || "",
       chatId: rowData?.chatId || "",
+      chatReviewFromAdmin: rowData?.chatReviewFromAdmin || "",
+      chatConcernFromAdmin: rowData?.chatConcernFromAdmin || "",
     });
   };
+  
   const openDownloadModal = () => {
     setShowModal(true);
   };
@@ -114,6 +131,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
   const handleClose = () => {
     setViewData(false);
     setShowModal(false);
+    setReview(false);
   };
 
   const handleFirstDropdownChange = (event) => {
@@ -165,10 +183,17 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
 
   };
 
-  // const handleDownload = () => {
-  //   <CSVLink data={csvData}>Download me</CSVLink>;
-  // };
+  const handleUpdateReview = () => {
+    console.log("hiii handleUpdateReview",reviewData)
+    try {
+      dispatch(HistoryActions.updateAdminChatReview({reviewData, onRefreshTable }));
+      setReview(false);
+    } catch (e) {
+      console.log(e);
+    }
+    
 
+  };
 
   const handleClickOpen = (rowData) => {
     navigate(`/history/fullChatHistory/${rowData.customerId}`, {
@@ -186,6 +211,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
         {displayTable()}
         {editModal()}
         {downloadModal()}
+        {reviewModal()}
       </div>
     </div>
   );
@@ -343,6 +369,16 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
                   moment(rowData.endTime).format("DD-MM-YYYY HH:mm A"),
               },
               {
+                title: "Review-Rating ",
+                field: "chatReviewFromAdmin",
+                filtering: false,
+              },
+              {
+                title: "Review-Concern ",
+                field: "chatConcernFromAdmin",
+                filtering: false,
+              },
+              {
                 title: "Status",
                 field: "status",
                 // defaultFilter: chatHistoryApiPayload?.filters?.status ? [chatHistoryApiPayload?.filters?.status] : [],
@@ -496,6 +532,11 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
                       chatId: rowData?._id,
                     })
                   ),
+              },
+              {
+                icon: "add",
+                tooltip: "Add review",
+                onClick: (event, rowData) => handleReview(rowData),
               },
               // {
               //   icon: "download",
@@ -826,6 +867,92 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
       <div>
         <Dialog open={showModal}>
           <DialogContent>{showDownloadForm()}</DialogContent>
+        </Dialog>
+      </div>
+    );
+  }
+
+  function reviewModal() {
+
+    const reviewForm = () => {
+      return (
+
+        <Grid container spacing={2}>
+          <Grid item lg={12} sm={12} md={12} xs={12}>
+            <div className={classes.headingContainer}>
+              <div className={classes.heading}>Add Review </div>
+              <div onClick={handleClose} className={classes.closeButton}>
+                <CloseRounded />
+              </div>
+            </div>
+          </Grid>
+
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <FormControl fullWidth>
+              <InputLabel id="first-dropdown-label">Rating</InputLabel>
+              <Select
+                labelId="first-dropdown-label"
+                id="first-dropdown"
+                value={reviewData?.chatReviewFromAdmin}
+                onChange={(event) => setReviewData(prev=>{
+                  const updatedData = {...prev};
+                  updatedData.chatReviewFromAdmin = event.target.value;
+                  return updatedData;
+                })} 
+              >
+                <MenuItem disabled value="">
+                  -Select Option-
+                </MenuItem>
+                <MenuItem value="Poor">Poor</MenuItem>
+                <MenuItem value="Average">Average</MenuItem>
+                <MenuItem value="Good">Good</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <FormControl fullWidth>
+              <InputLabel id="first-dropdown-label">Concern</InputLabel>
+              <Select
+                labelId="first-dropdown-label"
+                id="first-dropdown"
+                value={reviewData?.chatConcernFromAdmin}
+                onChange={(event) => setReviewData(prev=>{
+                  const updatedData = {...prev};
+                  updatedData.chatConcernFromAdmin = event.target.value;
+                  return updatedData;
+                })} 
+              >
+                <MenuItem disabled value="">
+                  -Select Option-
+                </MenuItem>
+                <MenuItem value="Marriage">Marriage</MenuItem>
+                <MenuItem value="Career">Career</MenuItem>
+                <MenuItem value="Buisness">Buisness</MenuItem>
+                <MenuItem value="Relationship">Relationship</MenuItem>
+                <MenuItem value="Education">Education</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item lg={6} sm={6} md={6} xs={6}>
+            <div onClick={handleUpdateReview} className={classes.submitbutton}>
+            {/* {isLoading ? <CircularProgress size={24} /> : " Submit"} */}
+              Submit
+            </div>
+          </Grid>
+          <Grid item lg={6} sm={6} md={6} xs={6}>
+            <div onClick={handleClose} className={classes.denyButton}>
+              Cancel
+            </div>
+          </Grid>
+        </Grid>
+      );
+    };
+
+    return (
+      <div>
+        <Dialog open={review}>
+          <DialogContent>{reviewForm()}</DialogContent>
         </Dialog>
       </div>
     );

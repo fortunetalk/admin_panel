@@ -131,3 +131,13 @@ export const setDownloadCallHistory = payload =>({
     type: actionTypes.SET_DOWNLOAD_CALL_HISTORY,
     payload
 })
+
+export const updateAdminChatReview = payload =>({
+    type: actionTypes.UPDATE_ADMIN_CHAT_REVIEW, 
+    payload
+  })
+
+export const updateAdminCallReview = payload =>({
+    type: actionTypes.UPDATE_ADMIN_CALL_REVIEW, 
+    payload
+  })

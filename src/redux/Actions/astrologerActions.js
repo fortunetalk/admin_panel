@@ -119,3 +119,4 @@ export const updateAstrologerAstrologerType = payload =>({
   type: actionTypes.UPDATE_ASTROLOGER_ASTROLOGER_TYPE, 
   payload
 })
+

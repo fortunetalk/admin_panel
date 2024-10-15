@@ -24,7 +24,8 @@ import {
   update_astrologer_bank_image,
   update_astrologer_id_image,
   update_astrologer_gallery_image,
-  update_astrologer_astrologer_type
+  update_astrologer_astrologer_type,
+  update_admin_chat_review
 } from "../../utils/Constants";
 import Swal from "sweetalert2";
 import { Colors } from "../../assets/styles";
@@ -762,6 +763,8 @@ function* updateAstrologerAstrologerType(actions) {
 }
 
 
+
+
 export default function* astrologerSaga() {
   yield takeLeading(actionTypes.GET_ALL_ASTROLOGER, getAstrologers);
   yield takeLeading(
@@ -826,4 +829,5 @@ export default function* astrologerSaga() {
     actionTypes.UPDATE_ASTROLOGER_ASTROLOGER_TYPE,
     updateAstrologerAstrologerType
   );
+
 }

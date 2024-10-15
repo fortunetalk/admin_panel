@@ -30,6 +30,7 @@ import {
   updateAstrologerStatus,
 } from "../../redux/Actions/astrologerActions.js";
 import { api_url, get_all_astrologers } from "../../utils/Constants.js";
+import moment from "moment/moment.js";
 
 const ListAstrology = ({ astrologerListData }) => {
   const tableRef = useRef(null);
@@ -168,27 +169,45 @@ const ListAstrology = ({ astrologerListData }) => {
               {
                 title: " OLD Astrologer Id",
                 field: "astroUniqueId",
+                filtering: false,
               },
               {
                 title: "Astrologer Id",
                 field: "astrologerID",
+                filtering: false,
               },
               {
                 title: "Display Name",
                 field: "displayName",
-                searchable: true,
+                filtering: false,
               },
               {
                 title: "Email",
                 field: "email",
+                filtering: false,
               },
               {
                 title: "Mobile",
                 field: "phoneNumber",
+                filtering: false,
+              },
+              {
+                title: "Joining Date",
+                field: "createdAt",
+                filtering: false,
+                render: (rowData) => (
+                  <div>
+                    {rowData?.createdAt
+                      ? rowData?.createdAt &&
+                      moment(rowData?.createdAt).format("DD-MM-YY HH:mm A")
+                      : "N/A"}
+                  </div>
+                ),
               },
               {
                 title: "Wallet",
                 field: "wallet_balance",
+                filtering: false,
                 render: (rowData) => {
                   const balance = Number(rowData.wallet_balance).toFixed(2);
                   return balance;
@@ -198,6 +217,10 @@ const ListAstrology = ({ astrologerListData }) => {
               {
                 title: "Status",
                 field: "status",
+                lookup: {
+                  ACTIVE: "Active",
+                  BLOCK: "Blocked",
+                },
                 render: (rowData) => (
                   <div
                     className={classes.statusButton}
@@ -215,6 +238,11 @@ const ListAstrology = ({ astrologerListData }) => {
               {
                 title: "Call",
                 field: "callStatus",
+                lookup: {
+                  ONLINE: "Online",
+                  OFFLINE: "Offline",
+                  BUSY: "Busy",
+                },
                 render: (rowData) => (
                   <div
                     className={classes.statusButton}
@@ -236,6 +264,11 @@ const ListAstrology = ({ astrologerListData }) => {
               {
                 title: "Chat",
                 field: "chatStatus",
+                lookup: {
+                  ONLINE: "Online",
+                  OFFLINE: "Offline",
+                  BUSY: "Busy",
+                },
                 render: (rowData) => (
                   <div
                     className={classes.statusButton}
@@ -277,6 +310,7 @@ const ListAstrology = ({ astrologerListData }) => {
                     page: query.page + 1,
                     limit: query.pageSize === 0 ? 10 : query.pageSize,
                     title: query.search,
+                    ...filters,
                   }),
                 })
                   .then((response) => response.json())
@@ -299,9 +333,9 @@ const ListAstrology = ({ astrologerListData }) => {
               paging: true,
               pageSize: 10,
               pageSizeOptions: [10, 20, 50, 100, 500, 1000],
-              filtering: false,
-              
+             filtering: "true",
             }}
+
             style={{ fontSize: "1.2rem" }}
             actions={[
               {

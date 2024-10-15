@@ -1,0 +1,65 @@
+.ChatName {
+    color: black;
+    font-weight: 500;
+}
+
+.ChatList .ChatName:hover {
+    color: #10395D; 
+    font-weight: bold; 
+}
+
+.ChatList {
+    transition: all 0.3s ease; /* Smooth transition for all properties */
+}
+
+.ChatList:hover {
+    color: #10395D; /* Change text color on hover */
+    font-weight: bold; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transform: scale(1.02); /* Slightly scale up the element on hover */
+}
+
+/* chatsupport.css */
+.ChatList {
+    background-color: #9FAFBE; /* Black background */
+    color: #000; /* Black text (this will be overridden by more specific styles) */
+    border-radius: 4px;
+    padding: 3px;
+}
+
+.ChatList .chat-item {
+    border-bottom: 1px solid #333; /* Darker border for separation */
+}
+
+.ChatList .chat-item:last-child {
+    border-bottom: none;
+}
+
+.ChatName {
+    color: #000; /* Black text for chat names */
+}
+
+.message-list {
+    background-color: #9FAFBE; /* Black background */
+    color: #000; /* Black text */
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.message-list .message {
+    color: #000; /* Black text for messages */
+}
+
+.message-list .message.left {
+    background-color: #333; /* Darker background for left-side messages */
+    color: #000; /* Black text for left-side messages */
+}
+
+.message-list .message.right {
+    background-color: #444; /* Slightly lighter background for right-side messages */
+    color: #000; /* Black text for right-side messages */
+}
+
+.message-list .message .date {
+    color: #666; /* Light gray for date/time to maintain readability */
+}

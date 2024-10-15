@@ -1,0 +1,58 @@
+import * as actionTypes from "../actionTypes";
+
+export const setIsLoading = () => ({
+    type: actionTypes.SET_IS_LOADING,
+    payload: true,
+});
+
+export const unsetIsLoading = () => ({
+    type: actionTypes.UNSET_IS_LOADING,
+    payload: false,
+});
+
+
+export const adminLoginRequest = (payload) => ({
+    type: actionTypes.ADMIN_LOGIN_REQUEST,
+    payload,
+});
+
+export const adminLoginSuccess = (payload) => ({
+    type: actionTypes.ADMIN_LOGIN_SUCCESS,
+    payload,
+});
+
+export const adminLoginFailure = (error) => ({
+    type: actionTypes.ADMIN_LOGIN_FAILURE,
+    error,
+});
+
+export const adminLogoutRequest = () => ({
+    type: actionTypes.ADMIN_LOGOUT_REQUEST,
+});
+
+export const adminLogoutSuccess = () => ({
+    type: actionTypes.ADMIN_LOGOUT_SUCCESS,
+});
+
+export const adminLogoutFailure = (error) => ({
+    type: actionTypes.ADMIN_LOGOUT_FAILURE,
+    error,
+});
+
+export const adminChangePasswordRequest = () => ({
+    type: actionTypes.ADMIN_CHANGE_PASSWORD_REQUEST,
+});
+
+export const adminChangePasswordSuccess = () => ({
+    type: actionTypes.ADMIN_CHANGE_PASSWORD_SUCCESS,
+});
+
+export const adminChangePasswordFailure = (error) => ({
+    type: actionTypes.ADMIN_CHANGE_PASSWORD_FAILURE,
+    error,
+});
+
+export const setApiPayload = (error) => ({
+    type: actionTypes.SET_API_PAYLOAD,
+    error,
+});

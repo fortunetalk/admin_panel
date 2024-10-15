@@ -10,6 +10,7 @@ import * as HistoryActions from "../../redux/Actions/historyActions.js";
 import Loader from "../../Components/loading/Loader.js";
 import { connect } from "react-redux";
 import moment from "moment/moment.js";
+import { formatTimeFromDateString } from "../../utils/services.js";
 
 const DemoClassHistory = ({ dispatch, demoClassHistoryData }) => {
   const classes = useStyles();
@@ -34,12 +35,17 @@ const DemoClassHistory = ({ dispatch, demoClassHistoryData }) => {
   const [adminStatus, setAdminStatus] = useState('');
   const [icon, setIcon] = useState({ file: "", bytes: null });
   const [video, setVideo] = useState({ file: '', bytes: null });
+  
 
   useEffect(function () {
     dispatch(HistoryActions.getDemoClassHistory());
   }, []);
 
   const handleView = (rowData) => {
+    const date = new Date(rowData?.time);
+    const hours = date.getUTCHours().toString().padStart(2, '0');  // Get UTC hours and pad with 0 if needed
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0');  // Get UTC minutes and pad with 0 if needed
+    const timeInUTC = `${hours}:${minutes}`;
     setViewData(true);
     const formattedDate = new Date(rowData?.date).toISOString().split("T")[0];
     setDate(formattedDate);
@@ -51,7 +57,8 @@ const DemoClassHistory = ({ dispatch, demoClassHistoryData }) => {
     setDescription(rowData?.demoClassId.description);
     setLearn(rowData?.demoClassId.learn);
     setCourseContent(rowData?.demoClassId.courseContent);
-    setTime(rowData?.time);
+    setTime (timeInUTC);
+    // setTime(rowData?.time);
     setSessionTime(rowData?.demoClassId.sessionTime);
     setGoogleMeet(rowData?.demoClassId.googleMeet);
     setClassStatus(rowData?.demoClassId.classStatus);
@@ -133,24 +140,37 @@ const DemoClassHistory = ({ dispatch, demoClassHistoryData }) => {
                 field: "mobileNumber",
               },
               {
-                title: "Schedule Date ",
+                title: "Demo Class Date ",
                 field: "createdAt",
                 render: rowData => moment(rowData.createdAt).format('MMMM Do YYYY'),
               },
               {
-                title: "Date",
+                title: " Demo Class Time",
+                field: "time",
+                render: (rowData) => {
+                  return formatTimeFromDateString(rowData?.demoClassId?.time); // Outputs: 04:30 PM
+              },
+            },
+              {
+                title: " Booked Date",
                 field: "date",
                 render: rowData => moment(rowData.date).format('MMMM Do YYYY'),
               },
               {
-                title: "Time",
-                render: rowData => {
-                    const timeValue = rowData?.demoClassId?.time;
-                    console.log("timeValue", timeValue);
-                    return timeValue;
+                title: " Booked Time",
+                field: "date",
+                render: rowData => moment(rowData.date).format('MMMM Do YYYY'),
+              },
+            //   {
+            //     title: "Time",
+            //     render: rowData => {
+            //         const timeValue = rowData?.demoClassId?.time;
+            //         console.log("timeValue", timeValue);
+            //         return timeValue;
                   
-                },
-            },
+            //     },
+            // },
+           
 
               { title: "Status", field: "status", render: rowData => (
                 <div className={classes.statusButton}

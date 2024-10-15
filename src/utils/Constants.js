@@ -395,6 +395,10 @@ export const recharge_history_delete= 'admin/recharge/delete'
 
 //download CSV
 export const download_chat_history= 'admin/download/chat_history'
+export const download_call_history= 'admin/download/call_history'
+
+
+
 
  
 // International Prices

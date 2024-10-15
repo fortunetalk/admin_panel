@@ -19,7 +19,8 @@ import {
   delete_chat_history,
   delete_call_history,
   get_chat_message_details,
-  download_chat_history
+  download_chat_history,
+  download_call_history
 
 } from "../../utils/Constants";
 import { database, firestore } from "../../config/firbase";
@@ -598,6 +599,30 @@ function* getDownloadChatHistory(action) {
   }
 }
 
+function* getDownloadCallHistory(action) {
+  try {
+    const { payload } = action;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    const response = yield ApiRequest.postRequest({
+      url: api_url + download_call_history,
+      header: "json",
+      data: payload,
+    });
+
+    if (response?.success) {
+      yield put({
+        type: actionTypes.SET_DOWNLOAD_CALL_HISTORY,
+        payload: response?.data?.data || [],
+      });
+    }
+
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+  } catch (e) {
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+    console.log(e);
+  }
+}
+
 
 
 export default function* historySaga() {
@@ -617,4 +642,5 @@ export default function* historySaga() {
   yield takeLeading(actionTypes.CHANGE_LIVE_COURSE_HISTORY_STATUS, updateLiveCourseHistoryStatus)
   yield takeLeading(actionTypes.GET_REGISTER_LIVE_CLASS_HISTORY, getRegisterLiveClassHistory)
   yield takeLeading(actionTypes.GET_DOWNLOAD_CHAT_HISTORY, getDownloadChatHistory)
+  yield takeLeading(actionTypes.GET_DOWNLOAD_CALL_HISTORY, getDownloadCallHistory)
 }

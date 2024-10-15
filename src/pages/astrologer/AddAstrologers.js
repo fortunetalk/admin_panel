@@ -80,9 +80,6 @@ const languages = [
 
 const astrologerTypeList = ["Consultation", "Teaching", "Pandit", "All"];
 
-
-
-
 export const AddAstrologers = ({
   activeSkillsData,
   activeExpertiseData,
@@ -161,6 +158,9 @@ export const AddAstrologers = ({
   const [chatPrice, setChatPrice] = useState("");
   const [companyChatPrice, setCompanyChatPrice] = useState("");
   const [displayChatPrice, setDisplayChatPrice] = useState("");
+  const [displayCallPrice, setDisplayCallPrice] = useState("");
+  const [callPrice, setCallPrice] = useState("");
+  const [companyCallPrice, setCompanyCallPrice] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const toggleShowPassword = () => {
@@ -707,20 +707,19 @@ export const AddAstrologers = ({
     skills,
     expertise,
     remedies,
-    callPrice,
+    // callPrice,
+    // companyCallPrice,
     // chatPrice,
     // displayChatPrice,
     educationQualification,
     indiaDisplayPrice,
     astrologerCallPrice,
-    companyCallPrice,
     astrologerChatPrice,
     // companyChatPrice,
     liveVideoPrice,
     companyLiveVideoPrice,
     liveCallPrice,
     companyLiveCallPrice,
-
     astrologyQualification,
     gallery,
     astrologerType,
@@ -738,8 +737,6 @@ export const AddAstrologers = ({
     var formattedDate = previous16YearsDate.toISOString().split("T")[0];
     return formattedDate;
   };
-
-
 
   useEffect(() => {
     if (country) {
@@ -768,6 +765,121 @@ export const AddAstrologers = ({
 
 
 
+  // const handleChange = (name, value) => {
+  //   switch (name) {
+  //     case "exclusive":
+  //       setExclusive(value);
+  //       setExclusiveOne(""); // Reset exclusiveOne when exclusive changes
+  //       setExclusiveTwo(""); // Reset exclusiveTwo when exclusive changes
+  //       setChatPrice("");
+  //       setCompanyChatPrice("");
+  //       setCallPrice("");
+  //       setCompanyCallPrice("");
+  //       break;
+  //     case "exclusiveOne":
+  //       setExclusiveOne(value);
+  //       calculatePrices(value, displayChatPrice, "exclusive");
+  //       calculatePrices(value, displayCallPrice, "exclusive");
+  //       break;
+  //     case "exclusiveTwo":
+  //       setExclusiveTwo(value);
+  //       calculatePrices(value, displayChatPrice, "nonExclusive");
+  //       calculatePrices(value, displayCallPrice, "nonExclusive");
+  //       break;
+  //     case "displayChatPrice":
+  //       setDisplayChatPrice(value);
+  //       // Calculate prices for both exclusive and non-exclusive selections
+  //       calculatePrices(exclusiveOne, value, "exclusive");
+  //       calculatePrices(exclusiveTwo, value, "nonExclusive");
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // };
+  
+  // const calculatePrices = (selection, displayPrice, type) => {
+  //   const displayValue = parseFloat(displayPrice);
+  //   if (!isNaN(displayValue) && selection) {
+  //     let percentage;
+  //     if (type === "exclusive") {
+  //       percentage = selection === "fifty" ? 0.5 : 0.55;
+  //     } else if (type === "nonExclusive") {
+  //       percentage = selection === "fourty" ? 0.4 : 0.45;
+  //     }
+  //     if (percentage !== undefined) {
+  //       setChatPrice((displayValue * percentage).toFixed(2));
+  //       setCompanyChatPrice((displayValue * (1 - percentage)).toFixed(2));
+  //       setCallPrice((displayValue * percentage).toFixed(2));
+  //       setCompanyCallPrice((displayValue * (1 - percentage)).toFixed(2));
+  //     }
+  //   }
+  // };
+  
+
+  // const handleChange = (name, value) => {
+  //   switch (name) {
+  //     case "exclusive":
+  //       setExclusive(value);
+  //       setExclusiveOne(""); // Reset exclusiveOne when exclusive changes
+  //       setExclusiveTwo(""); // Reset exclusiveTwo when exclusive changes
+  //       setChatPrice("");
+  //       setCompanyChatPrice("");
+  //       setCallPrice("");
+  //       setCompanyCallPrice("");
+  //       break;
+  //     case "exclusiveOne":
+  //       setExclusiveOne(value);
+  //       calculatePrices(value, displayChatPrice, "exclusive");
+  //       // Update call prices based on the current displayCallPrice
+  //       calculatePrices(value, displayCallPrice, "exclusive");
+  //       break;
+  //     case "exclusiveTwo":
+  //       setExclusiveTwo(value);
+  //       calculatePrices(value, displayChatPrice, "nonExclusive");
+  //       // Update call prices based on the current displayCallPrice
+  //       calculatePrices(value, displayCallPrice, "nonExclusive");
+  //       break;
+  //     case "displayChatPrice":
+  //       setDisplayChatPrice(value);
+  //       // Calculate prices for both exclusive and non-exclusive selections
+  //       calculatePrices(exclusiveOne, value, "exclusive");
+  //       calculatePrices(exclusiveTwo, value, "nonExclusive");
+  //       break;
+  //     case "displayCallPrice":
+  //       setDisplayCallPrice(value);
+  //       // Calculate prices for both exclusive and non-exclusive selections
+  //       calculatePrices(exclusiveOne, value, "exclusive", true);
+  //       calculatePrices(exclusiveTwo, value, "nonExclusive", true);
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // };
+  
+  // const calculatePrices = (selection, displayPrice, type, isCallPrice = false) => {
+  //   const displayValue = parseFloat(displayPrice);
+  //   if (!isNaN(displayValue) && selection) {
+  //     let percentage;
+  //     if (type === "exclusive") {
+  //       percentage = selection === "fifty" ? 0.5 : 0.55;
+  //     } else if (type === "nonExclusive") {
+  //       percentage = selection === "fourty" ? 0.4 : 0.45;
+  //     }
+  //     if (percentage !== undefined) {
+  //       if (isCallPrice) {
+  //         // Update call prices
+  //         setCallPrice((displayValue * percentage).toFixed(2));
+  //         setCompanyCallPrice((displayValue * (1 - percentage)).toFixed(2));
+  //       } else {
+  //         // Update chat prices
+  //         setChatPrice((displayValue * percentage).toFixed(2));
+  //         setCompanyChatPrice((displayValue * (1 - percentage)).toFixed(2));
+  //       }
+  //     }
+  //   }
+  // };
+
+
   const handleChange = (name, value) => {
     switch (name) {
       case "exclusive":
@@ -776,14 +888,20 @@ export const AddAstrologers = ({
         setExclusiveTwo(""); // Reset exclusiveTwo when exclusive changes
         setChatPrice("");
         setCompanyChatPrice("");
+        setCallPrice("");
+        setCompanyCallPrice("");
         break;
       case "exclusiveOne":
         setExclusiveOne(value);
         calculatePrices(value, displayChatPrice, "exclusive");
+        // Update call prices based on the current displayCallPrice
+        calculatePrices(value, displayCallPrice, "exclusive", true);
         break;
       case "exclusiveTwo":
         setExclusiveTwo(value);
         calculatePrices(value, displayChatPrice, "nonExclusive");
+        // Update call prices based on the current displayCallPrice
+        calculatePrices(value, displayCallPrice, "nonExclusive", true);
         break;
       case "displayChatPrice":
         setDisplayChatPrice(value);
@@ -791,30 +909,42 @@ export const AddAstrologers = ({
         calculatePrices(exclusiveOne, value, "exclusive");
         calculatePrices(exclusiveTwo, value, "nonExclusive");
         break;
+      case "displayCallPrice":
+        setDisplayCallPrice(value);
+        // Calculate prices for both exclusive and non-exclusive selections
+        calculatePrices(exclusiveOne, value, "exclusive", true);
+        calculatePrices(exclusiveTwo, value, "nonExclusive", true);
+        break;
       default:
         break;
     }
   };
   
-  const calculatePrices = (selection, displayPrice, type) => {
+  const calculatePrices = (selection, displayPrice, type, isCallPrice = false) => {
     const displayValue = parseFloat(displayPrice);
     if (!isNaN(displayValue) && selection) {
       let percentage;
+      
       if (type === "exclusive") {
-        percentage = selection === "fifty" ? 0.5 : 0.55;
+        percentage = selection === "fifty" ? 0.5 : selection === "fiftyFive" ? 0.55 : undefined; // Adjusted for fiftyFive
       } else if (type === "nonExclusive") {
-        percentage = selection === "fourty" ? 0.4 : 0.45;
+        percentage = selection === "fourty" ? 0.4 : selection === "fortyFive" ? 0.45 : undefined; // Adjusted for fortyFive
       }
+      
       if (percentage !== undefined) {
-        setChatPrice((displayValue * percentage).toFixed(2));
-        setCompanyChatPrice((displayValue * (1 - percentage)).toFixed(2));
+        if (isCallPrice) {
+          // Update call prices
+          setCallPrice((displayValue * percentage).toFixed(2));
+          setCompanyCallPrice((displayValue * (1 - percentage)).toFixed(2));
+        } else {
+          // Update chat prices
+          setChatPrice((displayValue * percentage).toFixed(2));
+          setCompanyChatPrice((displayValue * (1 - percentage)).toFixed(2));
+        }
       }
     }
   };
   
-
-
-
 
   return (
     <>
@@ -1298,7 +1428,7 @@ export const AddAstrologers = ({
             </Grid>
 
      
-            <Grid item lg={4} sm={12} md={12} xs={12}>
+            <Grid item lg={6} sm={12} md={12} xs={12}>
               <TextField
                 type="text"
                 label="Educational Qualification"
@@ -1312,7 +1442,7 @@ export const AddAstrologers = ({
                 error={error.educationQualification ? true : false}
               />
             </Grid>
-            <Grid item lg={4} sm={12} md={12} xs={12}>
+            <Grid item lg={6} sm={12} md={12} xs={12}>
               <TextField
                 type="text"
                 label="Astrological Qualification"
@@ -1327,36 +1457,6 @@ export const AddAstrologers = ({
               />
             </Grid>
 
-            <Grid item lg={4} sm={12} md={12} xs={12}>
-              <TextField
-                type="number"
-                label="Call Price"
-                inputMode="numeric"
-                value={callPrice}
-                variant="outlined"
-                fullWidth
-                onChange={(e) => updateState({ callPrice: e.target.value })}
-                helperText={error.callPrice}
-                error={error.callPrice ? true : false}
-              />
-            </Grid>
-            <Grid item lg={4} sm={12} md={12} xs={12}>
-              <TextField
-                type="number"
-                label="Company Call Price"
-                inputMode="numeric"
-                value={companyCallPrice}
-                variant="outlined"
-                fullWidth
-                onChange={(e) =>
-                  updateState({ companyCallPrice: e.target.value })
-                }
-                helperText={error.companyCallPrice}
-                error={error.companyCallPrice ? true : false}
-              />
-            </Grid>
-
-       
             <Grid item lg={4} md={12} sm={12} xs={12}>
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">Type</InputLabel>
@@ -1470,8 +1570,43 @@ export const AddAstrologers = ({
           }}
         />
       </Grid>
+      <Grid item lg={4} sm={12} md={12} xs={12}>
+              <TextField
+                fullWidth
+                label="Display Call Price"
+                value={displayCallPrice}
+                onChange={(e) => handleChange("displayCallPrice", e.target.value)}
+              />
+            </Grid>
 
-
+            <Grid item lg={4} sm={12} md={12} xs={12}>
+              <TextField
+                type="number"
+                label="Call Price"
+                inputMode="numeric"
+                value={callPrice}
+                variant="outlined"
+                fullWidth
+                onChange={(e) => updateState({ callPrice: e.target.value })}
+                helperText={error.callPrice}
+                error={error.callPrice ? true : false}
+              />
+            </Grid>
+            <Grid item lg={4} sm={12} md={12} xs={12}>
+              <TextField
+                type="number"
+                label="Company Call Price"
+                inputMode="numeric"
+                value={companyCallPrice}
+                variant="outlined"
+                fullWidth
+                onChange={(e) =>
+                  updateState({ companyCallPrice: e.target.value })
+                }
+                helperText={error.companyCallPrice}
+                error={error.companyCallPrice ? true : false}
+              />
+            </Grid>
             <Grid item lg={4} sm={12} md={12} xs={12}>
               <TextField
                 type="number"
@@ -1530,16 +1665,7 @@ export const AddAstrologers = ({
                 error={error.companyLiveCallPrice ? true : false}
               />
             </Grid>
-            <Grid item lg={4} sm={12} md={12} xs={12}>
-              <TextField
-                fullWidth
-                label="Display Call Price"
-                value={callPriceInt + companyCallPriceInt}
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-            </Grid>
+           
 
             <Grid item lg={4} sm={12} md={12} xs={12}>
               <TextField

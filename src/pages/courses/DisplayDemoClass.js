@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { propStyles, useStyles } from "../../assets/styles.js";
 import { Avatar, Grid, TextField, FormControl, InputLabel, Select, MenuItem, Tooltip, CircularProgress, IconButton } from "@mui/material";
 import { AddCircleRounded, PictureAsPdf } from "@mui/icons-material";
@@ -14,6 +14,7 @@ import * as DemoClassActions from "../../redux/Actions/demoClassActions.js";
 import { connect } from "react-redux";
 import CloseIcon from '@mui/icons-material/Close'; // Import the close icon
 import moment from "moment";
+import { formatTimeFromDateString } from "../../utils/services.js";
 
 const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activeCourseData, }) => {
   const classes = useStyles();
@@ -43,6 +44,8 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
     dispatch(DemoClassActions.getDemoClassData());
     dispatch(AstrologerActions.getAllActiveAstrologer());
   }, []);
+  // const formattedTime = formatTimeFromDateString(item.time);
+  // const formattedTime = useMemo(()=>formatTimeFromDateString(item.time), [item?.time])
 
   // function fillCourseList() {
   //   return activeCourseData.map((item) => {
@@ -63,6 +66,11 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
   }
 
   const handleOpen = (rowData) => {
+    const date = new Date(rowData?.time);
+    const hours = date.getUTCHours().toString().padStart(2, '0');  // Get UTC hours and pad with 0 if needed
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0');  // Get UTC minutes and pad with 0 if needed
+    const timeInUTC = `${hours}:${minutes}`;
+
     setOpen(true);
     const formattedDate = new Date(rowData?.date).toISOString().split("T")[0];
     setDate(formattedDate);
@@ -74,7 +82,7 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
     setDescription(rowData?.description);
     setLearn(rowData?.learn);
     setCourseContent(rowData?.courseContent);
-    setTime ( moment (rowData?.time).format("HH:mm"));
+    setTime (timeInUTC);
     setSessionTime(rowData?.sessionTime);
     setGoogleMeet(rowData?.googleMeet);
     setIcon({ file: rowData?.image, bytes: null });
@@ -83,6 +91,10 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
   };
 
   const handleView = (rowData) => {
+    const date = new Date(rowData?.time);
+    const hours = date.getUTCHours().toString().padStart(2, '0');  // Get UTC hours and pad with 0 if needed
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0');  // Get UTC minutes and pad with 0 if needed
+    const timeInUTC = `${hours}:${minutes}`;
     setViewData(true);
     const formattedDate = new Date(rowData?.date).toISOString().split("T")[0];
     setDate(formattedDate);
@@ -94,7 +106,8 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
     setDescription(rowData?.description);
     setLearn(rowData?.learn);
     setCourseContent(rowData?.courseContent);
-    setTime ( moment (rowData?.time).format("HH:mm:ss:A"));
+    // setTime ( moment (rowData?.time).format("HH:mm:ss:A"));
+    setTime (timeInUTC);
     setSessionTime(rowData?.sessionTime);
     setGoogleMeet(rowData?.googleMeet);
     setIcon(rowData?.image);
@@ -307,7 +320,7 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
                 title: "Time",
                 field: "time",
                 render: (rowData) => {
-                  return moment(rowData.time).format('hh:mm A'); // Outputs: 04:30 PM
+                  return formatTimeFromDateString(rowData.time); // Outputs: 04:30 PM
               },
               },
 

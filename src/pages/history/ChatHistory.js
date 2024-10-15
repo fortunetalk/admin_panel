@@ -68,7 +68,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
   const [singleDate, setSingleDate] = useState(""); // State for single date
   const [startDate, setStartDate] = useState(""); // State for start date
   const [endDate, setEndDate] = useState(""); // State for end date
-
+  const [isLoading, setIsLoading] = useState(false);
 
 
   const handleView = (rowData) => {
@@ -285,11 +285,24 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
                   return Number(rowData.deductedAmount).toFixed(2); // or just return rowData.deductedAmount
                 },
               },
+              // {
+              //   title: "Duration",
+              //   field: "durationInSeconds",
+              //   filtering: false,
+              // },
               {
                 title: "Duration",
                 field: "durationInSeconds",
                 filtering: false,
-              },
+                render: (rowData) => {
+                    const duration = moment.duration(rowData.durationInSeconds, 'seconds');
+                    const hours = Math.floor(duration.asHours());
+                    const minutes = duration.minutes();
+                    const seconds = duration.seconds();
+            
+                    return `${minutes}m : ${seconds}s`;
+                },
+            },
               {
                 title: "Request Time",
                 field: "createdAt",
@@ -786,7 +799,8 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
 
           <Grid item lg={4} sm={6} md={6} xs={6}>
             <div onClick={handleGet} className={classes.submitbutton}>
-              Submit
+            {isLoading ? <CircularProgress size={24} /> : " Submit"}
+              {/* Submit */}
             </div>
           </Grid>
           {csvData && (
@@ -794,7 +808,9 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
               {/* <div onClick={handleDownload} className={classes.submitbutton}>
             Download
           </div> */}
-              <CSVLink className={classes.submitbutton} data={csvData}>Download </CSVLink>;
+          <div  className={classes.submitbutton}>
+              <CSVLink style={{color:'white', }} data={csvData} >Download</CSVLink>
+              </div>
             </Grid>
           )}
           <Grid item lg={4} sm={6} md={6} xs={6}>
@@ -821,6 +837,7 @@ const mapStateToProps = (state) => ({
   chatHistoryData: state.history.chatHistoryData || [], // Default to empty array
   chatHistoryApiPayload: state.history.chatHistoryApiPayload, // Default to empty array
   csvData: state.history.csvData,
+  isLoading: state.astrologer.isLoading,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

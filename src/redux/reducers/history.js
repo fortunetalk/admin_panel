@@ -12,6 +12,7 @@ const initialState = {
   liveCourseHistoryData:null,
   registerLiveClassHistoryData: null,
   csvData: null,
+  csvCallData: null,
   isLoading: false,
 
 };
@@ -144,6 +145,12 @@ const history = (state = initialState, actions) => {
       return {
         ...state,
         csvData: payload,
+      };
+    }
+    case actionTypes.SET_DOWNLOAD_CALL_HISTORY: {
+      return {
+        ...state,
+        csvCallData: payload,
       };
     }
 

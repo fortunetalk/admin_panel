@@ -218,8 +218,8 @@ const ListAstrology = ({ astrologerListData }) => {
                 title: "Status",
                 field: "status",
                 lookup: {
-                  ACTIVE: "Active",
-                  BLOCK: "Blocked",
+                  Active: "Active",
+                  Blocked: "Blocked",
                 },
                 render: (rowData) => (
                   <div
@@ -239,9 +239,9 @@ const ListAstrology = ({ astrologerListData }) => {
                 title: "Call",
                 field: "callStatus",
                 lookup: {
-                  ONLINE: "Online",
-                  OFFLINE: "Offline",
-                  BUSY: "Busy",
+                  Online: "Online",
+                  Offline: "Offline",
+                  Busy: "Busy",
                 },
                 render: (rowData) => (
                   <div
@@ -265,9 +265,9 @@ const ListAstrology = ({ astrologerListData }) => {
                 title: "Chat",
                 field: "chatStatus",
                 lookup: {
-                  ONLINE: "Online",
-                  OFFLINE: "Offline",
-                  BUSY: "Busy",
+                  Online: "Online",
+                  Offline: "Offline",
+                  Busy: "Busy",
                 },
                 render: (rowData) => (
                   <div

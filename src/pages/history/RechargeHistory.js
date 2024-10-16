@@ -156,12 +156,13 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                             // },
                             {
                                 title: "TransactionType",
-                                filtering: false,
+                                field: "transactionType",
+                                lookup: { credited: "Credited", nonCredited: "Non-Credited", },
+                                filtering: true,
                                 render: (rowData) => {
                                     const transactionType = rowData?.transactionType;
                                     const text = transactionType === "DEBIT" ? 'Deducted' : 'Credited';
                                     const color = transactionType === "CREDIT" ? 'green' : 'red';
-                            
                                     return (
                                         <span style={{ color }}>
                                             {text}

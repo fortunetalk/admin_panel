@@ -180,7 +180,7 @@ const DisplayCallDiscussion = ({ dispatch, calllDiscussionData, isLoading }) => 
         <Grid container spacing={2}>
           <Grid item lg={12} sm={12} md={12} xs={12}>
             <div className={classes.headingContainer}>
-              <div className={classes.heading}>Edit Gift</div>
+              <div className={classes.heading}>Edit Call Discussion</div>
               <div onClick={handleClose} className={classes.closeButton}>
                 <CloseRounded />
               </div>

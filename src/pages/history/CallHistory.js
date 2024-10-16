@@ -372,33 +372,45 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
                 field: "callConcernFromAdmin",
                 filtering: false,
               },
-              // { title: "Status", field: "status" },
-
-              // {
-              //   title: "Status",
-              //   render: (rowData) => {
-              //     const statusMap = {
-              //       TIMEOUT: "MISSED",
-              //       REJECTED: "REJECTED",
-              //       CANCELLED: "CANCELLED",
-              //       COMPLETED: "COMPLETED"
-              //     };
-
-              //     return statusMap[rowData?.status] || "UNKNOWN"; // Provide a default value if status is not found
-              //   }
-              // },
+            
               {
                 title: "Status",
                 field: "status",
                 lookup: {
-                  COMPLETED: "COMPLETED",
-                  REJECTED: "REJECTED",
-                  ACCEPTED: "ACCEPTED",
-                  CREATED: "CREATED",
-                  ONGOING: "ON GOING",
-                  CANCELLED: "CANCELLED",
+                    COMPLETED: "COMPLETED",
+                    REJECTED: "REJECTED",
+                    ACCEPTED: "ACCEPTED",
+                    CREATED: "CREATED",
+                    ONGOING: "ON GOING",
+                    CANCELLED: "CANCELLED",
                 },
-              },
+                render: (rowData) => {
+                    const status = rowData?.status;
+                    let color;
+            
+                    switch (status) {
+                        case "ONGOING":
+                            color = 'green';
+                            break;
+                        case "REJECTED":
+                        case "CANCELLED":
+                            color = 'red';
+                            break;
+                        case "COMPLETED":
+                            color = 'purple';
+                            break;
+                        default:
+                            color = 'black'; // Default color for other statuses
+                            break;
+                    }
+            
+                    return (
+                        <span style={{ color }}>
+                            {status}
+                        </span>
+                    );
+                }
+            },
             ]}
             // data={reverseData}
 

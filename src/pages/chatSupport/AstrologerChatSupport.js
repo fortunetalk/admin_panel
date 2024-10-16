@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { Grid, Button } from "@mui/material";
 // import { MessageList, ChatList, Input } from "react-chat-elements";
 import '../chatSupport/chatsupport.css';
-import { GiftedChat } from 'react-web-gifted-chat';
 import { Avatar, ChatContainer, Conversation, ConversationHeader, ConversationList, InfoButton, MainContainer, Message, MessageInput, MessageList, MessageSeparator, TypingIndicator, VideoCallButton, VoiceCallButton } from "@chatscope/chat-ui-kit-react";
 import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { useStyles } from "../../assets/styles.js";
@@ -95,11 +94,6 @@ const AstrologerChatSupport = () => {
             // Add your logic to send the message
             setInputValue(''); 
         }
-    };
-    const onSend = (message) => {
-        setMessages(preState => {
-            return GiftedChat.append(preState, message)
-        });
     };
 
     return (

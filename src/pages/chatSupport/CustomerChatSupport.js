@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { Grid, Button } from "@mui/material";
 // import { MessageList, ChatList, Input } from "react-chat-elements";
 import '../chatSupport/chatsupport.css';
-import { GiftedChat } from 'react-web-gifted-chat';
 import { Avatar, ChatContainer, Conversation, ConversationHeader, ConversationList, InfoButton, MainContainer, Message, MessageInput, MessageList, MessageSeparator, TypingIndicator, VideoCallButton, VoiceCallButton } from "@chatscope/chat-ui-kit-react";
 
 import { useStyles } from "../../assets/styles.js";

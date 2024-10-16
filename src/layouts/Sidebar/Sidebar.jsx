@@ -24,6 +24,11 @@ const routes = [
     icon: <FaHome />,
   },
   {
+    path: "/display-sub-admin",
+    name: "Sub Admin",
+    icon: <FaHome />,
+  },
+  {
     path: "/astrologers",
     name: "Astrologers",
     icon: <BiUser />,

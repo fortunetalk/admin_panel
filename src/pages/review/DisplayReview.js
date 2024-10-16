@@ -160,8 +160,8 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
               { title: "User Phone no.", field: "phoneNumber", filtering: false },
               // { title: "Astrologer Name", field: "astrologerName", filtering: false },
               { title: "Comments", field: "comments", filtering: false },
-              { title: "Description", field: "description", filtering: false },
-              { title: "Review Type", field: "reviewFor", filtering: false },
+              // { title: "Description", field: "description", filtering: false },
+              // { title: "Review Type", field: "reviewFor", filtering: false },
               {
                 title: "Rating", field: "rating", filtering: true,
                 lookup: { 1: "1", 2: "2", 3: "3", 4: "4", 5: "5" },
@@ -295,7 +295,7 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
               helperText={error.comment}
             />
           </Grid>
-          <Grid item lg={12} sm={6} md={6} xs={6}>
+          {/* <Grid item lg={12} sm={6} md={6} xs={6}>
             <TextField
               id="outlined-multiline-static"
               label="Description"
@@ -320,7 +320,7 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
               error={error.reviewFor ? true : false}
               helperText={error.reviewFor}
             />
-          </Grid>
+          </Grid> */}
 
           <Grid item lg={6} sm={6} md={6} xs={6}>
             <div onClick={handleSubmit} className={classes.submitbutton}>

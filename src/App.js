@@ -147,6 +147,9 @@ import WaitingListHistory from "./pages/waitingList/WaitingListHistory";
 import Earning from "./pages/adminEarning/earning";
 import InternationalPricing from "./pages/international/pricing/InternationalPricing";
 import AddInternationalPricing from "./pages/international/pricing/AddInternationalPricing";
+import AddSubAdmin from "./pages/subAdmin/AddSubAdmin";
+import DisplaySubAdmin from "./pages/subAdmin/DisplaySubAdmin";
+
 
 
 function App() {
@@ -156,6 +159,8 @@ function App() {
         <Route path="/" exact element={<PrivateRoute />}>
           <Route index element={<Dashboard />} />
           <Route path="*" element={<> Not Ready</>} />
+          <Route path="/add-sub-admin" element={<AddSubAdmin />} />
+          <Route path="/display-sub-admin" element={<DisplaySubAdmin />} />
           <Route path="/addSkills" element={<AddSkills />} />
           <Route path="/displaySkills" element={<DisplaySkills />} />
           <Route path="/addSubSkills" element={<AddSubSkills />} />

@@ -683,6 +683,39 @@ function* updateAstrologerBankImage(actions) {
     // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
   }
 }
+function* updateAstrologerIdProofImage(actions) {
+  try {
+    const { payload } = actions;
+    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
+    const response = yield call(ApiRequest.postRequest, {
+      url: api_url + update_astrologer_id_image,
+      headers: { 'Content-Type': 'multipart/form-data' },
+      data: payload,
+    });
+
+    if (response.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Image Updated Successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Failed to update Image",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  } finally {
+    // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
+  }
+}
 function* updateAstrologerGalleryImage(actions) {
   try {
     const { payload } = actions;
@@ -820,6 +853,10 @@ export default function* astrologerSaga() {
   yield takeLeading(
     actionTypes.UPDATE_ASTROLOGER_BANK_PROOF_IMAGE,
     updateAstrologerBankImage
+  );
+  yield takeLeading(
+    actionTypes.UPDATE_ASTROLOGER_ID_PROOF_IMAGE,
+    updateAstrologerIdProofImage
   );
   yield takeLeading(
     actionTypes.UPDATE_ASTROLOGER_GALLERY_IMAGE,

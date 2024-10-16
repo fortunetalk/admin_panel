@@ -127,6 +127,7 @@ export const EditAstrologer = ({
     currencyType: "",
     gender: "",
     password: "",
+    plainPassword: "",
     dateOfBirth: "",
     experience: "",
     phoneCode: "",
@@ -217,6 +218,7 @@ export const EditAstrologer = ({
         currencyType: astrologerData?.currencyType,
         gender: astrologerData?.gender,
         password: astrologerData?.password,
+        plainPassword: astrologerData?.plainPassword,
         //  dateOfBirth: astrologerData?.moment ? astrologerData.moment(dateOfBirth).format("DD-MM-YYYY") : dateOfBirth,
         dateOfBirth: astrologerData?.dateOfBirth,
         experience: astrologerData?.experience,
@@ -484,6 +486,7 @@ export const EditAstrologer = ({
         name,
         email,
         password,
+        plainPassword,
         phoneNumber,
         phoneCode,
         gender,
@@ -539,6 +542,7 @@ export const EditAstrologer = ({
       currencyType: "",
       gender: "",
       password: "",
+      plainPassword: "",
       dateOfBirth: "",
       experience: "",
       phoneCode: "",
@@ -719,6 +723,14 @@ export const EditAstrologer = ({
     dispatch(AstrologerActions.updateAstrologerBankProofImage(formData));
   };
 
+  const handleUploadIdProofImage = () => {
+    const formData = new FormData();
+    formData.append("astrologerId", astrologerId);
+    formData.append("image", idProof.bytes);
+
+    dispatch(AstrologerActions.updateAstrologerIdProofImage(formData));
+  };
+
   const handleUploadGalleryImages = () => {
     const formData = new FormData();
     formData.append("astrologerId", astrologerId);
@@ -791,6 +803,7 @@ export const EditAstrologer = ({
     currencyType,
     gender,
     password,
+    plainPassword,
     dateOfBirth,
     experience,
     phoneCode,
@@ -1608,10 +1621,10 @@ export const EditAstrologer = ({
           </Grid>
           <Grid
             item
-            lg={3}
-            sm={3}
-            md={3}
-            xs={3}
+            lg={2}
+            sm={2}
+            md={2}
+            xs={2}
             className={classes.uploadContainer}
           >
             <Grid
@@ -1628,6 +1641,16 @@ export const EditAstrologer = ({
               />
             </Grid>
           </Grid>
+          <Grid item lg={1} sm={1} md={1} xs={1}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleUploadIdProofImage}
+            >
+              Update Image
+            </Button>
+          </Grid>
+
           <Grid item lg={1} sm={1} md={1} xs={1}>
             <Avatar
               color={Colors.primaryDark}
@@ -1891,13 +1914,13 @@ export const EditAstrologer = ({
       <TextField
         label="Password"
         type={showPassword ? 'text' : 'password'}
-        value={password}
+        value={plainPassword}
         variant="outlined"
         fullWidth
-        onFocus={() => handleError("password", null)}
-        onChange={(e) => updateState({ password: e.target.value })}
-        helperText={error?.password}
-        error={!!error?.password}
+        onFocus={() => handleError("plainPassword", null)}
+        onChange={(e) => updateState({ plainPassword: e.target.value })}
+        helperText={error?.plainPassword}
+        error={!!error?.plainPassword}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">

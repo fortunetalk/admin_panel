@@ -30,6 +30,7 @@ import moment from "moment";
 import { api_url, get_chat_history } from "../../utils/Constants.js";
 import { CSVLink, CSVDownload } from "react-csv";
 import DownloadIcon from '@mui/icons-material/Download';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 
 const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData }) => {
@@ -62,7 +63,9 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
     chatId: "",
   });
   const [showModal, setShowModal] = useState(false);
+  const [searchDateModal, setSearchDateModal] = useState(false);
   const [searchType, setSearchType] = useState("");
+  const [searchData, setSearchData] = useState(null);
   const [isCustomSelected, setIsCustomSelected] = useState(false);
   const [customSelection, setCustomSelection] = useState(""); // State for custom dropdown selection
   const [singleDate, setSingleDate] = useState(""); // State for single date
@@ -70,9 +73,9 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
   const [endDate, setEndDate] = useState(""); // State for end date
   const [reviewData, setReviewData] = useState({
     chatReviewFromAdmin: '',
-    chatConcernFromAdmin:'',
+    chatConcernFromAdmin: '',
     chatHistoryId: ''
-    
+
   }); // State for end date
   const [isLoading, setIsLoading] = useState(false);
 
@@ -118,9 +121,13 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
       chatConcernFromAdmin: rowData?.chatConcernFromAdmin || "",
     });
   };
-  
+
   const openDownloadModal = () => {
     setShowModal(true);
+  };
+
+  const openSearchDateModal = () => {
+    setSearchDateModal(true);
   };
 
   function transformTransactionId(transactionId) {
@@ -132,6 +139,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
     setViewData(false);
     setShowModal(false);
     setReview(false);
+    setSearchDateModal(false);
   };
 
   const handleFirstDropdownChange = (event) => {
@@ -183,15 +191,71 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
 
   };
 
-  const handleUpdateReview = () => {
-    console.log("hiii handleUpdateReview",reviewData)
+  // const handleDateSearch = () => {
+  //   try {
+  //     if (!searchType) {
+  //       alert("Please select a search type."); // You can replace this with a more user-friendly notification
+  //       return; // Prevent further execution if searchType is not selected
+  //     }
+
+  //     let searchDate = '';
+
+  //     if (singleDate) {
+  //       searchDate = singleDate; // Only send singleDate
+  //     } else if (startDate && endDate) {
+  //       searchDate = `${startDate},${endDate}`; // Send startDate and endDate
+  //     }
+
+  //     const searchData = {
+  //       searchType: searchType,
+  //       searchDate: searchDate // This will be an empty string if neither condition is met
+  //     };
+
+  //     console.log("searchData", searchData);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+
+  // };
+
+  const handleDateSearch = () => {
     try {
-      dispatch(HistoryActions.updateAdminChatReview({reviewData, onRefreshTable }));
+      if (!searchType) {
+        alert("Please select a search type.");
+        return;
+      }
+
+      let searchDate = '';
+
+      if (singleDate) {
+        searchDate = singleDate; // Only send singleDate
+      } else if (startDate && endDate) {
+        searchDate = `${startDate},${endDate}`; // Send startDate and endDate
+      }
+
+      const searchData = {
+        searchType: searchType,
+        searchDate: searchDate
+      };
+
+      setSearchData(searchData); // Store searchData in state
+      console.log("searchData", searchData);
+      // Optionally, close the modal here
+      handleClose();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleUpdateReview = () => {
+    console.log("hiii handleUpdateReview", reviewData)
+    try {
+      dispatch(HistoryActions.updateAdminChatReview({ reviewData, onRefreshTable }));
       setReview(false);
     } catch (e) {
       console.log(e);
     }
-    
+
 
   };
 
@@ -212,6 +276,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
         {editModal()}
         {downloadModal()}
         {reviewModal()}
+        {searchByDateModal()}
       </div>
     </div>
   );
@@ -226,33 +291,34 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
 
             title={
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <span
-                style={{
-                  fontWeight: "500",
-                  fontSize: "25px",
-                  marginRight: "20px", // This adds space to the right of the title
-                }}
-              >
-                Chat History
-              </span>
-              <button
-                style={{
-                  padding: "8px 16px",
-                  backgroundColor: "#10395D",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  marginLeft: "20px", // This adds space to the left of the button
-                  display: "flex",
-                  alignItems: "center", // Center the icon and text vertically
-                }}
-                onClick={openDownloadModal}
-              >
-                <DownloadIcon style={{ marginRight: "8px", color: "white" }} /> {/* Add icon here */}
-                Download CSV
-              </button>
-            </div>
+                <span
+                  style={{
+                    fontWeight: "500",
+                    fontSize: "25px",
+                    marginRight: "20px", // This adds space to the right of the title
+                  }}
+                >
+                  Chat History
+                </span>
+                <button
+                  style={{
+                    padding: "8px 16px",
+                    backgroundColor: "#10395D",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                    marginLeft: "20px", // This adds space to the left of the button
+                    display: "flex",
+                    alignItems: "center", // Center the icon and text vertically
+                  }}
+                  onClick={openDownloadModal}
+                >
+                  <DownloadIcon style={{ marginRight: "8px", color: "white" }} /> {/* Add icon here */}
+                  Download CSV
+                </button>
+
+              </div>
             }
 
             columns={[
@@ -321,14 +387,14 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
                 field: "durationInSeconds",
                 filtering: false,
                 render: (rowData) => {
-                    const duration = moment.duration(rowData.durationInSeconds, 'seconds');
-                    const hours = Math.floor(duration.asHours());
-                    const minutes = duration.minutes();
-                    const seconds = duration.seconds();
-            
-                    return `${minutes}m : ${seconds}s`;
+                  const duration = moment.duration(rowData.durationInSeconds, 'seconds');
+                  const hours = Math.floor(duration.asHours());
+                  const minutes = duration.minutes();
+                  const seconds = duration.seconds();
+
+                  return `${minutes}m : ${seconds}s`;
                 },
-            },
+              },
               {
                 title: "Request Time",
                 field: "createdAt",
@@ -344,7 +410,30 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
               {
                 title: "Start Time",
                 field: "startTime",
-                filtering: false,
+                filtering: true,
+                filterComponent: (props) => {
+                  console.log(props)
+                  return (
+                    <button
+                      style={{
+                        padding: "8px 16px",
+                        backgroundColor: "#10395D",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                        marginLeft: "20px", // This adds space to the left of the button
+                        display: "flex",
+                        alignItems: "center", // Center the icon and text vertically
+                      }}
+                      onClick={openSearchDateModal}
+                    >
+
+                      <CalendarTodayIcon style={{ marginRight: "8px", color: "white" }} />
+                      Filter
+                    </button>
+                  )
+                },
                 render: (rowData) => (
                   <div>
                     {rowData?.startTime
@@ -378,10 +467,24 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
                 field: "chatConcernFromAdmin",
                 filtering: false,
               },
+              // {
+              //   title: "Status",
+              //   field: "status",
+              //   // defaultFilter: chatHistoryApiPayload?.filters?.status ? [chatHistoryApiPayload?.filters?.status] : [],
+              //   lookup: {
+              //     COMPLETED: "COMPLETED",
+              //     REJECTED: "REJECTED",
+              //     ACCEPTED: "ACCEPTED",
+              //     CREATED: "CREATED",
+              //     ONGOING: "ON GOING",
+              //     TIMEOUT: "MISSED",
+              //     CUSTOMER_NOT_AVAILABLE: "CUSTOMER NOT AVAILABLE",
+              //   },
+              // },
+
               {
                 title: "Status",
                 field: "status",
-                // defaultFilter: chatHistoryApiPayload?.filters?.status ? [chatHistoryApiPayload?.filters?.status] : [],
                 lookup: {
                   COMPLETED: "COMPLETED",
                   REJECTED: "REJECTED",
@@ -391,6 +494,32 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
                   TIMEOUT: "MISSED",
                   CUSTOMER_NOT_AVAILABLE: "CUSTOMER NOT AVAILABLE",
                 },
+                render: (rowData) => {
+                  const status = rowData?.status;
+                  let color;
+
+                  switch (status) {
+                    case "ONGOING":
+                      color = 'green';
+                      break;
+                    case "REJECTED":
+                    case "CANCELLED":
+                      color = 'red';
+                      break;
+                    case "COMPLETED":
+                      color = 'purple';
+                      break;
+                    default:
+                      color = 'black'; // Default color for other statuses
+                      break;
+                  }
+
+                  return (
+                    <span style={{ color }}>
+                      {status}
+                    </span>
+                  );
+                }
               },
               {
                 title: "View Chat History",
@@ -407,6 +536,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
                 ),
               },
             ]}
+
             data={(query) =>
               new Promise((resolve, reject) => {
                 let filters = {};
@@ -506,6 +636,43 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
                   .catch((error) => reject(error));
               })
             }
+
+            // data={(query) =>
+            //   new Promise((resolve, reject) => {
+            //     let filters = {};
+            //     query.filters.forEach((item) => {
+            //       if (item.value.length > 0) {
+            //         filters[item.column.field] = item.value[0];
+            //       }
+            //     });
+
+            //     // Include the searchData in your API call
+            //     const search = searchData ? searchData.searchDate : query.search;
+
+            //     fetch(api_url + get_chat_history, {
+            //       method: "POST",
+            //       headers: {
+            //         "Content-Type": "application/json",
+            //       },
+            //       body: JSON.stringify({
+            //         page: query.page + 1,
+            //         limit: query.pageSize,
+            //         ...filters,
+            //         search: search,
+            //       }),
+            //     })
+            //       .then((response) => response.json())
+            //       .then((result) => {
+            //         resolve({
+            //           data: result?.data?.data,
+            //           page: result?.data?.pagination?.currentPage - 1,
+            //           totalCount: result?.data?.pagination?.totalCount,
+            //         });
+            //       })
+            //       .catch((error) => reject(error));
+            //   })
+            // }
+
             options={{
               ...propStyles.tableStyles,
               paging: true,
@@ -812,6 +979,126 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
               <Grid item lg={6} sm={12} md={6} xs={12}>
                 <TextField
                   type="date"
+                   label="From"
+                  value={startDate}
+                  variant="outlined"
+                  fullWidth
+                  onChange={(event) => setStartDate(event.target.value)}
+                  inputProps={{
+                    min: '1900-01-01', // Set a minimum date as needed
+                    max: new Date().toISOString().split("T")[0], // Prevent future date selection
+                  }}
+                  InputLabelProps={{
+                    shrink: true, // This keeps the label at the top
+                }}
+                />
+              </Grid>
+              <Grid item lg={6} sm={12} md={6} xs={12}>
+                <TextField
+                  type="date"
+                  label="To"
+                  value={endDate}
+                  variant="outlined"
+                  fullWidth
+                  onChange={(event) => setEndDate(event.target.value)}
+                  inputProps={{
+                    min: '1900-01-01', // Set a minimum date as needed
+                    max: new Date().toISOString().split("T")[0], // Prevent future date selection
+                  }}
+                  InputLabelProps={{
+                    shrink: true, // This keeps the label at the top
+                }}
+                />
+              </Grid>
+            </>
+          )}
+
+          <Grid item lg={4} sm={6} md={6} xs={6}>
+            <div onClick={handleGet} className={classes.submitbutton}>
+              {isLoading ? <CircularProgress size={24} /> : " Submit"}
+              {/* Submit */}
+            </div>
+          </Grid>
+          {csvData && (
+            <Grid item lg={4} sm={6} md={6} xs={6}>
+              <div className={classes.submitbutton}>
+                <CSVLink style={{ color: 'white', }} data={csvData} >Download</CSVLink>
+              </div>
+            </Grid>
+          )}
+          <Grid item lg={4} sm={6} md={6} xs={6}>
+            <div onClick={handleClose} className={classes.denyButton}>
+              Cancel
+            </div>
+          </Grid>
+        </Grid>
+      );
+    };
+
+    return (
+      <div>
+        <Dialog open={showModal}>
+          <DialogContent>{showDownloadForm()}</DialogContent>
+        </Dialog>
+      </div>
+    );
+  }
+
+  function searchByDateModal() {
+
+    const searchDateform = () => {
+      return (
+
+        <Grid container spacing={2}>
+          <Grid item lg={12} sm={12} md={12} xs={12}>
+            <div className={classes.headingContainer}>
+              <div className={classes.heading}>Search By Date </div>
+              <div onClick={handleClose} className={classes.closeButton}>
+                <CloseRounded />
+              </div>
+            </div>
+          </Grid>
+
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <FormControl fullWidth>
+              <InputLabel id="first-dropdown-label">CSV Download</InputLabel>
+              <Select
+                labelId="first-dropdown-label"
+                id="first-dropdown"
+                value={searchType}
+                onChange={handleFirstDropdownChange}
+              >
+                <MenuItem disabled value="">
+                  -Select Option-
+                </MenuItem>
+                {/* <MenuItem value="Custom">Custom</MenuItem> */}
+                <MenuItem value="Single">Single</MenuItem>
+                <MenuItem value="Between">Between</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+
+          {searchType === "Single" && (
+            <Grid item lg={12} sm={12} md={6} xs={12}>
+              <TextField
+                type="date"
+                value={singleDate}
+                variant="outlined"
+                fullWidth
+                onChange={(event) => setSingleDate(event.target.value)}
+                inputProps={{
+                  min: '1900-01-01', // Set a minimum date as needed
+                  max: new Date().toISOString().split("T")[0], // Prevent future date selection
+                }}
+              />
+            </Grid>
+          )}
+
+          {searchType === "Between" && (
+            <>
+              <Grid item lg={6} sm={12} md={6} xs={12}>
+                <TextField
+                  type="date"
                   value={startDate}
                   variant="outlined"
                   fullWidth
@@ -838,23 +1125,14 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
             </>
           )}
 
-          <Grid item lg={4} sm={6} md={6} xs={6}>
-            <div onClick={handleGet} className={classes.submitbutton}>
-            {isLoading ? <CircularProgress size={24} /> : " Submit"}
+          <Grid item lg={6} sm={6} md={6} xs={6}>
+            <div onClick={handleDateSearch} className={classes.submitbutton}>
+              {isLoading ? <CircularProgress size={24} /> : " Submit"}
               {/* Submit */}
             </div>
           </Grid>
-          {csvData && (
-            <Grid item lg={4} sm={6} md={6} xs={6}>
-              {/* <div onClick={handleDownload} className={classes.submitbutton}>
-            Download
-          </div> */}
-          <div  className={classes.submitbutton}>
-              <CSVLink style={{color:'white', }} data={csvData} >Download</CSVLink>
-              </div>
-            </Grid>
-          )}
-          <Grid item lg={4} sm={6} md={6} xs={6}>
+
+          <Grid item lg={6} sm={6} md={6} xs={6}>
             <div onClick={handleClose} className={classes.denyButton}>
               Cancel
             </div>
@@ -865,8 +1143,8 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
 
     return (
       <div>
-        <Dialog open={showModal}>
-          <DialogContent>{showDownloadForm()}</DialogContent>
+        <Dialog open={searchDateModal}>
+          <DialogContent>{searchDateform()}</DialogContent>
         </Dialog>
       </div>
     );
@@ -894,11 +1172,11 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
                 labelId="first-dropdown-label"
                 id="first-dropdown"
                 value={reviewData?.chatReviewFromAdmin}
-                onChange={(event) => setReviewData(prev=>{
-                  const updatedData = {...prev};
+                onChange={(event) => setReviewData(prev => {
+                  const updatedData = { ...prev };
                   updatedData.chatReviewFromAdmin = event.target.value;
                   return updatedData;
-                })} 
+                })}
               >
                 <MenuItem disabled value="">
                   -Select Option-
@@ -916,11 +1194,11 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
                 labelId="first-dropdown-label"
                 id="first-dropdown"
                 value={reviewData?.chatConcernFromAdmin}
-                onChange={(event) => setReviewData(prev=>{
-                  const updatedData = {...prev};
+                onChange={(event) => setReviewData(prev => {
+                  const updatedData = { ...prev };
                   updatedData.chatConcernFromAdmin = event.target.value;
                   return updatedData;
-                })} 
+                })}
               >
                 <MenuItem disabled value="">
                   -Select Option-
@@ -936,7 +1214,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
 
           <Grid item lg={6} sm={6} md={6} xs={6}>
             <div onClick={handleUpdateReview} className={classes.submitbutton}>
-            {/* {isLoading ? <CircularProgress size={24} /> : " Submit"} */}
+              {/* {isLoading ? <CircularProgress size={24} /> : " Submit"} */}
               Submit
             </div>
           </Grid>

@@ -27,9 +27,6 @@ class _ApiRequest {
   }) => {
     try {
 
-      console.log('header',header)
-      console.log('data',data)
-
     const response = await axios({
       method: "post",
       url: url,
@@ -41,12 +38,14 @@ class _ApiRequest {
     });
     return response.data;
     } catch (e) {
+      
       if (e.response && e.response.data) {
+        console.log(e)
         const errorMessage = extractErrorMessage(e.response.data);
         Swal.fire({
           icon: "error",
           title: "Server Error",
-          text: errorMessage,
+          text: e?.response?.data?.message,
           showConfirmButton: false,
           timer: 5000,
         });

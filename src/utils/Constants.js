@@ -1,14 +1,14 @@
 // Production Server
-export const base_url = "http://97.74.83.200:4000/";
-export const api_url = "http://97.74.83.200:4000/api/";
+// export const base_url = "http://97.74.83.200:4000/";
+// export const api_url = "http://97.74.83.200:4000/api/";
 
 // Testing Server
 // export const base_url = "http://97.74.83.200:8000/";
 // export const api_url = "http://97.74.83.200:8000/api/";
 
 // Local Server
-// export const base_url = "http://localhost:4000/";
-// export const api_url = "http://localhost:4000/api/";
+export const base_url = "http://localhost:4000/";
+export const api_url = "http://localhost:4000/api/";
 
 // admin login    
 export const admin_login='admin/login';
@@ -401,16 +401,17 @@ export const download_call_history= 'admin/download/call_history'
 export const update_admin_chat_review= 'admin/update_admin_chat_review'
 export const update_admin_call_review= 'admin/update_admin_call_review'
 
-
-
-
- 
 // International Prices
-
 export const create_international_price= 'admin/international_prices/create_international_price'
 export const get_international_price= 'admin/international_prices/get_international_price'
 export const update_international_price= 'admin/international_prices/update_international_price'
 export const delete_international_price= 'admin/international_prices/delete_international_price'
+
+// Sub Admin
+export const subadmin_add = 'admin/subadmin_add'
+export const get_all_subadmin = 'admin/get_all_subadmin'
+export const subadmin_delete = 'admin/subadmin_delete'
+export const subadmin_update = 'admin/subadmin_update'
 
 
 export const get_all_country = 'https://api.countrystatecity.in/v1/countries'

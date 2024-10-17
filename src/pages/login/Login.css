@@ -57,16 +57,39 @@
 }
 
 .loginButton {
-    background: #60278C;
-    width: 100%;
-    padding: 0.7rem;
+    background-color: rgba(255, 255, 255, 0.4);
+    width: 315px;
+    padding: 0.5rem;
     align-items: center;
     justify-content: center;
     text-align: center;
-    border-radius: 10;
-    color: #fff;
-    font-family: 'Philosopher';
+    color: black;
+    font-family: 'Philosopher', sans-serif; /* Added a fallback font */
     font-size: 1.5rem;
     cursor: pointer;
-    border-radius:5px
+    z-index: 1;
+    border-bottom-left-radius: 22px; /* Bottom left corner */
+    border-bottom-right-radius: 22px; /* Bottom right corner */
+    transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth transition */
+}
+
+.loginButton:hover {
+    transform: scale(1.03); /* Slightly enlarge on hover */
+    background-color: rgba(255, 255, 255, 0.6); /* Change background color on hover */
+}
+
+/* Media Query for Mobile View */
+@media (max-width: 600px) {
+    .loginButton {
+        width: 170px; /* Adjust width for mobile */
+        font-size: 1.2rem; /* Optionally decrease font size */
+    }
+}
+
+/* Media Query for iPad View */
+@media (min-width: 601px) and (max-width: 1024px) {
+    .loginButton {
+        width: 240px; /* Adjust width for iPad */
+        font-size: 1.4rem; /* Optionally adjust font size */
+    }
 }

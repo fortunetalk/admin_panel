@@ -29,17 +29,21 @@ export const Colors = {
 
 export const useStyles = makeStyles({
   loginBox: {
-    padding: "2rem 2rem 2rem 2rem",
+    padding: "2rem",
     maxWidth: "30rem",
     borderRadius: 20,
-    backgroundColor: "white",
-  },
-  loginheadingContainer: {
-    display: "flex",
-    alignItems: "center",
-    flexDirection: "column",
-    justifyContent: "center",
-  },
+    zIndex: 10,
+    backgroundColor: "rgba(255, 255, 255, 0.6)", // 80% opacity
+    boxShadow: "0px 4px 20px rgba(16, 57, 93, 0.5)", 
+},
+loginheadingContainer: {
+  display: "flex",
+  alignItems: "center",
+  flexDirection: "column",
+  justifyContent: "center",
+  marginTop: -65,
+
+},
   login: {
     fontSize: "1.2rem",
     marginTop: 10,

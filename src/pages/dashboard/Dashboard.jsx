@@ -26,12 +26,12 @@ import { AstrologerCountIcon, CourseComponent, CustomerCountIcon, demoComponent,
 import * as DashboardActions from "../../redux/Actions/dashboardActions";
 
 
-const Dashboard = ({dashboardData, dispatch }) => {
+const Dashboard = ({ dashboardData, dispatch }) => {
   const classes = useStyles();
 
-   useEffect(() => {
-         dispatch(DashboardActions.getDashboard());
-       }, []);
+  useEffect(() => {
+    dispatch(DashboardActions.getDashboard());
+  }, []);
 
   const [chartData, setChartData] = useState({
     options: {},
@@ -92,7 +92,7 @@ const Dashboard = ({dashboardData, dispatch }) => {
 
   // Dummy data for the MaterialTable
   const astrologerListData = [
-    
+
     {
       _id: "1",
       astrologerName: "Astro Anita",
@@ -111,7 +111,7 @@ const Dashboard = ({dashboardData, dispatch }) => {
       totalCharge: "₹ 60",
 
     },
-    
+
   ];
 
   useEffect(() => {
@@ -139,45 +139,45 @@ const Dashboard = ({dashboardData, dispatch }) => {
         </Grid>
 
         <Grid container spacing={2}>
-      <Grid item lg={12} sm={12} md={12} xs={12} style={{ padding: '5px 5px', borderRadius: '10px', boxShadow: '0px 8px 16px rgba(0.2, 0.2, 0.2, 0.3)', margin:'20px 10px'  }}>
-      
-        <MaterialTable
-          title="Top Astrologers"
-          data={astrologerListData}
-          columns={[
-            {
-              title: "S.No",
-              editable: "never",
-              render: (rowData) => astrologerListData.indexOf(rowData) + 1,
-            },
-            {
-              title: "User Name",
-              field: "userName",
-            },
-            {
-              title: "Astrologers",
-              field: "astrologerName",
-            },
-            {
-              title: "Duration",
-              field: "callDuration",
-            },
-            {
-              title: " Call Type",
-              field: "callType",
-            },
-            {
-              title: "Total Charge",
-              field: "totalCharge",
-            },
-           
-          ]}
-          options={{ filtering: false, actionsColumnIndex: -1 }}
-          style={{ fontSize: "1.4rem" }}
-        />
+          <Grid item lg={12} sm={12} md={12} xs={12} style={{ padding: '5px 5px', borderRadius: '10px', boxShadow: '0px 8px 16px rgba(0.2, 0.2, 0.2, 0.3)', margin: '20px 10px' }}>
 
-      </Grid>
-    </Grid>
+            <MaterialTable
+              title="Top Astrologers"
+              data={astrologerListData}
+              columns={[
+                {
+                  title: "S.No",
+                  editable: "never",
+                  render: (rowData) => astrologerListData.indexOf(rowData) + 1,
+                },
+                {
+                  title: "User Name",
+                  field: "userName",
+                },
+                {
+                  title: "Astrologers",
+                  field: "astrologerName",
+                },
+                {
+                  title: "Duration",
+                  field: "callDuration",
+                },
+                {
+                  title: " Call Type",
+                  field: "callType",
+                },
+                {
+                  title: "Total Charge",
+                  field: "totalCharge",
+                },
+
+              ]}
+              options={{ filtering: false, actionsColumnIndex: -1 }}
+              style={{ fontSize: "1.4rem" }}
+            />
+
+          </Grid>
+        </Grid>
       </div>
     </div>
   );
@@ -185,10 +185,10 @@ const Dashboard = ({dashboardData, dispatch }) => {
 
 
 const mapStateToProps = (state) => ({
-   dashboardData: state.dashboard.dashboardData,
-   });
-  
-  const mapDispatchToProps = (dispatch) => ({ dispatch });
-  
+  dashboardData: state.dashboard.dashboardData,
+});
+
+const mapDispatchToProps = (dispatch) => ({ dispatch });
+
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
-  
+

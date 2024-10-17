@@ -2,9 +2,11 @@ import * as actionTypes from "../actionTypes";
 
 const initialState = {
     adminData: null,
+    adminType: null,
     isLoading: false,
     error: null,
     apiPayload: null,
+    adminListData: null,
 };
 
 const admin = (state = initialState, action) => {
@@ -52,6 +54,16 @@ const admin = (state = initialState, action) => {
             return {
                 ...state,
                 apiPayload: false,
+            };
+        case actionTypes.SET_ALL_SUBADMIN:
+            return {
+                ...state,
+                adminListData: payload,
+            };
+        case actionTypes.SET_ADMIN_TYPE:
+            return {
+                ...state,
+                adminType: payload,
             };
         default:
             return state;

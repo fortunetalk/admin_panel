@@ -56,3 +56,34 @@ export const setApiPayload = (error) => ({
     type: actionTypes.SET_API_PAYLOAD,
     error,
 });
+
+
+// Sub-Admin 
+
+export const subadminAdd = (payload) => ({
+    type: actionTypes.SUBADMIN_ADD,
+    payload,
+});
+export const getAllSubadmin = (payload) => ({
+    type: actionTypes.GET_ALL_SUBADMIN,
+    payload,
+});
+export const setAllSubadmin = (payload) => ({
+    type: actionTypes.SET_ALL_SUBADMIN,
+    payload,
+});
+export const subadminDelete = (payload) => ({
+    type: actionTypes.SUBADMIN_DELETE,
+    payload,
+});
+export const subadminUpdate = (payload) => ({
+    type: actionTypes.SUBADMIN_UPDATE,
+    payload,
+});
+
+// SET_ADMIN_TYPE
+
+export const setAdminType = (payload) => ({
+    type: actionTypes.SET_ADMIN_TYPE,
+    payload,
+});

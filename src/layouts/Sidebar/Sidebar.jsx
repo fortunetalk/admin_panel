@@ -26,7 +26,7 @@ const routes = [
   {
     path: "/display-sub-admin",
     name: "Sub Admin",
-    icon: <FaHome />,
+    icon: <BiAbacus />,
   },
   {
     path: "/astrologers",
@@ -608,7 +608,7 @@ const showAnimation = {
   },
 };
 
-const SideBar = ({ children, dispatch, isSidebarOpen }) => {
+const SideBar = ({ children, dispatch, isSidebarOpen , adminType}) => {
   const [hiddenSidebarWidth, setHiddenSidebarWidth] = useState(0);
  
 
@@ -660,7 +660,7 @@ const SideBar = ({ children, dispatch, isSidebarOpen }) => {
         className={`sidebar`}
       >
         {isSidebarOpen ? (
-          <div className="top_section">Fortune Talk</div>
+          <div className="top_section">FortuneTalk</div>
         ) : (
           <div className="top_section">
             <img src={logo_icon} style={{ width: 30, height: 30 }} alt="logo" />
@@ -710,7 +710,8 @@ const SideBar = ({ children, dispatch, isSidebarOpen }) => {
 };
 
 const mapStateToProps = state => ({
-  isSidebarOpen: state.dashboard.isSidebarOpen
+  isSidebarOpen: state.dashboard.isSidebarOpen,
+  adminType: state.admin.adminType
 })
 
 const mapDispatchToProps = dispatch => ({ dispatch })

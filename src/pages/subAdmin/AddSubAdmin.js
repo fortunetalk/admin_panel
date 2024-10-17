@@ -4,7 +4,6 @@ import {
   Grid,
   TextField,
   CircularProgress,
-  MenuItem,
   Select,
   InputLabel,
   FormControl,
@@ -14,13 +13,12 @@ import {
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import DvrIcon from "@mui/icons-material/Dvr";
 import { useNavigate } from "react-router-dom";
-import { connect, useDispatch } from "react-redux";
-import * as Actions from "../../redux/Actions/callDiscussionAction.js";
+import { connect } from "react-redux";
+import * as Actions from "../../redux/Actions/adminAction.js";
 
-export const AddSubAdmin = ({ isLoading }) => {
+export const AddSubAdmin = ({dispatch, isLoading }) => {
   var classes = useStyles();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [userName, setUserName] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -56,36 +54,37 @@ const handleOptionChange = (e) => {
       isValid = false;
     }
    
-    if (!permission) {
-        handleError("permission", "Please input Permission");
-        isValid = false;
-      }
+    // if (!permission) {
+    //     handleError("permission", "Please input Permission");
+    //     isValid = false;
+    //   }
     return isValid;
   };
 
   const onAdd =()=>{
+    handleReset();
     navigate('/display-sub-admin')
   }
 
   const handleSubmit = async () => {
-    // if (validation()) {
-    //   var body = {
-    //     user_name: userName,
-    //     admin_name: adminName,
-    //     phone_number: phone,
-    //     review: review,
-    //     discussion: description,
-    //   };
-    //   dispatch(Actions.addCallDiscussion({body,onAdd}));
-    //   handleReset();
-    // }
+    console.log("Testing 1");
+    if (validation()) {
+      const data = {
+        username: userName,
+        name: name,
+        password: password,
+        permissions: permission,
+      }
+      dispatch(Actions.subadminAdd({data,onAdd}));
+      console.log("Testing");
+    }
   };
 
   const handleReset = useCallback(() => {
     setUserName("");
     setName("");
     setPassword("");
-    setPermission("");
+    setPermission([]);
  
   });
 

@@ -1,6 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useStyles, propStyles } from "../../assets/styles.js";
-import { Grid, TextField, CircularProgress } from "@mui/material";
+import {
+  Grid,
+  Button,
+  TextField,
+  Select,
+  Avatar,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Checkbox,
+  FormGroup,
+  FormControlLabel,
+  FormLabel,
+  ListItemText,
+  CircularProgress,
+} from "@mui/material";
 import MaterialTable from "material-table";
 import { useNavigate } from "react-router-dom";
 import Dialog from "@mui/material/Dialog";
@@ -10,16 +25,19 @@ import Swal from "sweetalert2";
 import * as HistoryActions from "../../redux/Actions/historyActions.js";
 import Loader from "../../Components/loading/Loader.js";
 import { connect } from "react-redux";
-import { secondsToHMS } from "../../utils/services.js";
+import { secondsToHMS, showNumber } from "../../utils/services.js";
 import moment from "moment";
 import { api_url, get_chat_history } from "../../utils/Constants.js";
+import { CSVLink, CSVDownload } from "react-csv";
+import DownloadIcon from '@mui/icons-material/Download';
 
 
-
-const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
+const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData }) => {
+  console.log("csvData", csvData);
   const classes = useStyles();
   const navigate = useNavigate();
-
+  const tableRef = useRef(null);
+  const [singelDate, SetSingelDate] = useState();
   const [viewData, setViewData] = useState(false);
   const [data, setData] = useState({
     transactionId: "",
@@ -42,17 +60,16 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
     maxduration: "",
     chatId: "",
   });
+  const [showModal, setShowModal] = useState(false);
 
-  const [filter, setFilter] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
+  const [searchType, setSearchType] = useState("");
+  const [isCustomSelected, setIsCustomSelected] = useState(false);
+  const [customSelection, setCustomSelection] = useState(""); // State for custom dropdown selection
+  const [singleDate, setSingleDate] = useState(""); // State for single date
+  const [startDate, setStartDate] = useState(""); // State for start date
+  const [endDate, setEndDate] = useState(""); // State for end date
+  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    dispatch(HistoryActions.getChatHistory());
-  }, [dispatch]);
-
-  useEffect(()=>{
-
-  }, [chatHistoryApiPayload])
 
   const handleView = (rowData) => {
     setViewData(true);
@@ -60,16 +77,23 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
       transactionId: rowData?.transactionId || "",
       customerId: rowData?.customerId?._id || "",
       astrologerId: rowData?.astrologerId?._id || "",
-      customerName: rowData?.customerId?.firstName || "",
-      customerPhoneNumber: rowData?.customerId?.phoneNumber || "",
-      customerEmail: rowData?.customerId?.email || "",
-      astrologerName: rowData?.astrologerId?.name || "",
-      astrologerDisplayName: rowData?.astrologerId?.displayName || "",
+      customerName: rowData?.customerName || "",
+      customerPhoneNumber: rowData?.phoneNumber || "",
+      customerEmail: rowData?.email || "",
+      astrologerName: rowData?.astrologerName || "",
+      astrologerDisplayName: rowData?.astrologerDisplayName || "",
       astrologerEmail: rowData?.astrologerId?.email || "",
-      requestTime: new Date(rowData?.createdAt).toLocaleString() || "",
+      requestTime: rowData?.createdAt
+        ? moment(rowData?.createdAt).format("DD-MM-YYYY HH:mm:ss A")
+        : "N/A" || "N/A",
       startTime: new Date(rowData?.startTime).toLocaleString() || "",
+      // startTime: rowData?.startTime || "NA",
+      // startTime: rowData?.startTime? moment(rowData?.startTime).format("DD-MM-YY HH:mm A")  : "N/A",
       endTime: new Date(rowData?.endTime).toLocaleString() || "",
-      durationInSeconds: rowData?.durationInSeconds || "",
+      durationInSeconds:
+        (rowData?.durationInSeconds &&
+          secondsToHMS(rowData?.durationInSeconds)) ||
+        "",
       chatPrice: rowData?.chatPrice || "",
       commissionPrice: rowData?.commissionPrice || "",
       status: rowData?.status || "",
@@ -78,28 +102,90 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
       chatId: rowData?.chatId || "",
     });
   };
+  const openDownloadModal = () => {
+    setShowModal(true);
+  };
+
+  function transformTransactionId(transactionId) {
+    const parts = transactionId.split("fortunetalk");
+    return `#FTCH${parts[1] || ""}`;
+  }
 
   const handleClose = () => {
     setViewData(false);
+    setShowModal(false);
   };
+
+  const handleFirstDropdownChange = (event) => {
+    const value = event.target.value;
+    setSearchType(value);
+    setIsCustomSelected(value === "Custom");
+    // Reset custom selection and dates when changing the main dropdown
+    setCustomSelection("");
+    setSingleDate("");
+    setStartDate("");
+    setEndDate("");
+  };
+
+  const handleCustomDropdownChange = (event) => {
+    const value = event.target.value;
+    setCustomSelection(value);
+    // Reset dates when changing custom selection
+    setSingleDate("");
+    setStartDate("");
+    setEndDate("");
+  };
+
+  // Your existing handleDownload remains unchanged
+  const handleGet = () => {
+    try {
+      if (!searchType) {
+        alert("Please select a search type."); // You can replace this with a more user-friendly notification
+        return; // Prevent further execution if searchType is not selected
+      }
+
+      let searchDate = '';
+
+      if (singleDate) {
+        searchDate = singleDate; // Only send singleDate
+      } else if (startDate && endDate) {
+        searchDate = `${startDate},${endDate}`; // Send startDate and endDate
+      }
+
+      const payload = {
+        searchType: searchType,
+        searchDate: searchDate // This will be an empty string if neither condition is met
+      };
+
+      console.log("payload", payload);
+      dispatch(HistoryActions.getDownloadChatHistory({ payload }));
+    } catch (e) {
+      console.log(e);
+    }
+
+  };
+
+  // const handleDownload = () => {
+  //   <CSVLink data={csvData}>Download me</CSVLink>;
+  // };
+
 
   const handleClickOpen = (rowData) => {
-    navigate(`/history/fullChatHistory/${rowData.customerId}`, { state: { chatId: rowData.chatId } })
+    navigate(`/history/fullChatHistory/${rowData.customerId}`, {
+      state: { chatId: rowData.chatId },
+    });
   };
 
-  const filterOptions = chatHistoryData && Array.isArray(chatHistoryData)
-    ? Array.from(new Set(chatHistoryData.map(data => data.astrologerId?.displayName || '')))
-    : [];
-
-  const statusOptions = chatHistoryData && Array.isArray(chatHistoryData)
-    ? Array.from(new Set(chatHistoryData.map(data => data.status || '')))
-    : [];
+  const onRefreshTable = () => {
+    tableRef.current && tableRef.current.onQueryChange();
+  };
 
   return (
     <div className={classes.container}>
       <div className={classes.box}>
         {displayTable()}
         {editModal()}
+        {downloadModal()}
       </div>
     </div>
   );
@@ -109,17 +195,53 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
       <Grid container spacing={1}>
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
+            tableRef={tableRef}
+
+
             title={
-              <div>
-                <span style={{ fontWeight: '500', fontSize: '25px', marginRight: '20px' }}>Chat History</span>
-              </div>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <span
+                style={{
+                  fontWeight: "500",
+                  fontSize: "25px",
+                  marginRight: "20px", // This adds space to the right of the title
+                }}
+              >
+                Chat History
+              </span>
+              <button
+                style={{
+                  padding: "8px 16px",
+                  backgroundColor: "#10395D",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  marginLeft: "20px", // This adds space to the left of the button
+                  display: "flex",
+                  alignItems: "center", // Center the icon and text vertically
+                }}
+                onClick={openDownloadModal}
+              >
+                <DownloadIcon style={{ marginRight: "8px", color: "white" }} /> {/* Add icon here */}
+                Download CSV
+              </button>
+            </div>
             }
 
             columns={[
+              // {
+              //   title: "S.No",
+              //   editable: "never",
+              //   render: (rowData) => rowData.tableData.id + 1,
+              // },
+
               {
-                title: "S.No",
-                editable: "never",
-                render: (rowData) => rowData.tableData.id + 1,
+                title: "Chat-Id",
+                field: "transactionId",
+                filtering: false,
+                render: (rowData) =>
+                  transformTransactionId(rowData.transactionId),
               },
               {
                 title: "Astrologer Display Name",
@@ -131,55 +253,72 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
                 field: "customerName",
                 filtering: false,
               },
-              // {
-              //   title: "Customer Name",
-              //   render: (rowData) => {
-              //     const firstName = rowData?.customerId?.firstName || "";
-              //     const lastName = rowData?.customerId?.lastName || "";
-              //     return `${firstName} ${lastName}`;
-              //   }
-              // },
               {
                 title: "Customer Phone Number",
-                render: (rowData) => {
-                  const phoneNumber = rowData?.phoneNumber || "";
-                  return `${phoneNumber}`;
-                }
+                field: "phoneNumber",
+                filtering: false,
               },
-              { title: "Chat Price", field: "chatPrice", filtering: false, },
-              { title: "Commission Price", field: "commissionPrice", filtering: false, },
-              // { title: "Total Charge", field: "deductedAmount" },
+              {
+                title: "Chat Price",
+                field: "chatPrice",
+                filtering: false,
+                render: (rowData) => showNumber(rowData.chatPrice),
+              },
+              {
+                title: "Commission Price",
+                field: "commissionPrice",
+                filtering: false,
+                render: (rowData) => showNumber(rowData.commissionPrice),
+              },
               {
                 title: "Total Charge",
                 field: "deductedAmount",
                 filtering: true,
-                lookup: { ZEROS: "NO BALANCE", NONZEROS: "HAVE BALANCE", },
-                render: rowData => {
+                defaultFilter: chatHistoryApiPayload?.filters?.deductedAmount ? [chatHistoryApiPayload?.filters?.deductedAmount] : [],
+                lookup: { ZEROS: "NO BALANCE", NONZEROS: "HAVE BALANCE" },
+                render: (rowData) => {
                   const amount = Number(rowData.deductedAmount).toFixed(2);
                   return `₹ ${amount}`;
-                }
+                },
+                export: (rowData) => {
+                  // Ensure the amount is formatted correctly for CSV
+                  return Number(rowData.deductedAmount).toFixed(2); // or just return rowData.deductedAmount
+                },
               },
+              // {
+              //   title: "Duration",
+              //   field: "durationInSeconds",
+              //   filtering: false,
+              // },
               {
                 title: "Duration",
-                render: (rowData) => (
-                  <div>
-                    {rowData?.durationInSeconds &&
-                      secondsToHMS(rowData?.durationInSeconds)}
-                  </div>
-                ),
-              },
+                field: "durationInSeconds",
+                filtering: false,
+                render: (rowData) => {
+                    const duration = moment.duration(rowData.durationInSeconds, 'seconds');
+                    const hours = Math.floor(duration.asHours());
+                    const minutes = duration.minutes();
+                    const seconds = duration.seconds();
+            
+                    return `${minutes}m : ${seconds}s`;
+                },
+            },
               {
                 title: "Request Time",
+                field: "createdAt",
+                filtering: false,
                 render: (rowData) => (
                   <div>
                     {rowData?.createdAt
-                      ? moment(rowData?.createdAt).format("DD-MM-YYYY HH:mm:ss A")
+                      ? moment(rowData?.createdAt).format("DD-MM-YYYY HH:mm A")
                       : "N/A"}
                   </div>
                 ),
               },
               {
                 title: "Start Time",
+                field: "startTime",
+                filtering: false,
                 render: (rowData) => (
                   <div>
                     {rowData?.startTime
@@ -190,74 +329,157 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
               },
               {
                 title: "End time",
+                field: "endTime",
+                filtering: false,
                 render: (rowData) => (
                   <div>
-                    {rowData?.endTime ? rowData?.endTime &&
+                    {rowData?.endTime
+                      ? rowData?.endTime &&
                       moment(rowData?.endTime).format("DD-MM-YY HH:mm A")
                       : "N/A"}
                   </div>
                 ),
+                export: (rowData) =>
+                  moment(rowData.endTime).format("DD-MM-YYYY HH:mm A"),
               },
-              { title: "Status", field: "status", lookup: { COMPLETED: "COMPLETED", REJECTED: "REJECTED", ACCEPTED: "ACCEPTED", CREATED: "CREATED", ONGOING: "ON GOING" }, },
+              {
+                title: "Status",
+                field: "status",
+                // defaultFilter: chatHistoryApiPayload?.filters?.status ? [chatHistoryApiPayload?.filters?.status] : [],
+                lookup: {
+                  COMPLETED: "COMPLETED",
+                  REJECTED: "REJECTED",
+                  ACCEPTED: "ACCEPTED",
+                  CREATED: "CREATED",
+                  ONGOING: "ON GOING",
+                  TIMEOUT: "MISSED",
+                  CUSTOMER_NOT_AVAILABLE: "CUSTOMER NOT AVAILABLE",
+                },
+              },
               {
                 title: "View Chat History",
-                field: "status",
+                field: "viewChat",
                 filtering: false,
-                render: rowData => (
-                  <div className={classes.statusButton}
-                    style={{ backgroundColor: '#90EE90' }}
-                    onClick={() => handleClickOpen(rowData)}>
+                render: (rowData) => (
+                  <div
+                    className={classes.statusButton}
+                    style={{ backgroundColor: "#90EE90" }}
+                    onClick={() => handleClickOpen(rowData)}
+                  >
                     View Chat
                   </div>
-                )
+                ),
               },
             ]}
-
-
-            data={query =>
+            data={(query) =>
               new Promise((resolve, reject) => {
-                console.log("query", query.filters);
-                const filters = {}
-
-                query.filters.map(item => {
+                let filters = {};
+                query.filters.forEach((item) => {
                   if (item.value.length > 0) {
-                    filters[item.column.field] = item.value[0]
+                    filters[item.column.field] = item.value[0];
                   }
-                })
+                });
 
-                console.log("chatHistoryApiPayload", chatHistoryApiPayload)
+                if (!(query.page === 0 && chatHistoryApiPayload)) {
+                  dispatch(
+                    HistoryActions.setChatHistoryApiPayload({
+                      page: query.page + 1,
+                      pageSize: query.pageSize,
+                      filters: filters,
+                      search: query.search,
+                    })
+                  );
+                } else {
+                }
+                if (
+                  query.page === 0 &&
+                  chatHistoryApiPayload &&
+                  query.filters.length === 0
+                ) {
+                  filters = chatHistoryApiPayload?.filters;
+                }
+
+                console.log(query, "query");
+                console.log(chatHistoryApiPayload, "chatHistoryApiPayload");
+
+                console.log({
+                  page:
+                    query.page == 0 && chatHistoryApiPayload
+                      ? chatHistoryApiPayload?.page
+                      : query.page + 1,
+                  limit:
+                    query.pageSize === 0
+                      ? chatHistoryApiPayload
+                        ? chatHistoryApiPayload?.pageSize
+                        : 10
+                      : query.pageSize,
+                  ...filters,
+                  search:
+                    query.page == 0 &&
+                      chatHistoryApiPayload &&
+                      query.search.length == 0
+                      ? chatHistoryApiPayload?.search
+                      : query.search,
+                });
 
                 fetch(api_url + get_chat_history, {
-                  method: 'POST', // Specify the request method
+                  method: "POST",
                   headers: {
-                    'Content-Type': 'application/json', // Set the content type to JSON
+                    "Content-Type": "application/json",
                   },
-                  body: JSON.stringify(chatHistoryApiPayload ?? {
-                    page: 1, // MaterialTable uses 0-indexed pages
-                    limit: query.pageSize === 0 ? 10 : query.pageSize,
-                    ...filters, // Include processed filters
-                    search: query.search,
-                  }), // Convert the request body to JSON
+                  body: JSON.stringify({
+                    page:
+                      query.page == 0 && chatHistoryApiPayload
+                        ? chatHistoryApiPayload?.page
+                        : query.page + 1,
+                    limit:
+                      query.pageSize === 0
+                        ? chatHistoryApiPayload
+                          ? chatHistoryApiPayload?.pageSize
+                          : 10
+                        : query.pageSize,
+                    ...filters,
+                    search:
+                      query.page == 0 &&
+                        chatHistoryApiPayload &&
+                        query.search.length == 0
+                        ? chatHistoryApiPayload?.search
+                        : query.search,
+                  }),
                 })
-                  .then(response => response.json())
-                  .then(result => {
-                    console.log(result)
-                    dispatch(HistoryActions.setChatHistoryApiPayload({
-                      page: query.page + 1, // MaterialTable uses 0-indexed pages
-                      limit: query.pageSize === 0 ? 10 : query.pageSize,
-                      ...filters, // Include processed filters
-                      search: query.search,
-                    }))
+                  .then((response) => response.json())
+                  .then((result) => {
+                    console.log(result?.data);
+                    if (
+                      result?.data?.data.length == 0 &&
+                      result?.data?.pagination?.currentPage != 1
+                    ) {
+                      onRefreshTable();
+                      resolve({
+                        data: result?.data?.data,
+                        page: 0,
+                        totalCount: result?.data?.pagination?.totalCount,
+                      });
+                    }
                     resolve({
-                      data: result.data.data, // Adjust based on your API response
-                      page: result.data.pagination.currentPage - 1, // Adjust for 0-indexed pages
-                      totalCount: result.data.pagination.totalCount, // Total number of rows
-                    })
+                      data: result?.data?.data,
+                      page: result?.data?.pagination?.currentPage - 1,
+                      totalCount: result?.data?.pagination?.totalCount,
+                    });
                   })
+                  .catch((error) => reject(error));
               })
             }
-
-            options={{ ...propStyles.tableStyles, paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], filtering: 'true' }}
+            options={{
+              ...propStyles.tableStyles,
+              paging: true,
+              pageSize: chatHistoryApiPayload
+                ? chatHistoryApiPayload?.pageSize
+                : 10,
+              pageSizeOptions: [10, 20, 50, 100, 500, 1000],
+              filtering: "true",
+              // exportButton: true,
+            }}
             style={{ fontSize: "1rem" }}
             actions={[
               {
@@ -275,6 +497,11 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
                     })
                   ),
               },
+              // {
+              //   icon: "download",
+              //   tooltip: "Download Chat History",
+              //   onClick: (event, rowData) => openDownloadModal(rowData),
+              // },
             ]}
           />
         </Grid>
@@ -297,7 +524,8 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
               label="Chat ID"
-              value={data.chatId}
+              // value={data.chatId}
+              value={transformTransactionId(data.transactionId)}
               variant="outlined"
               fullWidth
               InputProps={{
@@ -305,39 +533,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
               }}
             />
           </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Transaction ID"
-              value={data.transactionId}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Customer ID"
-              value={data.customerId}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Astrologer ID"
-              value={data.astrologerId}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
+
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
               label="Customer Name"
@@ -349,6 +545,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
               }}
             />
           </Grid>
+
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
               label="Customer Phone Number"
@@ -360,17 +557,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
               }}
             />
           </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Customer Email"
-              value={data.customerEmail}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
+
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
               label="Astrologer Name"
@@ -393,17 +580,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
               }}
             />
           </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <TextField
-              label="Astrologer Email"
-              value={data.astrologerEmail}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
+
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
               label="Request Time"
@@ -515,12 +692,152 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload }) => {
       </div>
     );
   }
+
+  function downloadModal() {
+
+    const showDownloadForm = () => {
+      return (
+
+        <Grid container spacing={2}>
+          <Grid item lg={12} sm={12} md={12} xs={12}>
+            <div className={classes.headingContainer}>
+              <div className={classes.heading}>Download CSV</div>
+              <div onClick={handleClose} className={classes.closeButton}>
+                <CloseRounded />
+              </div>
+            </div>
+          </Grid>
+
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <FormControl fullWidth>
+              <InputLabel id="first-dropdown-label">CSV Download</InputLabel>
+              <Select
+                labelId="first-dropdown-label"
+                id="first-dropdown"
+                value={searchType}
+                onChange={handleFirstDropdownChange}
+              >
+                <MenuItem disabled value="">
+                  -Select Option-
+                </MenuItem>
+                {/* <MenuItem value="Custom">Custom</MenuItem> */}
+                <MenuItem value="Single">Single</MenuItem>
+                <MenuItem value="Between">Between</MenuItem>
+                <MenuItem value="oneMonth">1 Month</MenuItem>
+                <MenuItem value="threeMonths">3 Months</MenuItem>
+                <MenuItem value="sixMonths">6 Months</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+
+          {/* {isCustomSelected && (
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <FormControl fullWidth>
+              <InputLabel id="custom-dropdown-label">Custom</InputLabel>
+              <Select
+                labelId="custom-dropdown-label"
+                id="custom-dropdown"
+                value={customSelection}
+                onChange={handleCustomDropdownChange}
+              >
+                <MenuItem disabled value="">
+                  -Select Option-
+                </MenuItem>
+                <MenuItem value="Single">Single</MenuItem>
+                <MenuItem value="Between">Between</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        )} */}
+
+          {searchType === "Single" && (
+            <Grid item lg={12} sm={12} md={6} xs={12}>
+              <TextField
+                type="date"
+                value={singleDate}
+                variant="outlined"
+                fullWidth
+                onChange={(event) => setSingleDate(event.target.value)}
+                inputProps={{
+                  min: '1900-01-01', // Set a minimum date as needed
+                  max: new Date().toISOString().split("T")[0], // Prevent future date selection
+                }}
+              />
+            </Grid>
+          )}
+
+          {searchType === "Between" && (
+            <>
+              <Grid item lg={6} sm={12} md={6} xs={12}>
+                <TextField
+                  type="date"
+                  value={startDate}
+                  variant="outlined"
+                  fullWidth
+                  onChange={(event) => setStartDate(event.target.value)}
+                  inputProps={{
+                    min: '1900-01-01', // Set a minimum date as needed
+                    max: new Date().toISOString().split("T")[0], // Prevent future date selection
+                  }}
+                />
+              </Grid>
+              <Grid item lg={6} sm={12} md={6} xs={12}>
+                <TextField
+                  type="date"
+                  value={endDate}
+                  variant="outlined"
+                  fullWidth
+                  onChange={(event) => setEndDate(event.target.value)}
+                  inputProps={{
+                    min: '1900-01-01', // Set a minimum date as needed
+                    max: new Date().toISOString().split("T")[0], // Prevent future date selection
+                  }}
+                />
+              </Grid>
+            </>
+          )}
+
+          <Grid item lg={4} sm={6} md={6} xs={6}>
+            <div onClick={handleGet} className={classes.submitbutton}>
+            {isLoading ? <CircularProgress size={24} /> : " Submit"}
+              {/* Submit */}
+            </div>
+          </Grid>
+          {csvData && (
+            <Grid item lg={4} sm={6} md={6} xs={6}>
+              {/* <div onClick={handleDownload} className={classes.submitbutton}>
+            Download
+          </div> */}
+          <div  className={classes.submitbutton}>
+              <CSVLink style={{color:'white', }} data={csvData} >Download</CSVLink>
+              </div>
+            </Grid>
+          )}
+          <Grid item lg={4} sm={6} md={6} xs={6}>
+            <div onClick={handleClose} className={classes.denyButton}>
+              Cancel
+            </div>
+          </Grid>
+        </Grid>
+      );
+    };
+
+    return (
+      <div>
+        <Dialog open={showModal}>
+          <DialogContent>{showDownloadForm()}</DialogContent>
+        </Dialog>
+      </div>
+    );
+  }
+
 };
 
 const mapStateToProps = (state) => ({
-  chatHistoryData: state.history.chatHistoryData || [],  // Default to empty array
-  chatHistoryApiPayload: state.history.chatHistoryApiPayload,  // Default to empty array
-
+  chatHistoryData: state.history.chatHistoryData || [], // Default to empty array
+  chatHistoryApiPayload: state.history.chatHistoryApiPayload, // Default to empty array
+  csvData: state.history.csvData,
+  isLoading: state.astrologer.isLoading,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

@@ -18,7 +18,9 @@ import {
   get_register_live_class_history,
   delete_chat_history,
   delete_call_history,
-  get_chat_message_details
+  get_chat_message_details,
+  download_chat_history,
+  download_call_history
 
 } from "../../utils/Constants";
 import { database, firestore } from "../../config/firbase";
@@ -138,6 +140,7 @@ function* getChatSummary(actions) {
   try {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
     const { customerId, chatId, classes } = actions.payload;
+    console.log(customerId)
     const response = yield ApiRequest.postRequest({
       url: api_url + get_chat_message_details,
       header: "json",
@@ -149,6 +152,7 @@ function* getChatSummary(actions) {
     console.log("response", response)
 
     if (response.success) {
+      console.log(response.data)
       let chatData = response?.data.map(msg => {
         const timestamp = msg.createdAt;
         let formattedDate = '';
@@ -278,7 +282,7 @@ function* getDemoClassHistory() {
     if (response?.success) {
       yield put({
         type: actionTypes.GET_DEMO_CLASS_HISTORY,
-        payload: response?.data,
+        payload: response?.data.reverse(),
       });
     }
 
@@ -571,6 +575,54 @@ function* getRegisterLiveClassHistory(action) {
     console.log(e);
   }
 }
+function* getDownloadChatHistory(action) {
+  try {
+    const { payload } = action;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    const response = yield ApiRequest.postRequest({
+      url: api_url + download_chat_history,
+      header: "json",
+      data: payload,
+    });
+
+    if (response?.success) {
+      yield put({
+        type: actionTypes.SET_DOWNLOAD_CHAT_HISTORY,
+        payload: response?.data?.data || [],
+      });
+    }
+
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+  } catch (e) {
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+    console.log(e);
+  }
+}
+
+function* getDownloadCallHistory(action) {
+  try {
+    const { payload } = action;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    const response = yield ApiRequest.postRequest({
+      url: api_url + download_call_history,
+      header: "json",
+      data: payload,
+    });
+
+    if (response?.success) {
+      yield put({
+        type: actionTypes.SET_DOWNLOAD_CALL_HISTORY,
+        payload: response?.data?.data || [],
+      });
+    }
+
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+  } catch (e) {
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+    console.log(e);
+  }
+}
+
 
 
 export default function* historySaga() {
@@ -589,4 +641,6 @@ export default function* historySaga() {
   yield takeLeading(actionTypes.GET_LIVE_COURSE_HISTORY, getLiveCourseHistory)
   yield takeLeading(actionTypes.CHANGE_LIVE_COURSE_HISTORY_STATUS, updateLiveCourseHistoryStatus)
   yield takeLeading(actionTypes.GET_REGISTER_LIVE_CLASS_HISTORY, getRegisterLiveClassHistory)
+  yield takeLeading(actionTypes.GET_DOWNLOAD_CHAT_HISTORY, getDownloadChatHistory)
+  yield takeLeading(actionTypes.GET_DOWNLOAD_CALL_HISTORY, getDownloadCallHistory)
 }

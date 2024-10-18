@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { propStyles, useStyles } from "../../assets/styles.js";
-import {  Grid, TextField, FormControl, InputLabel, MenuItem, Select, CircularProgress } from "@mui/material";
+import { Grid, TextField, FormControl, InputLabel, MenuItem, Select, CircularProgress } from "@mui/material";
 import { Colors } from "../../assets/styles.js";
 import { AddCircleRounded } from "@mui/icons-material";
 import MaterialTable from "material-table";
@@ -18,11 +18,10 @@ const RechargePlan = ({ dispatch, rechargePlanData }) => {
   const [open, setOpen] = useState(false);
   const [planId, setplanId] = useState("");
   const [rechargeAmount, setRechargeAmount] = useState('');
-    const [extraPercent, setExtraPercent] = useState('');
-    // const [startDate, setStartDate] = useState('');
-    // const [endDate, setEndDate] = useState('');
-    const [status, setStatus] = useState('');
-    const [error, setError] = useState({});
+  const [extraPercent, setExtraPercent] = useState('');
+  const [currency, setCurrency] = useState("");
+  const [status, setStatus] = useState('');
+  const [error, setError] = useState({});
 
   useEffect(function () {
     dispatch(RechargeActions.getRechargePlan());
@@ -32,8 +31,7 @@ const RechargePlan = ({ dispatch, rechargePlanData }) => {
     setOpen(true);
     setRechargeAmount(rowData?.amount);
     setExtraPercent(rowData?.percentage);
-    // setStartDate(rowData?.startDate);
-    // setEndDate(rowData?.endDate);
+    setCurrency(rowData?.currency);
     setStatus(rowData?.recharge_status);
     setplanId(rowData._id);
   };
@@ -45,17 +43,16 @@ const RechargePlan = ({ dispatch, rechargePlanData }) => {
 
   const handleSubmit = async () => {
     var body = {
-        "amount": rechargeAmount,
-        "percentage": extraPercent,
-        // "startDate": startDate,
-        // "endDate": endDate,
-        "recharge_status": status,
-        "planId": planId
+      "amount": rechargeAmount,
+      "percentage": extraPercent,
+      "currency": currency,
+      "recharge_status": status,
+      "planId": planId
     }
 
-      dispatch(
-        RechargeActions.updateRechargePlan(body)
-      );
+    dispatch(
+      RechargeActions.updateRechargePlan(body)
+    );
     setOpen(false);
   };
 
@@ -89,16 +86,16 @@ const RechargePlan = ({ dispatch, rechargePlanData }) => {
       day: '2-digit'
     });
   };
-  
+
 
   return (
     <div className={classes.container}>
       {
-        !rechargePlanData ? <CircularProgress/> :
-      <div className={classes.box}>
-        {rechargePlanData && displayTable()}
-        {editModal()}
-      </div>
+        !rechargePlanData ? <CircularProgress /> :
+          <div className={classes.box}>
+            {rechargePlanData && displayTable()}
+            {editModal()}
+          </div>
       }
     </div>
   );
@@ -116,18 +113,20 @@ const RechargePlan = ({ dispatch, rechargePlanData }) => {
                 render: rowData => Array.isArray(rechargePlanData) ? rechargePlanData.indexOf(rowData) + 1 : 'N/A'
               },
               { title: "Amount", field: "amount" },
-
               {
                 title: "Percentage",
                 field: "percentage",
               },
-              { title: "Status", field: "recharge_status", render: rowData => (
-                <div className={classes.statusButton}
-                style={{ backgroundColor: rowData.recharge_status === 'Active' ? '#90EE90' : '#FF7F7F '}}
-                onClick={() => handleClickOpen(rowData)}>
-                  {rowData.recharge_status}
-                </div>
-              )},
+              { title: "Currency", field: "currency", filtering: false },
+              {
+                title: "Status", field: "recharge_status", render: rowData => (
+                  <div className={classes.statusButton}
+                    style={{ backgroundColor: rowData.recharge_status === 'Active' ? '#90EE90' : '#FF7F7F ' }}
+                    onClick={() => handleClickOpen(rowData)}>
+                    {rowData.recharge_status}
+                  </div>
+                )
+              },
             ]}
             options={propStyles.tableStyles}
             style={{ fontSize: "1.0rem" }}
@@ -178,48 +177,60 @@ const RechargePlan = ({ dispatch, rechargePlanData }) => {
             </div>
           </Grid>
           <Grid item lg={6} sm={12} md={12} xs={12} >
-                        <TextField
-                            label="Recharge Amount"
-                            type="text"
-                            error={Boolean(error.rechargeAmount)}
-                            helperText={error.rechargeAmount}
-                            value={rechargeAmount}
-                            onFocus={() => handleError('rechargeAmount', null)}
-                            onChange={(event) => setRechargeAmount(event.target.value)}
-                            variant='outlined' fullWidth />
-                    </Grid>
-                    <Grid item lg={6} sm={12} md={12} xs={12} >
-                        <TextField
-                            label="Percent"
-                            type="text"
-                            error={Boolean(error.extraPercent)}
-                            helperText={error.extraPercent}
-                            value={extraPercent}
-                            onFocus={() => handleError('extraPercent', null)}
-                            onChange={(event) => setExtraPercent(event.target.value)}
-                            variant='outlined' fullWidth />
-                    </Grid>
-                  
-                    <Grid item lg={6} sm={12} md={12} xs={12} >
-                        <FormControl fullWidth>
-                            <InputLabel id="select-label">Status</InputLabel>
-                            <Select
-                                label="Select Status"
-                                labelId="select-label"
-                                value={status}
-                                onChange={(e) => setStatus(e.target.value)}
-                                variant="outlined"
-                                error={error.status ? true : false}
-                                fullWidth
-                            >
-                                <MenuItem value="null" disabled>Select Status</MenuItem>
-                                <MenuItem value="Active">Active</MenuItem>
-                                <MenuItem value="InActive">InActive</MenuItem>
-                            </Select>
-                            
-                        </FormControl>
-                    </Grid>
-                    <Grid item lg={6} sm={12} md={12} xs={12}></Grid>
+            <TextField
+              label="Recharge Amount"
+              type="text"
+              error={Boolean(error.rechargeAmount)}
+              helperText={error.rechargeAmount}
+              value={rechargeAmount}
+              onFocus={() => handleError('rechargeAmount', null)}
+              onChange={(event) => setRechargeAmount(event.target.value)}
+              variant='outlined' fullWidth />
+          </Grid>
+          <Grid item lg={6} sm={12} md={12} xs={12} >
+            <TextField
+              label="Percent"
+              type="text"
+              error={Boolean(error.extraPercent)}
+              helperText={error.extraPercent}
+              value={extraPercent}
+              onFocus={() => handleError('extraPercent', null)}
+              onChange={(event) => setExtraPercent(event.target.value)}
+              variant='outlined' fullWidth />
+          </Grid>
+
+          <Grid item lg={6} sm={12} md={12} xs={12}>
+            <TextField
+              label="Enter Currency"
+              type="text"
+              error={Boolean(error.currency)}
+              helperText={error.currency}
+              value={currency}
+              onFocus={() => handleError("currency", null)}
+              onChange={(event) => setCurrency(event.target.value)}
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+          <Grid item lg={6} sm={12} md={12} xs={12} >
+            <FormControl fullWidth>
+              <InputLabel id="select-label">Status</InputLabel>
+              <Select
+                label="Select Status"
+                labelId="select-label"
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                variant="outlined"
+                error={error.status ? true : false}
+                fullWidth
+              >
+                <MenuItem value="null" disabled>Select Status</MenuItem>
+                <MenuItem value="Active">Active</MenuItem>
+                <MenuItem value="InActive">InActive</MenuItem>
+              </Select>
+
+            </FormControl>
+          </Grid>
           <Grid item lg={6} sm={6} md={6} xs={6}>
             <div onClick={handleSubmit} className={classes.submitbutton}>
               Submit

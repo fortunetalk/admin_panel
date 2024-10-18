@@ -77,10 +77,50 @@ const routes = [
       },
     ],
   },
+  // {
+  //   path: "/displayCustomer",
+  //   name: "Customer",
+  //   icon: <BiAbacus />,
+  //   subRoutes: [
+  //     {
+  //       path: "/history/wallet-transaction",
+  //       name: "Wallet Transaction",
+  //       icon: <BiAbacus />,
+  //     },
+  //   ]
+  // },
   {
-    path: "/displayCustomer",
+    path: "/customer",
     name: "Customer",
     icon: <BiAbacus />,
+    subRoutes: [
+      {
+        path: "/displayCustomer",
+        name: "Customer List",
+        icon: <BiAbacus />,
+      },
+      {
+        path: "/history/wallet-transaction",
+        name: "Wallet Transaction",
+        icon: <BiAbacus />,
+      },
+      {
+        path: "/displayRechargePlan",
+        name: "Recharge History",
+        icon: <BiAbacus />,
+      },
+      {
+        path: "/history/ChatHistory",
+        name: "Chat History",
+        icon: <BiAbacus />,
+      },
+      {
+        path: "/history/CallHistory",
+        name: "Call History",
+        icon: <BiAbacus />,
+      },
+      
+    ],
   },
   {
     path: "/courses",
@@ -110,6 +150,21 @@ const routes = [
       {
         path: "/mcqAnswerList",
         name: "Attempted MCQ's",
+        icon: <BiAbacus />,
+      },
+      {
+        path: "/history/demoClassHistory",
+        name: "Demo Class History",
+        icon: <BiAbacus />,
+      },
+      {
+        path: "/history/liveClassHistory",
+        name: "Live Class History",
+        icon: <BiAbacus />,
+      },
+      {
+        path: "/history/liveCourseHistory",
+        name: "Live Course History",
         icon: <BiAbacus />,
       },
       // {
@@ -168,11 +223,11 @@ const routes = [
         name: "Recharge Plan",
         icon: <BiAbacus />,
       },
-      {
-        path: "/displayRechargePlan",
-        name: "Recharge History",
-        icon: <BiAbacus />,
-      },
+      // {
+      //   path: "/displayRechargePlan",
+      //   name: "Recharge History",
+      //   icon: <BiAbacus />,
+      // },
       // {
       //   path: "/displayFirstRechargeOffer",
       //   name: "First Recharge Offer",
@@ -180,39 +235,62 @@ const routes = [
       // },
     ],
   },
+  // {
+  //   path: "/history",
+  //   name: "History",
+  //   icon: <BiAbacus />,
+  //   subRoutes: [
+  //     // {
+  //     //   path: "/history/ChatHistory",
+  //     //   name: "Chat History",
+  //     //   icon: <BiAbacus />,
+  //     // },
+  //     // {
+  //     //   path: "/history/CallHistory",
+  //     //   name: "Call History",
+  //     //   icon: <BiAbacus />,
+  //     // },
+  //     // {
+  //     //   path: "/history/wallet-transaction",
+  //     //   name: "Wallet Transaction",
+  //     //   icon: <BiAbacus />,
+  //     // },
+  //     // {
+  //     //   path: "/history/demoClassHistory",
+  //     //   name: "Demo Class History",
+  //     //   icon: <BiAbacus />,
+  //     // },
+  //     // {
+  //     //   path: "/history/liveClassHistory",
+  //     //   name: "Live Class History",
+  //     //   icon: <BiAbacus />,
+  //     // },
+  //     // {
+  //     //   path: "/history/liveCourseHistory",
+  //     //   name: "Live Course History",
+  //     //   icon: <BiAbacus />,
+  //     // },
+  //     // {
+  //     //   path: "/history/UsersGiftHistory",
+  //     //   name: "User's Gift History",
+  //     //   icon: <BiAbacus />,
+  //     // },
+      
+  //   ],
+  // },
   {
-    path: "/history",
-    name: "History",
+    path: "/liveStreaming",
+    name: "Live Streaming ",
     icon: <BiAbacus />,
     subRoutes: [
       {
-        path: "/history/ChatHistory",
-        name: "Chat History",
+        path: "/liveStream",
+        name: "Live Stream",
         icon: <BiAbacus />,
       },
       {
-        path: "/history/CallHistory",
-        name: "Call History",
-        icon: <BiAbacus />,
-      },
-      {
-        path: "/history/wallet-transaction",
-        name: "Wallet Transaction",
-        icon: <BiAbacus />,
-      },
-      {
-        path: "/history/demoClassHistory",
-        name: "Demo Class History",
-        icon: <BiAbacus />,
-      },
-      {
-        path: "/history/liveClassHistory",
-        name: "Live Class History",
-        icon: <BiAbacus />,
-      },
-      {
-        path: "/history/liveCourseHistory",
-        name: "Live Course History",
+        path: "/displayGift",
+        name: "Gift",
         icon: <BiAbacus />,
       },
       {
@@ -220,6 +298,7 @@ const routes = [
         name: "User's Gift History",
         icon: <BiAbacus />,
       },
+     
       
     ],
   },
@@ -241,11 +320,7 @@ const routes = [
     ],
   },
 
-  {
-    path: "/liveStream",
-    name: "Live Stream",
-    icon: <BiAbacus />,
-  },
+
   {
     path: "/displayRemedise",
     name: "Remedies",
@@ -264,7 +339,7 @@ const routes = [
     subRoutes: [
       {
         path: "/displayReview",
-        name: "Astrologer Review",
+        name: "Customer Review",
         icon: <BiAbacus />,
       },
       // {
@@ -274,11 +349,7 @@ const routes = [
       // },
     ],
   },
-  {
-    path: "/displayGift",
-    name: "Gift",
-    icon: <BiAbacus />,
-  },
+
   {
     path: "/call-discussion",
     name: "User Call Discussion",
@@ -306,6 +377,11 @@ const routes = [
   {
     path: "/displayTestimonial",
     name: "Testimonial",
+    icon: <BiAbacus />,
+  },
+  {
+    path: "/displaySkills",
+    name: "Skills",
     icon: <BiAbacus />,
   },
   {
@@ -444,6 +520,19 @@ const routes = [
         name: " Video Call Earning",
         icon: <BiAbacus />,
       },
+    ],
+  },
+  {
+    path: "/international",
+    name: "International",
+    icon: <BiAbacus />,
+    subRoutes: [
+      {
+        path: "/international-prices",
+        name: "International Prices",
+        icon: <BiAbacus />,
+      },
+     
     ],
   },
   {

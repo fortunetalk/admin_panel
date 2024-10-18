@@ -1,16 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { propStyles, useStyles } from "../../assets/styles.js";
-import {
-  Avatar,
-  Grid,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Tooltip,
-  CircularProgress
-} from "@mui/material";
+import { Avatar, Grid, TextField, FormControl, InputLabel, Select, MenuItem, Tooltip, CircularProgress, IconButton } from "@mui/material";
 import { AddCircleRounded, PictureAsPdf } from "@mui/icons-material";
 import MaterialTable from "material-table";
 import { useNavigate } from "react-router-dom";
@@ -22,13 +12,11 @@ import * as CourseActions from "../../redux/Actions/courseActions.js";
 import * as AstrologerActions from "../../redux/Actions/astrologerActions.js";
 import * as DemoClassActions from "../../redux/Actions/demoClassActions.js";
 import { connect } from "react-redux";
+import CloseIcon from '@mui/icons-material/Close'; // Import the close icon
+import moment from "moment";
+import { formatTimeFromDateString } from "../../utils/services.js";
 
-const DisplayDemoClass = ({
-  dispatch,
-  demoClassData,
-  activeAstrologerData,
-  activeCourseData,
-}) => {
+const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activeCourseData, }) => {
   const classes = useStyles();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -56,11 +44,19 @@ const DisplayDemoClass = ({
     dispatch(DemoClassActions.getDemoClassData());
     dispatch(AstrologerActions.getAllActiveAstrologer());
   }, []);
+  // const formattedTime = formatTimeFromDateString(item.time);
+  // const formattedTime = useMemo(()=>formatTimeFromDateString(item.time), [item?.time])
+
+  // function fillCourseList() {
+  //   return activeCourseData.map((item) => {
+  //     return <MenuItem value={item._id}>{item.title}</MenuItem>;
+  //   });
+  // }
 
   function fillCourseList() {
-    return activeCourseData.map((item) => {
-      return <MenuItem value={item._id}>{item.title}</MenuItem>;
-    });
+    return activeCourseData.map((item) => (
+      <MenuItem key={item._id} value={item._id}>{item.title}</MenuItem>
+    ));
   }
 
   function fillAstrologerList() {
@@ -70,25 +66,35 @@ const DisplayDemoClass = ({
   }
 
   const handleOpen = (rowData) => {
+    const date = new Date(rowData?.time);
+    const hours = date.getUTCHours().toString().padStart(2, '0');  // Get UTC hours and pad with 0 if needed
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0');  // Get UTC minutes and pad with 0 if needed
+    const timeInUTC = `${hours}:${minutes}`;
+
     setOpen(true);
     const formattedDate = new Date(rowData?.date).toISOString().split("T")[0];
     setDate(formattedDate);
     setDemoClassId(rowData?._id)
-    setcourseId(rowData?.courseId?.title);
-    setAstrologerId(rowData?.astrologerId?.displayName);
+    setcourseId(rowData?.courseId?._id); 
+    setAstrologerId(rowData?.astrologerId?._id);
     setclassName(rowData?.className);
     setStatus(rowData?.status);
     setDescription(rowData?.description);
     setLearn(rowData?.learn);
     setCourseContent(rowData?.courseContent);
-    setTime(rowData?.time);
+    setTime (timeInUTC);
     setSessionTime(rowData?.sessionTime);
     setGoogleMeet(rowData?.googleMeet);
-    setIcon(rowData?.image);
-    setVideo(rowData?.video);
+    setIcon({ file: rowData?.image, bytes: null });
+    setVideo({ file: rowData?.video , bytes: null });
+    setPdf({ file: rowData?.pdf , bytes: null });
   };
 
   const handleView = (rowData) => {
+    const date = new Date(rowData?.time);
+    const hours = date.getUTCHours().toString().padStart(2, '0');  // Get UTC hours and pad with 0 if needed
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0');  // Get UTC minutes and pad with 0 if needed
+    const timeInUTC = `${hours}:${minutes}`;
     setViewData(true);
     const formattedDate = new Date(rowData?.date).toISOString().split("T")[0];
     setDate(formattedDate);
@@ -100,12 +106,13 @@ const DisplayDemoClass = ({
     setDescription(rowData?.description);
     setLearn(rowData?.learn);
     setCourseContent(rowData?.courseContent);
-    setTime(rowData?.time);
+    // setTime ( moment (rowData?.time).format("HH:mm:ss:A"));
+    setTime (timeInUTC);
     setSessionTime(rowData?.sessionTime);
     setGoogleMeet(rowData?.googleMeet);
     setIcon(rowData?.image);
     setVideo(rowData?.video);
-    
+
   };
 
   const handleError = (input, value) => {
@@ -151,7 +158,7 @@ const DisplayDemoClass = ({
       handleError("courseId", "Please Select Skill");
       isValid = false;
     }
-   
+
     // if (!file) {
     //   handleError("icon", "Please upload an image");
     //   isValid = false;
@@ -178,7 +185,7 @@ const DisplayDemoClass = ({
       formData.append("video", video.bytes);
       formData.append("pdf", pdf.bytes);
 
-        dispatch(DemoClassActions.updateDemoClass(formData));
+      dispatch(DemoClassActions.updateDemoClass(formData));
       handleClose();
     }
   };
@@ -187,7 +194,6 @@ const DisplayDemoClass = ({
     setcourseId("");
     setclassName("");
     setOpen(false);
-    
     setViewData(false);
   };
 
@@ -211,7 +217,7 @@ const DisplayDemoClass = ({
       }
     });
   };
-  
+
   const handleClickOpen = (rowData) => {
     Swal.fire({
       title: "Are you sure to Change the Status?",
@@ -263,17 +269,17 @@ const DisplayDemoClass = ({
       }
     });
   };
-  
+
 
   return (
     <div className={classes.container}>
       {
-        !demoClassData ? <CircularProgress/> :
-      <div className={classes.box}>
-        {demoClassData && displayTable()}
-        {editModal()}
-        {viewModal()}
-      </div>
+        !demoClassData ? <CircularProgress /> :
+          <div className={classes.box}>
+            {demoClassData && displayTable()}
+            {editModal()}
+            {viewModal()}
+          </div>
       }
     </div>
   );
@@ -300,13 +306,22 @@ const DisplayDemoClass = ({
                 field: "astrologerId.displayName",
                 render: rowData => rowData.astrologerId ? rowData.astrologerId.displayName : 'N/A'
               },
-              
+
               { title: "Class Name", field: "className" },
 
               {
-                title: "Date and Time",
+                title: "Date",
                 field: "date",
-                render: (rowData) => formatDate(rowData.date, rowData.time),
+                render: (rowData) => {
+                  return moment(rowData.date).format('MMMM Do YYYY'); // Format as needed
+                },
+              },
+              {
+                title: "Time",
+                field: "time",
+                render: (rowData) => {
+                  return formatTimeFromDateString(rowData.time); // Outputs: 04:30 PM
+              },
               },
 
               { title: "Session Time", field: "sessionTime" },
@@ -338,10 +353,10 @@ const DisplayDemoClass = ({
                           rowData.adminStatus === 'Approved'
                             ? '#90EE90' // Light Green
                             : rowData.adminStatus === 'Rejected'
-                            ? '#FF7F7F' // Light Red
-                            : rowData.adminStatus === 'Pending'
-                            ? '#FFD700' // Gold
-                            : '#D3D3D3', 
+                              ? '#FF7F7F' // Light Red
+                              : rowData.adminStatus === 'Pending'
+                                ? '#FFD700' // Gold
+                                : '#D3D3D3',
                       }}
                     >
                       <option value="Approved">Approved</option>
@@ -368,10 +383,10 @@ const DisplayDemoClass = ({
                           rowData.classStatus === "Start"
                             ? "#90EE90" // Light Green
                             : rowData.classStatus === "Completed"
-                            ? "#FF7F7F" // Light Red
-                            : rowData.classStatus === "Pending"
-                            ? "#FFD700" // Gold
-                            : "#D3D3D3",
+                              ? "#FF7F7F" // Light Red
+                              : rowData.classStatus === "Pending"
+                                ? "#FFD700" // Gold
+                                : "#D3D3D3",
                       }}
                     >
                       <option value="Start">Start</option>
@@ -406,7 +421,7 @@ const DisplayDemoClass = ({
                   <Tooltip title="Download PDF">
                     <PictureAsPdf
                       onClick={() => window.open(rowData.pdf, '_blank')}
-                      style={{ cursor: 'pointer', color: '#1976d2', width:'30px', height: '30px' }}
+                      style={{ cursor: 'pointer', color: '#1976d2', width: '30px', height: '30px' }}
                     />
                   </Tooltip>
                 ),
@@ -431,7 +446,7 @@ const DisplayDemoClass = ({
                 onClick: (event, rowData) =>
                   dispatch(
                     DemoClassActions.deleteDemoClass({
-                        demoClassId: rowData?._id,
+                      demoClassId: rowData?._id,
                     })
                   ),
               },
@@ -454,23 +469,28 @@ const DisplayDemoClass = ({
   }
 
   function editModal() {
-
     const showEditForm = () => {
       return (
         <Grid container spacing={2}>
           <Grid item lg={12} sm={12} md={12} xs={12}>
             <div className={classes.headingContainer}>
               <div className={classes.heading}>Edit Demo Class</div>
+              <IconButton
+                edge="end"
+                color="inherit"
+                onClick={handleClose} // Close modal handler
+                aria-label="close"
+                style={{ position: 'absolute', right: 16, top: 16 }} >
+                <CloseIcon />
+              </IconButton>
             </div>
           </Grid>
-           <Grid item lg={6} md={6} sm={12} xs={12}>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                Select Course
-              </InputLabel>
+              <InputLabel id="course-select-label">Select Course</InputLabel>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
+                labelId="course-select-label"
+                id="course-select"
                 label="Course"
                 value={courseId}
                 onFocus={() => handleError("courseId", null)}
@@ -478,30 +498,31 @@ const DisplayDemoClass = ({
                 error={error.courseId ? true : false}
               >
                 <MenuItem disabled value={null}>
-                  -Select Course-
+                -Select your Course-
+              </MenuItem>
+              {activeCourseData?.map((item) => (
+                <MenuItem key={item.id} value={item._id}>
+                  {item.title}
                 </MenuItem>
-                {activeCourseData && fillCourseList()}
+              ))}
+
               </Select>
             </FormControl>
             <div className={classes.errorstyles}>{error.courseId}</div>
           </Grid>
+
           <Grid item lg={6} md={6} sm={12} xs={12}>
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                Select Astrologer
-              </InputLabel>
+              <InputLabel id="astrologer-select-label">Select Astrologer</InputLabel>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
+                labelId="astrologer-select-label"
+                id="astrologer-select"
                 label="Astrologer"
                 value={astrologerId}
                 onFocus={() => handleError("astrologerId", null)}
                 onChange={(e) => setAstrologerId(e.target.value)}
-                error={error.astrologerId ? true : false}
-              >
-                <MenuItem disabled value={null}>
-                  -Select Astrologer-
-                </MenuItem>
+                error={error.astrologerId ? true : false} >
+                <MenuItem disabled value={null}>-Select Astrologer-</MenuItem>
                 {activeAstrologerData && fillAstrologerList()}
               </Select>
             </FormControl>
@@ -509,9 +530,9 @@ const DisplayDemoClass = ({
           </Grid>
           <Grid item lg={6} sm={6} md={6} xs={12}>
             <FormControl fullWidth>
-              <InputLabel id="select-label">Select Status</InputLabel>
+              <InputLabel id="status-select-label">Select Status</InputLabel>
               <Select
-                labelId="select-label"
+                labelId="status-select-label"
                 value={status}
                 onChange={handleOptionChange}
                 variant="outlined"
@@ -523,7 +544,7 @@ const DisplayDemoClass = ({
               <div className={classes.errorstyles}>{error.status}</div>
             </FormControl>
           </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
+          <Grid item lg={6} sm={12} md={6} xs={12}>
             <TextField
               label="Class Name"
               error={error.className ? true : false}
@@ -535,7 +556,6 @@ const DisplayDemoClass = ({
               fullWidth
             />
           </Grid>
-
           <Grid item lg={6} sm={12} md={6} xs={12}>
             <TextField
               type="date"
@@ -545,10 +565,12 @@ const DisplayDemoClass = ({
               onFocus={() => handleError("date", null)}
               onChange={(event) => setDate(event.target.value)}
               helperText={error.date}
-              error={error.date ? true : false}
+              error={!!error.date}
+              inputProps={{
+                min: new Date().toISOString().split("T")[0] // Set minimum date to today
+              }}
             />
           </Grid>
-
           <Grid item lg={6} sm={12} md={6} xs={12}>
             <TextField
               type="time"
@@ -557,9 +579,20 @@ const DisplayDemoClass = ({
               variant="outlined"
               fullWidth
               onFocus={() => handleError("time", null)}
-              onChange={(event) => setTime(event.target.value)}
+              onChange={(event) => {
+                const selectedTime = event.target.value;
+                const now = new Date();
+                const currentTime = now.toTimeString().split(' ')[0].slice(0, 5); // Get current time in HH:MM format
+
+                if (selectedTime >= currentTime) {
+                  setTime(selectedTime);
+                  setError(prev => ({ ...prev, time: '' })); // Clear any previous error
+                } else {
+                  setError(prev => ({ ...prev, time: 'Cannot select a past time.' }));
+                }
+              }}
               helperText={error.time}
-              error={error.time ? true : false}
+              error={!!error.time}
             />
           </Grid>
           <Grid item lg={6} sm={12} md={6} xs={12}>
@@ -588,12 +621,10 @@ const DisplayDemoClass = ({
               error={error.googleMeet ? true : false}
             />
           </Grid>
-
           <Grid item lg={12} md={12} sm={12} xs={12}>
             <TextField
               fullWidth
               label="Learn"
-              id="fullWidth"
               value={learn}
               multiline
               rows={4}
@@ -603,12 +634,10 @@ const DisplayDemoClass = ({
               error={error.learn ? true : false}
             />
           </Grid>
-
           <Grid item lg={12} md={12} sm={12} xs={12}>
             <TextField
               fullWidth
               label="Description"
-              id="fullWidth"
               value={description}
               multiline
               rows={4}
@@ -618,12 +647,10 @@ const DisplayDemoClass = ({
               error={error.description ? true : false}
             />
           </Grid>
-          
           <Grid item lg={12} md={12} sm={12} xs={12}>
             <TextField
               fullWidth
               label="Course Content"
-              id="fullWidth"
               value={courseContent}
               multiline
               rows={4}
@@ -633,82 +660,32 @@ const DisplayDemoClass = ({
               error={error.courseContent ? true : false}
             />
           </Grid>
-
-          <Grid
-            item
-            lg={4}
-            sm={6}
-            md={6}
-            xs={6}
-            className={classes.uploadContainer}
-          >
+          <Grid item lg={4} sm={6} md={6} xs={6} className={classes.uploadContainer}>
             <label className={classes.uploadImageButton}>
-              {
-                icon.file ? 
-                icon.file:
-                'Upload Image'
-              }
-              <input
-            onChange={handleIcon}
-            hidden
-            accept="image/*"
-            type="file"
-          />
-        </label>
-        <div className={classes.errorStyles}>{error.icon}</div>
+              {icon.file ? icon.file : 'Upload Image'}
+              <input onChange={handleIcon} hidden accept="image/*" type="file" />
+            </label>
+            <div className={classes.errorStyles}>{error.icon}</div>
           </Grid>
-          
-          <Grid
-            item
-            lg={4}
-            sm={6}
-            md={6}
-            xs={6}
-            className={classes.uploadContainer}
-          >
+          <Grid item lg={4} sm={6} md={6} xs={6} className={classes.uploadContainer}>
             <label className={classes.uploadImageButton}>
               Upload Video
-               <input
-            onChange={handleVideo}
-            hidden
-            accept="video/*"
-            type="file"
-          />
+              <input onChange={handleVideo} hidden accept="video/*" type="file" />
             </label>
             <div className={classes.errorstyles}>{error.video}</div>
           </Grid>
           <Grid item lg={2} sm={6} md={2} xs={6}>
-          {video.file && (
-          <video
-            src={video.file}
-            style={{ width: 150 }}
-            controls
-          />
-        )}
+            {video.file && (
+              <video src={video.file} style={{ width: 150 }} controls />
+            )}
           </Grid>
-
-          <Grid
-        item
-        lg={2}
-        sm={6}
-        md={2}
-        xs={6}
-        className={classes.uploadContainer}
-      >
-        <label className={classes.uploadImageButton}>
-          {
-            pdf.file ? pdf.file : 'Upload PDF'
-          }
-          <input
-            onChange={handlePdf}
-            hidden
-            accept="application/pdf"
-            type="file"
-          />
-        </label>
-        <div className={classes.errorStyles}>{error.pdf}</div>
-      </Grid>
-
+          <Grid item lg={2} sm={6} md={2} xs={6} className={classes.uploadContainer}>
+            <label className={classes.uploadImageButton}>
+              {pdf.file ? pdf.file : 'Upload PDF'}
+              <input onChange={handlePdf} hidden accept="application/pdf" type="file" />
+            </label>
+            <div className={classes.errorStyles}>{error.pdf}</div>
+          </Grid>
           <Grid item lg={6} sm={6} md={6} xs={6}>
             <div onClick={handleSubmit} className={classes.submitbutton}>
               Submit
@@ -725,12 +702,13 @@ const DisplayDemoClass = ({
 
     return (
       <div>
-        <Dialog open={open}>
+        <Dialog open={open} onClose={handleClose}>
           <DialogContent>{showEditForm()}</DialogContent>
         </Dialog>
       </div>
     );
   }
+
 
   function viewModal() {
     const viewForm = () => {

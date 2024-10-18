@@ -24,6 +24,7 @@ import * as SkillActions from "../../redux/Actions/skillsActions.js";
 const DisplaySkills = ({ dispatch, skillsData }) => {
   const classes = useStyles();
   const navigate = useNavigate();
+  console.log(skillsData,"skillsData");
   const [open, setOpen] = useState(false);
   const [skill_id, setSkill_id] = useState("");
   const [skill, setSkill] = useState("");

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { propStyles, useStyles } from "../../assets/styles.js";
 import {
   Avatar,
@@ -43,33 +43,22 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
   const navigate = useNavigate();
   const [customerList, setCustomerList] = useState([]);
   const [astrologerList, setAstrologerList] = useState([]);
-
   const [astrologer, setAstrologer] = useState("");
   const [customer, setCustomer] = useState("");
-  const [rating, setRating] = useState(1);
+  const [rating, setRating] = useState("");
   const [comment, setComment] = useState("");
+  const [description, setDescription] = useState("");
+  const [reviewFor, setReviewFor] = useState("");
   const [reviewId, setReviewId] = useState();
   const [open, setOpen] = useState();
   const [error, setError] = useState({});
-
   const [state, setState] = useState({});
+  const tableRef = useRef(null);
 
-  useEffect(function () {
-    // dispatch(ReviewActions.getAstrologersReviews());
-    // fetchAllCustomers()
-    // fetchAllAstrologers()
-  }, []);
+  const onRefreshTable = () => {
+    tableRef.current && tableRef.current.onQueryChange()
+  }
 
-
-  const fetchAllCustomers = async () => {
-    var response = await getData(get_all_customers);
-    setCustomerList(response.customers);
-  };
-
-  const fetchAllAstrologers = async () => {
-    var response = await getData(get_all_astrologers);
-    setAstrologerList(response.astrologers);
-  };
 
   const handleOpen = (rowData) => {
     setOpen(true);
@@ -77,7 +66,10 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
     setAstrologer(rowData?.astrologer?._id);
     setCustomer(rowData?.customer?._id);
     setComment(rowData?.comments);
-    setRating(rowData?.ratings);
+    setDescription(rowData?.description);
+    setDescription(rowData?.reviewFor);
+    setRating(rowData?.rating);
+    
   };
 
   const handleClose = () => {
@@ -87,65 +79,28 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
     setCustomer("");
     setComment("");
     setRating("");
+    setDescription("");
   };
 
   const handleError = (input, value) => {
     setError((prev) => ({ ...prev, [input]: value }));
   };
 
-  const validation = () => {
-    var isValid = true;
-    if (!reviewId) {
-      handleError("reviewId", "Please Select Skill");
-      isValid = false;
-    }
-    return isValid;
-  };
-
-  // const handleSubmit = async () => {
-  //   if (validation()) {
-  //     // setIsLoading(true)
-  //     var body = {
-  //       reviewId: reviewId,
-  //       ratings: rating,
-  //       comments: comment,
-  //     };
-  //     var response = await postData(update_review, body);
-  //     // setIsLoading(false)
-  //     if (response?.success) {
-  //       Swal.fire({
-  //         icon: "success",
-  //         title: "Review Updated Successfull",
-  //         showConfirmButton: true,
-  //         timer: 2000,
-  //       });
-  //       // fetchAllReviews();
-  //       handleClose();
-  //     } else {
-  //       Swal.fire({
-  //         title: "Failed",
-  //         text: "Please Check your Internet!",
-  //         icon: "error",
-  //         showConfirmButton: false,
-  //         timer: 2000,
-  //       });
-  //     }
-  //   }
-  // };
-
 
   const handleSubmit = async () => {
-        var body = {
-            "reviewId": reviewId,
-            "customerId": customer,
-            "rating": rating,
-            "comments": comment
-        }
-   
-        dispatch(ReviewActions.updateAstrologerReview(body))
-        setOpen(false)
+    var body = {
+      "reviewId": reviewId,
+      "customerId": customer,
+      "rating": rating,
+      "comments": comment,
+      "description": description,
+      "reviewFor": reviewFor,
+    }
 
-};
+    dispatch(ReviewActions.updateAstrologerReview({body, onComplete: onRefreshTable}))
+    setOpen(false)
+
+  };
 
 
   const handleDelete = async (rowData) => {
@@ -164,6 +119,7 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
     });
   };
 
+
   const updateState = (data) => {
     setState((prevState) => {
       const newData = { ...prevState, ...data };
@@ -171,30 +127,15 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
     });
   };
 
-  const {} = state;
+  const { } = state;
 
   const reverseData = Array.isArray(astrologersReviews) ? astrologersReviews.slice().reverse() : [];
 
-  // if (!astrologersReviews) {
-  //   return (
-  //     <Box
-  //       sx={{
-  //         display: 'flex',
-  //         justifyContent: 'center',
-  //         alignItems: 'center',
-  //         height: '100vh',
-  //       }}
-  //     >
-  //       <CircularProgress />
-  //     </Box>
-  //   );
-  // }
-
-  // astrologersReviews &&
+ 
   return (
     <div className={classes.container}>
       <div className={classes.box}>
-        { displayTable()}
+        {displayTable()}
         {editModal()}
       </div>
     </div>
@@ -207,30 +148,25 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
         <Loader isVisible={isLoading} />
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
-            title=" All Review"
-           
+            tableRef={tableRef}
+            title=" Customer Reviews"
             columns={[
               {
                 title: "S.No",
                 editable: "never",
                 render: (rowData) => rowData.tableData.id + 1,
-                // render: (rowData) => reverseData.indexOf(rowData) + 1,
               },
               { title: "User Name", field: "customerName", filtering: false },
-              { title: "Astrologer Name", field: "astrologerName", filtering: false },
+              { title: "User Phone no.", field: "phoneNumber", filtering: false },
+              // { title: "Astrologer Name", field: "astrologerName", filtering: false },
               { title: "Comments", field: "comments", filtering: false },
-              { title: "Rating", field: "rating", filtering: true ,
-                lookup: { 1: "1", 2: "2", 3: "3", 4: "4", 5:"5" },
-                width:'20'
+              { title: "Description", field: "description", filtering: false },
+              { title: "Review Type", field: "reviewFor", filtering: false },
+              {
+                title: "Rating", field: "rating", filtering: true,
+                lookup: { 1: "1", 2: "2", 3: "3", 4: "4", 5: "5" },
+                width: '20'
               },
-
-              // { 
-              //   title: "Rating", 
-              //   field: "rating", 
-              //   filtering: true,
-              //   inputProps={{ min: 1, max: 5 }}
-
-              // },
 
               {
                 title: "Date & Time",
@@ -244,9 +180,10 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
                   return '';
                 },
               }
-              
+
             ]}
-            // data={reverseData}
+
+
             data={query =>
               new Promise((resolve, reject) => {
                 console.log("query", query.filters);
@@ -257,14 +194,8 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
                     filters[item.column.field] = item.value[0]
                   }
                 })
-                console.log({
-                  page: query.page + 1, // MaterialTable uses 0-indexed pages
-                  limit: query.pageSize === 0 ? 10 : query.pageSize,
-                  ...filters, 
-                  search: query.search,
-                })
 
-                fetch( api_url + get_review, {
+                fetch(api_url + get_review, {
                   method: 'POST', // Specify the request method
                   headers: {
                     'Content-Type': 'application/json', // Set the content type to JSON
@@ -272,8 +203,8 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
                   body: JSON.stringify({
                     page: query.page + 1, // MaterialTable uses 0-indexed pages
                     limit: query.pageSize === 0 ? 10 : query.pageSize,
-                    ...filters, 
-                    search: query.search,              
+                    ...filters, // Include processed filters
+                    search: query.search,
                   }), // Convert the request body to JSON
                 })
                   .then(response => response.json())
@@ -286,11 +217,8 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
                     })
                   })
               })
-
             }
-
-            options={{ ...propStyles.tableStyles,  paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], filtering: 'true' }}
-
+            options={{ ...propStyles.tableStyles, paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], filtering: true }}
             actions={[
               {
                 icon: "edit",
@@ -342,9 +270,8 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
               fullWidth
               error={error.rating ? true : false}
               helperText={error.rating}
-              InputLabelProps={{ shrink: true }}  
-              inputProps={{ min: 1, max: 5 ,}}
-            
+              InputLabelProps={{ shrink: true }}
+              inputProps={{ min: 1, max: 5, }}
               onChange={(e) => {
                 const inputValue = e.target.value;
                 if (inputValue >= 0 && inputValue <= 5) {
@@ -361,11 +288,37 @@ const DisplayReview = ({ dispatch, isLoading, astrologersReviews }) => {
               multiline
               rows={4}
               fullWidth
-              InputLabelProps={{ shrink: true }}  
+              InputLabelProps={{ shrink: true }}
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               error={error.comment ? true : false}
               helperText={error.comment}
+            />
+          </Grid>
+          <Grid item lg={12} sm={6} md={6} xs={6}>
+            <TextField
+              id="outlined-multiline-static"
+              label="Description"
+              multiline
+              rows={4}
+              fullWidth
+              InputLabelProps={{ shrink: true }}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              error={error.description ? true : false}
+              helperText={error.description}
+            />
+          </Grid>
+          <Grid item lg={12} sm={6} md={6} xs={6}>
+            <TextField
+              id="outlined-multiline-static"
+              label="Review For"
+              fullWidth
+              InputLabelProps={{ shrink: true }}
+              value={reviewFor}
+              onChange={(e) => setReviewFor(e.target.value)}
+              error={error.reviewFor ? true : false}
+              helperText={error.reviewFor}
             />
           </Grid>
 

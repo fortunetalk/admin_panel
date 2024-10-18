@@ -35,3 +35,8 @@ export const getCustomerRechargeHistory = payload =>({
     type: actionTypes.CUSTOMER_RECHARGE_HISTORY_LIST,
     payload
 })
+
+export const updateChatCallCount = payload =>({
+    type: actionTypes.UPDATE_CHAT_CALL_COUNT,
+    payload
+})

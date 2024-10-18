@@ -2,8 +2,19 @@ import React, { useEffect, useState } from "react";
 import { useStyles, propStyles } from "../../assets/styles.js";
 import {
   Grid,
+  Button,
   TextField,
-  CircularProgress
+  Select,
+  Avatar,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Checkbox,
+  FormGroup,
+  FormControlLabel,
+  FormLabel,
+  ListItemText,
+  CircularProgress,
 } from "@mui/material";
 import MaterialTable from "material-table";
 import { useNavigate } from "react-router-dom";
@@ -14,12 +25,13 @@ import Swal from "sweetalert2";
 import * as HistoryActions from "../../redux/Actions/historyActions.js";
 import Loader from "../../Components/loading/Loader.js";
 import { connect } from "react-redux";
-import { secondsToHMS } from "../../utils/services.js";
+import { secondsToHMS, showNumber } from "../../utils/services.js";
 import moment from "moment";
 import { api_url, get_call_history } from "../../utils/Constants.js";
+import { CSVLink, CSVDownload } from "react-csv";
+import DownloadIcon from '@mui/icons-material/Download';
 
-
-const ChatHistory = ({ dispatch, callHistoryData }) => {
+const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
   const classes = useStyles();
   const navigate = useNavigate();
 
@@ -44,6 +56,14 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
     callId: "",
   });
 
+  const [showModal, setShowModal] = useState(false);
+  const [searchType, setSearchType] = useState("");
+  const [isCustomSelected, setIsCustomSelected] = useState(false);
+  const [customSelection, setCustomSelection] = useState(""); // State for custom dropdown selection
+  const [singleDate, setSingleDate] = useState(""); // State for single date
+  const [startDate, setStartDate] = useState(""); // State for start date
+  const [endDate, setEndDate] = useState(""); // State for end date
+
   // useEffect(function () {
   //   dispatch(HistoryActions.getCallHistory());
   // }, []);
@@ -54,7 +74,9 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
       transactionId: rowData?.transactionId || "",
       customerId: rowData?.customerId?._id || "",
       astrologerId: rowData?.astrologerId?._id || "",
-      customerName: `${rowData?.customerId?.firstName } ${rowData?.customerId?.lastName }`|| "",
+      customerName:
+        `${rowData?.customerId?.firstName} ${rowData?.customerId?.lastName}` ||
+        "",
       customerEmail: rowData?.customerId?.email || "",
       astrologerName: rowData?.astrologerId?.name || "",
       astrologerDisplayName: rowData?.astrologerId?.displayName || "",
@@ -72,20 +94,82 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
     });
   };
 
-  const handleClose = () => {
-    setViewData(false);
+  const handleFirstDropdownChange = (event) => {
+    const value = event.target.value;
+    setSearchType(value);
+    setIsCustomSelected(value === "Custom");
+    // Reset custom selection and dates when changing the main dropdown
+    setCustomSelection("");
+    setSingleDate("");
+    setStartDate("");
+    setEndDate("");
   };
 
-  const reverseData = Array.isArray(callHistoryData) ? callHistoryData.slice().reverse() : [];
+
+  const openDownloadModal = () => {
+    setShowModal(true);
+  };
+
+  const handleClose = () => {
+    setViewData(false);
+    setShowModal(false);
+  };
+
+  const handleGet = () => {
+    try {
+      if (!searchType) {
+        alert("Please select a search type."); // You can replace this with a more user-friendly notification
+        return; // Prevent further execution if searchType is not selected
+      }
+
+      let searchDate = '';
+
+      if (singleDate) {
+        searchDate = singleDate; // Only send singleDate
+      } else if (startDate && endDate) {
+        searchDate = `${startDate},${endDate}`; // Send startDate and endDate
+      }
+
+      const payload = {
+        searchType: searchType,
+        searchDate: searchDate // This will be an empty string if neither condition is met
+      };
+
+      console.log("payload", payload);
+      dispatch(HistoryActions.getDownloadCallHistory({ payload }));
+    } catch (e) {
+      console.log(e);
+    }
+
+  };
+
+  const handleCustomDropdownChange = (event) => {
+    const value = event.target.value;
+    setCustomSelection(value);
+    // Reset dates when changing custom selection
+    setSingleDate("");
+    setStartDate("");
+    setEndDate("");
+  };
+
+
+  const reverseData = Array.isArray(callHistoryData)
+    ? callHistoryData.slice().reverse()
+    : [];
+
+  function transformTransactionId(transactionId) {
+    const parts = transactionId.split("fortunetalk");
+    return `#FTCA${parts[1] || ""}`;
+  }
 
   return (
     <div className={classes.container}>
       {
-
-      <div className={classes.box}>
-        {displayTable()}
-        {editModal()}
-      </div>
+        <div className={classes.box}>
+          {displayTable()}
+          {editModal()}
+          {downloadModal()}
+        </div>
       }
     </div>
   );
@@ -94,20 +178,64 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
       <Grid container spacing={1}>
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <MaterialTable
-           title={
-            <div>
-              <span style={{ fontWeight: '500', fontSize: '25px', marginRight: '20px' }}>Call History</span>
-            </div>
-          }
-            
+            // title={
+            //   <div>
+            //     <span
+            //       style={{
+            //         fontWeight: "500",
+            //         fontSize: "25px",
+            //         marginRight: "20px",
+            //       }}
+            //     >
+            //       Call History
+            //     </span>
+            //   </div>
+            // }
+            title={
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <span
+                  style={{
+                    fontWeight: "500",
+                    fontSize: "25px",
+                    marginRight: "20px", // This adds space to the right of the title
+                  }}
+                >
+                  Call History
+                </span>
+                <button
+                  style={{
+                    padding: "8px 16px",
+                    backgroundColor: "#10395D",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                    marginLeft: "20px", // This adds space to the left of the button
+                    display: "flex",
+                    alignItems: "center", // Center the icon and text vertically
+                  }}
+                  onClick={openDownloadModal}
+                >
+                  <DownloadIcon style={{ marginRight: "8px", color: "white" }} /> {/* Add icon here */}
+                  Download CSV
+                </button>
+              </div>
+            }
             columns={[
-              {
-                title: "S.No",
-                editable: "never",
-                render: (rowData) => rowData.tableData.id + 1,
-              },
+              // {
+              //   title: "S.No",
+              //   editable: "never",
+              //   render: (rowData) => rowData.tableData.id + 1,
+              // },
 
-            //   { title: "Call ID", field: "_id" },
+              //   { title: "Call ID", field: "_id" },
+              {
+                title: "Call-Id",
+                field: "transactionId",
+                filtering: false,
+                render: (rowData) =>
+                  transformTransactionId(rowData.transactionId),
+              },
               {
                 title: "Astrologer Display Name",
                 field: "astrologerDisplayName",
@@ -121,33 +249,44 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
               {
                 title: "Customer Phone Number",
                 filtering: false,
-                render: (rowData) => {
-                  const phoneNumber = rowData?.phoneNumber || "";
-                  return `${phoneNumber}`;
-                }
+                field: "phoneNumber",
               },
-              { title: "Call Price", field: "callPrice", filtering: false, },
-              { title: "Commission Price", field: "commissionPrice", filtering: false, },
-             
-              { title: "Deducted Amount", field: "deductedAmount",
+              // { title: "Call Price", field: "callPrice", filtering: false, },
+              {
+                title: "Call Price",
+                field: "callPrice",
+                filtering: false,
+                render: (rowData) => showNumber(rowData.callPrice),
+              },
+              {
+                title: "Commission Price",
+                field: "commissionPrice",
+                filtering: false,
+                render: (rowData) => showNumber(rowData.commissionPrice),
+              },
+
+              {
+                title: "Deducted Amount",
+                field: "deductedAmount",
                 filtering: true,
-                lookup: { ZEROS: "NO BALANCE", NONZEROS: "HAVE BALANCE", },
+                lookup: { ZEROS: "NO BALANCE", NONZEROS: "HAVE BALANCE" },
                 render: (rowData) => {
                   const balance = Number(rowData.deductedAmount).toFixed(2);
                   return balance;
-                }
-               },
+                },
+              },
               {
                 title: "Duration",
                 filtering: false,
                 render: (rowData) => (
                   <div>
-                    {rowData?.durationInSeconds &&
-                      secondsToHMS(rowData?.durationInSeconds) || "N/A"}
+                    {(rowData?.durationInSeconds &&
+                      secondsToHMS(rowData?.durationInSeconds)) ||
+                      "N/A"}
                   </div>
                 ),
               },
-            
+
               // {
               //   title: "Date",
               //   render: (rowData) => (
@@ -159,17 +298,19 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
               // },
               {
                 title: "Request Time",
+                field: "createdAt",
                 filtering: false,
                 render: (rowData) => (
                   <div>
                     {rowData?.createdAt
-                      ? moment(rowData?.createdAt).format("DD-MM-YYYY HH:mm:ss A")
+                      ? moment(rowData?.createdAt).format("DD-MM-YYYY HH:mm A")
                       : "N/A"}
                   </div>
                 ),
               },
               {
                 title: "Start Time",
+                field: "startTime",
                 filtering: false,
                 render: (rowData) => (
                   <div>
@@ -178,19 +319,21 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                       : "N/A"}
                   </div>
                 ),
-                width: 550, 
               },
               {
                 title: "End time",
+                field: "endTime",
                 filtering: false,
                 render: (rowData) => (
                   <div>
-                    {rowData?.endTime ? rowData?.endTime &&
+                    {rowData?.endTime
+                      ? rowData?.endTime &&
                       moment(rowData?.endTime).format("DD-MM-YY HH:mm A")
                       : "N/A"}
                   </div>
                 ),
-                width:"550px", 
+                export: (rowData) =>
+                  moment(rowData.endTime).format("DD-MM-YYYY HH:mm A"),
               },
               // { title: "Status", field: "status" },
 
@@ -203,32 +346,42 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
               //       CANCELLED: "CANCELLED",
               //       COMPLETED: "COMPLETED"
               //     };
-              
+
               //     return statusMap[rowData?.status] || "UNKNOWN"; // Provide a default value if status is not found
               //   }
               // },
-              { title: "Status", field: "status", lookup: { COMPLETED: "COMPLETED", REJECTED: "REJECTED", ACCEPTED: "ACCEPTED", CREATED: "CREATED", ONGOING:"ON GOING", CANCELLED: "CANCELLED"  }, },
-
+              {
+                title: "Status",
+                field: "status",
+                lookup: {
+                  COMPLETED: "COMPLETED",
+                  REJECTED: "REJECTED",
+                  ACCEPTED: "ACCEPTED",
+                  CREATED: "CREATED",
+                  ONGOING: "ON GOING",
+                  CANCELLED: "CANCELLED",
+                },
+              },
             ]}
             // data={reverseData}
 
-            data={query =>
+            data={(query) =>
               new Promise((resolve, reject) => {
-                console.log('Query:', query);
+                console.log("Query:", query);
                 const filters = {};
-            
-                query.filters.forEach(item => {
+
+                query.filters.forEach((item) => {
                   if (item.value.length > 0) {
                     filters[item.column.field] = item.value[0];
                   }
                 });
-            
-                console.log('Filters:', filters);
-            
+
+                console.log("Filters:", filters);
+
                 fetch(api_url + get_call_history, {
-                  method: 'POST',
+                  method: "POST",
                   headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                   },
                   body: JSON.stringify({
                     page: query.page + 1,
@@ -237,23 +390,28 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                     search: query.search,
                   }),
                 })
-                  .then(response => response.json())
-                  .then(result => {
-                    console.log('Fetch Result:', result.data);
+                  .then((response) => response.json())
+                  .then((result) => {
+                    console.log("Fetch Result:", result.data);
                     resolve({
                       data: result.data.data,
                       page: result.data.pagination.currentPage - 1,
                       totalCount: result.data.pagination.totalCount,
                     });
                   })
-                  .catch(error => {
-                    console.error('Fetch Error:', error);
+                  .catch((error) => {
+                    console.error("Fetch Error:", error);
                     reject(error);
                   });
               })
             }
-          
-            options={{ ...propStyles.tableStyles,  paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], filtering: 'true' }}
+            options={{
+              ...propStyles.tableStyles,
+              paging: true,
+              pageSize: 10,
+              pageSizeOptions: [10, 20, 50, 100, 500, 1000],
+              filtering: "true",
+            }}
             style={{ fontSize: "1.0rem" }}
             actions={[
               // {
@@ -271,7 +429,6 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
                     })
                   ),
               },
-          
             ]}
           />
         </Grid>
@@ -495,10 +652,148 @@ const ChatHistory = ({ dispatch, callHistoryData }) => {
       </div>
     );
   }
+
+  function downloadModal() {
+
+    const showDownloadForm = () => {
+      return (
+
+        <Grid container spacing={2}>
+          <Grid item lg={12} sm={12} md={12} xs={12}>
+            <div className={classes.headingContainer}>
+              <div className={classes.heading}>Download CSV</div>
+              <div onClick={handleClose} className={classes.closeButton}>
+                <CloseRounded />
+              </div>
+            </div>
+          </Grid>
+
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <FormControl fullWidth>
+              <InputLabel id="first-dropdown-label">CSV Download</InputLabel>
+              <Select
+                labelId="first-dropdown-label"
+                id="first-dropdown"
+                value={searchType}
+                onChange={handleFirstDropdownChange}
+              >
+                <MenuItem disabled value="">
+                  -Select Option-
+                </MenuItem>
+                {/* <MenuItem value="Custom">Custom</MenuItem> */}
+                <MenuItem value="Single">Single</MenuItem>
+                <MenuItem value="Between">Between</MenuItem>
+                <MenuItem value="oneMonth">1 Month</MenuItem>
+                <MenuItem value="threeMonths">3 Months</MenuItem>
+                <MenuItem value="sixMonths">6 Months</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+
+          {/* {isCustomSelected && (
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <FormControl fullWidth>
+              <InputLabel id="custom-dropdown-label">Custom</InputLabel>
+              <Select
+                labelId="custom-dropdown-label"
+                id="custom-dropdown"
+                value={customSelection}
+                onChange={handleCustomDropdownChange}
+              >
+                <MenuItem disabled value="">
+                  -Select Option-
+                </MenuItem>
+                <MenuItem value="Single">Single</MenuItem>
+                <MenuItem value="Between">Between</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        )} */}
+
+          {searchType === "Single" && (
+            <Grid item lg={12} sm={12} md={6} xs={12}>
+              <TextField
+                type="date"
+                value={singleDate}
+                variant="outlined"
+                fullWidth
+                onChange={(event) => setSingleDate(event.target.value)}
+                inputProps={{
+                  min: '1900-01-01', // Set a minimum date as needed
+                  max: new Date().toISOString().split("T")[0], // Prevent future date selection
+                }}
+              />
+            </Grid>
+          )}
+
+          {searchType === "Between" && (
+            <>
+              <Grid item lg={6} sm={12} md={6} xs={12}>
+                <TextField
+                  type="date"
+                  value={startDate}
+                  variant="outlined"
+                  fullWidth
+                  onChange={(event) => setStartDate(event.target.value)}
+                  inputProps={{
+                    min: '1900-01-01', // Set a minimum date as needed
+                    max: new Date().toISOString().split("T")[0], // Prevent future date selection
+                  }}
+                />
+              </Grid>
+              <Grid item lg={6} sm={12} md={6} xs={12}>
+                <TextField
+                  type="date"
+                  value={endDate}
+                  variant="outlined"
+                  fullWidth
+                  onChange={(event) => setEndDate(event.target.value)}
+                  inputProps={{
+                    min: '1900-01-01', // Set a minimum date as needed
+                    max: new Date().toISOString().split("T")[0], // Prevent future date selection
+                  }}
+                />
+              </Grid>
+            </>
+          )}
+
+          <Grid item lg={4} sm={6} md={6} xs={6}>
+            <div onClick={handleGet} className={classes.submitbutton}>
+              Submit
+            </div>
+          </Grid>
+          {csvCallData && (
+            <Grid item lg={4} sm={6} md={6} xs={6}>
+              {/* <div onClick={handleDownload} className={classes.submitbutton}>
+            Download
+          </div> */}
+              <div className={classes.submitbutton}>
+                <CSVLink style={{ color: 'white', }} data={csvCallData} >Download</CSVLink>
+              </div>
+            </Grid>
+          )}
+          <Grid item lg={4} sm={6} md={6} xs={6}>
+            <div onClick={handleClose} className={classes.denyButton}>
+              Cancel
+            </div>
+          </Grid>
+        </Grid>
+      );
+    };
+
+    return (
+      <div>
+        <Dialog open={showModal}>
+          <DialogContent>{showDownloadForm()}</DialogContent>
+        </Dialog>
+      </div>
+    );
+  }
 };
 
 const mapStateToProps = (state) => ({
   callHistoryData: state.history.callHistoryData,
+  csvCallData: state.history.csvCallData,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

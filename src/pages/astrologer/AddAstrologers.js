@@ -23,7 +23,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Colors } from "../../assets/styles.js";
 import logo_icon from "../../assets/images/logo_icon.png";
-
+import { InputAdornment, IconButton } from '@mui/material';
 import { connect, useDispatch } from "react-redux";
 import * as AstrologerActions from "../../redux/Actions/astrologerActions.js";
 import * as ExpertiesActions from "../../redux/Actions/expertiesActions.js";
@@ -31,6 +31,8 @@ import * as SkillActions from "../../redux/Actions/skillsActions.js";
 import * as RemedyActions from "../../redux/Actions/remediesActions.js";
 import * as SettingActions from "../../redux/Actions/settingActions.js";
 import Loader from "../../Components/loading/Loader.js";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const preferredDaysList = ["Mon", "Tues", "Wed", "Thu", "Fri", "Sat", "Sun", "All"];
 const languages = [
@@ -77,9 +79,6 @@ const languages = [
 ];
 
 const astrologerTypeList = ["Consultation", "Teaching", "Pandit", "All"];
-
-
-
 
 export const AddAstrologers = ({
   activeSkillsData,
@@ -153,6 +152,23 @@ export const AddAstrologers = ({
     countryValue: [],
   });
 
+  const [exclusive, setExclusive] = useState("exclusive");
+  const [exclusiveOne, setExclusiveOne] = useState("fifty");
+  const [exclusiveTwo, setExclusiveTwo] = useState("");
+  const [chatPrice, setChatPrice] = useState("");
+  const [companyChatPrice, setCompanyChatPrice] = useState("");
+  const [displayChatPrice, setDisplayChatPrice] = useState("");
+  const [displayCallPrice, setDisplayCallPrice] = useState("");
+  const [callPrice, setCallPrice] = useState("");
+  const [companyCallPrice, setCompanyCallPrice] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+ 
+
+
   const [profilePhoto, setprofilePhoto] = useState({
     file: logo_icon,
     bytes: "",
@@ -212,7 +228,7 @@ export const AddAstrologers = ({
     }
     handleError("countryValue", null);
   };
-  
+
 
   const handleRemedies = (item) => {
     if (remedies.some((selectedItem) => selectedItem === item._id)) {
@@ -484,7 +500,7 @@ export const AddAstrologers = ({
     return isValid;
   };
 
-  const onAdd =()=>{
+  const onAdd = () => {
     navigate('/astrologers/displayAstrologer')
   }
 
@@ -530,6 +546,7 @@ export const AddAstrologers = ({
       formData.append("liveCallPrice", liveCallPrice);
       formData.append("companyLiveCallPrice", companyLiveCallPrice);
       formData.append("status", "Active");
+      formData.append("exclusiveType", "exclusive");
       // formData.append("working", working);
       formData.append("profileImage", profilePhoto.bytes);
       formData.append("bankProofImage", bankProof.bytes);
@@ -565,7 +582,7 @@ export const AddAstrologers = ({
           data: formData,
           reset: handleReset,
           onAdd: onAdd,
-          
+
         })
       );
       // navigate('/astrologers/displayAstrologer')
@@ -690,19 +707,19 @@ export const AddAstrologers = ({
     skills,
     expertise,
     remedies,
-    callPrice,
-    chatPrice,
+    // callPrice,
+    // companyCallPrice,
+    // chatPrice,
+    // displayChatPrice,
     educationQualification,
     indiaDisplayPrice,
     astrologerCallPrice,
-    companyCallPrice,
     astrologerChatPrice,
-    companyChatPrice,
+    // companyChatPrice,
     liveVideoPrice,
     companyLiveVideoPrice,
     liveCallPrice,
     companyLiveCallPrice,
-
     astrologyQualification,
     gallery,
     astrologerType,
@@ -735,7 +752,7 @@ export const AddAstrologers = ({
 
 
   const callPriceInt = parseFloat(callPrice);
-  const companyCallPriceInt = parseFloat(companyCallPrice);  
+  const companyCallPriceInt = parseFloat(companyCallPrice);
 
   const chatPriceInt = parseFloat(chatPrice);
   const companyChatPriceInt = parseFloat(companyChatPrice);
@@ -745,6 +762,189 @@ export const AddAstrologers = ({
 
   const liveCallPriceInt = parseFloat(liveCallPrice);
   const companyLiveCallPriceInt = parseFloat(companyLiveCallPrice);
+
+
+
+  // const handleChange = (name, value) => {
+  //   switch (name) {
+  //     case "exclusive":
+  //       setExclusive(value);
+  //       setExclusiveOne(""); // Reset exclusiveOne when exclusive changes
+  //       setExclusiveTwo(""); // Reset exclusiveTwo when exclusive changes
+  //       setChatPrice("");
+  //       setCompanyChatPrice("");
+  //       setCallPrice("");
+  //       setCompanyCallPrice("");
+  //       break;
+  //     case "exclusiveOne":
+  //       setExclusiveOne(value);
+  //       calculatePrices(value, displayChatPrice, "exclusive");
+  //       calculatePrices(value, displayCallPrice, "exclusive");
+  //       break;
+  //     case "exclusiveTwo":
+  //       setExclusiveTwo(value);
+  //       calculatePrices(value, displayChatPrice, "nonExclusive");
+  //       calculatePrices(value, displayCallPrice, "nonExclusive");
+  //       break;
+  //     case "displayChatPrice":
+  //       setDisplayChatPrice(value);
+  //       // Calculate prices for both exclusive and non-exclusive selections
+  //       calculatePrices(exclusiveOne, value, "exclusive");
+  //       calculatePrices(exclusiveTwo, value, "nonExclusive");
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // };
+  
+  // const calculatePrices = (selection, displayPrice, type) => {
+  //   const displayValue = parseFloat(displayPrice);
+  //   if (!isNaN(displayValue) && selection) {
+  //     let percentage;
+  //     if (type === "exclusive") {
+  //       percentage = selection === "fifty" ? 0.5 : 0.55;
+  //     } else if (type === "nonExclusive") {
+  //       percentage = selection === "fourty" ? 0.4 : 0.45;
+  //     }
+  //     if (percentage !== undefined) {
+  //       setChatPrice((displayValue * percentage).toFixed(2));
+  //       setCompanyChatPrice((displayValue * (1 - percentage)).toFixed(2));
+  //       setCallPrice((displayValue * percentage).toFixed(2));
+  //       setCompanyCallPrice((displayValue * (1 - percentage)).toFixed(2));
+  //     }
+  //   }
+  // };
+  
+
+  // const handleChange = (name, value) => {
+  //   switch (name) {
+  //     case "exclusive":
+  //       setExclusive(value);
+  //       setExclusiveOne(""); // Reset exclusiveOne when exclusive changes
+  //       setExclusiveTwo(""); // Reset exclusiveTwo when exclusive changes
+  //       setChatPrice("");
+  //       setCompanyChatPrice("");
+  //       setCallPrice("");
+  //       setCompanyCallPrice("");
+  //       break;
+  //     case "exclusiveOne":
+  //       setExclusiveOne(value);
+  //       calculatePrices(value, displayChatPrice, "exclusive");
+  //       // Update call prices based on the current displayCallPrice
+  //       calculatePrices(value, displayCallPrice, "exclusive");
+  //       break;
+  //     case "exclusiveTwo":
+  //       setExclusiveTwo(value);
+  //       calculatePrices(value, displayChatPrice, "nonExclusive");
+  //       // Update call prices based on the current displayCallPrice
+  //       calculatePrices(value, displayCallPrice, "nonExclusive");
+  //       break;
+  //     case "displayChatPrice":
+  //       setDisplayChatPrice(value);
+  //       // Calculate prices for both exclusive and non-exclusive selections
+  //       calculatePrices(exclusiveOne, value, "exclusive");
+  //       calculatePrices(exclusiveTwo, value, "nonExclusive");
+  //       break;
+  //     case "displayCallPrice":
+  //       setDisplayCallPrice(value);
+  //       // Calculate prices for both exclusive and non-exclusive selections
+  //       calculatePrices(exclusiveOne, value, "exclusive", true);
+  //       calculatePrices(exclusiveTwo, value, "nonExclusive", true);
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // };
+  
+  // const calculatePrices = (selection, displayPrice, type, isCallPrice = false) => {
+  //   const displayValue = parseFloat(displayPrice);
+  //   if (!isNaN(displayValue) && selection) {
+  //     let percentage;
+  //     if (type === "exclusive") {
+  //       percentage = selection === "fifty" ? 0.5 : 0.55;
+  //     } else if (type === "nonExclusive") {
+  //       percentage = selection === "fourty" ? 0.4 : 0.45;
+  //     }
+  //     if (percentage !== undefined) {
+  //       if (isCallPrice) {
+  //         // Update call prices
+  //         setCallPrice((displayValue * percentage).toFixed(2));
+  //         setCompanyCallPrice((displayValue * (1 - percentage)).toFixed(2));
+  //       } else {
+  //         // Update chat prices
+  //         setChatPrice((displayValue * percentage).toFixed(2));
+  //         setCompanyChatPrice((displayValue * (1 - percentage)).toFixed(2));
+  //       }
+  //     }
+  //   }
+  // };
+
+
+  const handleChange = (name, value) => {
+    switch (name) {
+      case "exclusive":
+        setExclusive(value);
+        setExclusiveOne(""); // Reset exclusiveOne when exclusive changes
+        setExclusiveTwo(""); // Reset exclusiveTwo when exclusive changes
+        setChatPrice("");
+        setCompanyChatPrice("");
+        setCallPrice("");
+        setCompanyCallPrice("");
+        break;
+      case "exclusiveOne":
+        setExclusiveOne(value);
+        calculatePrices(value, displayChatPrice, "exclusive");
+        // Update call prices based on the current displayCallPrice
+        calculatePrices(value, displayCallPrice, "exclusive", true);
+        break;
+      case "exclusiveTwo":
+        setExclusiveTwo(value);
+        calculatePrices(value, displayChatPrice, "nonExclusive");
+        // Update call prices based on the current displayCallPrice
+        calculatePrices(value, displayCallPrice, "nonExclusive", true);
+        break;
+      case "displayChatPrice":
+        setDisplayChatPrice(value);
+        // Calculate prices for both exclusive and non-exclusive selections
+        calculatePrices(exclusiveOne, value, "exclusive");
+        calculatePrices(exclusiveTwo, value, "nonExclusive");
+        break;
+      case "displayCallPrice":
+        setDisplayCallPrice(value);
+        // Calculate prices for both exclusive and non-exclusive selections
+        calculatePrices(exclusiveOne, value, "exclusive", true);
+        calculatePrices(exclusiveTwo, value, "nonExclusive", true);
+        break;
+      default:
+        break;
+    }
+  };
+  
+  const calculatePrices = (selection, displayPrice, type, isCallPrice = false) => {
+    const displayValue = parseFloat(displayPrice);
+    if (!isNaN(displayValue) && selection) {
+      let percentage;
+      
+      if (type === "exclusive") {
+        percentage = selection === "fifty" ? 0.5 : selection === "fiftyFive" ? 0.55 : undefined; // Adjusted for fiftyFive
+      } else if (type === "nonExclusive") {
+        percentage = selection === "fourty" ? 0.4 : selection === "fortyFive" ? 0.45 : undefined; // Adjusted for fortyFive
+      }
+      
+      if (percentage !== undefined) {
+        if (isCallPrice) {
+          // Update call prices
+          setCallPrice((displayValue * percentage).toFixed(2));
+          setCompanyCallPrice((displayValue * (1 - percentage)).toFixed(2));
+        } else {
+          // Update chat prices
+          setChatPrice((displayValue * percentage).toFixed(2));
+          setCompanyChatPrice((displayValue * (1 - percentage)).toFixed(2));
+        }
+      }
+    }
+  };
+  
 
   return (
     <>
@@ -856,7 +1056,7 @@ export const AddAstrologers = ({
                 )}
               </FormControl>
             </Grid>
-            <Grid item lg={4} sm={12} md={12} xs={12}>
+            {/* <Grid item lg={4} sm={12} md={12} xs={12}>
               <TextField
                 label="Password"
                 type="password"
@@ -868,7 +1068,33 @@ export const AddAstrologers = ({
                 helperText={error.password}
                 error={error.password ? true : false}
               />
-            </Grid>
+            </Grid> */}
+             <Grid item lg={4} sm={12} md={12} xs={12}>
+      <TextField
+        label="Password"
+        type={showPassword ? 'text' : 'password'}
+        value={password}
+        variant="outlined"
+        fullWidth
+        onFocus={() => handleError("password", null)}
+        onChange={(e) => updateState({ password: e.target.value })}
+        helperText={error.password}
+        error={!!error.password}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                onClick={toggleShowPassword}
+                edge="end"
+              >
+                {/* {showPassword ? <VisibilityOff /> : <Visibility />} */}
+                {showPassword ? <Visibility /> : <VisibilityOff />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+      />
+    </Grid>
             <Grid item lg={4} sm={12} md={12} xs={12}>
               <TextField
                 type="date"
@@ -1098,41 +1324,41 @@ export const AddAstrologers = ({
                 inputProps={{
                   min: 0,
                   max: 5,
-              }}
+                }}
               />
             </Grid>
             {/* astrologer container ends here */}
 
             <Grid item lg={4} sm={12} md={12} xs={12}>
-      <FormControl component="fieldset">
-        <FormLabel component="legend">Preferred Days</FormLabel>
-        <FormGroup aria-label="position" row>
-          {preferredDaysList.map((item) => (
-            <div key={item} className={classes.chips}>
-              <FormControlLabel
-                value={item}
-                className={classes.checkbox}
-                control={
-                  <Checkbox
-                    checked={
-                      item === "All"
-                        ? preferredDays.length === preferredDaysList.length - 1
-                        : preferredDays.includes(item)
-                    }
-                    onChange={() => handlePreferredDays(item)}
-                  />
-                }
-                label={item}
-                labelPlacement="end"
-              />
-            </div>
-          ))}
-        </FormGroup>
-      </FormControl>
-      {error.preferredDays && (
-        <div className={classes.errorstyles}>{error.preferredDays}</div>
-      )}
-    </Grid>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Preferred Days</FormLabel>
+                <FormGroup aria-label="position" row>
+                  {preferredDaysList.map((item) => (
+                    <div key={item} className={classes.chips}>
+                      <FormControlLabel
+                        value={item}
+                        className={classes.checkbox}
+                        control={
+                          <Checkbox
+                            checked={
+                              item === "All"
+                                ? preferredDays.length === preferredDaysList.length - 1
+                                : preferredDays.includes(item)
+                            }
+                            onChange={() => handlePreferredDays(item)}
+                          />
+                        }
+                        label={item}
+                        labelPlacement="end"
+                      />
+                    </div>
+                  ))}
+                </FormGroup>
+              </FormControl>
+              {error.preferredDays && (
+                <div className={classes.errorstyles}>{error.preferredDays}</div>
+              )}
+            </Grid>
 
             <Grid item lg={4} sm={12} md={12} xs={12}>
               <FormControl component="fieldset">
@@ -1201,197 +1427,8 @@ export const AddAstrologers = ({
               )}
             </Grid>
 
-            <Grid
-              item
-              lg={3}
-              sm={3}
-              md={3}
-              xs={3}
-              className={classes.uploadContainer}
-            >
-              <Grid
-                component="label"
-                onClick={handleProfile}
-                className={classes.uploadImageButton}
-              >
-                Upload Profile Photo
-                <input
-                  onChange={handleProfile}
-                  hidden
-                  accept="image/*"
-                  type="file"
-                />
-              </Grid>
-              <div className={classes.errorstyles}>{error.profilePhoto}</div>
-            </Grid>
-            <Grid item lg={1} sm={1} md={1} xs={1}>
-              <Avatar
-                color={Colors.primaryDark}
-                src={profilePhoto.file}
-                style={{ width: 56, height: 56 }}
-              />
-            </Grid>
-            <Grid
-              item
-              lg={3}
-              sm={3}
-              md={3}
-              xs={3}
-              className={classes.uploadContainer}
-            >
-              <Grid
-                component="label"
-                onClick={handlebankProof}
-                className={classes.uploadImageButton}
-              >
-                Upload Bank Proof
-                <input
-                  onChange={handlebankProof}
-                  hidden
-                  accept="image/*"
-                  type="file"
-                />
-              </Grid>
-              <div className={classes.errorstyles}>{error.bankProof}</div>
-            </Grid>
-            <Grid item lg={1} sm={1} md={1} xs={1}>
-              <Avatar
-                color={Colors.primaryDark}
-                src={bankProof.file}
-                style={{ width: 56, height: 56 }}
-              />
-            </Grid>
-            <Grid
-              item
-              lg={3}
-              sm={3}
-              md={3}
-              xs={3}
-              className={classes.uploadContainer}
-            >
-              <Grid
-                component="label"
-                onClick={handleidProof}
-                className={classes.uploadImageButton}
-              >
-                Upload Id Proof
-                <input
-                  onChange={handleidProof}
-                  hidden
-                  accept="image/*"
-                  type="file"
-                />
-              </Grid>
-              <div className={classes.errorstyles}>{error.idProof}</div>
-            </Grid>
-            <Grid item lg={1} sm={1} md={1} xs={1}>
-              <Avatar
-                color={Colors.primaryDark}
-                src={idProof.file}
-                style={{ width: 56, height: 56 }}
-              />
-            </Grid>
-
-            <Grid item lg={3} sm={12} md={12} xs={12}>
-              <TextField
-                label="Bank Account Number"
-                value={bankAccountNumber}
-                variant="outlined"
-                fullWidth
-                type="number"
-                onFocus={() => handleError("bankAccountNumber", null)}
-                onChange={(e) =>
-                  updateState({ bankAccountNumber: e.target.value })
-                }
-                helperText={error.bankAccountNumber}
-                error={error.bankAccountNumber ? true : false}
-              />
-            </Grid>
-            <Grid item lg={3} sm={12} md={12} xs={12}>
-              <TextField
-                label="Enter Bank Name"
-                value={bankName}
-                variant="outlined"
-                fullWidth
-                onChange={(e) => updateState({ bankName: e.target.value })}
-                helperText={error.bankName}
-                error={!!error.bankName ? true : false}
-              />
-            </Grid>
-            <Grid item lg={3} md={12} sm={12} xs={12}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">
-                  Account Type
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="Account Type"
-                  value={accountType}
-                  onFocus={() => handleError("accountType", null)}
-                  onChange={(e) => updateState({ accountType: e.target.value })}
-                  helperText={error.accountType}
-                  error={error.accountType ? true : false}
-                >
-                  <div className={classes.errorstyles}>{error.accountType}</div>
-                  <MenuItem disabled value={null}>
-                    -Select Account type-
-                  </MenuItem>
-                  <MenuItem value="saving">Saving</MenuItem>
-                  <MenuItem value="current">Current</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item lg={3} sm={12} md={12} xs={12}>
-              <TextField
-                label="Enter IFSC Code"
-                value={ifscCode}
-                variant="outlined"
-                fullWidth
-                onChange={(e) => updateState({ ifscCode: e.target.value })}
-                helperText={error.ifscCode}
-                error={error.ifscCode ? true : false}
-              />
-            </Grid>
-
-            <Grid item lg={4} sm={12} md={12} xs={12}>
-              <TextField
-                label="Account Holder Name"
-                value={accountHolderName}
-                variant="outlined"
-                fullWidth
-                onChange={(e) =>
-                  updateState({ accountHolderName: e.target.value })
-                }
-                helperText={error.accountHolderName}
-                error={error.accountHolderName ? true : false}
-              />
-            </Grid>
-            <Grid item lg={4} sm={12} md={12} xs={12}>
-              <TextField
-                label="PAN card Number"
-                value={panNumber}
-                variant="outlined"
-                fullWidth
-                onChange={(e) => updateState({ panNumber: e.target.value })}
-                helperText={error.panNumber}
-                error={error.panNumber ? true : false}
-              />
-            </Grid>
-            <Grid item lg={4} sm={12} md={12} xs={12}>
-              <TextField
-                type="number"
-                label="Adhar card Number"
-                inputMode="numeric"
-                value={aadharNumber}
-                variant="outlined"
-                fullWidth
-                onChange={(e) => updateState({ aadharNumber: e.target.value })}
-                helperText={error.aadharNumber}
-                error={error.aadharNumber ? true : false}
-              />
-            </Grid>
-            <Grid item lg={4} sm={12} md={12} xs={12}>
+     
+            <Grid item lg={6} sm={12} md={12} xs={12}>
               <TextField
                 type="text"
                 label="Educational Qualification"
@@ -1405,7 +1442,7 @@ export const AddAstrologers = ({
                 error={error.educationQualification ? true : false}
               />
             </Grid>
-            <Grid item lg={4} sm={12} md={12} xs={12}>
+            <Grid item lg={6} sm={12} md={12} xs={12}>
               <TextField
                 type="text"
                 label="Astrological Qualification"
@@ -1417,6 +1454,128 @@ export const AddAstrologers = ({
                 }
                 helperText={error.astrologyQualification}
                 error={error.astrologyQualification ? true : false}
+              />
+            </Grid>
+
+            <Grid item lg={4} md={12} sm={12} xs={12}>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Type</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={exclusive}
+            error={!!error.exclusive}
+            onFocus={() => handleError("exclusive", null)}
+            onChange={(e) => handleChange("exclusive", e.target.value)}
+          >
+            <MenuItem disabled value="">
+              -Select Option-
+            </MenuItem>
+            <MenuItem value="exclusive">Exclusive</MenuItem>
+            <MenuItem value="nonExclusive">Non Exclusive</MenuItem>
+          </Select>
+          {error.exclusive && (
+            <div className={classes.errorstyles}>{error.exclusive}</div>
+          )}
+        </FormControl>
+      </Grid>
+
+      {exclusive === "exclusive" && (
+        <Grid item lg={4} md={12} sm={12} xs={12}>
+          <FormControl fullWidth>
+            <InputLabel id="exclusive-one-label">Exclusive</InputLabel>
+            <Select
+              labelId="exclusive-one-label"
+              id="exclusive-one-select"
+              value={exclusiveOne}
+              error={!!error.exclusiveOne}
+              onFocus={() => handleError("exclusiveOne", null)}
+              onChange={(e) => handleChange("exclusiveOne", e.target.value)}
+            >
+              <MenuItem disabled value="">
+                -Select Option-
+              </MenuItem>
+              <MenuItem value="fifty">50</MenuItem>
+              <MenuItem value="fiftyFive">55</MenuItem>
+            </Select>
+            {error.exclusiveOne && (
+              <div className={classes.errorstyles}>{error.exclusiveOne}</div>
+            )}
+          </FormControl>
+        </Grid>
+      )}
+
+      {exclusive === "nonExclusive" && (
+        <Grid item lg={4} md={12} sm={12} xs={12}>
+          <FormControl fullWidth>
+            <InputLabel id="exclusive-two-label">Non-Exclusive</InputLabel>
+            <Select
+              labelId="exclusive-two-label"
+              id="exclusive-two-select"
+              value={exclusiveTwo}
+              error={!!error.exclusiveTwo}
+              onFocus={() => handleError("exclusiveTwo", null)}
+              onChange={(e) => handleChange("exclusiveTwo", e.target.value)}
+            >
+              <MenuItem disabled value="">
+                -Select Option-
+              </MenuItem>
+              <MenuItem value="fourty">40</MenuItem>
+              <MenuItem value="fourtyFive">45</MenuItem>
+            </Select>
+            {error.exclusiveTwo && (
+              <div className={classes.errorstyles}>{error.exclusiveTwo}</div>
+            )}
+          </FormControl>
+        </Grid>
+      )}
+
+      <Grid item lg={4} sm={12} md={12} xs={12}>
+        <TextField
+          fullWidth
+          label="Display Chat Price"
+          value={displayChatPrice}
+          onChange={(e) => handleChange("displayChatPrice", e.target.value)}
+        />
+      </Grid>
+      <Grid item lg={4} sm={12} md={12} xs={12}>
+        <TextField
+          type="number"
+          label="Chat Price"
+          inputMode="numeric"
+          value={chatPrice}
+          variant="outlined"
+          fullWidth
+          onChange={(e) => setChatPrice(e.target.value)} // Optional, could be readonly
+          helperText={error.chatPrice}
+          error={!!error.chatPrice}
+          InputProps={{
+            readOnly: true,
+          }}
+        />
+      </Grid>
+      <Grid item lg={4} sm={12} md={12} xs={12}>
+        <TextField
+          type="number"
+          label="Company Chat Price"
+          inputMode="numeric"
+          value={companyChatPrice}
+          variant="outlined"
+          fullWidth
+          onChange={(e) => setCompanyChatPrice(e.target.value)} // Optional, could be readonly
+          helperText={error.companyChatPrice}
+          error={!!error.companyChatPrice}
+          InputProps={{
+            readOnly: true,
+          }}
+        />
+      </Grid>
+      <Grid item lg={4} sm={12} md={12} xs={12}>
+              <TextField
+                fullWidth
+                label="Display Call Price"
+                value={displayCallPrice}
+                onChange={(e) => handleChange("displayCallPrice", e.target.value)}
               />
             </Grid>
 
@@ -1446,34 +1605,6 @@ export const AddAstrologers = ({
                 }
                 helperText={error.companyCallPrice}
                 error={error.companyCallPrice ? true : false}
-              />
-            </Grid>
-            <Grid item lg={4} sm={12} md={12} xs={12}>
-              <TextField
-                type="number"
-                label="Chat Price"
-                inputMode="numeric"
-                value={chatPrice}
-                variant="outlined"
-                fullWidth
-                onChange={(e) => updateState({ chatPrice: e.target.value })}
-                helperText={error.chatPrice}
-                error={error.chatPrice ? true : false}
-              />
-            </Grid>
-            <Grid item lg={4} sm={12} md={12} xs={12}>
-              <TextField
-                type="number"
-                label="Company Chat Price"
-                inputMode="numeric"
-                value={companyChatPrice}
-                variant="outlined"
-                fullWidth
-                onChange={(e) =>
-                  updateState({ companyChatPrice: e.target.value })
-                }
-                helperText={error.companyChatPrice}
-                error={error.companyChatPrice ? true : false}
               />
             </Grid>
             <Grid item lg={4} sm={12} md={12} xs={12}>
@@ -1534,26 +1665,8 @@ export const AddAstrologers = ({
                 error={error.companyLiveCallPrice ? true : false}
               />
             </Grid>
-            <Grid item lg={4} sm={12} md={12} xs={12}>
-              <TextField
-                fullWidth
-                label="Display Call Price"
-                value={callPriceInt + companyCallPriceInt}
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-            </Grid>
-            <Grid item lg={4} sm={12} md={12} xs={12}>
-              <TextField
-                fullWidth
-                label="Display Chat Price"
-                value={chatPriceInt + companyChatPriceInt}
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-            </Grid>
+           
+
             <Grid item lg={4} sm={12} md={12} xs={12}>
               <TextField
                 fullWidth
@@ -1752,6 +1865,197 @@ export const AddAstrologers = ({
               {error.expertise && (
                 <div className={classes.errorstyles}>{error.expertise}</div>
               )}
+            </Grid>
+
+            <Grid
+              item
+              lg={3}
+              sm={3}
+              md={3}
+              xs={3}
+              className={classes.uploadContainer}
+            >
+              <Grid
+                component="label"
+                onClick={handleProfile}
+                className={classes.uploadImageButton}
+              >
+                Upload Profile Photo
+                <input
+                  onChange={handleProfile}
+                  hidden
+                  accept="image/*"
+                  type="file"
+                />
+              </Grid>
+              <div className={classes.errorstyles}>{error.profilePhoto}</div>
+            </Grid>
+            <Grid item lg={1} sm={1} md={1} xs={1}>
+              <Avatar
+                color={Colors.primaryDark}
+                src={profilePhoto.file}
+                style={{ width: 56, height: 56 }}
+              />
+            </Grid>
+            <Grid
+              item
+              lg={3}
+              sm={3}
+              md={3}
+              xs={3}
+              className={classes.uploadContainer}
+            >
+              <Grid
+                component="label"
+                onClick={handlebankProof}
+                className={classes.uploadImageButton}
+              >
+                Upload Bank Proof
+                <input
+                  onChange={handlebankProof}
+                  hidden
+                  accept="image/*"
+                  type="file"
+                />
+              </Grid>
+              <div className={classes.errorstyles}>{error.bankProof}</div>
+            </Grid>
+            <Grid item lg={1} sm={1} md={1} xs={1}>
+              <Avatar
+                color={Colors.primaryDark}
+                src={bankProof.file}
+                style={{ width: 56, height: 56 }}
+              />
+            </Grid>
+            <Grid
+              item
+              lg={3}
+              sm={3}
+              md={3}
+              xs={3}
+              className={classes.uploadContainer}
+            >
+              <Grid
+                component="label"
+                onClick={handleidProof}
+                className={classes.uploadImageButton}
+              >
+                Upload Id Proof
+                <input
+                  onChange={handleidProof}
+                  hidden
+                  accept="image/*"
+                  type="file"
+                />
+              </Grid>
+              <div className={classes.errorstyles}>{error.idProof}</div>
+            </Grid>
+            <Grid item lg={1} sm={1} md={1} xs={1}>
+              <Avatar
+                color={Colors.primaryDark}
+                src={idProof.file}
+                style={{ width: 56, height: 56 }}
+              />
+            </Grid>
+
+            <Grid item lg={3} sm={12} md={12} xs={12}>
+              <TextField
+                label="Bank Account Number"
+                value={bankAccountNumber}
+                variant="outlined"
+                fullWidth
+                type="number"
+                onFocus={() => handleError("bankAccountNumber", null)}
+                onChange={(e) =>
+                  updateState({ bankAccountNumber: e.target.value })
+                }
+                helperText={error.bankAccountNumber}
+                error={error.bankAccountNumber ? true : false}
+              />
+            </Grid>
+            <Grid item lg={3} sm={12} md={12} xs={12}>
+              <TextField
+                label="Enter Bank Name"
+                value={bankName}
+                variant="outlined"
+                fullWidth
+                onChange={(e) => updateState({ bankName: e.target.value })}
+                helperText={error.bankName}
+                error={!!error.bankName ? true : false}
+              />
+            </Grid>
+            <Grid item lg={3} md={12} sm={12} xs={12}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">
+                  Account Type
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="Account Type"
+                  value={accountType}
+                  onFocus={() => handleError("accountType", null)}
+                  onChange={(e) => updateState({ accountType: e.target.value })}
+                  helperText={error.accountType}
+                  error={error.accountType ? true : false}
+                >
+                  <div className={classes.errorstyles}>{error.accountType}</div>
+                  <MenuItem disabled value={null}>
+                    -Select Account type-
+                  </MenuItem>
+                  <MenuItem value="saving">Saving</MenuItem>
+                  <MenuItem value="current">Current</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item lg={3} sm={12} md={12} xs={12}>
+              <TextField
+                label="Enter IFSC Code"
+                value={ifscCode}
+                variant="outlined"
+                fullWidth
+                onChange={(e) => updateState({ ifscCode: e.target.value })}
+                helperText={error.ifscCode}
+                error={error.ifscCode ? true : false}
+              />
+            </Grid>
+
+            <Grid item lg={4} sm={12} md={12} xs={12}>
+              <TextField
+                label="Account Holder Name"
+                value={accountHolderName}
+                variant="outlined"
+                fullWidth
+                onChange={(e) =>
+                  updateState({ accountHolderName: e.target.value })
+                }
+                helperText={error.accountHolderName}
+                error={error.accountHolderName ? true : false}
+              />
+            </Grid>
+            <Grid item lg={4} sm={12} md={12} xs={12}>
+              <TextField
+                label="PAN card Number"
+                value={panNumber}
+                variant="outlined"
+                fullWidth
+                onChange={(e) => updateState({ panNumber: e.target.value })}
+                helperText={error.panNumber}
+                error={error.panNumber ? true : false}
+              />
+            </Grid>
+            <Grid item lg={4} sm={12} md={12} xs={12}>
+              <TextField
+                type="number"
+                label="Adhar card Number"
+                inputMode="numeric"
+                value={aadharNumber}
+                variant="outlined"
+                fullWidth
+                onChange={(e) => updateState({ aadharNumber: e.target.value })}
+                helperText={error.aadharNumber}
+                error={error.aadharNumber ? true : false}
+              />
             </Grid>
             <Grid item lg={6} sm={6} md={6} xs={6}>
               <div onClick={handleSubmit} className={classes.submitbutton}>

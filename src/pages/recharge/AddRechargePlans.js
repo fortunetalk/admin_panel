@@ -22,6 +22,7 @@ const AddRechargePlans = ({ dispatch }) => {
   const classes = useStyles();
   const [rechargeAmount, setRechargeAmount] = useState("");
   const [extraPercent, setExtraPercent] = useState("");
+  const [currency, setCurrency] = useState("");
   const [status, setStatus] = useState("");
   const [error, setError] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -54,6 +55,7 @@ const AddRechargePlans = ({ dispatch }) => {
       var body = {
         amount: rechargeAmount,
         percentage: extraPercent,
+        currency: currency,
         recharge_status: status,
       };
       handleReset();
@@ -64,6 +66,7 @@ const AddRechargePlans = ({ dispatch }) => {
   const handleReset = () => {
     setRechargeAmount("");
     setExtraPercent("");
+    setCurrency("");
     setStatus("");
     setError({});
   };
@@ -113,6 +116,19 @@ const AddRechargePlans = ({ dispatch }) => {
             />
           </Grid>
           <Grid item lg={6} sm={12} md={12} xs={12}>
+            <TextField
+              label="Enter Currency"
+              type="text"
+              error={Boolean(error.currency)}
+              helperText={error.currency}
+              value={currency}
+              onFocus={() => handleError("currency", null)}
+              onChange={(event) => setCurrency(event.target.value)}
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+          <Grid item lg={6} sm={12} md={12} xs={12}>
             <FormControl fullWidth>
               <InputLabel id="select-label">Select Status</InputLabel>
               <Select
@@ -135,7 +151,7 @@ const AddRechargePlans = ({ dispatch }) => {
               )}
             </FormControl>
           </Grid>
-          <Grid item lg={6} sm={12} md={12} xs={12}></Grid>
+        
           <Grid item lg={6} sm={6} md={6} xs={6}>
             {/* <div onClick={handleSubmit} className={classes.submitbutton}>
               {isLoading ? <CircularProgress size={24} /> : " Submit"}

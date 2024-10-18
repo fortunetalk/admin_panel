@@ -106,13 +106,13 @@ function* deleteAstrologerReview(actions) {
 
 function* updateAstrologerReview(actions) {
   try {
-    const { payload } = actions;
+    const { body, onComplete } = actions.payload;
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const response = yield ApiRequest.postRequest({
       url: api_url + update_review,
       header: "json",
-      data: payload,
+      data: body,
     });
 
     if (response.success) {
@@ -123,6 +123,7 @@ function* updateAstrologerReview(actions) {
         timer: 2000,
       });
       yield put({ type: actionTypes.GET_ASTROLOGERS_REVIEWS, payload: null });
+      yield call(onComplete);
     } else {
       Swal.fire({
         icon: "error",

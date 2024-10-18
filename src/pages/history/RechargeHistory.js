@@ -43,9 +43,9 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
     const handleView = (rowData) => {
         setViewData(true);
         setData({
-            customerId: rowData?.customerId?.customerUniqueId || "",
-            customerName: rowData?.customerId?.firstName || "",
-            customerNumber: rowData?.customerId?.phoneNumber || "",
+            customerId: rowData?._id || "",
+            customerName: rowData?.customerName || "",
+            customerNumber: rowData?.phoneNumber || "",
             invoiceId: rowData?.invoiceId || "",
             amount: rowData?.amount || "",
             gst: rowData?.gst || "",
@@ -79,21 +79,24 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                         title="Wallet Transactions"
                         
                         columns={[
-                            {
-                                title: "S.No",
-                                editable: "never",
-                                render: (rowData) => rowData.tableData.id + 1,
+                            // {
+                            //     title: "S.No",
+                            //     editable: "never",
+                            //     render: (rowData) => rowData.tableData.id + 1,
                               
+                            // },
+                            { title: "InvoiceId",
+                              field: "invoiceId",
+                              filtering: false ,
+                            
                             },
                             // { title: "Customer Id", field: "customerId.customerUniqueId" },
                             { title: "Customer Name", 
-                             render: (rowData)=>{
-                               const firstName = rowData?.firstName;
-                               const lastname = rowData?.lastName;
-                               return `${firstName} ${lastname}`
+                                filtering: false,
+                                field: "customerName",
+
                              },
-                             },
-                             { title: "Customer Number", field: "phoneNumber" },
+                             { title: "Customer Number", filtering: false, field: "phoneNumber" },
                              {
                                 title: "Date",
                                 filtering: false,
@@ -106,38 +109,70 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                                 ),
                               },
                             //  { title: "GST", field: "gst" },
-                             { 
-                                title: "Amount", 
+                            //  { 
+                            //     title: "Amount", 
+                            //     field: "amount",
+                            //     render: (rowData) => {
+                            //       const balance = Number(rowData.amount).toFixed(2);
+                            //       if (rowData.amount === 0) {
+                            //         return `₹ 0.00`;
+                            //       }
+                            //       if (rowData?.transactionType === "DEBIT") {
+                            //         return `- ₹${balance}`;
+                            //       }
+                            //       return `+ ₹${balance}`;
+                            //     }
+                            //   },
+                              {
+                                title: "Amount",
                                 field: "amount",
+                                filtering: true,
+                                lookup: { unpaid: "NO BALANCE", paid: "HAVE BALANCE", },
                                 render: (rowData) => {
-                                  const balance = Number(rowData.amount).toFixed(2);
-                                  if (rowData.amount === 0) {
-                                    return `₹ 0.00`;
+                                    const balance = Number(rowData.amount).toFixed(2);
+                                    if (rowData.amount === 0) {
+                                      return `₹ 0.00`;
+                                    }
+                                    if (rowData?.transactionType === "DEBIT") {
+                                      return `- ₹${balance}`;
+                                    }
+                                    return `+ ₹${balance}`;
                                   }
-                                  if (rowData?.transactionType === "DEBIT") {
-                                    return `- ₹${balance}`;
-                                  }
-                                  return `+ ₹${balance}`;
-                                }
                               },
-                            // { title: "InvoiceId", field: "invoiceId" },
+                            
                             // { title: "PaymentMethod", field: "paymentMethod" },
-                            { title: "TransactionType",
-                                render: (rowData) => {
+                            // { title: "TransactionType",
+                            //     filtering: false,
+                            //     render: (rowData) => {
                                    
-                                    if (rowData?.transactionType=="DEBIT"){
-                                        return `Deducted`;
-                                    }
-                                    else{
-                                        return `Credited`;
-                                    }
+                            //         if (rowData?.transactionType=="DEBIT"){
+                            //             return `Deducted`;
+                            //         }
+                            //         else{
+                            //             return `Credited`;
+                            //         }
                                     
-                                  }
+                            //       }
+                            // },
+                            {
+                                title: "TransactionType",
+                                filtering: false,
+                                render: (rowData) => {
+                                    const transactionType = rowData?.transactionType;
+                                    const text = transactionType === "DEBIT" ? 'Deducted' : 'Credited';
+                                    const color = transactionType === "CREDIT" ? 'green' : 'red';
+                            
+                                    return (
+                                        <span style={{ color }}>
+                                            {text}
+                                        </span>
+                                    );
+                                }
                             },
                             // { title: "ReferenceModel", field: "referenceModel" },
-                            { title: "Type", field: "type" },
+                            { title: "Type", field: "type", filtering: false },
                         ]}
-                        // data={rechargeHistoryData}
+
                         data={query =>
                             new Promise((resolve, reject) => {
                               console.log('Query:', query);
@@ -179,7 +214,7 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                             })
                           }
                         
-                          options={{ ...propStyles.tableStyles,  paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], filtering: false }}
+                          options={{ ...propStyles.tableStyles,  paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100, 500, 1000], filtering: true }}
 
                         style={{ fontSize: "1.0rem" }}
                         actions={[
@@ -201,13 +236,13 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                 <Grid container spacing={2}>
                     <Grid item lg={12} sm={12} md={12} xs={12}>
                         <div className={classes.headingContainer}>
-                            <div className={classes.heading}>Recharge History Data</div>
+                            <div className={classes.heading}>Wallet Transaction</div>
                             <div onClick={handleClose} className={classes.closeButton}>
                                 <CloseRounded />
                             </div>
                         </div>
                     </Grid>
-                    <Grid item lg={6} md={6} sm={12} xs={12}>
+                    {/* <Grid item lg={6} md={6} sm={12} xs={12}>
                         <TextField
                             label="Customer ID"
                             value={data.customerId}
@@ -217,7 +252,7 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                                 readOnly: true,
                             }}
                         />
-                    </Grid>
+                    </Grid> */}
                     <Grid item lg={6} md={6} sm={12} xs={12}>
                         <TextField
                             label="Customer Name"
@@ -251,10 +286,11 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                             }}
                         />
                     </Grid>
+                    {data.transactionType === "CREDIT" && (
                     <Grid item lg={6} md={6} sm={12} xs={12}>
                         <TextField
                             label="GST"
-                            value={data.gst || "0"}
+                            value={`${data.gst || "0"}%`} 
                             variant="outlined"
                             fullWidth
                             InputProps={{
@@ -262,6 +298,7 @@ const ChatHistory = ({ dispatch, rechargeHistoryData }) => {
                             }}
                         />
                     </Grid>
+                )}
                     <Grid item lg={6} md={6} sm={12} xs={12}>
                         <TextField
                             label="Invoice ID"

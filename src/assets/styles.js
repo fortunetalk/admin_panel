@@ -162,7 +162,7 @@ loginheadingContainer: {
     marginLeft: "14px",
   },
   chips:{
-    margin: 10,
+    margin: 3,
   },
   checkbox: {
     color: '#333',

@@ -45,7 +45,8 @@ const Login = () => {
   const handleLogin = () => {
     if (validation()) {
 
-      dispatch(adminLoginRequest({ email: userEmail, password, type: isSubAdmin? 'subadmin' : 'admin'}));
+      // dispatch(adminLoginRequest({ email: userEmail, password, type: isSubAdmin? 'subadmin' : 'admin'}));
+      dispatch(adminLoginRequest({ email: userEmail, password }));
 
       Swal.fire({
         icon: 'success',

@@ -16,7 +16,6 @@ import SidebarMenu from "./SidebarMenu";
 import "./sideBar.css";
 import { connect } from "react-redux";
 
-
 const routes = [
   {
     path: "/",
@@ -37,11 +36,13 @@ const routes = [
         path: "/astrologers/AddAstrologers",
         name: "Add Astrologers",
         icon: <BiUserPlus />,
+        key: "addAstrologer",
       },
       {
         path: "/astrologers/displayAstrologer",
         name: "List of Astrologers",
         icon: <BiUser />,
+        key: "displayAstrologer",
       },
       {
         path: "/astrologers/topAstrologers",
@@ -124,7 +125,6 @@ const routes = [
         name: "Call History",
         icon: <BiAbacus />,
       },
-      
     ],
   },
   {
@@ -280,7 +280,7 @@ const routes = [
   //     //   name: "User's Gift History",
   //     //   icon: <BiAbacus />,
   //     // },
-      
+
   //   ],
   // },
   {
@@ -303,8 +303,6 @@ const routes = [
         name: "User's Gift History",
         icon: <BiAbacus />,
       },
-     
-      
     ],
   },
   {
@@ -325,7 +323,6 @@ const routes = [
     ],
   },
 
-
   {
     path: "/displayRemedise",
     name: "Remedies",
@@ -335,7 +332,6 @@ const routes = [
     path: "/displayExpertise",
     name: "Expertise",
     icon: <BiAbacus />,
-
   },
   {
     path: "/displayReview",
@@ -360,19 +356,17 @@ const routes = [
     name: "User Call Discussion",
     icon: <BiAbacus />,
   },
-  
+
   {
     path: "/displayBlogCategory",
     name: "Blog Category",
     icon: <BiAbacus />,
-
   },
   {
     path: "/displayAstroblog",
     name: "Blog",
     icon: <BiAbacus />,
   },
-  
 
   {
     path: "/displayAstrologerOffer",
@@ -434,7 +428,6 @@ const routes = [
         name: "Pooja Banner",
         icon: <BiAbacus />,
       },
-
     ],
   },
   {
@@ -442,7 +435,6 @@ const routes = [
     name: "Pages",
     icon: <BiAbacus />,
     subRoutes: [
-
       {
         path: "/displayTermsAndConditions",
         name: "Terms And Conditions",
@@ -453,7 +445,6 @@ const routes = [
         name: "Privacy Policy",
         icon: <BiAbacus />,
       },
-
     ],
   },
   {
@@ -537,7 +528,6 @@ const routes = [
         name: "International Prices",
         icon: <BiAbacus />,
       },
-     
     ],
   },
   {
@@ -565,14 +555,9 @@ const routes = [
         name: "City",
         icon: <BiUser />,
       },
-
-
     ],
   },
-
 ];
-
-
 
 const inputAnimation = {
   hidden: {
@@ -608,9 +593,48 @@ const showAnimation = {
   },
 };
 
-const SideBar = ({ children, dispatch, isSidebarOpen , adminType}) => {
+const SideBar = ({
+  children,
+  dispatch,
+  isSidebarOpen,
+  adminType,
+  adminData,
+}) => {
+  const { user, type } = adminData || {};
   const [hiddenSidebarWidth, setHiddenSidebarWidth] = useState(0);
- 
+  const [myRoutes, setMyRoutes] = useState(null);
+
+  useEffect(() => {
+    let updatedRoutes = [...routes]; // Create a copy of routes to avoid mutation
+
+    if (type === "subadmin") {
+      if (!user?.permissions?.astrologer?.isPermited) {
+        updatedRoutes.splice(2, 1); // Remove the route at index 2
+      } else if (updatedRoutes[2]?.subRoutes) {
+        let updatedSubRoutes = [...updatedRoutes[2].subRoutes]; // Copy of subRoutes to modify
+
+        // Check 'addAstrologer' permission and remove 'addAstrologer' sub-route if not permitted
+        if (!user?.permissions?.astrologer?.addAstrologer) {
+          updatedSubRoutes = updatedSubRoutes.filter(
+            (subRoute) => subRoute.key !== "addAstrologer"
+          );
+        }
+
+        // Check 'displayAstrologer' permission and remove 'displayAstrologer' sub-route if not permitted
+        if (!user?.permissions?.astrologer?.listOfAstrologer?.isPermited) {
+          updatedSubRoutes = updatedSubRoutes.filter(
+            (subRoute) => subRoute.key !== "displayAstrologer"
+          );
+        }
+
+        // Update the main route with the filtered subRoutes
+        updatedRoutes[2] = { ...updatedRoutes[2], subRoutes: updatedSubRoutes };
+      }
+    }
+
+    setMyRoutes(updatedRoutes); // Set the modified routes
+  }, [type, user?.permissions]); // Add dependencies that might change
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -628,23 +652,7 @@ const SideBar = ({ children, dispatch, isSidebarOpen , adminType}) => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
-
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     if (window.innerWidth > 991) setHiddenSidebarWidth(45);
-  //     else setHiddenSidebarWidth(0);
-  //   };
-
-  //   // Attach the event listener
-  //   window.addEventListener("resize", handleResize);
-
-  //   // Clean up the event listener on component unmount
-  //   handleResize();
-  //   return () => {
-  //     window.removeEventListener("resize", handleResize);
-  //   };
-  // }, []);
+  }, [myRoutes]);
 
   return (
     <>
@@ -667,53 +675,55 @@ const SideBar = ({ children, dispatch, isSidebarOpen , adminType}) => {
           </div>
         )}
         <section className="routes">
-          {routes.map((route, index) => {
-            if (route.subRoutes) {
-              return (
-                <SidebarMenu
-                  route={route}
-                  key={index}
-                  showAnimation={showAnimation}
-                />
-              );
-            }
+          {myRoutes &&
+            myRoutes.map((route, index) => {
+              if (route.subRoutes) {
+                return (
+                  <SidebarMenu
+                    route={route}
+                    key={index}
+                    showAnimation={showAnimation}
+                  />
+                );
+              }
 
-            return (
-              <div key={index} className="side_Bar">
-                <NavLink
-                  to={route.path}
-                  className="link"
-                  activeclassname="active"
-                >
-                  <div className="icon">{route.icon}</div>
-                  <AnimatePresence>
-                    {isSidebarOpen && (
-                      <motion.div
-                        variants={showAnimation}
-                        initial="hidden"
-                        animate="show"
-                        exit="hidden"
-                        className="link_text"
-                      >
-                        {route.name}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </NavLink>
-              </div>
-            );
-          })}
+              return (
+                <div key={index} className="side_Bar">
+                  <NavLink
+                    to={route.path}
+                    className="link"
+                    activeclassname="active"
+                  >
+                    <div className="icon">{route.icon}</div>
+                    <AnimatePresence>
+                      {isSidebarOpen && (
+                        <motion.div
+                          variants={showAnimation}
+                          initial="hidden"
+                          animate="show"
+                          exit="hidden"
+                          className="link_text"
+                        >
+                          {route.name}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </NavLink>
+                </div>
+              );
+            })}
         </section>
       </motion.div>
     </>
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   isSidebarOpen: state.dashboard.isSidebarOpen,
-  adminType: state.admin.adminType
-})
+  adminType: state.admin.adminType,
+  adminData: state.admin.adminData,
+});
 
-const mapDispatchToProps = dispatch => ({ dispatch })
+const mapDispatchToProps = (dispatch) => ({ dispatch });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SideBar);

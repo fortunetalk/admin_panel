@@ -9,9 +9,9 @@ import {
   InputLabel,
   FormControl,
   InputAdornment,
-  IconButton
+  IconButton,
 } from "@mui/material";
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Colors } from "../../assets/styles.js";
 import { AddCircleRounded } from "@mui/icons-material";
 import logo_icon from "../../assets/images/logo_icon.png";
@@ -38,7 +38,6 @@ const DisplaySubAdmin = ({ dispatch, adminListData, isLoading }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
-
   useEffect(function () {
     dispatch(Actions.getAllSubadmin());
   }, []);
@@ -53,9 +52,8 @@ const DisplaySubAdmin = ({ dispatch, adminListData, isLoading }) => {
     setUserName(rowData?.username);
     setName(rowData?.name);
     setPassword(rowData?.plainPassword);
-    setPermission(rowData?.permissions)
+    setPermission(rowData?.permissions);
   };
-
 
   const handleError = (field, message) => {
     setError((prevError) => ({ ...prevError, [field]: message }));
@@ -88,7 +86,6 @@ const DisplaySubAdmin = ({ dispatch, adminListData, isLoading }) => {
     return isValid;
   };
 
-
   const handleSubmit = async () => {
     if (validation()) {
       var body = {
@@ -96,14 +93,12 @@ const DisplaySubAdmin = ({ dispatch, adminListData, isLoading }) => {
         username: userName,
         name: name,
         permissions: permission,
-        password: password
+        password: password,
       };
       dispatch(Actions.subadminUpdate(body));
       setOpen(false);
-
     }
   };
-
 
   const handleClose = useCallback(() => {
     setUserName("");
@@ -112,8 +107,6 @@ const DisplaySubAdmin = ({ dispatch, adminListData, isLoading }) => {
     setPermission("");
     setOpen(false);
   });
-
-
 
   return (
     <div className={classes.container}>
@@ -135,12 +128,15 @@ const DisplaySubAdmin = ({ dispatch, adminListData, isLoading }) => {
               {
                 title: "S.No",
                 editable: "never",
-                render: rowData => Array.isArray(adminListData) ? adminListData.indexOf(rowData) + 1 : 'N/A'
+                render: (rowData) =>
+                  Array.isArray(adminListData)
+                    ? adminListData.indexOf(rowData) + 1
+                    : "N/A",
               },
               { title: "User Name", field: "username" },
               { title: "Name", field: "name" },
               { title: "Password", field: "plainPassword" },
-              { title: "permission", field: "permissions" },
+              // { title: "permission", field: "permissions" },
             ]}
             options={propStyles.tableStyles}
             style={{ fontSize: "1.0rem" }}
@@ -154,7 +150,9 @@ const DisplaySubAdmin = ({ dispatch, adminListData, isLoading }) => {
                 icon: "delete",
                 tooltip: "Delete",
                 onClick: (event, rowData) =>
-                  dispatch(Actions.subadminDelete({ subadminId: rowData?._id, })),
+                  dispatch(
+                    Actions.subadminDelete({ subadminId: rowData?._id })
+                  ),
               },
               {
                 icon: () => (
@@ -217,7 +215,7 @@ const DisplaySubAdmin = ({ dispatch, adminListData, isLoading }) => {
               id="outlined-description-static"
               label="Password"
               fullWidth
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               variant="outlined"

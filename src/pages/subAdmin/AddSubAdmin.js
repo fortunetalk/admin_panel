@@ -18,7 +18,7 @@ import {
   FormLabel,
   ListItemText,
 } from "@mui/material";
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import DvrIcon from "@mui/icons-material/Dvr";
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
@@ -48,8 +48,8 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
           editAstrologer: false,
           viewAstrologer: false,
           deleteAstrologer: false,
-        }
-      }
+        },
+      },
     },
   });
 
@@ -57,21 +57,8 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
     setShowPassword(!showPassword);
   };
 
-
   const handleError = (field, message) => {
     setError((prevError) => ({ ...prevError, [field]: message }));
-  };
-
-  const handleExpertise = (item) => {
-    if (permission.some((selectedItem) => selectedItem === item._id)) {
-      const expertiesData = permission.filter(
-        (selectedItem) => selectedItem !== item._id
-      );
-      updateState({ permission: expertiesData });
-    } else {
-      updateState({ permission: [...permission, item?._id] });
-    }
-    handleError("permission", null);
   };
 
   const updateState = (data) => {
@@ -106,8 +93,8 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
 
   const onAdd = () => {
     handleReset();
-    navigate('/display-sub-admin')
-  }
+    navigate("/display-sub-admin");
+  };
 
   const handleSubmit = async () => {
     console.log("Testing 1");
@@ -117,7 +104,7 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
         name: name,
         password: password,
         permissions: permission,
-      }
+      };
       dispatch(Actions.subadminAdd({ data, onAdd }));
       console.log("Testing");
     }
@@ -137,35 +124,17 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
             isPermited: false,
             editAstrologer: false,
             upadateChatStatus: false,
-          }
+          },
         },
       },
     });
-
-
   });
 
-
-  // const handlePermissionChange = (permissionKey) => {
-  //   setState((prevState) => {
-  //     const currentPermission = prevState.permission.astrologer[permissionKey];
-  //     return {
-  //       ...prevState,
-  //       permission: {
-  //         ...prevState.permission,
-  //         astrologer: {
-  //           ...prevState.permission.astrologer,
-  //           [permissionKey]: !currentPermission,
-  //         },
-  //       },
-  //     };
-  //   });
-  // };
- 
   const handlePermissionChange = (key) => {
     setState((prevState) => {
-      const [mainKey, subKey] = key.split('.'); // split key for nested properties
-      const currentPermission = prevState.permission.astrologer[mainKey][subKey];
+      const [mainKey, subKey] = key.split("."); // split key for nested properties
+      const currentPermission =
+        prevState.permission.astrologer[mainKey][subKey];
       return {
         ...prevState,
         permission: {
@@ -182,12 +151,23 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
     });
   };
 
+  const updatePermission = (path, value) => {
+    setState((prevState) => {
+      const updatedState = { ...prevState };
+      const keys = path.split(".");
 
-  const {
-    userName,
-    name,
-    permission,
-  } = state;
+      let current = updatedState;
+      for (let i = 0; i < keys.length - 1; i++) {
+        current = current[keys[i]];
+      }
+
+      current[keys[keys.length - 1]] = value;
+
+      return updatedState;
+    });
+  };
+
+  const { userName, name, permission } = state;
 
   return (
     <div className={classes.container}>
@@ -234,7 +214,7 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
               id="outlined-description-static"
               label="Password"
               fullWidth
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               variant="outlined"
@@ -258,8 +238,16 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
           </Grid>
 
           <Grid item lg={12} sm={12} md={12} xs={12}>
-            <FormControl component="fieldset" style={{ marginLeft: "10px", marginLeft: '10px' }}>
-              <FormLabel component="legend" style={{ fontSize: "20px", fontWeight: '500', color: "black", }}>Permissions</FormLabel>
+            <FormControl
+              component="fieldset"
+              style={{ marginLeft: "10px", marginLeft: "10px" }}
+            >
+              <FormLabel
+                component="legend"
+                style={{ fontSize: "20px", fontWeight: "500", color: "black" }}
+              >
+                Permissions
+              </FormLabel>
               <FormGroup aria-label="position" row>
                 <div className={classes.chips}>
                   <FormControlLabel
@@ -268,11 +256,39 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
                     control={
                       <Checkbox
                         checked={permission.astrologer.isPermited}
-                        onChange={() => handlePermissionChange('isPermited')}
+                        onChange={() => {
+                          if (permission.astrologer.isPermited) {
+                            updatePermission("permission.astrologer", {
+                              isPermited: false,
+                              addAstrologer: false,
+                              listOfAstrologer: {
+                                isPermited: false,
+                                updateStatus: false,
+                                updateChatStatus: false,
+                                updateCallStatus: false,
+                                editAstrologer: false,
+                                viewAstrologer: false,
+                                deleteAstrologer: false,
+                              },
+                            });
+                          } else {
+                            updatePermission(
+                              "permission.astrologer.isPermited",
+                              true
+                            );
+                          }
+                        }}
                       />
                     }
                     label={
-                      <span style={{ fontWeight: 'bold', color: '#10395D', fontWeight: "600", fontSize: '14px' }}>
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                          color: "#10395D",
+                          fontWeight: "600",
+                          fontSize: "14px",
+                        }}
+                      >
                         Astrologer
                       </span>
                     }
@@ -280,119 +296,306 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
                   />
                 </div>
               </FormGroup>
-              <FormGroup aria-label="position" row style={{ marginLeft: '10px', marginRight: '10px' }}>
+              <FormGroup
+                aria-label="position"
+                row
+                style={{ marginLeft: "10px", marginRight: "10px" }}
+              >
                 <div className={classes.chips}>
                   <FormControlLabel
-                    value={'Add Astrologer'}
+                    value={"Add Astrologer"}
                     className={classes.checkbox}
                     control={
                       <Checkbox
+                        disabled={!permission.astrologer.isPermited}
                         checked={permission.astrologer.addAstrologer}
-                        onChange={() => handlePermissionChange('addAstrologer')}
+                        onChange={() => {
+                          if (permission.astrologer.addAstrologer) {
+                            updatePermission(
+                              "permission.astrologer.addAstrologer",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.astrologer.addAstrologer",
+                              true
+                            );
+                          }
+                        }}
                       />
                     }
-                    label={'Add Astrologer'}
+                    label={"Add Astrologer"}
                     labelPlacement="end"
                   />
                 </div>
               </FormGroup>
-              <FormGroup aria-label="position" row style={{ marginLeft: '10px', marginRight: '10px' }}>
+              <FormGroup
+                aria-label="position"
+                row
+                style={{ marginLeft: "10px", marginRight: "10px" }}
+              >
                 <div className={classes.chips}>
                   <FormControlLabel
                     value={permission.astrologer.listOfAstrologer.isPermited}
                     className={classes.checkbox}
                     control={
                       <Checkbox
-                        checked={permission.astrologer.listOfAstrologer.isPermited}
-                        onChange={() => handlePermissionChange('listOfAstrologer.isPermited')}
+                        disabled={!permission.astrologer.isPermited}
+                        checked={
+                          permission.astrologer.listOfAstrologer.isPermited
+                        }
+                        onChange={() => {
+                          if (
+                            permission.astrologer.listOfAstrologer.isPermited
+                          ) {
+                            updatePermission(
+                              "permission.astrologer.listOfAstrologer",
+                              {
+                                isPermited: false,
+                                updateStatus: false,
+                                updateChatStatus: false,
+                                updateCallStatus: false,
+                                editAstrologer: false,
+                                viewAstrologer: false,
+                                deleteAstrologer: false,
+                              }
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.astrologer.listOfAstrologer.isPermited",
+                              true
+                            );
+                          }
+                        }}
                       />
                     }
-                    label={'List of Astrologers'}
+                    label={"List of Astrologers"}
                     labelPlacement="end"
                   />
                 </div>
               </FormGroup>
-              <FormGroup aria-label="position" row style={{ marginLeft: '30px' }}>
+              <FormGroup
+                aria-label="position"
+                row
+                style={{ marginLeft: "30px" }}
+              >
                 <div>
                   <FormControlLabel
                     value={permission.astrologer.listOfAstrologer.updateStatus}
                     control={
                       <Checkbox
-                        checked={permission.astrologer.listOfAstrologer.updateStatus}
-                        onChange={() => handlePermissionChange('listOfAstrologer.updateStatus')}
+                        disabled={
+                          !permission.astrologer.isPermited ||
+                          !permission.astrologer.listOfAstrologer.isPermited
+                        }
+                        checked={
+                          permission.astrologer.listOfAstrologer.updateStatus
+                        }
+                        onChange={() => {
+                          if (
+                            permission.astrologer.listOfAstrologer.updateStatus
+                          ) {
+                            updatePermission(
+                              "permission.astrologer.listOfAstrologer.updateStatus",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.astrologer.listOfAstrologer.updateStatus",
+                              true
+                            );
+                          }
+                        }}
                       />
                     }
-                    label={'Update Status'}
+                    label={"Update Status"}
                     labelPlacement="end"
                   />
                 </div>
                 <div>
                   <FormControlLabel
-                    value={'Update Chat Status'}
+                    value={"Update Chat Status"}
                     className={classes.checkbox}
                     control={
                       <Checkbox
-                        checked={permission.astrologer.listOfAstrologer.updateChatStatus}
-                        onChange={() => handlePermissionChange('listOfAstrologer.updateChatStatus')}
+                        disabled={
+                          !permission.astrologer.isPermited ||
+                          !permission.astrologer.listOfAstrologer.isPermited
+                        }
+                        value={
+                          permission.astrologer.listOfAstrologer
+                            .updateChatStatus
+                        }
+                        checked={
+                          permission.astrologer.listOfAstrologer
+                            .updateChatStatus
+                        }
+                        onChange={() => {
+                          if (
+                            permission.astrologer.listOfAstrologer
+                              .updateChatStatus
+                          ) {
+                            updatePermission(
+                              "permission.astrologer.listOfAstrologer.updateChatStatus",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.astrologer.listOfAstrologer.updateChatStatus",
+                              true
+                            );
+                          }
+                        }}
                       />
                     }
-                    label={'Update Chat Status'}
+                    label={"Update Chat Status"}
                     labelPlacement="end"
                   />
                 </div>
                 <div>
                   <FormControlLabel
-                    value={'Update Call Status'}
+                    value={"Update Call Status"}
                     className={classes.checkbox}
                     control={
                       <Checkbox
-                        checked={permission.astrologer.listOfAstrologer.updateCallStatus}
-                        onChange={() => handlePermissionChange('listOfAstrologer.updateCallStatus')}
+                        disabled={
+                          !permission.astrologer.isPermited ||
+                          !permission.astrologer.listOfAstrologer.isPermited
+                        }
+                        checked={
+                          permission.astrologer.listOfAstrologer
+                            .updateCallStatus
+                        }
+                        onChange={() => {
+                          if (
+                            permission.astrologer.listOfAstrologer
+                              .updateCallStatus
+                          ) {
+                            updatePermission(
+                              "permission.astrologer.listOfAstrologer.updateCallStatus",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.astrologer.listOfAstrologer.updateCallStatus",
+                              true
+                            );
+                          }
+                        }}
                       />
                     }
-                    label={'Update Call Status'}
+                    label={"Update Call Status"}
                     labelPlacement="end"
                   />
                 </div>
                 <div>
                   <FormControlLabel
-                    value={permission.astrologer.listOfAstrologer.editAstrologer}
+                    value={
+                      permission.astrologer.listOfAstrologer.editAstrologer
+                    }
                     className={classes.checkbox}
                     control={
                       <Checkbox
-                        checked={permission.astrologer.listOfAstrologer.editAstrologer}
-                        onChange={() => handlePermissionChange('listOfAstrologer.editAstrologer')}
+                        disabled={
+                          !permission.astrologer.isPermited ||
+                          !permission.astrologer.listOfAstrologer.isPermited
+                        }
+                        checked={
+                          permission.astrologer.listOfAstrologer.editAstrologer
+                        }
+                        onChange={() => {
+                          if (
+                            permission.astrologer.listOfAstrologer
+                              .editAstrologer
+                          ) {
+                            updatePermission(
+                              "permission.astrologer.listOfAstrologer.editAstrologer",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.astrologer.listOfAstrologer.editAstrologer",
+                              true
+                            );
+                          }
+                        }}
                       />
                     }
-                    label={'Edit Astrologer'}
+                    label={"Edit Astrologer"}
                     labelPlacement="end"
                   />
                 </div>
                 <div>
                   <FormControlLabel
-                    value={permission.astrologer.listOfAstrologer.viewAstrologer}
+                    value={
+                      permission.astrologer.listOfAstrologer.viewAstrologer
+                    }
                     className={classes.checkbox}
                     control={
                       <Checkbox
-                        checked={permission.astrologer.listOfAstrologer.viewAstrologer}
-                        onChange={() => handlePermissionChange('listOfAstrologer.viewAstrologer')}
+                        disabled={
+                          !permission.astrologer.isPermited ||
+                          !permission.astrologer.listOfAstrologer.isPermited
+                        }
+                        checked={
+                          permission.astrologer.listOfAstrologer.viewAstrologer
+                        }
+                        onChange={() => {
+                          if (
+                            permission.astrologer.listOfAstrologer
+                              .viewAstrologer
+                          ) {
+                            updatePermission(
+                              "permission.astrologer.listOfAstrologer.viewAstrologer",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.astrologer.listOfAstrologer.viewAstrologer",
+                              true
+                            );
+                          }
+                        }}
                       />
                     }
-                    label={'View Astrologer'}
+                    label={"View Astrologer"}
                     labelPlacement="end"
                   />
                 </div>
                 <div>
                   <FormControlLabel
-                    value={permission.astrologer.listOfAstrologer.deleteAstrologer}
+                    value={
+                      permission.astrologer.listOfAstrologer.deleteAstrologer
+                    }
                     className={classes.checkbox}
                     control={
                       <Checkbox
-                        checked={permission.astrologer.listOfAstrologer.deleteAstrologer}
-                        onChange={() => handlePermissionChange('listOfAstrologer.deleteAstrologer')}
+                        disabled={
+                          !permission.astrologer.isPermited ||
+                          !permission.astrologer.listOfAstrologer.isPermited
+                        }
+                        checked={
+                          permission.astrologer.listOfAstrologer
+                            .deleteAstrologer
+                        }
+                        onChange={() => {
+                          if (
+                            permission.astrologer.listOfAstrologer.deleteAstrologer
+                          ) {
+                            updatePermission(
+                              "permission.astrologer.listOfAstrologer.deleteAstrologer",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.astrologer.listOfAstrologer.deleteAstrologer",
+                              true
+                            );
+                          }
+                        }}
                       />
                     }
-                    label={'Delete Astrologer'}
+                    label={"Delete Astrologer"}
                     labelPlacement="end"
                   />
                 </div>
@@ -402,7 +605,6 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
               <div className={classes.errorstyles}>{error.permission}</div>
             )}
           </Grid>
-
 
           <Grid item lg={6} sm={6} md={6} xs={6}>
             <div onClick={handleSubmit} className={classes.submitbutton}>

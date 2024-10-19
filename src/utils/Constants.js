@@ -7,8 +7,8 @@
 // export const api_url = "http://97.74.83.200:8000/api/";
 
 // Local Server
-export const base_url = "http://localhost:4000/";
-export const api_url = "http://localhost:4000/api/";
+export const base_url = "http://localhost:8000/";
+export const api_url = "http://localhost:8000/api/";
 
 // admin login    
 export const admin_login='admin/login';

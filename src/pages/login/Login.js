@@ -14,15 +14,15 @@ import {
   IconButton,
   FormGroup,
   FormControlLabel,
-  Checkbox
+  Checkbox,
 } from "@mui/material";
 import Swal from "sweetalert2";
 import logo_icon from "../../assets/images/logo_icon.png";
 import login_background from "../../assets/images/login_background.jpg";
 import "./Login.css";
 import { useNavigate } from "react-router-dom";
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Person } from '@mui/icons-material';
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Person } from "@mui/icons-material";
 
 const Login = () => {
   const classes = useStyles();
@@ -44,53 +44,46 @@ const Login = () => {
 
   const handleLogin = () => {
     if (validation()) {
-
-      // dispatch(adminLoginRequest({ email: userEmail, password, type: isSubAdmin? 'subadmin' : 'admin'}));
-      dispatch(adminLoginRequest({ email: userEmail, password }));
-
-      Swal.fire({
-        icon: 'success',
-        title: 'Login Successful',
-        showConfirmButton: false,
-        timer: 2000,
-      }).then(() => {
-        setTimeout(() => {
-          navigate('/');
-        }, 1500);
-      });
+      dispatch(
+        adminLoginRequest({data: {
+          email: userEmail,
+          password,
+          type: isSubAdmin ? "subadmin" : "admin",
+        }, navigate})
+      );
     } else {
       Swal.fire({
-        icon: 'error',
-        title: 'Login Failed',
-        text: 'Please fill in both fields',
+        icon: "error",
+        title: "Login Failed",
+        text: "Please fill in both fields",
         showConfirmButton: false,
         timer: 2000,
       });
     }
   };
 
+  //   const onAdd = () => {
+  //     navigate('/')
+  //   }
 
-//   const onAdd = () => {
-//     navigate('/')
-//   }
+  //   const handleLogin = () => {
+  //     if (validation()) {
 
-//   const handleLogin = () => {
-//     if (validation()) {
-
-//       const data = {
-//         email: userEmail,
-//         password,
-//         type: isSubAdmin ? 'subadmin' : 'admin'
-//       }
-//       dispatch(adminLoginRequest({data, onAdd }));
-//   }
-// };
+  //       const data = {
+  //         email: userEmail,
+  //         password,
+  //         type: isSubAdmin ? 'subadmin' : 'admin'
+  //       }
+  //       dispatch(adminLoginRequest({data, onAdd }));
+  //   }
+  // };
 
   return (
     <div
       style={{
         // background: "#10395D",
-        background: "linear-gradient(135deg, #10395D, #1A4B6D, #2C678C, #4A8FB6, #D3D3D3)",
+        background:
+          "linear-gradient(135deg, #10395D, #1A4B6D, #2C678C, #4A8FB6, #D3D3D3)",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         height: "100vh",
@@ -111,9 +104,7 @@ const Login = () => {
               />
               {/* <div className={classes.login}>Login to</div> */}
               <div className={classes.login}> </div>
-              <div className={classes.loginheading}>
-                Fortune Talk Admin
-              </div>
+              <div className={classes.loginheading}>Fortune Talk Admin</div>
             </div>
           </Grid>
 
@@ -126,12 +117,11 @@ const Login = () => {
               onChange={(e) => setUserEmail(e.target.value)}
               variant="outlined"
               InputLabelProps={{
-                style: { backgroundColor: "transparent", color: 'black' },
+                style: { backgroundColor: "transparent", color: "black" },
                 shrink: true, // Keeps the label above the field when focused or filled
               }}
               InputProps={{
-
-                style: { backgroundColor: 'white', color: 'black' }, // Background and text color for input
+                style: { backgroundColor: "white", color: "black" }, // Background and text color for input
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
@@ -152,7 +142,7 @@ const Login = () => {
               id="outlined-description-static"
               label="Password"
               fullWidth
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               variant="outlined"
@@ -162,7 +152,7 @@ const Login = () => {
                 shrink: true, // Keeps the label above the field when focused or filled
               }}
               InputProps={{
-                style: { backgroundColor: 'white', color: 'black' },
+                style: { backgroundColor: "white", color: "black" },
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
@@ -192,9 +182,7 @@ const Login = () => {
               />
             </FormGroup>
           </Grid>
-
         </Grid>
-
       </div>
       <Grid item lg={12} sm={12} md={12} xs={12}>
         <div className="loginButton" onClick={handleLogin}>

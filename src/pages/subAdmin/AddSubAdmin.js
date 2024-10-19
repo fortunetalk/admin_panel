@@ -28,7 +28,7 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
   var classes = useStyles();
   const navigate = useNavigate();
   // const [userName, setUserName] = useState("");
-  const [password, setPassword] = useState(false);
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(false);
 
@@ -192,7 +192,7 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
               helperText={error.userName}
               value={userName}
               onFocus={() => handleError("userName", null)}
-              onChange={(e) => updateState({ name: e.target.value })}
+              onChange={(e) => updateState({ userName: e.target.value })}
               variant="outlined"
               fullWidth
             />

@@ -7,13 +7,13 @@ import { Colors } from "../../assets/styles";
 
 function* adminLogin(action) {
   try {
-    const { payload } = action;
+    const { data, navigate } = action.payload;
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + admin_login,
       header: "application/json",
-      data: payload,
+      data: data,
     });
 
     if (response.success) {
@@ -21,6 +21,16 @@ function* adminLogin(action) {
 
       localStorage.setItem("accessToken", response.data.accessToken);
       localStorage.setItem("refreshToken", response.data.refreshToken);
+
+      
+      Swal.fire({
+        icon: "success",
+        title: "Login Successful",
+        showConfirmButton: false,
+        timer: 2000,
+      }).then(() => {
+        navigate("/");
+      });
 
     } else if (response.success && response.type) {
       

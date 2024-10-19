@@ -149,6 +149,8 @@ import InternationalPricing from "./pages/international/pricing/InternationalPri
 import AddInternationalPricing from "./pages/international/pricing/AddInternationalPricing";
 import AddSubAdmin from "./pages/subAdmin/AddSubAdmin";
 import DisplaySubAdmin from "./pages/subAdmin/DisplaySubAdmin";
+import ViewSubAdmin from "./pages/subAdmin/ViewSubAdmin";
+import EditSubAdmin from "./pages/subAdmin/EditSubAdmin";
 
 
 
@@ -161,6 +163,8 @@ function App() {
           <Route path="*" element={<> Not Ready</>} />
           <Route path="/add-sub-admin" element={<AddSubAdmin />} />
           <Route path="/display-sub-admin" element={<DisplaySubAdmin />} />
+          <Route path="/view-sub-admin/:_id" element={<ViewSubAdmin />} />
+          <Route path="/edit-sub-admin/:_id" element={<EditSubAdmin />} />
           <Route path="/addSkills" element={<AddSkills />} />
           <Route path="/displaySkills" element={<DisplaySkills />} />
           <Route path="/addSubSkills" element={<AddSubSkills />} />

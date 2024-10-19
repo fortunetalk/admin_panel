@@ -144,7 +144,8 @@ const DisplaySubAdmin = ({ dispatch, adminListData, isLoading }) => {
               {
                 icon: "edit",
                 tooltip: "Edit",
-                onClick: (event, rowData) => handleOpen(rowData),
+                // onClick: (event, rowData) => handleOpen(rowData),
+                  onClick: (event, rowData) => navigate(`/edit-sub-admin/${rowData._id}`),
               },
               {
                 icon: "delete",
@@ -153,6 +154,11 @@ const DisplaySubAdmin = ({ dispatch, adminListData, isLoading }) => {
                   dispatch(
                     Actions.subadminDelete({ subadminId: rowData?._id })
                   ),
+              },
+              {
+                icon: "visibility",
+                tooltip: "View Sub-Admin",
+                onClick: (event, rowData) => navigate(`/view-sub-admin/${rowData._id}`),
               },
               {
                 icon: () => (

@@ -80,6 +80,15 @@ export const subadminUpdate = (payload) => ({
     type: actionTypes.SUBADMIN_UPDATE,
     payload,
 });
+export const getSubAdminById = (payload) => ({
+    type: actionTypes.GET_SUB_ADMIN_BY_ID,
+    payload,
+});
+export const setSubAdminById = (payload) => ({
+    type: actionTypes.SET_SUB_ADMIN_BY_ID,
+    payload,
+});
+
 
 // SET_ADMIN_TYPE
 

@@ -200,10 +200,7 @@ function* getAllSubadmin() {
     });
 
     if (response.success) {
-      yield put({
-        type: actionTypes.SET_ALL_SUBADMIN,
-        payload: response?.data.reverse(),
-      });
+      yield put({ type: actionTypes.SET_ALL_SUBADMIN, payload: response?.data.reverse(), });
     }
   } catch (e) {
     console.log(e);
@@ -257,6 +254,41 @@ function* subadminDelete(actions) {
   }
 }
 function* subadminUpdate(actions) {
+  const {data, onAdd} = actions.payload;
+  try {
+    // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
+    const response = yield call(ApiRequest.postRequest, {
+      url: api_url + subadmin_update,
+      header: "json",
+      data: data,
+    });
+
+    if (response.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Sub-Admin Updated Successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      yield put({ type: actionTypes.GET_ALL_SUBADMIN, payload: response });
+      yield call(onAdd);
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Server Error",
+        text: "Failed to update Sub-Admin",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  } finally {
+    // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
+  }
+}
+function* getSubAdminById(actions) {
   const {payload} = actions;
   try {
     // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
@@ -268,22 +300,7 @@ function* subadminUpdate(actions) {
     });
 
     if (response.success) {
-      Swal.fire({
-        icon: "success",
-        title: "Sub-Admin Updated Successfully",
-        showConfirmButton: false,
-        timer: 2000,
-      });
-      yield put({ type: actionTypes.GET_ALL_SUBADMIN, payload: response });
-      // yield call(onAdd);
-    } else {
-      Swal.fire({
-        icon: "error",
-        title: "Server Error",
-        text: "Failed to update Sub-Admin",
-        showConfirmButton: false,
-        timer: 2000,
-      });
+      yield put({ type: actionTypes.SET_SUB_ADMIN_BY_ID, payload: response });
     }
   } catch (e) {
     console.log(e);
@@ -300,4 +317,5 @@ export default function* adminSaga() {
   yield takeLatest(actionTypes.GET_ALL_SUBADMIN, getAllSubadmin);
   yield takeLatest(actionTypes.SUBADMIN_DELETE, subadminDelete);
   yield takeLatest(actionTypes.SUBADMIN_UPDATE, subadminUpdate);
+  yield takeLatest(actionTypes.GET_SUB_ADMIN_BY_ID, getSubAdminById);
 }

@@ -260,9 +260,7 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
   };
 
   const handleClickOpen = (rowData) => {
-    navigate(`/history/fullChatHistory/${rowData.customerId}`, {
-      state: { chatId: rowData.chatId },
-    });
+    navigate(`/history/fullChatHistory/${rowData.customerId}`, { state: { chatId: rowData.chatId },});
   };
 
   const onRefreshTable = () => {

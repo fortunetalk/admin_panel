@@ -7,6 +7,7 @@ const initialState = {
     error: null,
     apiPayload: null,
     adminListData: null,
+    subAdminByIdData: null,
 };
 
 const admin = (state = initialState, action) => {
@@ -59,6 +60,11 @@ const admin = (state = initialState, action) => {
             return {
                 ...state,
                 adminListData: payload,
+            };
+        case actionTypes.SET_SUB_ADMIN_BY_ID:
+            return {
+                ...state,
+                subAdminByIdData: payload,
             };
         case actionTypes.SET_ADMIN_TYPE:
             return {

@@ -102,11 +102,9 @@ export const EditAstrologer = ({
   console.log(astrologerData?.remediesId, "remdeiseId")
   var classes = useStyles();
   const { astrologerId } = useParams();
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const containerRef = useRef(null);
-
   const [galleryImages, setGalleryImages] = useState([]);
   const [language, setLanguage] = useState([]);
   const [open, setOpen] = useState(false);
@@ -187,7 +185,6 @@ export const EditAstrologer = ({
   useEffect(() => {
     if (astrologerId) {
       getAstrologer(astrologerId);
-
     }
   }, [astrologerId]);
 
@@ -353,11 +350,9 @@ export const EditAstrologer = ({
 
   // console.log('data===>',astrologerData?.currencyValue)
 
-
   const onAdd =()=>{
     navigate('/astrologers/displayAstrologer')
   }
-
 
   const handleRatingChange = (e) => {
     const newRating = e.target.value;

@@ -50,6 +50,19 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
           deleteAstrologer: false,
         },
       },
+      customer: {
+        isPermited: false,
+        addCustomer: false,
+        listOfCustomer: {
+          isPermited: false,
+          updateCustomerStatus: false,
+          updateCustomerChatStatus: false,
+          updateCustomerCallStatus: false,
+          editCustomer: false,
+          viewCustomer: false,
+          deleteCustomer: false,
+        },
+      },
     },
   });
 
@@ -596,6 +609,361 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
                       />
                     }
                     label={"Delete Astrologer"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              {/* Customer Permisiions  */}
+
+              <FormGroup aria-label="position" row>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permission.customer.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        checked={permission.customer.isPermited}
+                        onChange={() => {
+                          if (permission.customer.isPermited) {
+                            updatePermission("permission.customer", {
+                              isPermited: false,
+                              addAstrologer: false,
+                              listOfAstrologer: {
+                                isPermited: false,
+                                updateStatus: false,
+                                updateChatStatus: false,
+                                updateCallStatus: false,
+                                editAstrologer: false,
+                                viewAstrologer: false,
+                                deleteAstrologer: false,
+                              },
+                            });
+                          } else {
+                            updatePermission(
+                              "permission.customer.isPermited",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                          color: "#10395D",
+                          fontWeight: "600",
+                          fontSize: "14px",
+                        }}
+                      >
+                        Customer
+                      </span>
+                    }
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+              <FormGroup
+                aria-label="position"
+                row
+                style={{ marginLeft: "10px", marginRight: "10px" }}
+              >
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={"Add Customer"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={!permission.customer.isPermited}
+                        checked={permission.customer.addCustomer}
+                        onChange={() => {
+                          if (permission.customer.addCustomer) {
+                            updatePermission(
+                              "permission.customer.addCustomer",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.customer.addCustomer",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"Add Customer"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+              <FormGroup
+                aria-label="position"
+                row
+                style={{ marginLeft: "10px", marginRight: "10px" }}
+              >
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permission.customer.listOfCustomer.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={!permission.customer.isPermited}
+                        checked={
+                          permission.customer.listOfCustomer.isPermited
+                        }
+                        onChange={() => {
+                          if (
+                            permission.customer.listOfCustomer.isPermited
+                          ) {
+                            updatePermission(
+                              "permission.customer.listOfCustomer",
+                              {
+                                isPermited: false,
+                                updateStatus: false,
+                                updateChatStatus: false,
+                                updateCallStatus: false,
+                                editAstrologer: false,
+                                viewAstrologer: false,
+                                deleteAstrologer: false,
+                              }
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.customer.listOfCustomer.isPermited",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"List of Customer"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+              <FormGroup
+                aria-label="position"
+                row
+                style={{ marginLeft: "30px" }}
+              >
+                <div>
+                  <FormControlLabel
+                    value={permission.customer.listOfCustomer.updateCustomerStatus}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission.customer.isPermited ||
+                          !permission.customer.listOfCustomer.isPermited
+                        }
+                        checked={
+                          permission.customer.listOfCustomer.updateCustomerStatus
+                        }
+                        onChange={() => {
+                          if (
+                            permission.customer.listOfCustomer.updateCustomerStatus
+                          ) {
+                            updatePermission(
+                              "permission.customer.listOfCustomer.updateCustomerStatus",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.customer.listOfCustomer.updateCustomerStatus",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"Update Customer Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    value={"Update Customer Chat Status"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission.customer.isPermited ||
+                          !permission.customer.listOfCustomer.isPermited
+                        }
+                        value={
+                          permission.customer.listOfCustomer
+                            .updateCustomerChatStatus
+                        }
+                        checked={
+                          permission.customer.listOfCustomer
+                            .updateCustomerChatStatus
+                        }
+                        onChange={() => {
+                          if (
+                            permission.customer.listOfCustomer
+                              .updateCustomerChatStatus
+                          ) {
+                            updatePermission(
+                              "permission.customer.listOfCustomer.updateCustomerChatStatus",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.customer.listOfCustomer.updateCustomerChatStatus",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"Update Customer Chat Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    value={"Update Customer Call Status"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission.customer.isPermited ||
+                          !permission.customer.listOfCustomer.isPermited
+                        }
+                        checked={
+                          permission.customer.listOfCustomer
+                            .updateCustomerCallStatus
+                        }
+                        onChange={() => {
+                          if (
+                            permission.customer.listOfCustomer
+                              .updateCustomerCallStatus
+                          ) {
+                            updatePermission(
+                              "permission.customer.listOfCustomer.updateCustomerCallStatus",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.customer.listOfCustomer.updateCustomerCallStatus",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"Update Customer Call Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    value={
+                      permission.customer.listOfCustomer.editCustomer
+                    }
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission.customer.isPermited ||
+                          !permission.customer.listOfCustomer.isPermited
+                        }
+                        checked={
+                          permission.customer.listOfCustomer.editCustomer
+                        }
+                        onChange={() => {
+                          if (
+                            permission.customer.listOfCustomer
+                              .editCustomer
+                          ) {
+                            updatePermission(
+                              "permission.customer.listOfCustomer.editCustomer",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.customer.listOfCustomer.editCustomer",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"Edit Customer"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    value={
+                      permission.customer.listOfCustomer.viewCustomer
+                    }
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission.customer.isPermited ||
+                          !permission.customer.listOfCustomer.isPermited
+                        }
+                        checked={
+                          permission.customer.listOfCustomer.viewCustomer
+                        }
+                        onChange={() => {
+                          if (
+                            permission.customer.listOfCustomer
+                              .viewCustomer
+                          ) {
+                            updatePermission(
+                              "permission.customer.listOfCustomer.viewCustomer",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.customer.listOfCustomer.viewCustomer",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"View Customer"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    value={
+                      permission.customer.listOfCustomer.deleteCustomer
+                    }
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission.customer.isPermited ||
+                          !permission.customer.listOfCustomer.isPermited
+                        }
+                        checked={
+                          permission.customer.listOfCustomer
+                            .deleteCustomer
+                        }
+                        onChange={() => {
+                          if (
+                            permission.customer.listOfCustomer.deleteCustomer
+                          ) {
+                            updatePermission(
+                              "permission.customer.listOfCustomer.deleteCustomer",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.customer.listOfCustomer.deleteCustomer",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"Delete Customer"}
                     labelPlacement="end"
                   />
                 </div>

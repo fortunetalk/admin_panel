@@ -30,8 +30,10 @@ import moment from "moment";
 import { api_url, get_call_history } from "../../utils/Constants.js";
 import { CSVLink, CSVDownload } from "react-csv";
 import DownloadIcon from '@mui/icons-material/Download';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
-const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
+const ChatHistory = ({ dispatch, callHistoryData, csvCallData, adminData }) => {
+  const { user, type } = adminData || {};
   const classes = useStyles();
   const navigate = useNavigate();
 
@@ -57,6 +59,7 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
   });
 
   const [showModal, setShowModal] = useState(false);
+  const [searchDateModal, setSearchDateModal] = useState(false);
   const [searchType, setSearchType] = useState("");
   const [isCustomSelected, setIsCustomSelected] = useState(false);
   const [customSelection, setCustomSelection] = useState(""); // State for custom dropdown selection
@@ -64,6 +67,8 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
   const [startDate, setStartDate] = useState(""); // State for start date
   const [endDate, setEndDate] = useState(""); // State for end date
   const [review, setReview] = useState(false);
+  const [searchData, setSearchData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [reviewData, setReviewData] = useState({
     callReviewFromAdmin: '',
     callConcernFromAdmin:'',
@@ -75,6 +80,11 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
   // }, []);
 
   const handleReview = (rowData) => {
+
+    if (type === "subadmin" && !user.permissions.customer?.callHistory?.addReview) {
+      return;
+    }
+
     setReview(true);
     setReviewData({
       callReviewFromAdmin: rowData.callReviewFromAdmin,
@@ -83,7 +93,12 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
     })
   };
 
+  const openSearchDateModal = () => {
+    setSearchDateModal(true);
+  };
+
   const handleUpdateReview = () => {
+    
     console.log("hiii handleUpdateReview",reviewData)
     try {
       dispatch(HistoryActions.updateAdminCallReview({reviewData}));
@@ -93,8 +108,41 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
     }
   };
 
+  const handleDateSearch = () => {
+    try {
+      if (!searchType) {
+        alert("Please select a search type.");
+        return;
+      }
+
+      let searchDate = '';
+
+      if (singleDate) {
+        searchDate = singleDate; // Only send singleDate
+      } else if (startDate && endDate) {
+        searchDate = `${startDate},${endDate}`; // Send startDate and endDate
+      }
+
+      const searchData = {
+        searchType: searchType,
+        searchDate: searchDate
+      };
+
+      setSearchData(searchData); // Store searchData in state
+      console.log("searchData", searchData);
+      // Optionally, close the modal here
+      handleClose();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
 
   const handleView = (rowData) => {
+    if (type === "subadmin" && !user.permissions.customer?.callHistory?.viewCallHistoryData) {
+      return;
+    }
+
     setViewData(true);
     setData({
       transactionId: rowData?.transactionId || "",
@@ -130,8 +178,10 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
     setEndDate("");
   };
 
-
   const openDownloadModal = () => {
+    if (type === "subadmin" && !user.permissions.customer?.callHistory?.download) {
+      return;
+    }
     setShowModal(true);
   };
 
@@ -139,6 +189,8 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
     setViewData(false);
     setShowModal(false);
     setReview(false);
+    setSearchDateModal(false);
+
   };
 
   const handleGet = () => {
@@ -196,6 +248,7 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
           {editModal()}
           {downloadModal()}
           {reviewModal()}
+          {searchByDateModal()}
         </div>
       }
     </div>
@@ -338,7 +391,30 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
               {
                 title: "Start Time",
                 field: "startTime",
-                filtering: false,
+                filter:'true',
+                filterComponent: (props) => {
+                  console.log(props)
+                  return (
+                    <button
+                      style={{
+                        padding: "8px 16px",
+                        backgroundColor: "#10395D",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                        marginLeft: "20px", // This adds space to the left of the button
+                        display: "flex",
+                        alignItems: "center", // Center the icon and text vertically
+                      }}
+                      onClick={openSearchDateModal}
+                    >
+
+                      <CalendarTodayIcon style={{ marginRight: "8px", color: "white" }} />
+                      Filter
+                    </button>
+                  )
+                },
                 render: (rowData) => (
                   <div>
                     {rowData?.startTime
@@ -471,12 +547,15 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
               {
                 icon: "delete",
                 tooltip: "Delete Chat History",
-                onClick: (event, rowData) =>
-                  dispatch(
-                    HistoryActions.deleteCallHistory({
-                      callId: rowData?._id,
-                    })
-                  ),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.customer?.callHistory?.delete
+                  ) {
+                    return;
+                  }
+                  dispatch( HistoryActions.deleteCallHistory({ callId: rowData?._id, }) );
+                },
               },
               {
                 icon: "add",
@@ -930,6 +1009,112 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
     );
   }
 
+  function searchByDateModal() {
+
+    const searchDateform = () => {
+      return (
+
+        <Grid container spacing={2}>
+          <Grid item lg={12} sm={12} md={12} xs={12}>
+            <div className={classes.headingContainer}>
+              <div className={classes.heading}>Search By Date </div>
+              <div onClick={handleClose} className={classes.closeButton}>
+                <CloseRounded />
+              </div>
+            </div>
+          </Grid>
+
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <FormControl fullWidth>
+              <InputLabel id="first-dropdown-label">CSV Download</InputLabel>
+              <Select
+                labelId="first-dropdown-label"
+                id="first-dropdown"
+                value={searchType}
+                onChange={handleFirstDropdownChange}
+              >
+                <MenuItem disabled value="">
+                  -Select Option-
+                </MenuItem>
+                {/* <MenuItem value="Custom">Custom</MenuItem> */}
+                <MenuItem value="Single">Single</MenuItem>
+                <MenuItem value="Between">Between</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+
+          {searchType === "Single" && (
+            <Grid item lg={12} sm={12} md={6} xs={12}>
+              <TextField
+                type="date"
+                value={singleDate}
+                variant="outlined"
+                fullWidth
+                onChange={(event) => setSingleDate(event.target.value)}
+                inputProps={{
+                  min: '1900-01-01', // Set a minimum date as needed
+                  max: new Date().toISOString().split("T")[0], // Prevent future date selection
+                }}
+              />
+            </Grid>
+          )}
+
+          {searchType === "Between" && (
+            <>
+              <Grid item lg={6} sm={12} md={6} xs={12}>
+                <TextField
+                  type="date"
+                  value={startDate}
+                  variant="outlined"
+                  fullWidth
+                  onChange={(event) => setStartDate(event.target.value)}
+                  inputProps={{
+                    min: '1900-01-01', // Set a minimum date as needed
+                    max: new Date().toISOString().split("T")[0], // Prevent future date selection
+                  }}
+                />
+              </Grid>
+              <Grid item lg={6} sm={12} md={6} xs={12}>
+                <TextField
+                  type="date"
+                  value={endDate}
+                  variant="outlined"
+                  fullWidth
+                  onChange={(event) => setEndDate(event.target.value)}
+                  inputProps={{
+                    min: '1900-01-01', // Set a minimum date as needed
+                    max: new Date().toISOString().split("T")[0], // Prevent future date selection
+                  }}
+                />
+              </Grid>
+            </>
+          )}
+
+          <Grid item lg={6} sm={6} md={6} xs={6}>
+            <div onClick={handleDateSearch} className={classes.submitbutton}>
+              {isLoading ? <CircularProgress size={24} /> : " Submit"}
+              {/* Submit */}
+            </div>
+          </Grid>
+
+          <Grid item lg={6} sm={6} md={6} xs={6}>
+            <div onClick={handleClose} className={classes.denyButton}>
+              Cancel
+            </div>
+          </Grid>
+        </Grid>
+      );
+    };
+
+    return (
+      <div>
+        <Dialog open={searchDateModal}>
+          <DialogContent>{searchDateform()}</DialogContent>
+        </Dialog>
+      </div>
+    );
+  }
+
 };
 
 
@@ -937,6 +1122,7 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData }) => {
 const mapStateToProps = (state) => ({
   callHistoryData: state.history.callHistoryData,
   csvCallData: state.history.csvCallData,
+  adminData: state.admin.adminData,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

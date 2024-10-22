@@ -13,13 +13,21 @@ import { api_url, get_recharge_history } from "../../utils/Constants.js";
 import moment from "moment";
 import * as AdminActions from '../../redux/Actions/adminAction.js'
 
-const DisplayRechargePlan = ({ dispatch, rechargeHistoryData }) => {
+const DisplayRechargePlan = ({ dispatch, rechargeHistoryData, adminData }) => {
+  const { user, type } = adminData || {};
   const classes = useStyles();
   const navigate = useNavigate();
   const [dateRange, setDateRange] = useState({ start: null, end: null });
 
   const handleDateFilterChange = (name) => (event) => {
     setDateRange({ ...dateRange, [name]: event.target.value });
+  };
+
+  const handleAdd = () => {
+    if (type === "subadmin" && !user.permissions.customer?.rechargeHistory?.addRecharge) {
+      return;
+    }
+    navigate("/addRechargeHistory");
   };
 
   const dateFilterComponent = (filterProps) => (
@@ -146,7 +154,15 @@ const DisplayRechargePlan = ({ dispatch, rechargeHistoryData }) => {
               {
                 icon: "delete",
                 tooltip: "Delete Recharge",
-                onClick: (event, rowData) => dispatch(RechargeHistoryActions.deleteRechargeHistory({ invoiceId: rowData?.invoiceId }))
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.customer?.rechargeHistory?.delete
+                  ) {
+                    return;
+                  }
+                  dispatch(RechargeHistoryActions.deleteRechargeHistory({ invoiceId: rowData?.invoiceId }));
+                },
               },
               {
                 icon: () => (
@@ -157,7 +173,8 @@ const DisplayRechargePlan = ({ dispatch, rechargeHistoryData }) => {
                 ),
                 tooltip: "Add Recharge",
                 isFreeAction: true,
-                onClick: () => navigate("/addRechargeHistory"),
+                onClick: () => handleAdd(),
+                // onClick: () => navigate("/addRechargeHistory"),
               },
             ]}
           />
@@ -169,6 +186,7 @@ const DisplayRechargePlan = ({ dispatch, rechargeHistoryData }) => {
 
 const mapStateToProps = (state) => ({
   rechargeHistoryData: state.rechargeHistory.rechargeHistoryData,
+  adminData: state.admin.adminData,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

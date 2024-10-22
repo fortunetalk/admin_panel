@@ -33,8 +33,9 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
   const [error, setError] = useState(false);
 
   const [state, setState] = useState({
-    userName: "",
+    email: "",
     name: "",
+    type: "",
     showPassword: "",
     permission: {
       astrologer: {
@@ -56,12 +57,44 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
         listOfCustomer: {
           isPermited: false,
           updateCustomerStatus: false,
-          updateCustomerChatStatus: false,
-          updateCustomerCallStatus: false,
+          addRecharge: false,
           editCustomer: false,
           viewCustomer: false,
           deleteCustomer: false,
         },
+        chatHistory: {
+          isPermited: false,
+          viewChatMessages: false,
+          viewChatHistoryData: false,
+          delete: false,
+          addReview: false,
+          download: false,
+        },
+        callHistory: {
+          isPermited: false,
+          viewCallHistoryData: false,
+          delete: false,
+          addReview: false,
+          download: false,
+        },
+        rechargeHistory: {
+          isPermited: false,
+          addRecharge: false,
+          delete: false,
+        },
+        walletHistory: {
+          isPermited: false,
+        },
+      },
+      callDiscussion: {
+        isPermited: false,
+        viewCallDiscussion: {
+          isPermited: false,
+          edit: false,
+          delete: false,
+          add: false,
+        },
+
       },
     },
   });
@@ -84,8 +117,8 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
   const validation = () => {
     var isValid = true;
 
-    if (!userName) {
-      handleError("userName", "Please Enter User Name");
+    if (!email) {
+      handleError("email", "Please Enter User Email");
       isValid = false;
     }
     if (!name) {
@@ -94,6 +127,10 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
     }
     if (!password) {
       handleError("password", "Please Enter password");
+      isValid = false;
+    }
+    if (!type) {
+      handleError("type", "Please input Type");
       isValid = false;
     }
 
@@ -113,9 +150,10 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
     console.log("Testing 1");
     if (validation()) {
       const data = {
-        username: userName,
+        email: email,
         name: name,
         password: password,
+        type: type,
         permissions: permission,
       };
       dispatch(Actions.subadminAdd({ data, onAdd }));
@@ -126,8 +164,9 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
   const handleReset = useCallback(() => {
     setPassword("");
     updateState({
-      userName: "",
+      email: "",
       name: "",
+      type: "",
       showPassword: "",
       permission: {
         astrologer: {
@@ -135,9 +174,53 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
           addAstrologer: false,
           listOfAstrologer: {
             isPermited: false,
+            updateStatus: false,
+            updateChatStatus: false,
+            updateCallStatus: false,
             editAstrologer: false,
-            upadateChatStatus: false,
+            viewAstrologer: false,
+            deleteAstrologer: false,
           },
+        },
+        customer: {
+          isPermited: false,
+          addCustomer: false,
+          listOfCustomer: {
+            isPermited: false,
+            updateCustomerStatus: false,
+            addRecharge: false,
+            editCustomer: false,
+            viewCustomer: false,
+            deleteCustomer: false,
+          },
+          chatHistory: {
+            isPermited: false,
+            viewChatMessages: false,
+            viewChatHistoryData: false,
+            delete: false,
+            addReview: false,
+            download: false,
+
+          },
+          callHistory: {
+            isPermited: false,
+            viewCallHistoryData: false,
+            delete: false,
+            addReview: false,
+            download: false,
+          },
+          rechargeHistory: {
+            isPermited: false,
+            addRecharge: false,
+            delete: false,
+            download: false,
+          },
+        },
+        callDiscussion: {
+          isPermited: false,
+          edit: false,
+          delete: false,
+          add: false,
         },
       },
     });
@@ -180,7 +263,7 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
     });
   };
 
-  const { userName, name, permission } = state;
+  const { email, name, permission, type } = state;
 
   return (
     <div className={classes.container}>
@@ -198,19 +281,19 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
               </div>
             </div>
           </Grid>
-          <Grid item lg={4} md={6} sm={12} xs={12}>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
-              label="User Name"
-              error={error.userName ? true : false}
-              helperText={error.userName}
-              value={userName}
-              onFocus={() => handleError("userName", null)}
-              onChange={(e) => updateState({ userName: e.target.value })}
+              label="User Email"
+              error={error.email ? true : false}
+              helperText={error.email}
+              value={email}
+              onFocus={() => handleError("email", null)}
+              onChange={(e) => updateState({ email: e.target.value })}
               variant="outlined"
               fullWidth
             />
           </Grid>
-          <Grid item lg={4} md={6} sm={12} xs={12}>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
             <TextField
               label="Name"
               error={error.name ? true : false}
@@ -222,7 +305,7 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
               fullWidth
             />
           </Grid>
-          <Grid item lg={4} sm={6} md={6} xs={6}>
+          <Grid item lg={6} sm={6} md={6} xs={6}>
             <TextField
               id="outlined-description-static"
               label="Password"
@@ -249,6 +332,28 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
               }}
             />
           </Grid>
+          <Grid item lg={6} md={12} sm={12} xs={12}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Type</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Type"
+                value={type}
+                error={error.type ? true : false}
+                onFocus={() => handleError("type", null)}
+                onChange={(e) => updateState({ type: e.target.value })}
+              >
+                <MenuItem disabled value={null}>
+                  -Select Type-
+                </MenuItem>
+                <MenuItem value="admin">Admin</MenuItem>
+                <MenuItem value="subadmin">Sub-Admin</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+
+
 
           <Grid item lg={12} sm={12} md={12} xs={12}>
             <FormControl
@@ -261,6 +366,8 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
               >
                 Permissions
               </FormLabel>
+
+              {/* Astrologer Permisiions  */}
               <FormGroup aria-label="position" row>
                 <div className={classes.chips}>
                   <FormControlLabel
@@ -664,6 +771,8 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
                   />
                 </div>
               </FormGroup>
+
+              {/* List Of Customer */}
               <FormGroup
                 aria-label="position"
                 row
@@ -782,7 +891,7 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
                 </div>
                 <div>
                   <FormControlLabel
-                    value={"Update Customer Chat Status"}
+                    value={"Add Recharge"}
                     className={classes.checkbox}
                     control={
                       <Checkbox
@@ -792,67 +901,31 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
                         }
                         value={
                           permission.customer.listOfCustomer
-                            .updateCustomerChatStatus
+                            .addRecharge
                         }
                         checked={
                           permission.customer.listOfCustomer
-                            .updateCustomerChatStatus
+                            .addRecharge
                         }
                         onChange={() => {
                           if (
                             permission.customer.listOfCustomer
-                              .updateCustomerChatStatus
+                              .addRecharge
                           ) {
                             updatePermission(
-                              "permission.customer.listOfCustomer.updateCustomerChatStatus",
+                              "permission.customer.listOfCustomer.addRecharge",
                               false
                             );
                           } else {
                             updatePermission(
-                              "permission.customer.listOfCustomer.updateCustomerChatStatus",
+                              "permission.customer.listOfCustomer.addRecharge",
                               true
                             );
                           }
                         }}
                       />
                     }
-                    label={"Update Customer Chat Status"}
-                    labelPlacement="end"
-                  />
-                </div>
-                <div>
-                  <FormControlLabel
-                    value={"Update Customer Call Status"}
-                    className={classes.checkbox}
-                    control={
-                      <Checkbox
-                        disabled={
-                          !permission.customer.isPermited ||
-                          !permission.customer.listOfCustomer.isPermited
-                        }
-                        checked={
-                          permission.customer.listOfCustomer
-                            .updateCustomerCallStatus
-                        }
-                        onChange={() => {
-                          if (
-                            permission.customer.listOfCustomer
-                              .updateCustomerCallStatus
-                          ) {
-                            updatePermission(
-                              "permission.customer.listOfCustomer.updateCustomerCallStatus",
-                              false
-                            );
-                          } else {
-                            updatePermission(
-                              "permission.customer.listOfCustomer.updateCustomerCallStatus",
-                              true
-                            );
-                          }
-                        }}
-                      />
-                    }
-                    label={"Update Customer Call Status"}
+                    label={"Add Recharge"}
                     labelPlacement="end"
                   />
                 </div>
@@ -968,6 +1041,753 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
                   />
                 </div>
               </FormGroup>
+
+              {/* Chat History of Customer */}
+
+              <FormGroup
+                aria-label="position"
+                row
+                style={{ marginLeft: "10px", marginRight: "10px" }}
+              >
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permission.customer.chatHistory.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={!permission.customer.isPermited}
+                        checked={
+                          permission.customer.chatHistory.isPermited
+                        }
+                        onChange={() => {
+                          if (
+                            permission.customer.chatHistory.isPermited
+                          ) {
+                            updatePermission(
+                              "permission.customer.chatHistory",
+                              {
+                                isPermited: false,
+                                viewChatMessages: false,
+                                viewChatHistoryData: false,
+                                delete: false,
+                                addReview: false,
+                                download: false,
+                              }
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.customer.chatHistory.isPermited",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"Chat History"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+              <FormGroup
+                aria-label="position"
+                row
+                style={{ marginLeft: "30px" }}
+              >
+                <div>
+                  <FormControlLabel
+                    value={permission.customer.chatHistory.viewChatMessages}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission.customer.isPermited ||
+                          !permission.customer.chatHistory.isPermited
+                        }
+                        checked={
+                          permission.customer.chatHistory.viewChatMessages
+                        }
+                        onChange={() => {
+                          if (
+                            permission.customer.chatHistory.viewChatMessages
+                          ) {
+                            updatePermission(
+                              "permission.customer.chatHistory.viewChatMessages",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.customer.chatHistory.viewChatMessages",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"View Chat Messages"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    value={"View Chat History Data"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission.customer.isPermited ||
+                          !permission.customer.chatHistory.isPermited
+                        }
+                        value={
+                          permission.customer.chatHistory
+                            .viewChatHistoryData
+                        }
+                        checked={
+                          permission.customer.chatHistory
+                            .viewChatHistoryData
+                        }
+                        onChange={() => {
+                          if (
+                            permission.customer.chatHistory
+                              .viewChatHistoryData
+                          ) {
+                            updatePermission(
+                              "permission.customer.chatHistory.viewChatHistoryData",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.customer.chatHistory.viewChatHistoryData",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"View Chat History Data"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    value={
+                      permission.customer.chatHistory.delete
+                    }
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission.customer.isPermited ||
+                          !permission.customer.chatHistory.isPermited
+                        }
+                        checked={
+                          permission.customer.chatHistory.delete
+                        }
+                        onChange={() => {
+                          if (
+                            permission.customer.chatHistory
+                              .delete
+                          ) {
+                            updatePermission(
+                              "permission.customer.chatHistory.delete",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.customer.chatHistory.delete",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    value={
+                      permission.customer.chatHistory.addReview
+                    }
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission.customer.isPermited ||
+                          !permission.customer.chatHistory.isPermited
+                        }
+                        checked={
+                          permission.customer.chatHistory.addReview
+                        }
+                        onChange={() => {
+                          if (
+                            permission.customer.chatHistory
+                              .addReview
+                          ) {
+                            updatePermission(
+                              "permission.customer.chatHistory.addReview",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.customer.chatHistory.addReview",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"Add Review"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    value={
+                      permission.customer.chatHistory.download
+                    }
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission.customer.isPermited ||
+                          !permission.customer.chatHistory.isPermited
+                        }
+                        checked={
+                          permission.customer.chatHistory
+                            .download
+                        }
+                        onChange={() => {
+                          if (
+                            permission.customer.chatHistory.download
+                          ) {
+                            updatePermission(
+                              "permission.customer.chatHistory.download",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.customer.chatHistory.download",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"Download CSV"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              {/* Call History of Customer */}
+
+              <FormGroup
+                aria-label="position"
+                row
+                style={{ marginLeft: "10px", marginRight: "10px" }}
+              >
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permission?.customer?.callHistory?.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={!permission?.customer?.isPermited}
+                        checked={permission?.customer?.callHistory?.isPermited}
+                        onChange={() => {
+                          if (permission?.customer?.callHistory?.isPermited) {
+                            updatePermission(
+                              "permission.customer.callHistory",
+                              {
+                                isPermited: false,
+                                viewCallHistoryData: false,
+                                delete: false,
+                                addReview: false,
+                                download: false,
+                              }
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.customer.callHistory.isPermited",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"Call History"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+              <FormGroup
+                aria-label="position"
+                row
+                style={{ marginLeft: "30px" }}
+              >
+                <div>
+                  <FormControlLabel
+                    value={"View Chat History Data"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.customer?.isPermited ||
+                          !permission?.customer?.callHistory?.isPermited
+                        }
+                        value={permission?.customer?.callHistory?.viewCallHistoryData}
+                        checked={permission?.customer?.callHistory?.viewCallHistoryData}
+                        onChange={() => {
+                          if (permission?.customer?.callHistory?.viewCallHistoryData) {
+                            updatePermission(
+                              "permission.customer.callHistory.viewCallHistoryData",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.customer.callHistory.viewCallHistoryData",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"View Call History Data"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    value={permission?.customer?.callHistory?.delete}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.customer?.isPermited ||
+                          !permission?.customer?.callHistory?.isPermited
+                        }
+                        checked={permission?.customer?.callHistory?.delete}
+                        onChange={() => {
+                          if (permission?.customer?.callHistory?.delete) {
+                            updatePermission(
+                              "permission.customer.callHistory.delete",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.customer.callHistory.delete",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    value={permission?.customer?.callHistory?.addReview}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.customer?.isPermited ||
+                          !permission?.customer?.callHistory?.isPermited
+                        }
+                        checked={permission?.customer?.callHistory?.addReview}
+                        onChange={() => {
+                          if (permission?.customer?.callHistory?.addReview) {
+                            updatePermission(
+                              "permission.customer.callHistory.addReview",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.customer.callHistory.addReview",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"Add Review"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    value={permission?.customer?.callHistory?.download}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.customer?.isPermited ||
+                          !permission?.customer?.callHistory?.isPermited
+                        }
+                        checked={permission?.customer?.callHistory?.download}
+                        onChange={() => {
+                          if (permission?.customer?.callHistory?.download) {
+                            updatePermission(
+                              "permission.customer.callHistory.download",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.customer.callHistory.download",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"Download CSV"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              {/* Recharge History of Customer */}
+
+              <FormGroup
+                aria-label="position"
+                row
+                style={{ marginLeft: "10px", marginRight: "10px" }}
+              >
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permission?.customer?.rechargeHistory?.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={!permission?.customer?.isPermited}
+                        checked={permission?.customer?.rechargeHistory?.isPermited}
+                        onChange={() => {
+                          if (permission?.customer?.rechargeHistory?.isPermited) {
+                            updatePermission(
+                              "permission.customer.rechargeHistory",
+                              {
+                                isPermited: false,
+                                addRecharge: false,
+                                delete: false,
+
+                              }
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.customer.rechargeHistory.isPermited",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"Recharge History"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+              <FormGroup
+                aria-label="position"
+                row
+                style={{ marginLeft: "30px" }}
+              >
+
+                <div>
+                  <FormControlLabel
+                    value={permission?.customer?.rechargeHistory?.addRecharge}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.customer?.isPermited ||
+                          !permission?.customer?.rechargeHistory?.isPermited
+                        }
+                        checked={permission?.customer?.rechargeHistory?.addRecharge}
+                        onChange={() => {
+                          if (permission?.customer?.rechargeHistory?.addRecharge) {
+                            updatePermission(
+                              "permission.customer.rechargeHistory.addRecharge",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.customer.rechargeHistory.addRecharge",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"Add Recharge"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    value={permission?.customer?.rechargeHistory?.delete}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.customer?.isPermited ||
+                          !permission?.customer?.rechargeHistory?.isPermited
+                        }
+                        checked={permission?.customer?.rechargeHistory?.delete}
+                        onChange={() => {
+                          if (permission?.customer?.rechargeHistory?.delete) {
+                            updatePermission(
+                              "permission.customer.rechargeHistory.delete",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.customer.rechargeHistory.delete",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+              </FormGroup>
+
+              {/* Wallet History of Customer */}
+
+              <FormGroup
+                aria-label="position"
+                row
+                style={{ marginLeft: "10px", marginRight: "10px" }}
+              >
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permission?.customer?.walletHistory?.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={!permission?.customer?.isPermited}
+                        checked={permission?.customer?.walletHistory?.isPermited}
+                        onChange={() => {
+                          if (permission?.customer?.walletHistory?.isPermited) {
+                            updatePermission(
+                              "permission.customer.walletHistory",
+                              {
+                                isPermited: false,
+                              }
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.customer.walletHistory.isPermited",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"Wallet History"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              {/* Call Discussion */}
+
+              <FormGroup aria-label="position" row>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permission.callDiscussion?.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        checked={permission.callDiscussion?.isPermited}
+                        onChange={() => {
+                          if (permission.callDiscussion?.isPermited) {
+                            updatePermission("permission.callDiscussion", {
+                              isPermited: false,
+                              viewCallDiscussion: {
+                                isPermited: false,
+                                edit: false,
+                                delete: false,
+                                add: false,
+                              },
+                            });
+                          } else {
+                            updatePermission(
+                              "permission.callDiscussion.isPermited",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                          color: "#10395D",
+                          fontSize: "14px",
+                        }}
+                      >
+                        Call Discussion
+                      </span>
+                    }
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup
+                aria-label="position"
+                row
+                style={{ marginLeft: "10px", marginRight: "10px" }}
+              >
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permission.callDiscussion?.viewCallDiscussion?.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={!permission.callDiscussion?.isPermited}
+                        checked={
+                          permission.callDiscussion?.viewCallDiscussion?.isPermited
+                        }
+                        onChange={() => {
+                          if (
+                            permission.callDiscussion?.viewCallDiscussion?.isPermited
+                          ) {
+                            updatePermission(
+                              "permission.callDiscussion.viewCallDiscussion",
+                              {
+                                isPermited: false,
+                                edit: false,
+                                delete: false,
+                                add: false,
+                              }
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.callDiscussion.viewCallDiscussion.isPermited",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"View Call Discussion"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup
+                aria-label="position"
+                row
+                style={{ marginLeft: "30px" }}
+              >
+                <div>
+                  <FormControlLabel
+                    value={"Edit"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission.callDiscussion?.isPermited ||
+                          !permission.callDiscussion?.viewCallDiscussion?.isPermited
+                        }
+                        value={permission.callDiscussion?.viewCallDiscussion?.edit}
+                        checked={permission.callDiscussion?.viewCallDiscussion?.edit}
+                        onChange={() => {
+                          if (
+                            permission.callDiscussion?.viewCallDiscussion?.edit
+                          ) {
+                            updatePermission(
+                              "permission.callDiscussion.viewCallDiscussion.edit",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.callDiscussion.viewCallDiscussion.edit",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"Edit"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    value={"Delete"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission.callDiscussion?.isPermited ||
+                          !permission.callDiscussion?.viewCallDiscussion?.isPermited
+                        }
+                        value={permission.callDiscussion?.viewCallDiscussion?.delete}
+                        checked={permission.callDiscussion?.viewCallDiscussion?.delete}
+                        onChange={() => {
+                          if (
+                            permission.callDiscussion?.viewCallDiscussion?.delete
+                          ) {
+                            updatePermission(
+                              "permission.callDiscussion.viewCallDiscussion.delete",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.callDiscussion.viewCallDiscussion.delete",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    value={"Add"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission.callDiscussion?.isPermited ||
+                          !permission.callDiscussion?.viewCallDiscussion?.isPermited
+                        }
+                        checked={permission.callDiscussion?.viewCallDiscussion?.add}
+                        onChange={() => {
+                          if (
+                            permission.callDiscussion?.viewCallDiscussion?.add
+                          ) {
+                            updatePermission(
+                              "permission.callDiscussion.viewCallDiscussion.add",
+                              false
+                            );
+                          } else {
+                            updatePermission(
+                              "permission.callDiscussion.viewCallDiscussion.add",
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    }
+                    label={"Add"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
             </FormControl>
             {error.permission && (
               <div className={classes.errorstyles}>{error.permission}</div>
@@ -991,6 +1811,7 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
 };
 const mapStateToProps = (state) => ({
   isLoading: state.gift.isLoading,
+  adminData: state.admin.adminData,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

@@ -1,16 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { useStyles } from "../../assets/styles.js";
+
 import {
   Grid,
   CircularProgress,
   InputAdornment,
   IconButton,
+  Button,
   TextField,
+  Select,
+  Avatar,
+  InputLabel,
+  MenuItem,
   FormControl,
+  Checkbox,
   FormGroup,
   FormControlLabel,
   FormLabel,
-  Checkbox,
+  ListItemText,
+  FormHelperText,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import DvrIcon from "@mui/icons-material/Dvr";
@@ -25,10 +33,11 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState({});
   const [state, setState] = useState({
-    userName: "",
+    email: "",
     name: "",
+    type: "",
     plainPassword: "", // Changed this to plainPassword
-    permissions: {
+    permission: {
       astrologer: {
         isPermited: false,
         addAstrologer: false,
@@ -48,12 +57,44 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
         listOfCustomer: {
           isPermited: false,
           updateCustomerStatus: false,
-          updateCustomerChatStatus: false,
-          updateCustomerCallStatus: false,
+          addRecharge: false,
           editCustomer: false,
           viewCustomer: false,
           deleteCustomer: false,
         },
+        chatHistory: {
+          isPermited: false,
+          viewChatMessages: false,
+          viewChatHistoryData: false,
+          delete: false,
+          addReview: false,
+          download: false,
+        },
+        callHistory: {
+          isPermited: false,
+          viewCallHistoryData: false,
+          delete: false,
+          addReview: false,
+          download: false,
+        },
+        rechargeHistory: {
+          isPermited: false,
+          addRecharge: false,
+          delete: false,
+        },
+        walletHistory: {
+          isPermited: false,
+        },
+      },
+      callDiscussion: {
+        isPermited: false,
+        viewCallDiscussion: {
+          isPermited: false,
+          edit: false,
+          delete: false,
+          add: false,
+        },
+
       },
     },
   });
@@ -64,18 +105,15 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
 
   useEffect(() => {
     if (subAdminByIdData?.data) {
-      const { username, name, permissions, plainPassword } = subAdminByIdData.data;
+      const { email, name, permissions, plainPassword, type } =
+        subAdminByIdData.data;
       setState((prevState) => ({
         ...prevState,
-        userName: username,
+        email: email,
         name: name,
         plainPassword: plainPassword || "", // Set plainPassword from data
-        permissions: {
-          astrologer: {
-            ...prevState.permissions.astrologer,
-            ...permissions.astrologer,
-          },
-        },
+        permission: permissions,
+        type: type,
       }));
     }
   }, [subAdminByIdData]);
@@ -90,10 +128,10 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
 
   const validation = () => {
     let isValid = true;
-    const { userName, name, plainPassword } = state;
+    const { email, name, plainPassword, type } = state;
 
-    if (!userName) {
-      handleError("userName", "Please Enter User Name");
+    if (!email) {
+      handleError("email", "Please Enter User Name");
       isValid = false;
     }
     if (!name) {
@@ -107,37 +145,43 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
     return isValid;
   };
 
-
   const handleSubmit = async () => {
     if (validation()) {
-      const { userName, name, plainPassword, permissions } = state;
       const id = subAdminByIdData?.data?._id; // Get the ID from subAdminByIdData
-      const data = { id, username: userName, name, password: plainPassword, permissions }; // Include id in the payload
-      dispatch(Actions.subadminUpdate({ data, onAdd: () => navigate("/display-sub-admin") }));
+      const data = {
+        id,
+        email: email,
+        type: type,
+        name,
+        password: plainPassword,
+        permissions: permission,
+      }; // Include id in the payload
+      dispatch(
+        Actions.subadminUpdate({
+          data,
+          onAdd: () => navigate("/display-sub-admin"),
+        })
+      );
     }
   };
-  
+
   const updatePermission = (path, value) => {
     setState((prevState) => {
       const updatedState = { ...prevState };
       const keys = path.split(".");
       let current = updatedState;
-  
+
       for (let i = 0; i < keys.length - 1; i++) {
-        // Check if the current object exists, if not, create it
-        if (!current[keys[i]]) {
-          current[keys[i]] = {};
-        }
         current = current[keys[i]];
       }
-  
+
       current[keys[keys.length - 1]] = value;
-  
+
       return updatedState;
     });
   };
 
-  const { userName, name, permissions, plainPassword } = state;
+  const { email, name, permission, plainPassword, type } = state;
 
   return (
     <div className={classes.container}>
@@ -146,20 +190,23 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
           <Grid item lg={12}>
             <div className={classes.headingContainer}>
               <div className={classes.heading}>Edit SubAdmin Details</div>
-              <div onClick={() => navigate("/display-sub-admin")} className={classes.addButton}>
+              <div
+                onClick={() => navigate("/display-sub-admin")}
+                className={classes.addButton}
+              >
                 <DvrIcon />
                 <div className={classes.addButtontext}>Display SubAdmins</div>
               </div>
             </div>
           </Grid>
-          <Grid item lg={4}>
+          <Grid item lg={6}>
             <TextField
-              label="User Name"
-              error={!!error.userName}
-              helperText={error.userName}
-              value={userName}
-              onFocus={() => handleError("userName", null)}
-              onChange={(e) => setState({ ...state, userName: e.target.value })}
+              label="User Email"
+              error={!!error.email}
+              helperText={error.email}
+              value={email}
+              onFocus={() => handleError("email", null)}
+              onChange={(e) => setState({ ...state, email: e.target.value })}
               variant="outlined"
               fullWidth
               InputLabelProps={{
@@ -167,7 +214,7 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
               }}
             />
           </Grid>
-          <Grid item lg={4}>
+          <Grid item lg={6}>
             <TextField
               label="Name"
               error={!!error.name}
@@ -182,7 +229,7 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
               }}
             />
           </Grid>
-          <Grid item lg={4}>
+          <Grid item lg={6}>
             <TextField
               label="Password"
               fullWidth
@@ -206,6 +253,33 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
               }}
             />
           </Grid>
+          <Grid item lg={6} md={12} sm={12} xs={12}>
+            <FormControl fullWidth>
+              <InputLabel id="type-select-label">Type</InputLabel>
+              <Select
+                labelId="type-select-label"
+                id="type-select"
+                label="Type"
+                value={type || ""} // Ensure value is a string
+                error={!!error.type}
+                onFocus={() => handleError("type", null)}
+                onChange={(e) => {
+                  setState((prevState) => ({
+                    ...prevState,
+                    type: e.target.value, // Update type in state
+                  }));
+                }}
+              >
+                <MenuItem value="">
+                  <em>-Select Type-</em>
+                </MenuItem>
+                <MenuItem value="admin">Admin</MenuItem>
+                <MenuItem value="subadmin">Sub-Admin</MenuItem>
+              </Select>
+              {error.type && <FormHelperText error>{error.type}</FormHelperText>}
+            </FormControl>
+          </Grid>
+
 
           <Grid item lg={12}>
             <FormControl component="fieldset" style={{ marginLeft: "10px" }}>
@@ -220,19 +294,36 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={permissions?.astrologer?.isPermited}
+                        checked={permission?.astrologer?.isPermited}
                         onChange={() => {
-                          const isPermited = !permissions?.astrologer?.isPermited;
-                          updatePermission("permissions.astrologer.isPermited", isPermited);
-                          if (!isPermited) {
-                            updatePermission("permissions.astrologer.addAstrologer", false);
-                            updatePermission("permissions.astrologer.listOfAstrologer.isPermited", false);
+                          if (permission?.astrologer?.isPermited) {
+                            updatePermission("permission.astrologer", {
+                              isPermited: false,
+                              addAstrologer: false,
+                              listOfAstrologer: {
+                                isPermited: false,
+                                updateStatus: false,
+                                updateChatStatus: false,
+                                updateCallStatus: false,
+                                editAstrologer: false,
+                                viewAstrologer: false,
+                                deleteAstrologer: false,
+                              },
+                            });
+                          } else {
+                            updatePermission("permission.astrologer.isPermited", true);
                           }
                         }}
                       />
                     }
                     label={
-                      <span style={{ fontWeight: "bold", color: "#10395D", fontSize: "14px" }}>
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                          color: "#10395D",
+                          fontSize: "14px",
+                        }}
+                      >
                         Astrologer
                       </span>
                     }
@@ -240,15 +331,20 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                   />
                 </div>
               </FormGroup>
+
               <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
                 <div className={classes.chips}>
                   <FormControlLabel
                     control={
                       <Checkbox
-                        disabled={!permissions?.astrologer?.isPermited}
-                        checked={permissions?.astrologer?.addAstrologer}
+                        disabled={!permission?.astrologer?.isPermited}
+                        checked={permission?.astrologer?.addAstrologer}
                         onChange={() => {
-                          updatePermission("permissions.astrologer.addAstrologer", !permissions?.astrologer?.addAstrologer);
+                          if (permission?.astrologer?.addAstrologer) {
+                            updatePermission("permission.astrologer.addAstrologer", false);
+                          } else {
+                            updatePermission("permission.astrologer.addAstrologer", true);
+                          }
                         }}
                       />
                     }
@@ -257,23 +353,27 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                   />
                 </div>
               </FormGroup>
+
               <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
                 <div className={classes.chips}>
                   <FormControlLabel
                     control={
                       <Checkbox
-                        disabled={!permissions?.astrologer?.isPermited}
-                        checked={permissions?.astrologer?.listOfAstrologer?.isPermited}
+                        disabled={!permission?.astrologer?.isPermited}
+                        checked={permission?.astrologer?.listOfAstrologer?.isPermited}
                         onChange={() => {
-                          const isPermited = !permissions?.astrologer?.listOfAstrologer?.isPermited;
-                          updatePermission("permissions.astrologer.listOfAstrologer.isPermited", isPermited);
-                          if (!isPermited) {
-                            updatePermission("permissions.astrologer.listOfAstrologer.updateStatus", false);
-                            updatePermission("permissions.astrologer.listOfAstrologer.updateChatStatus", false);
-                            updatePermission("permissions.astrologer.listOfAstrologer.updateCallStatus", false);
-                            updatePermission("permissions.astrologer.listOfAstrologer.editAstrologer", false);
-                            updatePermission("permissions.astrologer.listOfAstrologer.viewAstrologer", false);
-                            updatePermission("permissions.astrologer.listOfAstrologer.deleteAstrologer", false);
+                          if (permission?.astrologer?.listOfAstrologer?.isPermited) {
+                            updatePermission("permission.astrologer.listOfAstrologer", {
+                              isPermited: false,
+                              updateStatus: false,
+                              updateChatStatus: false,
+                              updateCallStatus: false,
+                              editAstrologer: false,
+                              viewAstrologer: false,
+                              deleteAstrologer: false,
+                            });
+                          } else {
+                            updatePermission("permission.astrologer.listOfAstrologer.isPermited", true);
                           }
                         }}
                       />
@@ -283,15 +383,23 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                   />
                 </div>
               </FormGroup>
+
               <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
                 <div>
                   <FormControlLabel
                     control={
                       <Checkbox
-                        disabled={!permissions?.astrologer?.isPermited || !permissions?.astrologer?.listOfAstrologer?.isPermited}
-                        checked={permissions?.astrologer?.listOfAstrologer?.updateStatus}
+                        disabled={
+                          !permission?.astrologer?.isPermited ||
+                          !permission?.astrologer?.listOfAstrologer?.isPermited
+                        }
+                        checked={permission?.astrologer?.listOfAstrologer?.updateStatus}
                         onChange={() => {
-                          updatePermission("permissions.astrologer.listOfAstrologer.updateStatus", !permissions?.astrologer?.listOfAstrologer?.updateStatus);
+                          if (permission?.astrologer?.listOfAstrologer?.updateStatus) {
+                            updatePermission("permission.astrologer.listOfAstrologer.updateStatus", false);
+                          } else {
+                            updatePermission("permission.astrologer.listOfAstrologer.updateStatus", true);
+                          }
                         }}
                       />
                     }
@@ -303,10 +411,17 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        disabled={!permissions?.astrologer?.isPermited || !permissions?.astrologer?.listOfAstrologer?.isPermited}
-                        checked={permissions?.astrologer?.listOfAstrologer?.updateChatStatus}
+                        disabled={
+                          !permission?.astrologer?.isPermited ||
+                          !permission?.astrologer?.listOfAstrologer?.isPermited
+                        }
+                        checked={permission?.astrologer?.listOfAstrologer?.updateChatStatus}
                         onChange={() => {
-                          updatePermission("permissions.astrologer.listOfAstrologer.updateChatStatus", !permissions?.astrologer?.listOfAstrologer?.updateChatStatus);
+                          if (permission?.astrologer?.listOfAstrologer?.updateChatStatus) {
+                            updatePermission("permission.astrologer.listOfAstrologer.updateChatStatus", false);
+                          } else {
+                            updatePermission("permission.astrologer.listOfAstrologer.updateChatStatus", true);
+                          }
                         }}
                       />
                     }
@@ -318,10 +433,17 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        disabled={!permissions?.astrologer?.isPermited || !permissions?.astrologer?.listOfAstrologer?.isPermited}
-                        checked={permissions?.astrologer?.listOfAstrologer?.updateCallStatus}
+                        disabled={
+                          !permission?.astrologer?.isPermited ||
+                          !permission?.astrologer?.listOfAstrologer?.isPermited
+                        }
+                        checked={permission?.astrologer?.listOfAstrologer?.updateCallStatus}
                         onChange={() => {
-                          updatePermission("permissions.astrologer.listOfAstrologer.updateCallStatus", !permissions?.astrologer?.listOfAstrologer?.updateCallStatus);
+                          if (permission?.astrologer?.listOfAstrologer?.updateCallStatus) {
+                            updatePermission("permission.astrologer.listOfAstrologer.updateCallStatus", false);
+                          } else {
+                            updatePermission("permission.astrologer.listOfAstrologer.updateCallStatus", true);
+                          }
                         }}
                       />
                     }
@@ -333,10 +455,17 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        disabled={!permissions?.astrologer?.isPermited || !permissions?.astrologer?.listOfAstrologer?.isPermited}
-                        checked={permissions?.astrologer?.listOfAstrologer?.editAstrologer}
+                        disabled={
+                          !permission?.astrologer?.isPermited ||
+                          !permission?.astrologer?.listOfAstrologer?.isPermited
+                        }
+                        checked={permission?.astrologer?.listOfAstrologer?.editAstrologer}
                         onChange={() => {
-                          updatePermission("permissions.astrologer.listOfAstrologer.editAstrologer", !permissions?.astrologer?.listOfAstrologer?.editAstrologer);
+                          if (permission?.astrologer?.listOfAstrologer?.editAstrologer) {
+                            updatePermission("permission.astrologer.listOfAstrologer.editAstrologer", false);
+                          } else {
+                            updatePermission("permission.astrologer.listOfAstrologer.editAstrologer", true);
+                          }
                         }}
                       />
                     }
@@ -348,10 +477,17 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        disabled={!permissions?.astrologer?.isPermited || !permissions?.astrologer?.listOfAstrologer?.isPermited}
-                        checked={permissions?.astrologer?.listOfAstrologer?.viewAstrologer}
+                        disabled={
+                          !permission?.astrologer?.isPermited ||
+                          !permission?.astrologer?.listOfAstrologer?.isPermited
+                        }
+                        checked={permission?.astrologer?.listOfAstrologer?.viewAstrologer}
                         onChange={() => {
-                          updatePermission("permissions.astrologer.listOfAstrologer.viewAstrologer", !permissions?.astrologer?.listOfAstrologer?.viewAstrologer);
+                          if (permission?.astrologer?.listOfAstrologer?.viewAstrologer) {
+                            updatePermission("permission.astrologer.listOfAstrologer.viewAstrologer", false);
+                          } else {
+                            updatePermission("permission.astrologer.listOfAstrologer.viewAstrologer", true);
+                          }
                         }}
                       />
                     }
@@ -363,10 +499,17 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        disabled={!permissions?.astrologer?.isPermited || !permissions?.astrologer?.listOfAstrologer?.isPermited}
-                        checked={permissions?.astrologer?.listOfAstrologer?.deleteAstrologer}
+                        disabled={
+                          !permission?.astrologer?.isPermited ||
+                          !permission?.astrologer?.listOfAstrologer?.isPermited
+                        }
+                        checked={permission?.astrologer?.listOfAstrologer?.deleteAstrologer}
                         onChange={() => {
-                          updatePermission("permissions.astrologer.listOfAstrologer.deleteAstrologer", !permissions?.astrologer?.listOfAstrologer?.deleteAstrologer);
+                          if (permission?.astrologer?.listOfAstrologer?.deleteAstrologer) {
+                            updatePermission("permission.astrologer.listOfAstrologer.deleteAstrologer", false);
+                          } else {
+                            updatePermission("permission.astrologer.listOfAstrologer.deleteAstrologer", true);
+                          }
                         }}
                       />
                     }
@@ -376,26 +519,42 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                 </div>
               </FormGroup>
 
-              {/* Customer  */}
+              {/* Customer Section */}
 
               <FormGroup aria-label="position" row>
                 <div className={classes.chips}>
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={permissions?.customer?.isPermited}
+                        checked={permission?.customer?.isPermited}
                         onChange={() => {
-                          const isPermited = !permissions?.customer?.isPermited;
-                          updatePermission("permissions.customer.isPermited", isPermited);
-                          if (!isPermited) {
-                            updatePermission("permissions.customer.addCustomer", false);
-                            updatePermission("permissions.customer.listOfCustomer.isPermited", false);
+                          if (permission?.customer?.isPermited) {
+                            updatePermission("permission.customer", {
+                              isPermited: false,
+                              addCustomer: false,
+                              listOfCustomer: {
+                                isPermited: false,
+                                updateCustomerStatus: false,
+                                addRecharge: false,
+                                editCustomer: false,
+                                viewCustomer: false,
+                                deleteCustomer: false,
+                              },
+                            });
+                          } else {
+                            updatePermission("permission.customer.isPermited", true);
                           }
                         }}
                       />
                     }
                     label={
-                      <span style={{ fontWeight: "bold", color: "#10395D", fontSize: "14px" }}>
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                          color: "#10395D",
+                          fontSize: "14px",
+                        }}
+                      >
                         Customer
                       </span>
                     }
@@ -403,15 +562,20 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                   />
                 </div>
               </FormGroup>
+
               <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
                 <div className={classes.chips}>
                   <FormControlLabel
                     control={
                       <Checkbox
-                        disabled={!permissions?.customer?.isPermited}
-                        checked={permissions?.customer?.addCustomer}
+                        disabled={!permission?.customer?.isPermited}
+                        checked={permission?.customer?.addCustomer}
                         onChange={() => {
-                          updatePermission("permissions.customer.addCustomer", !permissions?.customer?.addCustomer);
+                          if (permission?.customer?.addCustomer) {
+                            updatePermission("permission.customer.addCustomer", false);
+                          } else {
+                            updatePermission("permission.customer.addCustomer", true);
+                          }
                         }}
                       />
                     }
@@ -420,23 +584,26 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                   />
                 </div>
               </FormGroup>
+
               <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
                 <div className={classes.chips}>
                   <FormControlLabel
                     control={
                       <Checkbox
-                        disabled={!permissions?.customer?.isPermited}
-                        checked={permissions?.customer?.listOfCustomer?.isPermited}
+                        disabled={!permission?.customer?.isPermited}
+                        checked={permission?.customer?.listOfCustomer?.isPermited}
                         onChange={() => {
-                          const isPermited = !permissions?.customer?.listOfCustomer?.isPermited;
-                          updatePermission("permissions.customer.listOfCustomer.isPermited", isPermited);
-                          if (!isPermited) {
-                            updatePermission("permissions.customer.listOfCustomer.updateCustomerStatus", false);
-                            updatePermission("permissions.customer.listOfCustomer.updateCustomerChatStatus", false);
-                            updatePermission("permissions.customer.listOfCustomer.updateCustomerCallStatus", false);
-                            updatePermission("permissions.customer.listOfCustomer.editCustomer", false);
-                            updatePermission("permissions.customer.listOfCustomer.viewCustomer", false);
-                            updatePermission("permissions.customer.listOfCustomer.deleteCustomer", false);
+                          if (permission?.customer?.listOfCustomer?.isPermited) {
+                            updatePermission("permission.customer.listOfCustomer", {
+                              isPermited: false,
+                              updateCustomerStatus: false,
+                              addRecharge: false,
+                              editCustomer: false,
+                              viewCustomer: false,
+                              deleteCustomer: false,
+                            });
+                          } else {
+                            updatePermission("permission.customer.listOfCustomer.isPermited", true);
                           }
                         }}
                       />
@@ -446,15 +613,23 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                   />
                 </div>
               </FormGroup>
+
               <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
                 <div>
                   <FormControlLabel
                     control={
                       <Checkbox
-                        disabled={!permissions?.customer?.isPermited || !permissions?.customer?.listOfCustomer?.isPermited}
-                        checked={permissions?.customer?.listOfCustomer?.updateCustomerStatus}
+                        disabled={
+                          !permission?.customer?.isPermited ||
+                          !permission?.customer?.listOfCustomer?.isPermited
+                        }
+                        checked={permission?.customer?.listOfCustomer?.updateCustomerStatus}
                         onChange={() => {
-                          updatePermission("permissions.customer.listOfCustomer.updateCustomerStatus", !permissions?.customer?.listOfCustomer?.updateCustomerStatus);
+                          if (permission?.customer?.listOfCustomer?.updateCustomerStatus) {
+                            updatePermission("permission.customer.listOfCustomer.updateCustomerStatus", false);
+                          } else {
+                            updatePermission("permission.customer.listOfCustomer.updateCustomerStatus", true);
+                          }
                         }}
                       />
                     }
@@ -466,14 +641,21 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        disabled={!permissions?.customer?.isPermited || !permissions?.customer?.listOfCustomer?.isPermited}
-                        checked={permissions?.customer?.listOfCustomer?.updateCustomerChatStatus}
+                        disabled={
+                          !permission?.customer?.isPermited ||
+                          !permission?.customer?.listOfCustomer?.isPermited
+                        }
+                        checked={permission?.customer?.listOfCustomer?.addRecharge}
                         onChange={() => {
-                          updatePermission("permissions.customer.listOfCustomer.updateCustomerChatStatus", !permissions?.customer?.listOfCustomer?.updateCustomerChatStatus);
+                          if (permission?.customer?.listOfCustomer?.addRecharge) {
+                            updatePermission("permission.customer.listOfCustomer.addRecharge", false);
+                          } else {
+                            updatePermission("permission.customer.listOfCustomer.addRecharge", true);
+                          }
                         }}
                       />
                     }
-                    label={"Update Customer Chat Status"}
+                    label={"Add Recharge"}
                     labelPlacement="end"
                   />
                 </div>
@@ -481,25 +663,17 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        disabled={!permissions?.customer?.isPermited || !permissions?.customer?.listOfCustomer?.isPermited}
-                        checked={permissions?.customer?.listOfCustomer?.updateCustomerCallStatus}
+                        disabled={
+                          !permission?.customer?.isPermited ||
+                          !permission?.customer?.listOfCustomer?.isPermited
+                        }
+                        checked={permission?.customer?.listOfCustomer?.editCustomer}
                         onChange={() => {
-                          updatePermission("permissions.customer.listOfCustomer.updateCustomerCallStatus", !permissions?.customer?.listOfCustomer?.updateCustomerCallStatus);
-                        }}
-                      />
-                    }
-                    label={"Update Customer Call Status"}
-                    labelPlacement="end"
-                  />
-                </div>
-                <div>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        disabled={!permissions?.customer?.isPermited || !permissions?.customer?.listOfCustomer?.isPermited}
-                        checked={permissions?.customer?.listOfCustomer?.editCustomer}
-                        onChange={() => {
-                          updatePermission("permissions.customer.listOfCustomer.editCustomer", !permissions?.customer?.listOfCustomer?.editCustomer);
+                          if (permission?.customer?.listOfCustomer?.editCustomer) {
+                            updatePermission("permission.customer.listOfCustomer.editCustomer", false);
+                          } else {
+                            updatePermission("permission.customer.listOfCustomer.editCustomer", true);
+                          }
                         }}
                       />
                     }
@@ -511,14 +685,21 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        disabled={!permissions?.customer?.isPermited || !permissions?.customer?.listOfCustomer?.isPermited}
-                        checked={permissions?.customer?.listOfCustomer?.viewCustomer}
+                        disabled={
+                          !permission?.customer?.isPermited ||
+                          !permission?.customer?.listOfCustomer?.isPermited
+                        }
+                        checked={permission?.customer?.listOfCustomer?.viewCustomer}
                         onChange={() => {
-                          updatePermission("permissions.customer.listOfCustomer.viewCustomer", !permissions?.customer?.listOfCustomer?.viewCustomer);
+                          if (permission?.customer?.listOfCustomer?.viewCustomer) {
+                            updatePermission("permission.customer.listOfCustomer.viewCustomer", false);
+                          } else {
+                            updatePermission("permission.customer.listOfCustomer.viewCustomer", true);
+                          }
                         }}
                       />
                     }
-                    label={"View Customer"}
+                    label={"View customer"}
                     labelPlacement="end"
                   />
                 </div>
@@ -526,10 +707,17 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        disabled={!permissions?.customer?.isPermited || !permissions?.customer?.listOfCustomer?.isPermited}
-                        checked={permissions?.customer?.listOfCustomer?.deleteCustomer}
+                        disabled={
+                          !permission?.customer?.isPermited ||
+                          !permission?.customer?.listOfCustomer?.isPermited
+                        }
+                        checked={permission?.customer?.listOfCustomer?.deleteCustomer}
                         onChange={() => {
-                          updatePermission("permissions.customer.listOfCustomer.deleteCustomer", !permissions?.customer?.listOfCustomer?.deleteCustomer);
+                          if (permission?.customer?.listOfCustomer?.deleteCustomer) {
+                            updatePermission("permission.customer.listOfCustomer.deleteCustomer", false);
+                          } else {
+                            updatePermission("permission.customer.listOfCustomer.deleteCustomer", true);
+                          }
                         }}
                       />
                     }
@@ -538,6 +726,517 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                   />
                 </div>
               </FormGroup>
+
+
+              {/* Chat History of Customer */}
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={!permission?.customer?.isPermited}
+                        checked={permission?.customer?.chatHistory?.isPermited}
+                        onChange={() => {
+                          if (permission?.customer?.chatHistory?.isPermited) {
+                            updatePermission("permission.customer.chatHistory", {
+                              isPermited: false,
+                              viewChatMessages: false,
+                              viewChatHistoryData: false,
+                              delete: false,
+                              addReview: false,
+                              download: false,
+                            });
+                          } else {
+                            updatePermission("permission.customer.chatHistory.isPermited", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Chat History"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.customer?.isPermited ||
+                          !permission?.customer?.chatHistory?.isPermited
+                        }
+                        checked={permission?.customer?.chatHistory?.viewChatMessages}
+                        onChange={() => {
+                          if (permission?.customer?.chatHistory?.viewChatMessages) {
+                            updatePermission("permission.customer.chatHistory.viewChatMessages", false);
+                          } else {
+                            updatePermission("permission.customer.chatHistory.viewChatMessages", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"View Chat Messages"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.customer?.isPermited ||
+                          !permission?.customer?.chatHistory?.isPermited
+                        }
+                        checked={permission?.customer?.chatHistory?.viewChatHistoryData}
+                        onChange={() => {
+                          if (permission?.customer?.chatHistory?.viewChatHistoryData) {
+                            updatePermission("permission.customer.chatHistory.viewChatHistoryData", false);
+                          } else {
+                            updatePermission("permission.customer.chatHistory.viewChatHistoryData", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"View Chat History Data"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.customer?.isPermited ||
+                          !permission?.customer?.chatHistory?.isPermited
+                        }
+                        checked={permission?.customer?.chatHistory?.delete}
+                        onChange={() => {
+                          if (permission?.customer?.chatHistory?.delete) {
+                            updatePermission("permission.customer.chatHistory.delete", false);
+                          } else {
+                            updatePermission("permission.customer.chatHistory.delete", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.customer?.isPermited ||
+                          !permission?.customer?.chatHistory?.isPermited
+                        }
+                        checked={permission?.customer?.chatHistory?.addReview}
+                        onChange={() => {
+                          if (permission?.customer?.chatHistory?.addReview) {
+                            updatePermission("permission.customer.chatHistory.addReview", false);
+                          } else {
+                            updatePermission("permission.customer.chatHistory.addReview", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Add Review"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.customer?.isPermited ||
+                          !permission?.customer?.chatHistory?.isPermited
+                        }
+                        checked={permission?.customer?.chatHistory?.download}
+                        onChange={() => {
+                          if (permission?.customer?.chatHistory?.download) {
+                            updatePermission("permission.customer.chatHistory.download", false);
+                          } else {
+                            updatePermission("permission.customer.chatHistory.download", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Download CSV"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              {/* Call History of Customer */}
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={!permission?.customer?.isPermited}
+                        checked={permission?.customer?.callHistory?.isPermited}
+                        onChange={() => {
+                          if (permission?.customer?.callHistory?.isPermited) {
+                            updatePermission("permission.customer.callHistory", {
+                              isPermited: false,
+                              viewChatHistoryData: false,
+                              delete: false,
+                              addReview: false,
+                              download: false,
+                            });
+                          } else {
+                            updatePermission("permission.customer.callHistory.isPermited", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Call History"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.customer?.isPermited ||
+                          !permission?.customer?.callHistory?.isPermited
+                        }
+                        checked={permission?.customer?.callHistory?.viewCallHistoryData}
+                        onChange={() => {
+                          if (permission?.customer?.callHistory?.viewCallHistoryData) {
+                            updatePermission("permission.customer.callHistory.viewCallHistoryData", false);
+                          } else {
+                            updatePermission("permission.customer.callHistory.viewCallHistoryData", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"View Call History Data"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.customer?.isPermited ||
+                          !permission?.customer?.callHistory?.isPermited
+                        }
+                        checked={permission?.customer?.callHistory?.delete}
+                        onChange={() => {
+                          if (permission?.customer?.callHistory?.delete) {
+                            updatePermission("permission.customer.callHistory.delete", false);
+                          } else {
+                            updatePermission("permission.customer.callHistory.delete", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.customer?.isPermited ||
+                          !permission?.customer?.callHistory?.isPermited
+                        }
+                        checked={permission?.customer?.callHistory?.addReview}
+                        onChange={() => {
+                          if (permission?.customer?.callHistory?.addReview) {
+                            updatePermission("permission.customer.callHistory.addReview", false);
+                          } else {
+                            updatePermission("permission.customer.callHistory.addReview", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Add Review"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.customer?.isPermited ||
+                          !permission?.customer?.callHistory?.isPermited
+                        }
+                        checked={permission?.customer?.callHistory?.download}
+                        onChange={() => {
+                          if (permission?.customer?.callHistory?.download) {
+                            updatePermission("permission.customer.callHistory.download", false);
+                          } else {
+                            updatePermission("permission.customer.callHistory.download", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Download CSV"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              {/* Recharge History */}
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={!permission?.customer?.isPermited}
+                        checked={permission?.customer?.rechargeHistory?.isPermited}
+                        onChange={() => {
+                          if (permission?.customer?.rechargeHistory?.isPermited) {
+                            updatePermission("permission.customer.rechargeHistory", {
+                                isPermited: false,
+                                addRecharge: false,
+                                delete: false,
+                            });
+                          } else {
+                            updatePermission("permission.customer.rechargeHistory.isPermited", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Recharge History"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+               
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.customer?.isPermited ||
+                          !permission?.customer?.rechargeHistory?.isPermited
+                        }
+                        checked={permission?.customer?.rechargeHistory?.addRecharge}
+                        onChange={() => {
+                          if (permission?.customer?.rechargeHistory?.addRecharge) {
+                            updatePermission("permission.customer.rechargeHistory.addRecharge", false);
+                          } else {
+                            updatePermission("permission.customer.rechargeHistory.addRecharge", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Add Recharge"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.customer?.isPermited ||
+                          !permission?.customer?.rechargeHistory?.isPermited
+                        }
+                        checked={permission?.customer?.rechargeHistory?.delete}
+                        onChange={() => {
+                          if (permission?.customer?.rechargeHistory?.delete) {
+                            updatePermission("permission.customer.rechargeHistory.delete", false);
+                          } else {
+                            updatePermission("permission.customer.rechargeHistory.delete", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+              </FormGroup>
+
+              {/* Wallet History */}
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={!permission?.customer?.isPermited}
+                        checked={permission?.customer?.walletHistory?.isPermited}
+                        onChange={() => {
+                          if (permission?.customer?.walletHistory?.isPermited) {
+                            updatePermission("permission.customer.walletHistory", {
+                                isPermited: false,
+                            });
+                          } else {
+                            updatePermission("permission.customer.walletHistory.isPermited", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Wallet History"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+             {/* Call Discussion*/}
+
+              <FormGroup aria-label="position" row>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={permission?.callDiscussion?.isPermited}
+                        onChange={() => {
+                          if (permission?.callDiscussion?.isPermited) {
+                            updatePermission("permission.callDiscussion", {
+                              isPermited: false,
+                              viewCallDiscussion: {
+                                isPermited: false,
+                                edit: false,
+                                delete: false,
+                                add: false,
+                              },
+                            });
+                          } else {
+                            updatePermission("permission.callDiscussion.isPermited", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                          color: "#10395D",
+                          fontSize: "14px",
+                        }}
+                      >
+                        Call Discussion
+                      </span>
+                    }
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={!permission?.callDiscussion?.isPermited}
+                        checked={permission?.callDiscussion?.viewCallDiscussion?.isPermited}
+                        onChange={() => {
+                          if (permission?.callDiscussion?.viewCallDiscussion?.isPermited) {
+                            updatePermission("permission.callDiscussion.viewCallDiscussion", {
+                              isPermited: false,
+                                edit: false,
+                                delete: false,
+                                add: false,
+                            });
+                          } else {
+                            updatePermission("permission.callDiscussion.viewCallDiscussion.isPermited", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"View Call Discussion"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.callDiscussion?.isPermited ||
+                          !permission?.callDiscussion?.viewCallDiscussion?.isPermited
+                        }
+                        checked={permission?.callDiscussion?.viewCallDiscussion?.edit}
+                        onChange={() => {
+                          if (permission?.callDiscussion?.viewCallDiscussion?.edit) {
+                            updatePermission("permission.callDiscussion.viewCallDiscussion.edit", false);
+                          } else {
+                            updatePermission("permission.callDiscussion.viewCallDiscussion.edit", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Edit"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.callDiscussion?.isPermited ||
+                          !permission?.callDiscussion?.viewCallDiscussion?.isPermited
+                        }
+                        checked={permission?.callDiscussion?.viewCallDiscussion?.delete}
+                        onChange={() => {
+                          if (permission?.callDiscussion?.viewCallDiscussion?.delete) {
+                            updatePermission("permission.callDiscussion.viewCallDiscussion.delete", false);
+                          } else {
+                            updatePermission("permission.callDiscussion.viewCallDiscussion.delete", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.callDiscussion?.isPermited ||
+                          !permission?.callDiscussion?.viewCallDiscussion?.isPermited
+                        }
+                        checked={permission?.callDiscussion?.viewCallDiscussion?.add}
+                        onChange={() => {
+                          if (permission?.callDiscussion?.viewCallDiscussion?.add) {
+                            updatePermission("permission.callDiscussion.viewCallDiscussion.add", false);
+                          } else {
+                            updatePermission("permission.callDiscussion.viewCallDiscussion.add", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Add"}
+                    labelPlacement="end"
+                  />
+                </div>
+              
+              </FormGroup>
+
+
             </FormControl>
           </Grid>
 
@@ -548,7 +1247,10 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
             </div>
           </Grid>
           <Grid item lg={6}>
-            <div onClick={() => setState({ ...state, plainPassword: "" })} className={classes.denyButton}>
+            <div
+              onClick={() => setState({ ...state, plainPassword: "" })}
+              className={classes.denyButton}
+            >
               Reset
             </div>
           </Grid>

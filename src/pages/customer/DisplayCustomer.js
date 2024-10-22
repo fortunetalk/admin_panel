@@ -25,7 +25,8 @@ import Loader from "../../Components/loading/Loader.js";
 import { api_url, get_all_customers } from "../../utils/Constants.js";
 import { useRef } from "react";
 
-const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
+const DisplayCustomer = ({ customerListData, dispatch, isLoading, adminData}) => {
+  const { user, type } = adminData || {};
   const classes = useStyles();
   const navigate = useNavigate();
   const tableRef = useRef(null);
@@ -73,6 +74,13 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
     chatCallCount: "",
   });
 
+  const handleAdd = () => {
+    if ( type === "subadmin" && !user.permissions.customer?.addCustomer ) {
+      return;
+    }
+    navigate("/addCustomer");
+  };
+
   // useEffect(
   //   function () {
   //     dispatch(CustomerActions.getAllCustomer());
@@ -102,6 +110,9 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
   };
 
   const handleOpen = (rowData) => {
+    if (type === "subadmin" && !user.permissions.customer?.listOfCustomer?.editCustomer) {
+      return;
+    }
     setOpen(true);
     console.log("timeOfBirth", rowData.timeOfBirth);
     setFormData({
@@ -183,6 +194,11 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
   };
 
   const handleView = (rowData) => {
+
+    if (type === "subadmin" && !user.permissions.customer?.listOfCustomer?.viewCustomer) {
+      return;
+    }
+
     setViewData(true);
     setFormData({
       customerId: rowData.customerUniqueId || "",
@@ -213,6 +229,9 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
   };
 
   const handleClickOpen = (rowData) => {
+    if (type === "subadmin" && !user.permissions.customer?.listOfCustomer?.updateCustomerStatus) {
+      return;
+    }
     Swal.fire({
       title: "Are you sure to Change the Status?",
       text: "You won't be able to revert this!",
@@ -235,9 +254,10 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
   };
 
   const addRecharge = (rowData) => {
-    navigate("/rechargeByAdmin", {
-      state: { customerId: rowData?._id },
-    });
+    if (type === "subadmin" && !user.permissions.customer?.listOfCustomer?.addRecharge) {
+      return;
+    }
+    navigate("/rechargeByAdmin", { state: { customerId: rowData?._id }, });
   };
 
   const viewCustomerHistory = (rowData) => {
@@ -391,8 +411,15 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
               {
                 icon: "delete",
                 tooltip: "Delete Customer",
-                onClick: (event, rowData) =>
-                  dispatch( CustomerActions.deleteCustomer({customerId: rowData?._id, title: rowData?.customerName, })),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.customer?.listOfCustomer?.deleteCustomer
+                  ) {
+                    return;
+                  }
+                  dispatch( CustomerActions.deleteCustomer({customerId: rowData?._id, title: rowData?.customerName, }));
+                },
               },
               {
                 icon: "add_circle",
@@ -418,7 +445,17 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
                 ),
                 tooltip: "Add Customer",
                 isFreeAction: true,
-                onClick: () => navigate("/addCustomer"),
+                onClick: () => handleAdd(),
+
+                // onClick: (event, rowData) => {
+                //   if (
+                //     type === "subadmin" &&
+                //     !user.permissions.customer?.listOfCustomer?.addCustomer
+                //   ) {
+                //     return;
+                //   }
+                //   navigate("/addCustomer");
+                // },
               },
             ]}
           />
@@ -919,6 +956,7 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
             </div>
           </Grid>
 
+
           {/* <Grid item lg={12} md={12} sm={12} xs={12}>
             <TextField
               label="Chat/Call Count"
@@ -963,6 +1001,7 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading }) => {
 
 const mapStateToProps = (state) => ({
   customerListData: state.customer.customerListData,
+  adminData: state.admin.adminData,
   isLoading: state.customer.isLoading,
 });
 

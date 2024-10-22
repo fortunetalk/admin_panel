@@ -174,24 +174,13 @@ function App() {
           <Route path="/rechargeByAdmin" element={<AddRechargeByAdmin/>} />
           <Route path="/customerRechargeHistory" element={<CustomerRechargeHistory/>} />
           <Route path="/addRechargeHistory" element={<AddRechargeHistory/>} />
-          <Route
-            path="/displayRechargePlan"
-            element={<DisplayRechargePlans />}
-          />
-          <Route
-            path="/displayFirstRechargeOffer"
-            element={<DisplayFirstRechargeOffer />}
-          />
-          <Route
-            path="/addFirstRechargeOffer"
-            element={<AddFirstRechargeOffer />}
-          />
-        
+          <Route path="/displayRechargePlan"  element={<DisplayRechargePlans />}  />
+          <Route path="/displayFirstRechargeOffer" element={<DisplayFirstRechargeOffer />}  />
+          <Route  path="/addFirstRechargeOffer"  element={<AddFirstRechargeOffer />}  /> 
           <Route path="/displayRemedise" element={<DisplayRemedies />} />
           <Route path="/AddRemedies" element={<AddRemedies />} />
           <Route path="/displayExpertise" element={<DisplayExpertise />} />
           <Route path="/AddExpertise" element={<AddExpertise />} />
-
           <Route path="/displayCustomer" element={<DisplayCustomer />} />
           <Route
             path="/displayCustomerOrderHistory"

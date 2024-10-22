@@ -33,7 +33,8 @@ import DownloadIcon from '@mui/icons-material/Download';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 
-const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData }) => {
+const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData, adminData }) => {
+  const { user, type } = adminData || {};
   console.log("csvData", csvData);
   const classes = useStyles();
   const navigate = useNavigate();
@@ -80,6 +81,9 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
   const [isLoading, setIsLoading] = useState(false);
 
   const handleReview = (rowData) => {
+    if (type === "subadmin" && !user.permissions.customer?.chatHistory?.addReview) {
+      return;
+    }
     setReview(true);
     setReviewData({
       chatReviewFromAdmin: rowData.chatReviewFromAdmin,
@@ -89,6 +93,10 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
   };
 
   const handleView = (rowData) => {
+    if (type === "subadmin" && !user.permissions.customer?.chatHistory?.viewChatHistoryData) {
+      return;
+    }
+
     setViewData(true);
     setData({
       transactionId: rowData?.transactionId || "",
@@ -123,6 +131,9 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
   };
 
   const openDownloadModal = () => {
+    if (type === "subadmin" && !user.permissions.customer?.chatHistory?.download) {
+      return;
+    }
     setShowModal(true);
   };
 
@@ -191,32 +202,6 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
 
   };
 
-  // const handleDateSearch = () => {
-  //   try {
-  //     if (!searchType) {
-  //       alert("Please select a search type."); // You can replace this with a more user-friendly notification
-  //       return; // Prevent further execution if searchType is not selected
-  //     }
-
-  //     let searchDate = '';
-
-  //     if (singleDate) {
-  //       searchDate = singleDate; // Only send singleDate
-  //     } else if (startDate && endDate) {
-  //       searchDate = `${startDate},${endDate}`; // Send startDate and endDate
-  //     }
-
-  //     const searchData = {
-  //       searchType: searchType,
-  //       searchDate: searchDate // This will be an empty string if neither condition is met
-  //     };
-
-  //     console.log("searchData", searchData);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-
-  // };
 
   const handleDateSearch = () => {
     try {
@@ -260,6 +245,9 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
   };
 
   const handleClickOpen = (rowData) => {
+    if (type === "subadmin" && !user.permissions.customer?.chatHistory?.viewChatMessages) {
+      return;
+    }
     navigate(`/history/fullChatHistory/${rowData.customerId}`, { state: { chatId: rowData.chatId },});
   };
 
@@ -691,12 +679,15 @@ const ChatHistory = ({ dispatch, chatHistoryData, chatHistoryApiPayload, csvData
               {
                 icon: "delete",
                 tooltip: "Delete Chat History",
-                onClick: (event, rowData) =>
-                  dispatch(
-                    HistoryActions.deleteChatHistory({
-                      chatId: rowData?._id,
-                    })
-                  ),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.customer?.chatHistory?.delete
+                  ) {
+                    return;
+                  }
+                  dispatch(HistoryActions.deleteChatHistory({  chatId: rowData?._id, })  );
+                },
               },
               {
                 icon: "add",
@@ -1240,6 +1231,7 @@ const mapStateToProps = (state) => ({
   chatHistoryData: state.history.chatHistoryData || [], // Default to empty array
   chatHistoryApiPayload: state.history.chatHistoryApiPayload, // Default to empty array
   csvData: state.history.csvData,
+  adminData: state.admin.adminData,
   isLoading: state.astrologer.isLoading,
 });
 

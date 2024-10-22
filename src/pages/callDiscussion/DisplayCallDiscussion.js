@@ -14,7 +14,8 @@ import { connect } from "react-redux";
 import * as Actions from "../../redux/Actions/callDiscussionAction.js";
 import moment from "moment";
 
-const DisplayCallDiscussion = ({ dispatch, calllDiscussionData, isLoading }) => {
+const DisplayCallDiscussion = ({ dispatch, calllDiscussionData, isLoading, adminData }) => {
+  const { user, type } = adminData || {};
   const classes = useStyles();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -32,6 +33,11 @@ const DisplayCallDiscussion = ({ dispatch, calllDiscussionData, isLoading }) => 
   }, []);
 
   const handleOpen = (rowData) => {
+
+    if (type === "subadmin" && !user.permissions.callDiscussion?.viewCallDiscussion?.edit) {
+      return;
+    }
+
     setOpen(true);
     setUserDiscussionId(rowData?._id);
     setAdminName(rowData?.admin_name);
@@ -149,12 +155,15 @@ const DisplayCallDiscussion = ({ dispatch, calllDiscussionData, isLoading }) => 
               {
                 icon: "delete",
                 tooltip: "Delete",
-                onClick: (event, rowData) =>
-                  dispatch(
-                    Actions.deleteCallDiscussion({
-                      userDiscussionId: rowData?._id,
-                    })
-                  ),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.callDiscussion?.viewCallDiscussion?.delete
+                  ) {
+                    return;
+                  }
+                  dispatch(  Actions.deleteCallDiscussion({  userDiscussionId: rowData?._id, }));
+                },
               },
               {
                 icon: () => (
@@ -165,7 +174,12 @@ const DisplayCallDiscussion = ({ dispatch, calllDiscussionData, isLoading }) => 
                 ),
                 tooltip: "Add Gift",
                 isFreeAction: true,
-                onClick: () => navigate("/add-call-discussion"),
+                onClick: () => {
+                  if ( type === "subadmin" &&  !user.permissions.callDiscussion?.viewCallDiscussion?.add ) {
+                    return;
+                  }
+                  navigate("/add-call-discussion");
+                },
               },
             ]}
           />
@@ -283,6 +297,7 @@ const DisplayCallDiscussion = ({ dispatch, calllDiscussionData, isLoading }) => 
 const mapStateToProps = (state) => ({
   calllDiscussionData: state.callDiscussion.calllDiscussionData,
     isLoading: state.callDiscussion.isLoading,
+    adminData: state.admin.adminData,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

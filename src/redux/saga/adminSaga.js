@@ -1,7 +1,16 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import * as actionTypes from "../actionTypes";
 import { ApiRequest } from "../../utils/apiRequest";
-import { api_url, admin_login, admin_logout, admin_change_password, subadmin_add, get_all_subadmin, subadmin_delete, subadmin_update } from "../../utils/Constants";
+import {
+  api_url,
+  admin_login,
+  admin_logout,
+  admin_change_password,
+  subadmin_add,
+  get_all_subadmin,
+  subadmin_delete,
+  subadmin_update,
+} from "../../utils/Constants";
 import Swal from "sweetalert2";
 import { Colors } from "../../assets/styles";
 
@@ -17,12 +26,16 @@ function* adminLogin(action) {
     });
 
     if (response.success) {
-      yield put({ type: actionTypes.ADMIN_LOGIN_SUCCESS, payload: response.data });
+      yield put({
+        type: actionTypes.SET_ADMIN_DATA,
+        payload: response.data,
+      });
 
       localStorage.setItem("accessToken", response.data.accessToken);
       localStorage.setItem("refreshToken", response.data.refreshToken);
+      localStorage.setItem("loginType", response.data.type);
+      localStorage.setItem("adminData", JSON.stringify(response.data));
 
-      
       Swal.fire({
         icon: "success",
         title: "Login Successful",
@@ -31,14 +44,7 @@ function* adminLogin(action) {
       }).then(() => {
         navigate("/");
       });
-
-    } else if (response.success && response.type) {
-      
-      yield put({ type: actionTypes.SET_ADMIN_TYPE, payload: response.data.type });
-      localStorage.setItem("accessToken", response.data.accessToken);
-      localStorage.setItem("refreshToken", response.data.refreshToken);
-
-  }  else {
+    } else {
       Swal.fire({
         icon: "error",
         title: "Login Failed",
@@ -46,10 +52,13 @@ function* adminLogin(action) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.ADMIN_LOGIN_FAILURE, error: response.message });
+      yield put({
+        type: actionTypes.ADMIN_LOGIN_FAILURE,
+        error: response.message,
+      });
     }
   } catch (error) {
-    console.error('Error logging in:', error);
+    console.error("Error logging in:", error);
     Swal.fire({
       icon: "error",
       title: "Error",
@@ -67,38 +76,35 @@ function* adminLogout() {
   try {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = localStorage.getItem("accessToken");
     console.log("accessToken", accessToken);
     if (!accessToken) {
-      throw new Error('No access token found');
+      throw new Error("No access token found");
     }
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + admin_logout,
-      header: 'json',
+      header: "json",
       data: {},
       token: accessToken,
     });
 
-
-    console.log('response', response);
+    console.log("response", response);
 
     if (response?.success) {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
 
       yield put({ type: actionTypes.ADMIN_LOGOUT_SUCCESS });
-
-
     } else {
-      throw new Error(response?.message || 'Logout failed');
+      throw new Error(response?.message || "Logout failed");
     }
   } catch (error) {
-    console.error('Error logging out:', error);
+    console.error("Error logging out:", error);
     Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: error.message || 'Failed to log out',
+      icon: "error",
+      title: "Error",
+      text: error.message || "Failed to log out",
       showConfirmButton: false,
       timer: 2000,
     });
@@ -135,10 +141,13 @@ function* adminChangePassword(action) {
         showConfirmButton: false,
         timer: 2000,
       });
-      yield put({ type: actionTypes.ADMIN_CHANGE_PASSWORD_FAILURE, error: response.message });
+      yield put({
+        type: actionTypes.ADMIN_CHANGE_PASSWORD_FAILURE,
+        error: response.message,
+      });
     }
   } catch (error) {
-    console.error('Error changing password:', error);
+    console.error("Error changing password:", error);
     Swal.fire({
       icon: "error",
       title: "Error",
@@ -146,7 +155,10 @@ function* adminChangePassword(action) {
       showConfirmButton: false,
       timer: 2000,
     });
-    yield put({ type: actionTypes.ADMIN_CHANGE_PASSWORD_FAILURE, error: error.message });
+    yield put({
+      type: actionTypes.ADMIN_CHANGE_PASSWORD_FAILURE,
+      error: error.message,
+    });
   } finally {
     yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
   }
@@ -154,8 +166,8 @@ function* adminChangePassword(action) {
 
 function* subadminAdd(actions) {
   try {
-    const {data, onAdd } = actions.payload;
-    yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
+    const { data, onAdd } = actions.payload;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
 
     const response = yield call(ApiRequest.postRequest, {
       url: api_url + subadmin_add,
@@ -167,45 +179,45 @@ function* subadminAdd(actions) {
       Swal.fire({
         icon: "success",
         title: "Sub-Admin Added Successfully",
-        text: response?.message ,
+        text: response?.message,
         showConfirmButton: false,
         timer: 2000,
-      },
-
-    );
+      });
       yield put({ type: actionTypes.GET_ALL_SUBADMIN, payload: null });
       yield call(onAdd);
     } else {
       Swal.fire({
         icon: "error",
         title: "Server Error",
-        text: response?.message ,
+        text: response?.message,
         showConfirmButton: false,
         timer: 2000,
       });
     }
   } catch (e) {
     console.log("error", e);
-    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   } finally {
-    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
-
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   }
 }
 function* getAllSubadmin() {
   try {
-    yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
     const response = yield call(ApiRequest.getRequest, {
       url: api_url + get_all_subadmin,
     });
 
     if (response.success) {
-      yield put({ type: actionTypes.SET_ALL_SUBADMIN, payload: response?.data.reverse(), });
+      yield put({
+        type: actionTypes.SET_ALL_SUBADMIN,
+        payload: response?.data.reverse(),
+      });
     }
   } catch (e) {
     console.log(e);
   } finally {
-    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
   }
 }
 
@@ -254,7 +266,7 @@ function* subadminDelete(actions) {
   }
 }
 function* subadminUpdate(actions) {
-  const {data, onAdd} = actions.payload;
+  const { data, onAdd } = actions.payload;
   try {
     // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
@@ -263,6 +275,9 @@ function* subadminUpdate(actions) {
       header: "json",
       data: data,
     });
+
+
+    console.log(response)
 
     if (response.success) {
       Swal.fire({
@@ -289,7 +304,7 @@ function* subadminUpdate(actions) {
   }
 }
 function* getSubAdminById(actions) {
-  const {payload} = actions;
+  const { payload } = actions;
   try {
     // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
 
@@ -312,7 +327,10 @@ function* getSubAdminById(actions) {
 export default function* adminSaga() {
   yield takeLatest(actionTypes.ADMIN_LOGIN_REQUEST, adminLogin);
   yield takeLatest(actionTypes.ADMIN_LOGOUT_REQUEST, adminLogout);
-  yield takeLatest(actionTypes.ADMIN_CHANGE_PASSWORD_REQUEST, adminChangePassword);
+  yield takeLatest(
+    actionTypes.ADMIN_CHANGE_PASSWORD_REQUEST,
+    adminChangePassword
+  );
   yield takeLatest(actionTypes.SUBADMIN_ADD, subadminAdd);
   yield takeLatest(actionTypes.GET_ALL_SUBADMIN, getAllSubadmin);
   yield takeLatest(actionTypes.SUBADMIN_DELETE, subadminDelete);

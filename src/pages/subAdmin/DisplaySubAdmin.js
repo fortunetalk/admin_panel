@@ -133,9 +133,10 @@ const DisplaySubAdmin = ({ dispatch, adminListData, isLoading }) => {
                     ? adminListData.indexOf(rowData) + 1
                     : "N/A",
               },
-              { title: "User Name", field: "username" },
+              { title: "User Email", field: "email" },
               { title: "Name", field: "name" },
               { title: "Password", field: "plainPassword" },
+              { title: "Type", field: "type" },
               // { title: "permission", field: "permissions" },
             ]}
             options={propStyles.tableStyles}

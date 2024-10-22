@@ -32,12 +32,13 @@ import {
 import { api_url, get_all_astrologers } from "../../utils/Constants.js";
 import moment from "moment/moment.js";
 
-const ListAstrology = ({ astrologerListData }) => {
+const ListAstrology = ({ astrologerListData, adminData }) => {
+  const { user, type } = adminData || {};
   const tableRef = useRef(null);
   const dispatch = useDispatch();
   var classes = useStyles();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+
   const [state, setState] = useState({
     editModalOpen: false,
     viewModalOpen: false,
@@ -49,10 +50,16 @@ const ListAstrology = ({ astrologerListData }) => {
   // }, []);
 
   const handleEdit = (astrologerId) => {
+    if (type === "subadmin" && !user.permissions.astrologer?.listOfAstrologer?.editAstrologer) {
+      return;
+    }
     navigate(`/editAstrologer/${astrologerId}`);
   };
 
   const handleView = (rowData) => {
+    if (type === "subadmin" && !user.permissions.astrologer?.listOfAstrologer?.viewAstrologer) {
+      return;
+    }
     updateState({ viewModalOpen: true, selectedAstro: rowData });
   };
 
@@ -74,11 +81,14 @@ const ListAstrology = ({ astrologerListData }) => {
     setTimeout(() => {
       navigate(0); // Refreshes the current page
     }, 5000);
-  }
+  };
 
   const { editModalOpen, viewModalOpen, selectedAstro } = state;
 
   const handleClickOpen = (rowData) => {
+    if (type === "subadmin" && !user.permissions.astrologer?.listOfAstrologer?.updateStatus) {
+      return;
+    }
     Swal.fire({
       title: "Are you sure to Change the Status?",
       text: "You won't be able to revert this!",
@@ -91,13 +101,19 @@ const ListAstrology = ({ astrologerListData }) => {
       if (result.isConfirmed) {
         const newStatus = rowData.status === "Active" ? "Blocked" : "Active";
         dispatch(
-          updateAstrologerStatus({data:{astrologerId: rowData._id, status: newStatus}, onComplete: onRefreshTable  })
+          updateAstrologerStatus({
+            data: { astrologerId: rowData._id, status: newStatus },
+            onComplete: onRefreshTable,
+          })
         );
       }
     });
   };
 
   const handleChangeCallStatus = (rowData) => {
+    if (type === "subadmin" && !user.permissions.astrologer?.listOfAstrologer?.updateCallStatus) {
+      return;
+    }
     Swal.fire({
       title: "Are you sure to Change the Call Status?",
       text: "You won't be able to revert this!",
@@ -117,17 +133,23 @@ const ListAstrology = ({ astrologerListData }) => {
         //     onUpdate })
         // );
         dispatch(
-          updateAstrologerCallStatus({ data:{ astrologerId: rowData._id, callStatus: newStatus}, onComplete: onRefreshTable  })
+          updateAstrologerCallStatus({
+            data: { astrologerId: rowData._id, callStatus: newStatus },
+            onComplete: onRefreshTable,
+          })
         );
       }
     });
   };
 
   const onRefreshTable = () => {
-    tableRef.current && tableRef.current.onQueryChange()
-  }
+    tableRef.current && tableRef.current.onQueryChange();
+  };
 
   const handleChangeChatStatus = (rowData) => {
+    if (type === "subadmin" && !user.permissions.astrologer?.listOfAstrologer?.updateChatStatus) {
+      return;
+    }
     Swal.fire({
       title: "Are you sure to Change the Chat Status?",
       text: "You won't be able to revert this!",
@@ -140,8 +162,12 @@ const ListAstrology = ({ astrologerListData }) => {
       if (result.isConfirmed) {
         const newStatus =
           rowData.chatStatus === "Online" ? "Offline" : "Online";
-        dispatch(updateAstrologerChatStatus({ data: { astrologerId: rowData._id, chatStatus: newStatus }, onComplete: onRefreshTable }));
-
+        dispatch(
+          updateAstrologerChatStatus({
+            data: { astrologerId: rowData._id, chatStatus: newStatus },
+            onComplete: onRefreshTable,
+          })
+        );
       }
     });
   };
@@ -161,11 +187,6 @@ const ListAstrology = ({ astrologerListData }) => {
             tableRef={tableRef}
             title="List of Astrologers"
             columns={[
-              // {
-              //   title: "S.No",
-              //   editable: "never",
-              //   render: (rowData) => rowData.tableData.id + 1,
-              // },
               {
                 title: " OLD Astrologer Id",
                 field: "astroUniqueId",
@@ -199,7 +220,7 @@ const ListAstrology = ({ astrologerListData }) => {
                   <div>
                     {rowData?.createdAt
                       ? rowData?.createdAt &&
-                      moment(rowData?.createdAt).format("DD-MM-YY HH:mm A")
+                        moment(rowData?.createdAt).format("DD-MM-YY HH:mm A")
                       : "N/A"}
                   </div>
                 ),
@@ -234,7 +255,6 @@ const ListAstrology = ({ astrologerListData }) => {
                   </div>
                 ),
               },
-
               {
                 title: "Call",
                 field: "callStatus",
@@ -251,8 +271,8 @@ const ListAstrology = ({ astrologerListData }) => {
                         rowData.callStatus === "Online"
                           ? "#90EE90"
                           : rowData.callStatus === "Busy"
-                            ? "#FF7F7F"
-                            : "#D3D3D3", // Default color if it's neither Online nor Busy
+                          ? "#FF7F7F"
+                          : "#D3D3D3", // Default color if it's neither Online nor Busy
                     }}
                     onClick={() => handleChangeCallStatus(rowData)}
                   >
@@ -277,8 +297,8 @@ const ListAstrology = ({ astrologerListData }) => {
                         rowData.chatStatus === "Online"
                           ? "#90EE90"
                           : rowData.chatStatus === "Busy"
-                            ? "#FF7F7F"
-                            : "#D3D3D3",
+                          ? "#FF7F7F"
+                          : "#D3D3D3",
                     }}
                     onClick={() => handleChangeChatStatus(rowData)}
                   >
@@ -333,9 +353,8 @@ const ListAstrology = ({ astrologerListData }) => {
               paging: true,
               pageSize: 10,
               pageSizeOptions: [10, 20, 50, 100, 500, 1000],
-             filtering: "true",
+              filtering: "true",
             }}
-
             style={{ fontSize: "1.2rem" }}
             actions={[
               {
@@ -346,8 +365,15 @@ const ListAstrology = ({ astrologerListData }) => {
               {
                 icon: "delete",
                 tooltip: "Delete Astrologer",
-                onClick: (event, rowData) =>
-                  dispatch(deleteAstrologer({ astrologerId: rowData._id })),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.astrologer?.listOfAstrologer?.deleteAstrologer
+                  ) {
+                    return;
+                  }
+                  dispatch(deleteAstrologer({ astrologerId: rowData._id }));
+                },
               },
               {
                 icon: "visibility",
@@ -774,11 +800,11 @@ const ListAstrology = ({ astrologerListData }) => {
                       value={
                         selectedAstro?.skillId.length > 1
                           ? selectedAstro.skillId
-                            .map((skill) => skill.title)
-                            .join(", ")
+                              .map((skill) => skill.title)
+                              .join(", ")
                           : selectedAstro.skillId.length === 1
-                            ? selectedAstro.skillId[0].title
-                            : ""
+                          ? selectedAstro.skillId[0].title
+                          : ""
                       }
                       InputProps={{
                         readOnly: true,
@@ -792,11 +818,11 @@ const ListAstrology = ({ astrologerListData }) => {
                       value={
                         selectedAstro?.remediesId.length > 1
                           ? selectedAstro.remediesId
-                            .map((remedy) => remedy.title)
-                            .join(", ")
+                              .map((remedy) => remedy.title)
+                              .join(", ")
                           : selectedAstro.remediesId.length === 1
-                            ? selectedAstro.remediesId[0].title
-                            : ""
+                          ? selectedAstro.remediesId[0].title
+                          : ""
                       }
                       InputProps={{
                         readOnly: true,
@@ -810,11 +836,11 @@ const ListAstrology = ({ astrologerListData }) => {
                       value={
                         selectedAstro?.expertiseId.length > 1
                           ? selectedAstro.expertiseId
-                            .map((expertise) => expertise.title)
-                            .join(", ")
+                              .map((expertise) => expertise.title)
+                              .join(", ")
                           : selectedAstro.expertiseId.length === 1
-                            ? selectedAstro.expertiseId[0].title
-                            : ""
+                          ? selectedAstro.expertiseId[0].title
+                          : ""
                       }
                       InputProps={{
                         readOnly: true,
@@ -951,6 +977,7 @@ const ListAstrology = ({ astrologerListData }) => {
 
 const mapStateToProps = (state) => ({
   astrologerListData: state.astrologer.astrologerListData,
+  adminData: state.admin.adminData,
 });
 
 const mapDispatchToProps = (dispatch) => ({

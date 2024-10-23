@@ -141,17 +141,20 @@ const routes = [
         path: "/displayCourses",
         name: "Courses List",
         icon: <BiAbacus />,
+        key: "displayCourses",
         
       },
       {
         path: "/AddCourse",
         name: "Add Course",
         icon: <BiAbacus />,
+        key: "AddCourse",
       },
       {
         path: "/displayDemoClass",
         name: "Demo Class",
         icon: <BiAbacus />,
+        key: "displayDemoClass",
       },
       {
         path: "/displayLiveClass",
@@ -234,61 +237,9 @@ const routes = [
         name: "Recharge Plan",
         icon: <BiAbacus />,
       },
-      // {
-      //   path: "/displayRechargePlan",
-      //   name: "Recharge History",
-      //   icon: <BiAbacus />,
-      // },
-      // {
-      //   path: "/displayFirstRechargeOffer",
-      //   name: "First Recharge Offer",
-      //   icon: <BiAbacus />,
-      // },
     ],
   },
-  // {
-  //   path: "/history",
-  //   name: "History",
-  //   icon: <BiAbacus />,
-  //   subRoutes: [
-  //     // {
-  //     //   path: "/history/ChatHistory",
-  //     //   name: "Chat History",
-  //     //   icon: <BiAbacus />,
-  //     // },
-  //     // {
-  //     //   path: "/history/CallHistory",
-  //     //   name: "Call History",
-  //     //   icon: <BiAbacus />,
-  //     // },
-  //     // {
-  //     //   path: "/history/wallet-transaction",
-  //     //   name: "Wallet Transaction",
-  //     //   icon: <BiAbacus />,
-  //     // },
-  //     // {
-  //     //   path: "/history/demoClassHistory",
-  //     //   name: "Demo Class History",
-  //     //   icon: <BiAbacus />,
-  //     // },
-  //     // {
-  //     //   path: "/history/liveClassHistory",
-  //     //   name: "Live Class History",
-  //     //   icon: <BiAbacus />,
-  //     // },
-  //     // {
-  //     //   path: "/history/liveCourseHistory",
-  //     //   name: "Live Course History",
-  //     //   icon: <BiAbacus />,
-  //     // },
-  //     // {
-  //     //   path: "/history/UsersGiftHistory",
-  //     //   name: "User's Gift History",
-  //     //   icon: <BiAbacus />,
-  //     // },
-
-  //   ],
-  // },
+ 
   {
     path: "/liveStreaming",
     name: "Live Streaming",
@@ -349,11 +300,6 @@ const routes = [
         name: "Customer Review",
         icon: <BiAbacus />,
       },
-      // {
-      //   path: "/appReviews",
-      //   name: "App Review",
-      //   icon: <BiAbacus />,
-      // },
     ],
   },
 
@@ -683,7 +629,6 @@ const SideBar = ({
                   (subRoute) => subRoute.key !== "walletTransaction"
                 );
               }
-
               // Update the main route with the filtered subRoutes
               const data = { ...item, subRoutes: subRoutes };
               newRoutes.push(data)
@@ -694,7 +639,35 @@ const SideBar = ({
 
         }
         else if (item?.name === 'Courses') {
+          if (user?.permissions?.courses?.isPermited) {
+            if (item?.subRoutes) {
+              let subRoutes = [...item?.subRoutes]; // Copy of subRoutes to modify
 
+              // Check 'ChatHistory' permission and remove 'ChatHistory' sub-route if not permitted
+              if (!user?.permissions?.courses?.coursesList?.isPermited) {
+                subRoutes = subRoutes.filter(
+                  (subRoute) => subRoute.key !== "displayCourses"
+                );
+              }
+
+              // Check 'displayAstrologer' permission and remove 'displayAstrologer' sub-route if not permitted
+              if (!user?.permissions?.courses?.addCourses?.isPermited) {
+                subRoutes = subRoutes.filter(
+                  (subRoute) => subRoute.key !== "AddCourse"
+                );
+              }
+
+              if (!user?.permissions?.courses?.demoClass?.isPermited) {
+                subRoutes = subRoutes.filter(
+                  (subRoute) => subRoute.key !== "displayDemoClass"
+                );
+              }
+
+              // Update the main route with the filtered subRoutes
+              const data = { ...item, subRoutes: subRoutes };
+              newRoutes.push(data)
+            }
+          }
         }
         else if (item?.name === 'Workshop') {
 

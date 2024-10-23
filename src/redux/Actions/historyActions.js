@@ -23,6 +23,10 @@ export const setChatHistoryApiPayload = payload =>({
     type: actionTypes.SET_CHAT_HISTORY_API_PAYLOAD,
     payload
 })
+export const setCallHistoryApiPayload = payload =>({
+    type: actionTypes.SET_CALL_HISTORY_API_PAYLOAD,
+    payload
+})
 export const deleteChatHistory = payload =>({
     type: actionTypes.DELETE_CHAT_HISTORY,
     payload

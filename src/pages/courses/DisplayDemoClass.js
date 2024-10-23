@@ -16,7 +16,8 @@ import CloseIcon from '@mui/icons-material/Close'; // Import the close icon
 import moment from "moment";
 import { formatTimeFromDateString } from "../../utils/services.js";
 
-const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activeCourseData, }) => {
+const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activeCourseData, adminData}) => {
+  const { user, type } = adminData || {};
   const classes = useStyles();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -66,6 +67,11 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
   }
 
   const handleOpen = (rowData) => {
+
+    if (type === "subadmin" && !user.permissions.courses?.demoClass?.edit) {
+      return;
+    }
+
     const date = new Date(rowData?.time);
     const hours = date.getUTCHours().toString().padStart(2, '0');  // Get UTC hours and pad with 0 if needed
     const minutes = date.getUTCMinutes().toString().padStart(2, '0');  // Get UTC minutes and pad with 0 if needed
@@ -91,6 +97,11 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
   };
 
   const handleView = (rowData) => {
+
+    if (type === "subadmin" && !user.permissions.courses?.demoClass?.view) {
+      return;
+    }
+
     const date = new Date(rowData?.time);
     const hours = date.getUTCHours().toString().padStart(2, '0');  // Get UTC hours and pad with 0 if needed
     const minutes = date.getUTCMinutes().toString().padStart(2, '0');  // Get UTC minutes and pad with 0 if needed
@@ -198,6 +209,11 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
   };
 
   const handleAdminStatusChange = (rowData, newStatus) => {
+
+    if (type === "subadmin" && !user.permissions.courses?.demoClass?.adminStatus) {
+      return;
+    }
+
     Swal.fire({
       title: "Are you sure you want to change the Admin Status?",
       text: "You won't be able to revert this!",
@@ -219,6 +235,10 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
   };
 
   const handleClickOpen = (rowData) => {
+    if (type === "subadmin" && !user.permissions.courses?.demoClass?.status) {
+      return;
+    }
+
     Swal.fire({
       title: "Are you sure to Change the Status?",
       text: "You won't be able to revert this!",
@@ -250,6 +270,11 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
   };
 
   const handleClassStatusChange = (rowData, newStatus) => {
+
+    if (type === "subadmin" && !user.permissions.courses?.demoClass?.classStatus) {
+      return;
+    }
+
     Swal.fire({
       title: "Are you sure you want to change the Class Status?",
       text: "You won't be able to revert this!",
@@ -420,12 +445,19 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
                 render: (rowData) => (
                   <Tooltip title="Download PDF">
                     <PictureAsPdf
-                      onClick={() => window.open(rowData.pdf, '_blank')}
+                      onClick={() => {
+                        // Check the condition before opening the PDF
+                        if (type === "subadmin" && !user.permissions.courses?.demoClass?.pdf) {
+                          alert('You do not have permission to download this PDF.');
+                          return; // Exit if the condition is not met
+                        }
+                        window.open(rowData.pdf, '_blank'); // Open the PDF if the condition is met
+                      }}
                       style={{ cursor: 'pointer', color: '#1976d2', width: '30px', height: '30px' }}
                     />
                   </Tooltip>
                 ),
-              },
+              }
             ]}
             options={propStyles.tableStyles}
             style={{ fontSize: "1.4rem" }}
@@ -443,12 +475,15 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
               {
                 icon: "delete",
                 tooltip: "Delete Demo Class",
-                onClick: (event, rowData) =>
-                  dispatch(
-                    DemoClassActions.deleteDemoClass({
-                      demoClassId: rowData?._id,
-                    })
-                  ),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.courses?.demoClass?.delete
+                  ) {
+                    return;
+                  }
+                  dispatch( DemoClassActions.deleteDemoClass({  demoClassId: rowData?._id, }) );
+                },
               },
               {
                 icon: () => (
@@ -901,6 +936,7 @@ const mapStateToProps = (state) => ({
   activeCourseData: state.course.activeCourseData,
   activeAstrologerData: state.astrologer.activeAstrologerData,
   demoClassData: state.demoClass.demoClassData,
+  adminData: state.admin.adminData,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

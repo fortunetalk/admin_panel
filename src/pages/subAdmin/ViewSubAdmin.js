@@ -95,6 +95,43 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
       },
 
     },
+    courses: {
+      isPermited: false,
+      coursesList: {
+        isPermited: false,
+        status: false,
+        edit: false,
+        delete: false,
+        add: false,
+      },
+      addCourses: {
+        isPermited: false,
+      },
+      demoClass: {
+        isPermited: false,
+        adminStatus: false,
+        classStatus: false,
+        status: false,
+        pdf: false,
+        view: false,
+        edit: false,
+        delete: false,
+      },
+      liveClass: {
+        isPermited: false,
+        adminStatus: false,
+        classStatus: false,
+        status: false,
+        pdf: false,
+        view: false,
+        edit: false,
+        delete: false,
+        classList: false,
+        mcqQuestions: false,
+        add: false,
+      },
+      
+    },
   };
 
   return (
@@ -862,6 +899,488 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
                           !permissions?.callDiscussion?.viewCallDiscussion?.isPermited
                         }
                         checked={permissions?.callDiscussion?.viewCallDiscussion?.add}
+                      />
+                    }
+                    label={"Add"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+              </FormGroup>
+
+               {/* Courses List */}
+
+              <FormGroup aria-label="position" row>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permissions?.courses?.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        checked={permissions?.courses?.isPermited}
+                        disabled
+                      />
+                    }
+                    label={
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                          color: "#10395D",
+                          fontWeight: "600",
+                          fontSize: "14px",
+                        }}
+                      >
+                        Courses
+                      </span>
+                    }
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permissions?.courses?.coursesList?.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={!permissions?.courses?.isPermited}
+                        checked={permissions?.courses?.coursesList?.isPermited}
+                      />
+                    }
+                    label={"Courses List"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+
+                <div>
+                  <FormControlLabel
+                    value={permissions?.courses?.coursesList?.status}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.coursesList?.isPermited
+                        }
+                        checked={permissions?.courses?.coursesList?.status}
+                      />
+                    }
+                    label={"Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    value={permissions?.courses?.coursesList?.edit}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.coursesList?.isPermited
+                        }
+                        checked={permissions?.courses?.coursesList?.edit}
+                      />
+                    }
+                    label={"Edit"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"Delete"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.coursesList?.isPermited
+                        }
+                        checked={permissions?.courses?.coursesList?.delete}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"Add"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.coursesList?.isPermited
+                        }
+                        checked={permissions?.courses?.coursesList?.add}
+                      />
+                    }
+                    label={"Add"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+              </FormGroup>
+
+             {/* Add Courses */}
+
+             {/* <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={"Add Courses"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={!permissions?.courses?.isPermited}
+                        checked={permissions?.courses?.addCourses}
+                      />
+                    }
+                    label={"Add Courses"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup> */}
+
+
+               {/* Demo Class */}
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permissions?.courses?.demoClass?.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={!permissions?.courses?.isPermited}
+                        checked={permissions?.courses?.demoClass?.isPermited}
+                      />
+                    }
+                    label={"Demo Class"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+
+                <div>
+                  <FormControlLabel
+                    value={permissions?.courses?.demoClass?.adminStatus}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.demoClass?.isPermited
+                        }
+                        checked={permissions?.courses?.demoClass?.adminStatus}
+                      />
+                    }
+                    label={"Admin Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    value={permissions?.courses?.demoClass?.classStatus}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.demoClass?.isPermited
+                        }
+                        checked={permissions?.courses?.demoClass?.classStatus}
+                      />
+                    }
+                    label={"Class Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    value={permissions?.courses?.demoClass?.status}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.demoClass?.isPermited
+                        }
+                        checked={permissions?.courses?.demoClass?.status}
+                      />
+                    }
+                    label={"Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"PDF"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.demoClass?.isPermited
+                        }
+                        checked={permissions?.courses?.demoClass?.pdf}
+                      />
+                    }
+                    label={"PDF"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"View"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.demoClass?.isPermited
+                        }
+                        checked={permissions?.courses?.demoClass?.view}
+                      />
+                    }
+                    label={"View"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"Edit"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.demoClass?.isPermited
+                        }
+                        checked={permissions?.courses?.demoClass?.edit}
+                      />
+                    }
+                    label={"Edit"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"Delete"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.demoClass?.isPermited
+                        }
+                        checked={permissions?.courses?.demoClass?.delete}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+              </FormGroup>
+
+               {/* Live Class */}
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permissions?.courses?.liveClass?.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={!permissions?.courses?.isPermited}
+                        checked={permissions?.courses?.liveClass?.isPermited}
+                      />
+                    }
+                    label={"Live Class"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+
+                <div>
+                  <FormControlLabel
+                    value={permissions?.courses?.liveClass?.adminStatus}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.liveClass?.isPermited
+                        }
+                        checked={permissions?.courses?.liveClass?.adminStatus}
+                      />
+                    }
+                    label={"Admin Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    value={permissions?.courses?.liveClass?.classStatus}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.liveClass?.isPermited
+                        }
+                        checked={permissions?.courses?.liveClass?.classStatus}
+                      />
+                    }
+                    label={"Class Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    value={permissions?.courses?.liveClass?.status}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.liveClass?.isPermited
+                        }
+                        checked={permissions?.courses?.liveClass?.status}
+                      />
+                    }
+                    label={"Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"PDF"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.liveClass?.isPermited
+                        }
+                        checked={permissions?.courses?.liveClass?.pdf}
+                      />
+                    }
+                    label={"PDF"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"View"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.liveClass?.isPermited
+                        }
+                        checked={permissions?.courses?.liveClass?.view}
+                      />
+                    }
+                    label={"View"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"Edit"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.liveClass?.isPermited
+                        }
+                        checked={permissions?.courses?.liveClass?.edit}
+                      />
+                    }
+                    label={"Edit"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"Delete"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.liveClass?.isPermited
+                        }
+                        checked={permissions?.courses?.liveClass?.delete}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"Class List"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.liveClass?.isPermited
+                        }
+                        checked={permissions?.courses?.liveClass?.classList}
+                      />
+                    }
+                    label={"Class List"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"MCQ Questions"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.liveClass?.isPermited
+                        }
+                        checked={permissions?.courses?.liveClass?.mcqQuestions}
+                      />
+                    }
+                    label={"MCQ Questions"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"Add"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.liveClass?.isPermited
+                        }
+                        checked={permissions?.courses?.liveClass?.add}
                       />
                     }
                     label={"Add"}

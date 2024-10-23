@@ -45,6 +45,12 @@ const history = (state = initialState, actions) => {
         chatHistoryApiPayload: payload,
       };
     }
+    case actionTypes.SET_CALL_HISTORY_API_PAYLOAD: {
+      return {
+        ...state,
+        callHistoryApiPayload: payload,
+      };
+    }
     case actionTypes.DELETE_CHAT_HISTORY: {
       return {
         ...state,

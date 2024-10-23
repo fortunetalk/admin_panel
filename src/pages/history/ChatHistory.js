@@ -38,7 +38,9 @@ const ChatHistory = ({
   chatHistoryApiPayload,
   csvData,
   adminData,
+  isLoading
 }) => {
+  console.log("csvData",csvData);
   const { user, type } = adminData || {};
   const classes = useStyles();
   const navigate = useNavigate();
@@ -80,11 +82,6 @@ const ChatHistory = ({
     chatConcernFromAdmin: "",
     chatHistoryId: "",
   }); // State for end date
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    onRefreshTable();
-  }, [searchData]);
 
   const handleReview = (rowData) => {
     if (
@@ -166,6 +163,12 @@ const ChatHistory = ({
     setShowModal(false);
     setReview(false);
     setSearchDateModal(false);
+    // Reset fields after search
+    setSingleDate("");
+    setStartDate("");
+    setEndDate("");
+    setSearchType("");
+
   };
 
   const handleFirstDropdownChange = (event) => {
@@ -226,11 +229,11 @@ const ChatHistory = ({
       let searchDate = "";
 
       if (singleDate) {
-        searchDate = moment(singleDate).format("DD-MM-YYYY"); // Only send singleDate
+        searchDate = moment(singleDate).format(); // Only send singleDate
       } else if (startDate && endDate) {
-        searchDate = `${moment(startDate).format("DD-MM-YYYY")},${moment(
+        searchDate = `${moment(startDate).format()},${moment(
           endDate
-        ).format("DD-MM-YYYY")}`; // Send startDate and endDate
+        ).format()}`; // Send startDate and endDate
       }
 
       const searchData = {
@@ -254,6 +257,13 @@ const ChatHistory = ({
         );
       }
       setSearchData(searchData);
+      onRefreshTable();
+      // Reset fields after search
+      setSingleDate("");
+      setStartDate("");
+      setEndDate("");
+      setSearchType("");
+
       handleClose();
 
       // Optionally, close the modal here
@@ -482,7 +492,7 @@ const ChatHistory = ({
                   <div>
                     {rowData?.endTime
                       ? rowData?.endTime &&
-                        moment(rowData?.endTime).format("DD-MM-YY HH:mm A")
+                      moment(rowData?.endTime).format("DD-MM-YY HH:mm A")
                       : "N/A"}
                   </div>
                 ),
@@ -609,8 +619,8 @@ const ChatHistory = ({
                   ...filters,
                   search:
                     query.page == 0 &&
-                    chatHistoryApiPayload &&
-                    query.search.length == 0
+                      chatHistoryApiPayload &&
+                      query.search.length == 0
                       ? chatHistoryApiPayload?.search
                       : query.search,
                 });
@@ -634,8 +644,8 @@ const ChatHistory = ({
                     ...filters,
                     search:
                       query.page == 0 &&
-                      chatHistoryApiPayload &&
-                      query.search.length == 0
+                        chatHistoryApiPayload &&
+                        query.search.length == 0
                         ? chatHistoryApiPayload?.search
                         : query.search,
                     searchType: chatHistoryApiPayload?.searchType || "",
@@ -1056,7 +1066,7 @@ const ChatHistory = ({
 
           <Grid item lg={12} md={12} sm={12} xs={12}>
             <FormControl fullWidth>
-              <InputLabel id="first-dropdown-label">CSV Download</InputLabel>
+              <InputLabel id="first-dropdown-label">Search Type</InputLabel>
               <Select
                 labelId="first-dropdown-label"
                 id="first-dropdown"
@@ -1239,7 +1249,7 @@ const mapStateToProps = (state) => ({
   chatHistoryApiPayload: state.history.chatHistoryApiPayload, // Default to empty array
   csvData: state.history.csvData,
   adminData: state.admin.adminData,
-  isLoading: state.astrologer.isLoading,
+  isLoading: state.admin.isLoading,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

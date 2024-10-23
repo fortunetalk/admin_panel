@@ -30,9 +30,11 @@ const DisplayLiveClass = ({
   liveClassData,
   activeAstrologerData,
   activeCourseData,
+  adminData
 }) => {
   const classes = useStyles();
   const navigate = useNavigate();
+  const { user, type } = adminData || {};
   const [open, setOpen] = useState(false);
   const [viewData, setViewData] = useState(false);
   const [liveClassId, setliveClassId] = useState("");
@@ -72,6 +74,10 @@ const DisplayLiveClass = ({
   }
 
   const handleOpen = (rowData) => {
+    if (type === "subadmin" && !user.permissions.courses?.liveClass?.edit) {
+      return;
+    }
+
     setOpen(true);
     const formattedDate = new Date(rowData?.date).toISOString().split("T")[0];
     setDate(formattedDate);
@@ -90,6 +96,11 @@ const DisplayLiveClass = ({
   };
 
   const handleView = (rowData) => {
+
+    if (type === "subadmin" && !user.permissions.courses?.liveClass?.view) {
+      return;
+    }
+
     setViewData(true);
     const formattedDate = new Date(rowData?.date).toISOString().split("T")[0];
     setDate(formattedDate);
@@ -108,11 +119,20 @@ const DisplayLiveClass = ({
   };
 
   const handleNavigate=(rowData)=>{
+
+    if (type === "subadmin" && !user.permissions.courses?.liveClass?.classList) {
+      return;
+    }
     dispatch(ScheduleClassActions.getScheduleClassData(rowData?._id))
     navigate(`/liveClassList/${rowData?._id}`);
 
   }
   const handleMCQ=(rowData)=>{
+    if (type === "subadmin" && !user.permissions.courses?.liveClass?.mcqQuestions) {
+      return;
+    }
+
+
     navigate(`/mcqList/${rowData?._id}`);
   }
 
@@ -198,6 +218,11 @@ const DisplayLiveClass = ({
   };
 
   const handleAdminStatusChange = (rowData, newStatus) => {
+
+    if (type === "subadmin" && !user.permissions.courses?.liveClass?.adminStatus) {
+      return;
+    }
+
     Swal.fire({
       title: "Are you sure you want to change the Admin Status?",
       text: "You won't be able to revert this!",
@@ -218,6 +243,10 @@ const DisplayLiveClass = ({
     });
   };
   const handleClassStatusChange = (rowData, newStatus) => {
+    if (type === "subadmin" && !user.permissions.courses?.liveClass?.classStatus) {
+      return;
+    }
+
     Swal.fire({
       title: "Are you sure you want to change the Class Status?",
       text: "You won't be able to revert this!",
@@ -239,6 +268,10 @@ const DisplayLiveClass = ({
   };
 
   const handleClickOpen = (rowData) => {
+    if (type === "subadmin" && !user.permissions.courses?.liveClass?.status) {
+      return;
+    }
+
     Swal.fire({
       title: "Are you sure to Change the Status?",
       text: "You won't be able to revert this!",
@@ -419,7 +452,16 @@ const DisplayLiveClass = ({
                 render: (rowData) => (
                   <Tooltip title="Download PDF">
                     <PictureAsPdf
-                      onClick={() => window.open(rowData.pdf, "_blank")}
+                      // onClick={() => window.open(rowData.pdf, "_blank")}
+                      onClick={() => {
+                        // Check the condition before opening the PDF
+                        if (type === "subadmin" && !user.permissions.courses?.liveClass?.pdf) {
+                          alert('You do not have permission to download this PDF.');
+                          return; // Exit if the condition is not met
+                        }
+                        window.open(rowData.pdf, '_blank'); // Open the PDF if the condition is met
+                      }}
+
                       style={{
                         cursor: "pointer",
                         color: "#1976d2",
@@ -447,12 +489,18 @@ const DisplayLiveClass = ({
               {
                 icon: "delete",
                 tooltip: "Delete Live Class",
-                onClick: (event, rowData) =>
-                  dispatch(
-                    LiveClassActions.deleteLiveClass({
-                      liveClassId: rowData?._id,
-                    })
-                  ),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.courses?.liveClass?.delete
+                  ) {
+                    return;
+                  }
+                  dispatch( LiveClassActions.deleteLiveClass({   liveClassId: rowData?._id,  }) );
+                },
+
+                // onClick: (event, rowData) =>
+                //   dispatch( LiveClassActions.deleteLiveClass({   liveClassId: rowData?._id,  }) ),
               },
               {
                 icon: School,
@@ -479,7 +527,16 @@ const DisplayLiveClass = ({
                 ),
                 tooltip: "Add Demo Class",
                 isFreeAction: true,
-                onClick: () => navigate("/scheduleLiveClass"),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.courses?.liveClass?.add
+                  ) {
+                    return;
+                  }
+                  navigate("/scheduleLiveClass");
+                },
+                // onClick: () => navigate("/scheduleLiveClass"),
               },
             ]}
           />
@@ -921,6 +978,7 @@ const mapStateToProps = (state) => ({
   activeCourseData: state.course.activeCourseData,
   activeAstrologerData: state.astrologer.activeAstrologerData,
   liveClassData: state.liveClass.liveClassData,
+  adminData: state.admin.adminData,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

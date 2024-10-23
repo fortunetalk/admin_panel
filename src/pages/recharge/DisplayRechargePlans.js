@@ -133,7 +133,7 @@ const DisplayRechargePlan = ({ dispatch, rechargeHistoryData, adminData }) => {
                     limit: query.pageSize === 0 ? 10 : query.pageSize,
                     ...filters,
                     search: query.search,
-                    type: "CREDIT"
+                    transactionType: "credited"
                   }),
                 })
                   .then(response => response.json())

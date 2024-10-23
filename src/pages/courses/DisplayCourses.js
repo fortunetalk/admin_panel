@@ -20,7 +20,8 @@ import DialogContent from "@mui/material/DialogContent";
 import { connect } from "react-redux";
 import * as Actions from "../../redux/Actions/courseActions.js";
 
-const DisplayCourses = ({ dispatch, courseData }) => {
+const DisplayCourses = ({ dispatch, courseData, adminData}) => {
+  const { user, type } = adminData || {};
   const classes = useStyles();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -38,6 +39,11 @@ const DisplayCourses = ({ dispatch, courseData }) => {
   }, []);
 
   const handleOpen = (rowData) => {
+
+    if (type === "subadmin" && !user.permissions.courses?.coursesList?.edit) {
+      return;
+    }
+
     setOpen(true);
     setcourseId(rowData._id);
     setcourse(rowData?.title);
@@ -113,6 +119,9 @@ const DisplayCourses = ({ dispatch, courseData }) => {
   });
 
   const handleClickOpen = (rowData) => {
+    if (type === "subadmin" && !user.permissions.courses?.coursesList?.status) {
+      return;
+    }
 
     Swal.fire({
       title: 'Are you sure to Change the Status?',
@@ -187,13 +196,15 @@ const DisplayCourses = ({ dispatch, courseData }) => {
               {
                 icon: "delete",
                 tooltip: "Delete Course",
-                onClick: (event, rowData) =>
-                  dispatch(
-                    Actions.deleteCourse({
-                      courseId: rowData?._id,
-                      title: rowData?.title,
-                    })
-                  ),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.courses?.coursesList?.delete
+                  ) {
+                    return; 
+                  }
+                  dispatch( Actions.deleteCourse({  courseId: rowData?._id,   title: rowData?.title, }) );
+                },
               },
               {
                 icon: () => (
@@ -204,7 +215,15 @@ const DisplayCourses = ({ dispatch, courseData }) => {
                 ),
                 tooltip: "Add Course",
                 isFreeAction: true,
-                onClick: () => navigate("/AddCourse"),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.courses?.coursesList?.add
+                  ) {
+                    return;
+                  }
+                  navigate("/AddCourse")
+                },
               },
             ]}
           />
@@ -330,6 +349,7 @@ const DisplayCourses = ({ dispatch, courseData }) => {
 
 const mapStateToProps = (state) => ({
   courseData: state.course.courseData,
+  adminData: state.admin.adminData,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

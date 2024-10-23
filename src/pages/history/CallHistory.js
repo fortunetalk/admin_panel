@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useStyles, propStyles } from "../../assets/styles.js";
 import {
   Grid,
@@ -32,7 +32,10 @@ import { CSVLink, CSVDownload } from "react-csv";
 import DownloadIcon from '@mui/icons-material/Download';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
-const ChatHistory = ({ dispatch, callHistoryData, csvCallData, adminData }) => {
+
+const ChatHistory = ({ dispatch, callHistoryData, csvCallData, adminData , callHistoryApiPayload, isLoading}) => {
+  
+  console.log("csvCallData", csvCallData);
   const { user, type } = adminData || {};
   const classes = useStyles();
   const navigate = useNavigate();
@@ -68,7 +71,7 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData, adminData }) => {
   const [endDate, setEndDate] = useState(""); // State for end date
   const [review, setReview] = useState(false);
   const [searchData, setSearchData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const tableRef = useRef(null);
   const [reviewData, setReviewData] = useState({
     callReviewFromAdmin: '',
     callConcernFromAdmin:'',
@@ -78,6 +81,10 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData, adminData }) => {
   // useEffect(function () {
   //   dispatch(HistoryActions.getCallHistory());
   // }, []);
+
+  const onRefreshTable = () => {
+    tableRef.current && tableRef.current.onQueryChange();
+  };
 
   const handleReview = (rowData) => {
 
@@ -108,6 +115,35 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData, adminData }) => {
     }
   };
 
+  // const handleDateSearch = () => {
+  //   try {
+  //     if (!searchType) {
+  //       alert("Please select a search type.");
+  //       return;
+  //     }
+
+  //     let searchDate = '';
+
+  //     if (singleDate) {
+  //       searchDate = singleDate; // Only send singleDate
+  //     } else if (startDate && endDate) {
+  //       searchDate = `${startDate},${endDate}`; // Send startDate and endDate
+  //     }
+
+  //     const searchData = {
+  //       searchType: searchType,
+  //       searchDate: searchDate
+  //     };
+
+  //     setSearchData(searchData); // Store searchData in state
+  //     console.log("searchData", searchData);
+  //     // Optionally, close the modal here
+  //     handleClose();
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
+
   const handleDateSearch = () => {
     try {
       if (!searchType) {
@@ -115,23 +151,46 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData, adminData }) => {
         return;
       }
 
-      let searchDate = '';
+      let searchDate = "";
 
       if (singleDate) {
-        searchDate = singleDate; // Only send singleDate
+        searchDate = moment(singleDate).format(); // Only send singleDate
       } else if (startDate && endDate) {
-        searchDate = `${startDate},${endDate}`; // Send startDate and endDate
+        searchDate = `${moment(startDate).format()},${moment(
+          endDate
+        ).format()}`; // Send startDate and endDate
       }
 
       const searchData = {
         searchType: searchType,
-        searchDate: searchDate
+        searchDate: searchDate,
       };
 
-      setSearchData(searchData); // Store searchData in state
-      console.log("searchData", searchData);
-      // Optionally, close the modal here
+      // Store searchData in state
+      console.log("searchData", {
+        ...callHistoryApiPayload,
+        searchType,
+        searchDate,
+      });
+      if (callHistoryApiPayload) {
+        dispatch(
+          HistoryActions.setCallHistoryApiPayload({
+            ...callHistoryApiPayload,
+            searchType,
+            searchDate,
+          })
+        );
+      }
+      setSearchData(searchData);
+      onRefreshTable();
+      // Reset fields after search
+      setSingleDate("");
+      setStartDate("");
+      setEndDate("");
+      setSearchType("");
       handleClose();
+
+      // Optionally, close the modal here
     } catch (e) {
       console.log(e);
     }
@@ -190,7 +249,6 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData, adminData }) => {
     setShowModal(false);
     setReview(false);
     setSearchDateModal(false);
-
   };
 
   const handleGet = () => {
@@ -488,7 +546,6 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData, adminData }) => {
                 }
             },
             ]}
-            // data={reverseData}
 
             data={(query) =>
               new Promise((resolve, reject) => {
@@ -500,7 +557,14 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData, adminData }) => {
                     filters[item.column.field] = item.value[0];
                   }
                 });
-
+   console.log({
+    page: query.page + 1,
+    limit: query.pageSize === 0 ? 10 : query.pageSize,
+    ...filters,
+    search: query.search,
+     searchType: callHistoryApiPayload?.searchType || "",
+      searchDate: callHistoryApiPayload?.searchDate || "",
+  })
                 console.log("Filters:", filters);
 
                 fetch(api_url + get_call_history, {
@@ -513,6 +577,8 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData, adminData }) => {
                     limit: query.pageSize === 0 ? 10 : query.pageSize,
                     ...filters,
                     search: query.search,
+                     searchType: callHistoryApiPayload?.searchType || "",
+                      searchDate: callHistoryApiPayload?.searchDate || "",
                   }),
                 })
                   .then((response) => response.json())
@@ -522,6 +588,7 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData, adminData }) => {
                       data: result.data.data,
                       page: result.data.pagination.currentPage - 1,
                       totalCount: result.data.pagination.totalCount,
+                     
                     });
                   })
                   .catch((error) => {
@@ -530,6 +597,8 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData, adminData }) => {
                   });
               })
             }
+
+          
             options={{
               ...propStyles.tableStyles,
               paging: true,
@@ -814,8 +883,8 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData, adminData }) => {
                   -Select Option-
                 </MenuItem>
                 {/* <MenuItem value="Custom">Custom</MenuItem> */}
-                <MenuItem value="Single">Single</MenuItem>
-                <MenuItem value="Between">Between</MenuItem>
+                <MenuItem value="single">Single</MenuItem>
+                <MenuItem value="between">Between</MenuItem>
                 <MenuItem value="oneMonth">1 Month</MenuItem>
                 <MenuItem value="threeMonths">3 Months</MenuItem>
                 <MenuItem value="sixMonths">6 Months</MenuItem>
@@ -843,7 +912,7 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData, adminData }) => {
           </Grid>
         )} */}
 
-          {searchType === "Single" && (
+          {searchType === "single" && (
             <Grid item lg={12} sm={12} md={6} xs={12}>
               <TextField
                 type="date"
@@ -859,7 +928,7 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData, adminData }) => {
             </Grid>
           )}
 
-          {searchType === "Between" && (
+          {searchType === "between" && (
             <>
               <Grid item lg={6} sm={12} md={6} xs={12}>
                 <TextField
@@ -1026,7 +1095,7 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData, adminData }) => {
 
           <Grid item lg={12} md={12} sm={12} xs={12}>
             <FormControl fullWidth>
-              <InputLabel id="first-dropdown-label">CSV Download</InputLabel>
+              <InputLabel id="first-dropdown-label">Search Type</InputLabel>
               <Select
                 labelId="first-dropdown-label"
                 id="first-dropdown"
@@ -1037,13 +1106,13 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData, adminData }) => {
                   -Select Option-
                 </MenuItem>
                 {/* <MenuItem value="Custom">Custom</MenuItem> */}
-                <MenuItem value="Single">Single</MenuItem>
-                <MenuItem value="Between">Between</MenuItem>
+                <MenuItem value="single">Single</MenuItem>
+                <MenuItem value="between">Between</MenuItem>
               </Select>
             </FormControl>
           </Grid>
 
-          {searchType === "Single" && (
+          {searchType === "single" && (
             <Grid item lg={12} sm={12} md={6} xs={12}>
               <TextField
                 type="date"
@@ -1059,7 +1128,7 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData, adminData }) => {
             </Grid>
           )}
 
-          {searchType === "Between" && (
+          {searchType === "between" && (
             <>
               <Grid item lg={6} sm={12} md={6} xs={12}>
                 <TextField
@@ -1123,6 +1192,8 @@ const mapStateToProps = (state) => ({
   callHistoryData: state.history.callHistoryData,
   csvCallData: state.history.csvCallData,
   adminData: state.admin.adminData,
+  callHistoryApiPayload: state.history.callHistoryApiPayload, // Default to empty array
+  isLoading: state.admin.isLoading,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

@@ -17,6 +17,7 @@ const initialState = {
   updateAstrologerGalleryImage: null,
   updateAstrologerAstrologerType: null,
   setAstrologer: null,
+  topAstrologerData: null,
   isLoading: false,
 };
 
@@ -174,6 +175,13 @@ const astrologer = (state = initialState, actions) => {
       return {
         ...state,
         updateAstrologerAstrologerType: payload,
+      };
+    }
+
+    case actionTypes.SET_TOP_ASTROLOGERS: {
+      return {
+        ...state,
+        topAstrologerData: payload,
       };
     }
 

@@ -111,6 +111,7 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading, adminData}) =>
 
   const handleOpen = (rowData) => {
     if (type === "subadmin" && !user.permissions.customer?.listOfCustomer?.editCustomer) {
+      alert('You do not have permission to edit customer.');
       return;
     }
     setOpen(true);
@@ -196,6 +197,7 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading, adminData}) =>
   const handleView = (rowData) => {
 
     if (type === "subadmin" && !user.permissions.customer?.listOfCustomer?.viewCustomer) {
+      alert('You do not have permission to view.');
       return;
     }
 
@@ -230,6 +232,7 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading, adminData}) =>
 
   const handleClickOpen = (rowData) => {
     if (type === "subadmin" && !user.permissions.customer?.listOfCustomer?.updateCustomerStatus) {
+      alert('You do not have permission to update customer status.');
       return;
     }
     Swal.fire({
@@ -255,6 +258,7 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading, adminData}) =>
 
   const addRecharge = (rowData) => {
     if (type === "subadmin" && !user.permissions.customer?.listOfCustomer?.addRecharge) {
+      alert('You do not have permission to add recharge.');
       return;
     }
     navigate("/rechargeByAdmin", { state: { customerId: rowData?._id }, });
@@ -416,6 +420,7 @@ const DisplayCustomer = ({ customerListData, dispatch, isLoading, adminData}) =>
                     type === "subadmin" &&
                     !user.permissions.customer?.listOfCustomer?.deleteCustomer
                   ) {
+                    alert('You do not have permission to delete.');
                     return;
                   }
                   dispatch( CustomerActions.deleteCustomer({customerId: rowData?._id, title: rowData?.customerName, }));

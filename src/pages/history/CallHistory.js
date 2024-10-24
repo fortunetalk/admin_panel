@@ -89,6 +89,7 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData, adminData , callH
   const handleReview = (rowData) => {
 
     if (type === "subadmin" && !user.permissions.customer?.callHistory?.addReview) {
+      alert('You do not have permission to add review.');
       return;
     }
 
@@ -199,6 +200,7 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData, adminData , callH
 
   const handleView = (rowData) => {
     if (type === "subadmin" && !user.permissions.customer?.callHistory?.viewCallHistoryData) {
+      alert('You do not have permission to view.');
       return;
     }
 
@@ -239,6 +241,7 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData, adminData , callH
 
   const openDownloadModal = () => {
     if (type === "subadmin" && !user.permissions.customer?.callHistory?.download) {
+      alert('You do not have permission to download csv.');
       return;
     }
     setShowModal(true);
@@ -621,6 +624,7 @@ const ChatHistory = ({ dispatch, callHistoryData, csvCallData, adminData , callH
                     type === "subadmin" &&
                     !user.permissions.customer?.callHistory?.delete
                   ) {
+                    alert('You do not have permission to delete.');
                     return;
                   }
                   dispatch( HistoryActions.deleteCallHistory({ callId: rowData?._id, }) );

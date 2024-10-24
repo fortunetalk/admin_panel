@@ -41,6 +41,7 @@ const DisplayCourses = ({ dispatch, courseData, adminData}) => {
   const handleOpen = (rowData) => {
 
     if (type === "subadmin" && !user.permissions.courses?.coursesList?.edit) {
+      alert('You do not have permission to edit.');
       return;
     }
 
@@ -120,6 +121,7 @@ const DisplayCourses = ({ dispatch, courseData, adminData}) => {
 
   const handleClickOpen = (rowData) => {
     if (type === "subadmin" && !user.permissions.courses?.coursesList?.status) {
+      alert('You do not have permission to change status.');
       return;
     }
 
@@ -201,6 +203,7 @@ const DisplayCourses = ({ dispatch, courseData, adminData}) => {
                     type === "subadmin" &&
                     !user.permissions.courses?.coursesList?.delete
                   ) {
+                    alert('You do not have permission to delete.');
                     return; 
                   }
                   dispatch( Actions.deleteCourse({  courseId: rowData?._id,   title: rowData?.title, }) );
@@ -220,6 +223,7 @@ const DisplayCourses = ({ dispatch, courseData, adminData}) => {
                     type === "subadmin" &&
                     !user.permissions.courses?.coursesList?.add
                   ) {
+                    alert('You do not have permission to add.');
                     return;
                   }
                   navigate("/AddCourse")

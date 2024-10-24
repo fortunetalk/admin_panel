@@ -75,6 +75,7 @@ const DisplayLiveClass = ({
 
   const handleOpen = (rowData) => {
     if (type === "subadmin" && !user.permissions.courses?.liveClass?.edit) {
+      alert('You do not have permission to edit.');
       return;
     }
 
@@ -98,6 +99,7 @@ const DisplayLiveClass = ({
   const handleView = (rowData) => {
 
     if (type === "subadmin" && !user.permissions.courses?.liveClass?.view) {
+      alert('You do not have permission to view.');
       return;
     }
 
@@ -121,6 +123,7 @@ const DisplayLiveClass = ({
   const handleNavigate=(rowData)=>{
 
     if (type === "subadmin" && !user.permissions.courses?.liveClass?.classList) {
+      alert('You do not have permission to view class List.');
       return;
     }
     dispatch(ScheduleClassActions.getScheduleClassData(rowData?._id))
@@ -129,6 +132,7 @@ const DisplayLiveClass = ({
   }
   const handleMCQ=(rowData)=>{
     if (type === "subadmin" && !user.permissions.courses?.liveClass?.mcqQuestions) {
+      alert('You do not have permission to view MCQ Questions.');
       return;
     }
 
@@ -220,7 +224,9 @@ const DisplayLiveClass = ({
   const handleAdminStatusChange = (rowData, newStatus) => {
 
     if (type === "subadmin" && !user.permissions.courses?.liveClass?.adminStatus) {
+      alert('You do not have permission to change admin status.');
       return;
+      
     }
 
     Swal.fire({
@@ -244,6 +250,7 @@ const DisplayLiveClass = ({
   };
   const handleClassStatusChange = (rowData, newStatus) => {
     if (type === "subadmin" && !user.permissions.courses?.liveClass?.classStatus) {
+      alert('You do not have permission to change class status.');
       return;
     }
 
@@ -269,6 +276,7 @@ const DisplayLiveClass = ({
 
   const handleClickOpen = (rowData) => {
     if (type === "subadmin" && !user.permissions.courses?.liveClass?.status) {
+      alert('You do not have permission to change status.');
       return;
     }
 
@@ -490,10 +498,8 @@ const DisplayLiveClass = ({
                 icon: "delete",
                 tooltip: "Delete Live Class",
                 onClick: (event, rowData) => {
-                  if (
-                    type === "subadmin" &&
-                    !user.permissions.courses?.liveClass?.delete
-                  ) {
+                  if (   type === "subadmin" &&  !user.permissions.courses?.liveClass?.delete ) {
+                    alert('You do not have permission to delete.');
                     return;
                   }
                   dispatch( LiveClassActions.deleteLiveClass({   liveClassId: rowData?._id,  }) );
@@ -528,10 +534,8 @@ const DisplayLiveClass = ({
                 tooltip: "Add Demo Class",
                 isFreeAction: true,
                 onClick: (event, rowData) => {
-                  if (
-                    type === "subadmin" &&
-                    !user.permissions.courses?.liveClass?.add
-                  ) {
+                  if (  type === "subadmin" &&  !user.permissions.courses?.liveClass?.add ) {
+                    alert('You do not have permission to add demo class.');
                     return;
                   }
                   navigate("/scheduleLiveClass");

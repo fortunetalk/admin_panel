@@ -120,3 +120,22 @@ export const updateAstrologerAstrologerType = payload =>({
   payload
 })
 
+export const getTopAstrologers = payload =>({
+  type: actionTypes.GET_TOP_ASTROLOGERS, 
+  payload
+})
+
+export const setTopAstrologers = payload =>({
+  type: actionTypes.SET_TOP_ASTROLOGERS, 
+  payload
+})
+
+export const deleteTopAstrologers = payload =>({
+  type: actionTypes.DELETE_TOP_ASTROLOGER, 
+  payload
+})
+export const addTopAstrologer = payload =>({
+  type: actionTypes.ADD_TOP_ASTROLOGER, 
+  payload
+})
+

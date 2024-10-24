@@ -44,7 +44,7 @@ class _ApiRequest {
         const errorMessage = extractErrorMessage(e.response.data);
         Swal.fire({
           icon: "error",
-          title: "Server Error",
+          title: "Request Failed",
           text: e?.response?.data?.message,
           showConfirmButton: false,
           timer: 5000,

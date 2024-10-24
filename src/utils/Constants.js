@@ -1,14 +1,14 @@
 // Production Server
-export const base_url = "http://97.74.83.200:4000/";
-export const api_url = "http://97.74.83.200:4000/api/";
+// export const base_url = "http://97.74.83.200:4000/";
+// export const api_url = "http://97.74.83.200:4000/api/";
 
 // Testing Server
 // export const base_url = "http://97.74.83.200:8000/";
 // export const api_url = "http://97.74.83.200:8000/api/";
 
 // Local Server
-// export const base_url = "http://localhost:4000/";
-// export const api_url = "http://localhost:4000/api/";
+export const base_url = "http://localhost:4000/";
+export const api_url = "http://localhost:4000/api/";
 
 // admin login
 export const admin_login = "admin/login";
@@ -109,6 +109,9 @@ export const update_first_recharge_offer = "admin/update-first-recharge-offer";
 export const delete_first_recharge_offer = "admin/delete-first-recharge-offer";
 
 export const get_all_astrologers = "admin/astrologers";
+export const get_top_astrologers = "admin/get_all_top_astrologer";
+export const delete_top_astrologer = "admin/delete_top_astrologer";
+export const add_top_astrologer = "admin/add_top_astrologer";
 export const get_all_active_astrologers = "admin/acitve_astrologers";
 export const get_astrologer = "admin/astrologers/:astrologerId";
 export const verify_astrologer = "astrologer/verify-astrologer-profile";

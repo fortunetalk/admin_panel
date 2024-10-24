@@ -48,12 +48,13 @@ const routes = [
         path: "/astrologers/topAstrologers",
         name: "Top Astrologers",
         icon: <BiUser />,
+        key: "topAstrologers",
       },
-      {
-        path: "/displayEnquiry",
-        name: "Astrologers Enquiry",
-        icon: <BiUser />,
-      },
+      // {
+      //   path: "/displayEnquiry",
+      //   name: "Astrologers Enquiry",
+      //   icon: <BiUser />,
+      // },
     ],
   },
   {
@@ -160,11 +161,13 @@ const routes = [
         path: "/displayLiveClass",
         name: "Live Class",
         icon: <BiAbacus />,
+        key: "displayLiveClass",
       },
       {
         path: "/mcqAnswerList",
         name: "Attempted MCQ's",
         icon: <BiAbacus />,
+        key: "mcqAnswerList",
       },
       {
         path: "/history/demoClassHistory",
@@ -586,6 +589,11 @@ const SideBar = ({
                   (subRoute) => subRoute.key !== "displayAstrologer"
                 );
               }
+              if (!user?.permissions?.astrologer?.topAstrologers?.isPermited) {
+                subRoutes = subRoutes.filter(
+                  (subRoute) => subRoute.key !== "topAstrologers"
+                );
+              }
 
               // Update the main route with the filtered subRoutes
               const data = { ...item, subRoutes: subRoutes };
@@ -651,7 +659,8 @@ const SideBar = ({
               }
 
               // Check 'displayAstrologer' permission and remove 'displayAstrologer' sub-route if not permitted
-              if (!user?.permissions?.courses?.addCourses?.isPermited) {
+           
+              if (!user?.permissions?.courses?.addCourses) {
                 subRoutes = subRoutes.filter(
                   (subRoute) => subRoute.key !== "AddCourse"
                 );
@@ -660,6 +669,18 @@ const SideBar = ({
               if (!user?.permissions?.courses?.demoClass?.isPermited) {
                 subRoutes = subRoutes.filter(
                   (subRoute) => subRoute.key !== "displayDemoClass"
+                );
+              }
+
+              if (!user?.permissions?.courses?.liveClass?.isPermited) {
+                subRoutes = subRoutes.filter(
+                  (subRoute) => subRoute.key !== "displayLiveClass"
+                );
+              }
+
+              if (!user?.permissions?.courses?.mcqList) {
+                subRoutes = subRoutes.filter(
+                  (subRoute) => subRoute.key !== "mcqAnswerList"
                 );
               }
 

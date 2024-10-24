@@ -46,9 +46,14 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
           updateStatus: false,
           updateChatStatus: false,
           updateCallStatus: false,
+          markAsTop: false,
           editAstrologer: false,
           viewAstrologer: false,
           deleteAstrologer: false,
+        },
+        topAstrologers: {
+          isPermited: false,
+          delete: false,
         },
       },
       customer: {
@@ -105,9 +110,7 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
           delete: false,
           add: false,
         },
-        addCourses: {
-          isPermited: false,
-        },
+        addCourses: false,
         demoClass: {
           isPermited: false,
           adminStatus: false,
@@ -131,6 +134,7 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
           mcqQuestions: false,
           add: false,
         },
+        mcqList: false,
       },
     },
   });
@@ -318,7 +322,6 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
             </FormControl>
           </Grid>
 
-
           <Grid item lg={12}>
             <FormControl component="fieldset" style={{ marginLeft: "10px" }}>
               <FormLabel
@@ -344,6 +347,7 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                                 updateStatus: false,
                                 updateChatStatus: false,
                                 updateCallStatus: false,
+                                markAsTop: false,
                                 editAstrologer: false,
                                 viewAstrologer: false,
                                 deleteAstrologer: false,
@@ -407,6 +411,7 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                               updateStatus: false,
                               updateChatStatus: false,
                               updateCallStatus: false,
+                              markAsTop: false,
                               editAstrologer: false,
                               viewAstrologer: false,
                               deleteAstrologer: false,
@@ -498,6 +503,28 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                           !permission?.astrologer?.isPermited ||
                           !permission?.astrologer?.listOfAstrologer?.isPermited
                         }
+                        checked={permission?.astrologer?.listOfAstrologer?.markAsTop}
+                        onChange={() => {
+                          if (permission?.astrologer?.listOfAstrologer?.markAsTop) {
+                            updatePermission("permission.astrologer.listOfAstrologer.markAsTop", false);
+                          } else {
+                            updatePermission("permission.astrologer.listOfAstrologer.markAsTop", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Mark as top"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.astrologer?.isPermited ||
+                          !permission?.astrologer?.listOfAstrologer?.isPermited
+                        }
                         checked={permission?.astrologer?.listOfAstrologer?.editAstrologer}
                         onChange={() => {
                           if (permission?.astrologer?.listOfAstrologer?.editAstrologer) {
@@ -553,6 +580,56 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                       />
                     }
                     label={"Delete Astrologer"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={!permission?.astrologer?.isPermited}
+                        checked={permission?.astrologer?.topAstrologers?.isPermited}
+                        onChange={() => {
+                          if (permission?.astrologer?.topAstrologers?.isPermited) {
+                            updatePermission("permission.astrologer.topAstrologers", {
+                              isPermited: false,
+                              delete: false,
+                            });
+                          } else {
+                            updatePermission("permission.astrologer.topAstrologers.isPermited", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Top Astrologers"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.astrologer?.isPermited ||
+                          !permission?.astrologer?.topAstrologers?.isPermited
+                        }
+                        checked={permission?.astrologer?.topAstrologers?.delete}
+                        onChange={() => {
+                          if (permission?.astrologer?.topAstrologers?.delete) {
+                            updatePermission("permission.astrologer.topAstrologers.delete", false);
+                          } else {
+                            updatePermission("permission.astrologer.topAstrologers.delete", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Delete"}
                     labelPlacement="end"
                   />
                 </div>
@@ -1440,19 +1517,18 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
               </FormGroup>
 
               {/* Add Courses */}
-
-              {/* <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
                 <div className={classes.chips}>
                   <FormControlLabel
                     control={
                       <Checkbox
                         disabled={!permission?.courses?.isPermited}
-                        checked={permission?.courses?.addCourses?.isPermited}
+                        checked={permission?.courses?.addCourses}
                         onChange={() => {
-                          if (permission?.courses?.addCourses?.isPermited) {
-                            updatePermission("permission.courses.addCourses.isPermited", false);
+                          if (permission?.courses?.addCourses) {
+                            updatePermission("permission.courses.addCourses", false);
                           } else {
-                            updatePermission("permission.courses.addCourses.isPermited", true);
+                            updatePermission("permission.courses.addCourses", true);
                           }
                         }}
                       />
@@ -1461,7 +1537,8 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                     labelPlacement="end"
                   />
                 </div>
-              </FormGroup> */}
+              </FormGroup>
+
 
               {/* Demo Classes*/}
               
@@ -1922,6 +1999,29 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                   />
                 </div>
 
+              </FormGroup>
+
+              {/* MCQ Questions*/}
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={!permission?.courses?.isPermited}
+                        checked={permission?.courses?.mcqList}
+                        onChange={() => {
+                          if (permission?.courses?.mcqList) {
+                            updatePermission("permission.courses.mcqList", false);
+                          } else {
+                            updatePermission("permission.courses.mcqList", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"MCQ Question List"}
+                    labelPlacement="end"
+                  />
+                </div>
               </FormGroup>
 
             </FormControl>

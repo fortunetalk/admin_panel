@@ -48,9 +48,14 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
         updateStatus: false,
         updateChatStatus: false,
         updateCallStatus: false,
+        markAsTop: false,
         editAstrologer: false,
         viewAstrologer: false,
         deleteAstrologer: false,
+      },
+      topAstrologers: {
+        isPermited: false,
+        delete: false,
       },
     },
     customer: {
@@ -104,9 +109,7 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
         delete: false,
         add: false,
       },
-      addCourses: {
-        isPermited: false,
-      },
+      addCourses: false,
       demoClass: {
         isPermited: false,
         adminStatus: false,
@@ -130,6 +133,7 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
         mcqQuestions: false,
         add: false,
       },
+      mcqList: false,
       
     },
   };
@@ -321,6 +325,23 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
                 </div>
                 <div>
                   <FormControlLabel
+                    value={permissions?.astrologer?.listOfAstrologer?.markAsTop}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.astrologer?.isPermited ||
+                          !permissions?.astrologer?.listOfAstrologer?.isPermited
+                        }
+                        checked={permissions?.astrologer?.listOfAstrologer?.markAsTop}
+                      />
+                    }
+                    label={"Mark as top"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
                     value={permissions?.astrologer?.listOfAstrologer?.editAstrologer}
                     className={classes.checkbox}
                     control={
@@ -370,6 +391,43 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
                     labelPlacement="end"
                   />
                 </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permissions?.astrologer?.topAstrologers?.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={!permissions?.astrologer?.isPermited}
+                        checked={permissions?.astrologer?.topAstrologers?.isPermited}
+                      />
+                    }
+                    label={"Top Astrologers"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+                <div>
+                  <FormControlLabel
+                    value={permissions?.astrologer?.topAstrologers?.delete}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.astrologer?.isPermited ||
+                          !permissions?.astrologer?.topAstrologers?.isPermited
+                        }
+                        checked={permissions?.astrologer?.topAstrologers?.delete}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+            
               </FormGroup>
 
               {/* Customer  */}
@@ -1030,7 +1088,7 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
 
              {/* Add Courses */}
 
-             {/* <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+             <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
                 <div className={classes.chips}>
                   <FormControlLabel
                     value={"Add Courses"}
@@ -1045,7 +1103,7 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
                     labelPlacement="end"
                   />
                 </div>
-              </FormGroup> */}
+              </FormGroup>
 
 
                {/* Demo Class */}
@@ -1388,6 +1446,25 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
                   />
                 </div>
 
+              </FormGroup>
+
+              {/* MCQ Questions */}
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={"MCQ Questions"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={!permissions?.courses?.isPermited}
+                        checked={permissions?.courses?.mcqList}
+                      />
+                    }
+                    label={"MCQ Questions"}
+                    labelPlacement="end"
+                  />
+                </div>
               </FormGroup>
 
 

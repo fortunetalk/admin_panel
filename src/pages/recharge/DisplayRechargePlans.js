@@ -25,6 +25,7 @@ const DisplayRechargePlan = ({ dispatch, rechargeHistoryData, adminData }) => {
 
   const handleAdd = () => {
     if (type === "subadmin" && !user.permissions.customer?.rechargeHistory?.addRecharge) {
+      alert('You do not have permission to add Recharge.');
       return;
     }
     navigate("/addRechargeHistory");
@@ -159,6 +160,7 @@ const DisplayRechargePlan = ({ dispatch, rechargeHistoryData, adminData }) => {
                     type === "subadmin" &&
                     !user.permissions.customer?.rechargeHistory?.delete
                   ) {
+                    alert('You do not have permission to delete.');
                     return;
                   }
                   dispatch(RechargeHistoryActions.deleteRechargeHistory({ invoiceId: rowData?.invoiceId }));

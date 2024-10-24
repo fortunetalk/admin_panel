@@ -88,6 +88,7 @@ const ChatHistory = ({
       type === "subadmin" &&
       !user.permissions.customer?.chatHistory?.addReview
     ) {
+      alert('You do not have permission to add review.');
       return;
     }
     setReview(true);
@@ -103,6 +104,7 @@ const ChatHistory = ({
       type === "subadmin" &&
       !user.permissions.customer?.chatHistory?.viewChatHistoryData
     ) {
+      alert('You do not have permission to view chat details.');
       return;
     }
 
@@ -144,6 +146,7 @@ const ChatHistory = ({
       type === "subadmin" &&
       !user.permissions.customer?.chatHistory?.download
     ) {
+      alert('You do not have permission to download csv.');
       return;
     }
     setShowModal(true);
@@ -289,6 +292,7 @@ const ChatHistory = ({
       type === "subadmin" &&
       !user.permissions.customer?.chatHistory?.viewChatMessages
     ) {
+      alert('You do not have permission to View Chat Messages.');
       return;
     }
     navigate(`/history/fullChatHistory/${rowData.customerId}`, {
@@ -700,6 +704,7 @@ const ChatHistory = ({
                     type === "subadmin" &&
                     !user.permissions.customer?.chatHistory?.delete
                   ) {
+                    alert('You do not have permission to delete.');
                     return;
                   }
                   dispatch(

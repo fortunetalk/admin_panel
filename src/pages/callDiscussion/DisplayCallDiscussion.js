@@ -35,6 +35,7 @@ const DisplayCallDiscussion = ({ dispatch, calllDiscussionData, isLoading, admin
   const handleOpen = (rowData) => {
 
     if (type === "subadmin" && !user.permissions.callDiscussion?.viewCallDiscussion?.edit) {
+      alert('You do not have permission to edit.');
       return;
     }
 
@@ -160,6 +161,7 @@ const DisplayCallDiscussion = ({ dispatch, calllDiscussionData, isLoading, admin
                     type === "subadmin" &&
                     !user.permissions.callDiscussion?.viewCallDiscussion?.delete
                   ) {
+                    alert('You do not have permission to delete.');
                     return;
                   }
                   dispatch(  Actions.deleteCallDiscussion({  userDiscussionId: rowData?._id, }));
@@ -176,6 +178,7 @@ const DisplayCallDiscussion = ({ dispatch, calllDiscussionData, isLoading, admin
                 isFreeAction: true,
                 onClick: () => {
                   if ( type === "subadmin" &&  !user.permissions.callDiscussion?.viewCallDiscussion?.add ) {
+                    alert('You do not have permission to add.');
                     return;
                   }
                   navigate("/add-call-discussion");

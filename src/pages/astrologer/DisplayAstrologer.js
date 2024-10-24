@@ -31,6 +31,7 @@ import {
 } from "../../redux/Actions/astrologerActions.js";
 import { api_url, get_all_astrologers } from "../../utils/Constants.js";
 import moment from "moment/moment.js";
+import * as AstrologerActions from "../../redux/Actions/astrologerActions.js";
 
 const ListAstrology = ({ astrologerListData, adminData }) => {
   const { user, type } = adminData || {};
@@ -51,6 +52,7 @@ const ListAstrology = ({ astrologerListData, adminData }) => {
 
   const handleEdit = (astrologerId) => {
     if (type === "subadmin" && !user.permissions.astrologer?.listOfAstrologer?.editAstrologer) {
+      alert('You do not have permission to edit Astrologer.');
       return;
     }
     navigate(`/editAstrologer/${astrologerId}`);
@@ -58,6 +60,7 @@ const ListAstrology = ({ astrologerListData, adminData }) => {
 
   const handleView = (rowData) => {
     if (type === "subadmin" && !user.permissions.astrologer?.listOfAstrologer?.viewAstrologer) {
+      alert('You do not have permission to view Astrologer.');
       return;
     }
     updateState({ viewModalOpen: true, selectedAstro: rowData });
@@ -87,7 +90,9 @@ const ListAstrology = ({ astrologerListData, adminData }) => {
 
   const handleClickOpen = (rowData) => {
     if (type === "subadmin" && !user.permissions.astrologer?.listOfAstrologer?.updateStatus) {
+      alert('You do not have permission to update status.');
       return;
+      
     }
     Swal.fire({
       title: "Are you sure to Change the Status?",
@@ -112,6 +117,7 @@ const ListAstrology = ({ astrologerListData, adminData }) => {
 
   const handleChangeCallStatus = (rowData) => {
     if (type === "subadmin" && !user.permissions.astrologer?.listOfAstrologer?.updateCallStatus) {
+      alert('You do not have permission to update call status.');
       return;
     }
     Swal.fire({
@@ -148,6 +154,7 @@ const ListAstrology = ({ astrologerListData, adminData }) => {
 
   const handleChangeChatStatus = (rowData) => {
     if (type === "subadmin" && !user.permissions.astrologer?.listOfAstrologer?.updateChatStatus) {
+      alert('You do not have permission to update chat status.');
       return;
     }
     Swal.fire({
@@ -162,15 +169,38 @@ const ListAstrology = ({ astrologerListData, adminData }) => {
       if (result.isConfirmed) {
         const newStatus =
           rowData.chatStatus === "Online" ? "Offline" : "Online";
-        dispatch(
-          updateAstrologerChatStatus({
-            data: { astrologerId: rowData._id, chatStatus: newStatus },
-            onComplete: onRefreshTable,
-          })
-        );
+        dispatch( updateAstrologerChatStatus({ data: { astrologerId: rowData._id, chatStatus: newStatus },  onComplete: onRefreshTable, }) );
       }
     });
   };
+
+  const handleMarkAsTop = (rowData) => {
+
+    if (type === "subadmin" && !user.permissions.astrologer?.listOfAstrologer?.markAsTop) {
+      alert('You do not have permission to update mark as top.');
+      return;
+    }
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You want to mark this astrologer as Top Astrologer?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: Colors.primaryLight,
+      cancelButtonColor: Colors.red_a,
+      confirmButtonText: 'Yes, mark it!',
+      cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // dispatchMarkAsTopAstrologer(id); 
+        const payload ={
+          astrologerId: rowData?._id,
+        };
+        dispatch(AstrologerActions.addTopAstrologer(payload) );
+      }
+    });
+  };
+
 
   return (
     <div className={classes.container}>
@@ -233,6 +263,31 @@ const ListAstrology = ({ astrologerListData, adminData }) => {
                   const balance = Number(rowData.wallet_balance).toFixed(2);
                   return balance;
                 },
+              },
+              {
+                title: "Top Astrologer",
+                field: "status",
+                filtering: false,
+                render: (rowData) => (
+                  <div>
+                    <button
+                     onClick={() => handleMarkAsTop(rowData)}
+                      style={{
+                        marginTop: '3px',
+                        padding: '6px 10px',
+                        backgroundColor: '#B2E0B2',
+                        color: 'black',
+                        border: 'none',
+                        borderRadius: '15px',
+                        fontSize: '14px',
+                        fontWeight: 'semi-bold', 
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Mark as Top
+                    </button>
+                  </div>
+                ),
               },
 
               {
@@ -355,7 +410,7 @@ const ListAstrology = ({ astrologerListData, adminData }) => {
               pageSizeOptions: [10, 20, 50, 100, 500, 1000],
               filtering: "true",
             }}
-            style={{ fontSize: "1.2rem" }}
+            style={{ fontSize: "1.0rem" }}
             actions={[
               {
                 icon: "edit",
@@ -370,6 +425,7 @@ const ListAstrology = ({ astrologerListData, adminData }) => {
                     type === "subadmin" &&
                     !user.permissions.astrologer?.listOfAstrologer?.deleteAstrologer
                   ) {
+                    alert('You do not have permission to delete Astrologer.');
                     return;
                   }
                   dispatch(deleteAstrologer({ astrologerId: rowData._id }));

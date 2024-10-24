@@ -29,7 +29,9 @@ const data = [
   { id: 2, name: "ritik" },
 ];
 
-const TopAstrologers = ({ dispatch, astrologerListData }) => {
+const TopAstrologers = ({ dispatch, topAstrologerData,adminData }) => {
+  const { user, type } = adminData || {};
+  console.log("topAstrologerData", topAstrologerData);
   var classes = useStyles();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +41,7 @@ const TopAstrologers = ({ dispatch, astrologerListData }) => {
   });
 
   useEffect(() => {
-    dispatch(AstrologerActions.getAllAstrologer());
+    dispatch(AstrologerActions.getTopAstrologers());
   }, []);
 
   const handleEdit = (rowData) => {
@@ -77,10 +79,11 @@ const TopAstrologers = ({ dispatch, astrologerListData }) => {
 
   const { editModalOpen, selectedAstro } = state;
 
+
   return (
     <div className={classes.container}>
       <Loader isVisible={isLoading} />
-      <div className={classes.box}>{astrologerListData && displayTable()}</div>
+      <div className={classes.box}>{topAstrologerData && displayTable()}</div>
       {editModalInfo()}
     </div>
   );
@@ -89,109 +92,46 @@ const TopAstrologers = ({ dispatch, astrologerListData }) => {
     return (
       <Grid container spacing={2}>
         <Grid item lg={12} sm={12} md={12} xs={12} style={{ marginTop: 15 }}>
-          {/* <MaterialTable
+          <MaterialTable
             title="Top Astrologers"
-            data={astrologerListData}
+            data={topAstrologerData}
             columns={[
               {
                 title: "S.No",
                 editable: "never",
-                render: (rowData) => astrologerListData.indexOf(rowData) + 1,
+                render: (rowData) => topAstrologerData.indexOf(rowData) + 1,
               },
               {
                 title: "Name",
-                field: "astrologerName",
-              },
-              {
-                title: "Email",
-                field: "email",
+                field: "astrologerId.displayName",
               },
               {
                 title: "Mobile",
-                field: "phoneNumber",
+                field: "astrologerId.phoneNumber",
               },
-              {
-                title: "Experience",
-                field: "experience",
-              },
-              // {
-              //   title: "Profile",
-              //   field: "profileImage",
-              //   render: (rowData) => (
-              //     <Avatar
-              //       src={base_url + rowData.profileImage}
-              //       style={{ width: 50, height: 50 }}
-              //       variant="rounded"
-              //     />
-              //   ),
-              // },
-              {
-                title: "Wallet",
-                field: "wallet_balance",
-              },
-              {
-                title: "Chat Price",
-                field: "chat_price",
-              },
-              {
-                title: "Call Price",
-                field: "call_price",
-              },
-              {
-                title: "Verify",
-                field: "isVerified",
-                render: (rowData) => (
-                  <div
-                    onClick={() =>
-                      dispatch(
-                        AstrologerActions.verifyUnverifyAstrologer({
-                          isVerified: rowData.isVerified ? "false" : "true",
-                          astrologerId: rowData?._id,
-                        })
-                      )
-                    }
-                    style={{
-                      backgroundColor: !rowData.isVerified
-                        ? Colors.red_a
-                        : Colors.greenLight,
-
-                      color: Colors.white,
-                      textAlign: "center",
-                      padding: 5,
-                      fontSize: "1.2rem",
-                      fontFamily: "Philospher",
-                      borderRadius: 5,
-                      cursor: "pointer",
-                    }}
-                  >
-                    {rowData.isVerified ? "Verified" : "Unverified"}
-                  </div>
-                ),
-              },
+              
+             
             ]}
             options={{ ...propStyles.tableStyles, filtering: false }}
-            style={{ fontSize: "1.4rem" }}
+            style={{ fontSize: "1.0rem" }}
             actions={[
-              {
-                icon: "edit",
-                tooltip: "Edit Skill",
-                onClick: (event, rowData) => handleEdit(rowData),
-              },
               {
                 icon: "delete",
                 tooltip: "Delete Astrologer",
-                onClick: (event, rowData) =>
-                  dispatch(
-                    AstrologerActions.deleteAstrologer({
-                      astrologerId: rowData._id,
-                    })
-                  ),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.astrologer?.topAstrologers?.delete
+                  ) {
+                    alert('You do not have permission to delete.');
+                    return;
+                  }
+                  dispatch( AstrologerActions.deleteTopAstrologers({  topAstrologerId: rowData._id, }) );
+                },              
               },
             ]}
-          /> */}
-          <div >
-          <h3> Coming Soon </h3>
-          </div>
+          />
+          
         </Grid>
       </Grid>
     );
@@ -290,7 +230,8 @@ const TopAstrologers = ({ dispatch, astrologerListData }) => {
 };
 
 const mapStateToProps = (state) => ({
-  astrologerListData: state.astrologer.astrologerListData,
+  topAstrologerData: state.astrologer.topAstrologerData,
+  adminData: state.admin.adminData,
 });
 
 const mapDispatchToProps = (dispatch) => ({dispatch});

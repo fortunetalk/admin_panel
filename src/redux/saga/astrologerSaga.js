@@ -25,7 +25,10 @@ import {
   update_astrologer_id_image,
   update_astrologer_gallery_image,
   update_astrologer_astrologer_type,
-  update_admin_chat_review
+  update_admin_chat_review,
+  get_top_astrologers,
+  delete_top_astrologer,
+  add_top_astrologer
 } from "../../utils/Constants";
 import Swal from "sweetalert2";
 import { Colors } from "../../assets/styles";
@@ -795,7 +798,113 @@ function* updateAstrologerAstrologerType(actions) {
   }
 }
 
+function* getTopAstrologers() {
+  try {
+    yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
+    const response = yield call(ApiRequest.getRequest, {
+      url: api_url + get_top_astrologers,
+    });
 
+    if (response.success) {
+      yield put({  type: actionTypes.SET_TOP_ASTROLOGERS, payload: response?.data.reverse(), });
+    }
+  } catch (e) {
+    console.log(e);
+  } finally {
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
+  }
+}
+
+function* deleteTopAstrologers(actions) {
+  try {
+    const { payload } = actions;
+
+    const result = yield Swal.fire({
+      title: "Are you sure to remove this astrologer",
+      text: "This Astrologer will be removed from the top astrologer list",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: Colors.primaryLight,
+      cancelButtonColor: Colors.red_a,
+      confirmButtonText: "Delete",
+    });
+
+    if (result?.isConfirmed) {
+      // yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+
+      const response = yield call(ApiRequest.postRequest, {
+        url: api_url + delete_top_astrologer,
+        header: "json",
+        data: payload,
+      });
+
+      if (response.success) {
+        Swal.fire({
+          title: "Deleted!",
+          text: "Astrologer has been removed.",
+          icon: "success",
+        });
+        yield put({ type: actionTypes.GET_TOP_ASTROLOGERS, payload: null });
+      } else {
+        Swal.fire({
+          title: "Failed",
+          text: "Failed to remove the astrologer",
+          icon: "error",
+        });
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  } finally {
+    // yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
+  }
+}
+
+function* addTopAstrologer(actions) {
+  try {
+    const {payload } = actions;
+    yield put({ type: actionTypes.SET_IS_LOADING , payload: false });
+
+    const response = yield call(ApiRequest.postRequest, {
+      url: api_url + add_top_astrologer,
+      header: "json",
+      data: payload,
+    });
+
+    if (response?.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Added to Top Astrologer list Successfully",
+        showConfirmButton: false,
+        timer: 2000,
+      },
+
+      // window.location.href = "#/astrologers/displayAstrologer"
+    );
+
+      yield put({ type: actionTypes.GET_TOP_ASTROLOGERS, payload: null });
+      // yield call(reset);
+      // yield call(onAdd);
+    } else {
+      const errorMessage = extractErrorMessage(
+        response?.Error?.message || "Failed to mark as Top Astrologer"
+      );
+      Swal.fire({
+        icon: "error",
+        title: "Failed to mark as Top Astrologer",
+        text: response?.message,
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+  } catch (e) {
+    console.log("error", e);
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
+  } finally {
+    yield put({ type: actionTypes.UNSET_IS_LOADING , payload: false });
+
+  }
+}
 
 
 export default function* astrologerSaga() {
@@ -862,9 +971,9 @@ export default function* astrologerSaga() {
     actionTypes.UPDATE_ASTROLOGER_GALLERY_IMAGE,
     updateAstrologerGalleryImage
   );
-  yield takeLeading(
-    actionTypes.UPDATE_ASTROLOGER_ASTROLOGER_TYPE,
-    updateAstrologerAstrologerType
-  );
+  yield takeLeading( actionTypes.UPDATE_ASTROLOGER_ASTROLOGER_TYPE,  updateAstrologerAstrologerType  );
+  yield takeLeading( actionTypes.GET_TOP_ASTROLOGERS,  getTopAstrologers  );
+  yield takeLeading( actionTypes.DELETE_TOP_ASTROLOGER,  deleteTopAstrologers  );
+  yield takeLeading( actionTypes.ADD_TOP_ASTROLOGER,  addTopAstrologer  );
 
 }

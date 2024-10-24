@@ -46,9 +46,14 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
           updateStatus: false,
           updateChatStatus: false,
           updateCallStatus: false,
+          markAsTop: false,
           editAstrologer: false,
           viewAstrologer: false,
           deleteAstrologer: false,
+        },
+        topAstrologers: {
+          isPermited: false,
+          delete: false,
         },
       },
       customer: {
@@ -104,9 +109,7 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
           delete: false,
           add: false,
         },
-        addCourses: {
-          isPermited: false,
-        },
+        addCourses: false,
         demoClass: {
           isPermited: false,
           adminStatus: false,
@@ -130,6 +133,7 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
           mcqQuestions: false,
           add: false,
         },
+        mcqList: false,
       },
     },
   });
@@ -212,9 +216,14 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
             updateStatus: false,
             updateChatStatus: false,
             updateCallStatus: false,
+            markAsTop: false,
             editAstrologer: false,
             viewAstrologer: false,
             deleteAstrologer: false,
+          },
+          topAstrologers: {
+            isPermited: false,
+            delete: false,
           },
         },
         customer: {
@@ -266,9 +275,7 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
             delete: false,
             add: false,
           },
-          addCourses: {
-            isPermited: false
-          },
+          addCourses: false,
           demoClass: {
             isPermited: false,
             adminStatus: false,
@@ -291,7 +298,8 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
             classList: false,
             mcqQuestions: false,
             add: false,
-          },
+          }, 
+          mcqList: false,
         },
       },
     });
@@ -458,6 +466,7 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
                                   updateStatus: false,
                                   updateChatStatus: false,
                                   updateCallStatus: false,
+                                  markAsTop: false,
                                   editAstrologer: false,
                                   viewAstrologer: false,
                                   deleteAstrologer: false,
@@ -547,16 +556,14 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
                                   updateStatus: false,
                                   updateChatStatus: false,
                                   updateCallStatus: false,
+                                  markAsTop: false,
                                   editAstrologer: false,
                                   viewAstrologer: false,
                                   deleteAstrologer: false,
                                 }
                               );
                             } else {
-                              updatePermission(
-                                "permission.astrologer.listOfAstrologer.isPermited",
-                                true
-                              );
+                              updatePermission("permission.astrologer.listOfAstrologer.isPermited", true);
                             }
                           }}
                         />
@@ -682,6 +689,42 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
                   </div>
                   <div>
                     <FormControlLabel
+                      value={"Mark as top"}
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={
+                            !permission.astrologer.isPermited ||
+                            !permission.astrologer.listOfAstrologer.isPermited
+                          }
+                          checked={
+                            permission.astrologer.listOfAstrologer
+                              .markAsTop
+                          }
+                          onChange={() => {
+                            if (
+                              permission.astrologer.listOfAstrologer
+                                .markAsTop
+                            ) {
+                              updatePermission(
+                                "permission.astrologer.listOfAstrologer.markAsTop",
+                                false
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.astrologer.listOfAstrologer.markAsTop",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"Mark as top"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                  <div>
+                    <FormControlLabel
                       value={
                         permission.astrologer.listOfAstrologer.editAstrologer
                       }
@@ -792,6 +835,75 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
                     />
                   </div>
                 </FormGroup>
+                <FormGroup
+                  aria-label="position"
+                  row
+                  style={{ marginLeft: "10px", marginRight: "10px" }}
+                >
+                  <div className={classes.chips}>
+                    <FormControlLabel
+                      value={permission?.astrologer?.topAstrologers?.isPermited} // Optional chaining added here
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={!permission?.astrologer?.isPermited} // Optional chaining added here
+                          checked={permission?.astrologer?.topAstrologers?.isPermited} // Optional chaining added here
+                          onChange={() => {
+                            if (permission?.astrologer?.topAstrologers?.isPermited) { // Optional chaining added here
+                              updatePermission(
+                                "permission.astrologer.topAstrologers",
+                                {
+                                  isPermited: false,
+                                  delete: false,
+                                }
+                              );
+                            } else {
+                              updatePermission("permission.astrologer.topAstrologers.isPermited", true);
+                            }
+                          }}
+                        />
+                      }
+                      label={"Top Astrologers"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                </FormGroup>
+                <FormGroup
+                  aria-label="position"
+                  row
+                  style={{ marginLeft: "30px" }}
+                >
+                  <div>
+                    <FormControlLabel
+                      value={permission?.astrologer?.topAstrologers?.delete} // Optional chaining added here
+                      control={
+                        <Checkbox
+                          disabled={
+                            !permission?.astrologer?.isPermited || // Optional chaining added here
+                            !permission?.astrologer?.topAstrologers?.isPermited // Optional chaining added here
+                          }
+                          checked={permission?.astrologer?.topAstrologers?.delete} // Optional chaining added here
+                          onChange={() => {
+                            if (permission?.astrologer?.topAstrologers?.delete) { // Optional chaining added here
+                              updatePermission(
+                                "permission.astrologer.topAstrologers.delete",
+                                false
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.astrologer.topAstrologers.delete",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"Delete"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                </FormGroup>
+
 
                 {/* Customer Permisiions  */}
 
@@ -2089,47 +2201,39 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
 
                 {/* Add Courses */}
 
-                {/* <FormGroup
-                aria-label="position"
-                row
-                style={{ marginLeft: "10px", marginRight: "10px" }}
-              >
-                <div className={classes.chips}>
-                  <FormControlLabel
-                    value={permission.courses?.addCourses?.isPermited}
-                    className={classes.checkbox}
-                    control={
-                      <Checkbox
-                        disabled={!permission.courses?.isPermited}
-                        checked={
-                          permission.courses?.addCourses?.isPermited
-                        }
-                        onChange={() => {
-                          if (
-                            permission.courses?.addCourses?.isPermited
-                          ) {
-                            updatePermission(
-                              "permission.courses.addCourses",
-                              {
-                                isPermited: false,
-
-                              }
-                            );
-                          } else {
-                            updatePermission(
-                              "permission.courses.addCourses.isPermited",
-                              true
-                            );
-                          }
-                        }}
-                      />
-                    }
-                    label={"Add Courses"}
-                    labelPlacement="end"
-                  />
-                </div>
-              </FormGroup> */}
-
+                <FormGroup
+                  aria-label="position"
+                  row
+                  style={{ marginLeft: "10px", marginRight: "10px" }}
+                >
+                  <div className={classes.chips}>
+                    <FormControlLabel
+                      value={"Add Courses"}
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={!permission.courses.isPermited}
+                          checked={permission.courses.addCourses}
+                          onChange={() => {
+                            if (permission.courses.addCourses) {
+                              updatePermission(
+                                "permission.courses.addCourses",
+                                false
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.courses.addCourses",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"Add Courses"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                </FormGroup>
 
                 {/* Demo Class */}
                 <FormGroup
@@ -2761,6 +2865,42 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
                     />
                   </div>
                 </FormGroup>
+
+                {/* MCQ List */}
+                <FormGroup
+                  aria-label="position"
+                  row
+                  style={{ marginLeft: "10px", marginRight: "10px" }}
+                >
+                  <div className={classes.chips}>
+                    <FormControlLabel
+                      value={"MCQ Questions"}
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={!permission.courses.isPermited}
+                          checked={permission.courses.mcqList}
+                          onChange={() => {
+                            if (permission.courses.mcqList) {
+                              updatePermission(
+                                "permission.courses.mcqList",
+                                false
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.courses.mcqList",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"MCQ Questions"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                </FormGroup>
+
 
               </FormControl>
               {error.permission && (

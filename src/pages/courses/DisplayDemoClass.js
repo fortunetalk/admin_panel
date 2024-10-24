@@ -69,6 +69,7 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
   const handleOpen = (rowData) => {
 
     if (type === "subadmin" && !user.permissions.courses?.demoClass?.edit) {
+      alert('You do not have permission to edit.');
       return;
     }
 
@@ -99,6 +100,7 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
   const handleView = (rowData) => {
 
     if (type === "subadmin" && !user.permissions.courses?.demoClass?.view) {
+      alert('You do not have permission to view.');
       return;
     }
 
@@ -211,6 +213,7 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
   const handleAdminStatusChange = (rowData, newStatus) => {
 
     if (type === "subadmin" && !user.permissions.courses?.demoClass?.adminStatus) {
+      alert('You do not have permission to change Admin Status.');
       return;
     }
 
@@ -236,6 +239,7 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
 
   const handleClickOpen = (rowData) => {
     if (type === "subadmin" && !user.permissions.courses?.demoClass?.status) {
+      alert('You do not have permission to change status.');
       return;
     }
 
@@ -272,6 +276,7 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
   const handleClassStatusChange = (rowData, newStatus) => {
 
     if (type === "subadmin" && !user.permissions.courses?.demoClass?.classStatus) {
+      alert('You do not have permission to change class status.');
       return;
     }
 
@@ -480,6 +485,7 @@ const DisplayDemoClass = ({ dispatch, demoClassData, activeAstrologerData, activ
                     type === "subadmin" &&
                     !user.permissions.courses?.demoClass?.delete
                   ) {
+                    alert('You do not have permission to delete.');
                     return;
                   }
                   dispatch( DemoClassActions.deleteDemoClass({  demoClassId: rowData?._id, }) );

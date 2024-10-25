@@ -173,16 +173,18 @@ const routes = [
         path: "/history/demoClassHistory",
         name: "Demo Class History",
         icon: <BiAbacus />,
+        key: "demoClassHistory",
       },
-      {
-        path: "/history/liveClassHistory",
-        name: "Live Class History",
-        icon: <BiAbacus />,
-      },
+      // {
+      //   path: "/history/liveClassHistory",
+      //   name: "Live Class History",
+      //   icon: <BiAbacus />,
+      // },
       {
         path: "/history/liveCourseHistory",
         name: "Live Course History",
         icon: <BiAbacus />,
+        key: "liveCourseHistory",
       },
       // {
       //   path: "/registerLiveClassHistory",
@@ -348,11 +350,13 @@ const routes = [
         path: "/displayAstrologerTrainingBanner",
         name: "Astrologer Training Banner",
         icon: <BiAbacus />,
+         key:"displayAstrologerTrainingBanner"
       },
       {
         path: "/displayAstrologerBanner",
         name: "Astrologer Banner",
         icon: <BiAbacus />,
+         key:"displayAstrologerBanner"
       },
       {
         path: "/displayCourseBanner",
@@ -684,6 +688,18 @@ const SideBar = ({
                 );
               }
 
+              if (!user?.permissions?.courses?.demoClassHistory) {
+                subRoutes = subRoutes.filter(
+                  (subRoute) => subRoute.key !== "demoClassHistory"
+                );
+              }
+
+              if (!user?.permissions?.courses?.liveCourseHistory) {
+                subRoutes = subRoutes.filter(
+                  (subRoute) => subRoute.key !== "liveCourseHistory"
+                );
+              }
+
               // Update the main route with the filtered subRoutes
               const data = { ...item, subRoutes: subRoutes };
               newRoutes.push(data)
@@ -723,10 +739,14 @@ const SideBar = ({
           }
         }
         else if (item?.name === 'Blog Category') {
-
+          if (user?.permissions?.blogsCategory?.isPermited) {
+            newRoutes.push(item)
+          }
         }
         else if (item?.name === 'Blog') {
-
+          if (user?.permissions?.blogs?.isPermited) {
+            newRoutes.push(item)
+          }
         }
         else if (item?.name === 'Astrologer Offers') {
 
@@ -738,7 +758,28 @@ const SideBar = ({
 
         }
         else if (item?.name === 'Banner') {
+          if (user?.permissions?.banners?.isPermited) {
+            if (item?.subRoutes) {
+              let subRoutes = [...item?.subRoutes]; // Copy of subRoutes to modify
 
+              // Check 'ChatHistory' permission and remove 'ChatHistory' sub-route if not permitted
+              if (!user?.permissions?.banners?.astrologerTrainingbanners?.isPermited) {
+                subRoutes = subRoutes.filter(
+                  (subRoute) => subRoute.key !== "displayAstrologerTrainingBanner"
+                );
+              }
+
+              if (!user?.permissions?.banners?.astrologerbanners?.isPermited) {
+                subRoutes = subRoutes.filter(
+                  (subRoute) => subRoute.key !== "displayAstrologerBanner"
+                );
+              }
+
+              // Update the main route with the filtered subRoutes
+              const data = { ...item, subRoutes: subRoutes };
+              newRoutes.push(data)
+            }
+          }
         }
         else if (item?.name === 'Pages') {
 

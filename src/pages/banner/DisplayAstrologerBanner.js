@@ -20,7 +20,8 @@ import DialogContent from "@mui/material/DialogContent";
 import { connect } from "react-redux";
 import * as Actions from "../../redux/Actions/astrologerBannerActions.js";
 
-const DisplayAstrologerBanner = ({ dispatch, astrologerBannerData }) => {
+const DisplayAstrologerBanner = ({ dispatch, astrologerBannerData, adminData}) => {
+  const { user, type } = adminData || {};
   const classes = useStyles();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -36,6 +37,13 @@ const DisplayAstrologerBanner = ({ dispatch, astrologerBannerData }) => {
 
   // Open modal with specific row data
   const handleOpen = (rowData) => {
+
+    if (type === "subadmin" && !user.permissions.banners?.astrologerbanners?.status) {
+      alert('You do not have permission to change status.');
+      return;
+    }
+
+
     setOpen(true);
     setBannerId(rowData._id);
     setStatus(rowData.status);
@@ -162,10 +170,18 @@ const DisplayAstrologerBanner = ({ dispatch, astrologerBannerData }) => {
               {
                 icon: "delete",
                 tooltip: "Delete Banner",
-                onClick: (event, rowData) =>
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.banners?.astrologerbanners?.delete
+                  ) {
+                    alert('You do not have permission to delete.');
+                    return;
+                  }
                   dispatch(
                     Actions.deleteAstrologerBanner({ bannerId: rowData._id })
-                  ),
+                  );
+                },
               },
               {
                 icon: () => (
@@ -176,7 +192,16 @@ const DisplayAstrologerBanner = ({ dispatch, astrologerBannerData }) => {
                 ),
                 tooltip: "Add Astrologer Banner",
                 isFreeAction: true,
-                onClick: () => navigate("/addAstrologerBanner"),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.banners?.astrologerbanners?.add
+                  ) {
+                    alert('You do not have permission to add.');
+                    return;
+                  }
+                  navigate("/addAstrologerBanner");
+                },
               },
             ]}
           />
@@ -275,6 +300,7 @@ const DisplayAstrologerBanner = ({ dispatch, astrologerBannerData }) => {
 
 const mapStateToProps = (state) => ({
   astrologerBannerData: state.astrologerBanner.astrologerBannerData,
+  adminData: state.admin.adminData,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

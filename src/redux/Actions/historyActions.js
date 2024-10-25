@@ -135,6 +135,14 @@ export const setDownloadCallHistory = payload =>({
     type: actionTypes.SET_DOWNLOAD_CALL_HISTORY,
     payload
 })
+export const getDownloadRechargeHistory = payload =>({
+    type: actionTypes.GET_DOWNLOAD_RECHARGE_HISTORY,
+    payload
+})
+export const setDownloadRechargeHistory = payload =>({
+    type: actionTypes.SET_DOWNLOAD_RECHARGE_HISTORY,
+    payload
+})
 
 export const updateAdminChatReview = payload =>({
     type: actionTypes.UPDATE_ADMIN_CHAT_REVIEW, 

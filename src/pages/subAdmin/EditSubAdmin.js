@@ -135,6 +135,52 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
           add: false,
         },
         mcqList: false,
+        demoClassHistory: {
+          isPermited: false,
+          status: false,
+          view: false,
+          delete: false,
+        },
+        liveCourseHistory: {
+          isPermited: false,
+          status: false,
+          view: false,
+          delete: false,
+        },
+       
+      },
+      blogs: {
+        isPermited: false,
+        viewBlogs: {
+          isPermited: false,
+          edit: false,
+          delete: false,
+          add: false,
+          status: false,
+        },
+      },
+      blogsCategory: {
+        isPermited: false,
+        edit: false,
+        delete: false,
+        add: false,
+      },
+      banners: {
+        isPermited: false,
+        astrologerTrainingbanners: {
+          isPermited: false,
+          status: false,
+          edit: false,
+          delete: false,
+          add: false,
+        },
+        astrologerbanners: {
+          isPermited: false,
+          status: false,
+          edit: false,
+          delete: false,
+          add: false,
+        },
       },
     },
   });
@@ -1541,7 +1587,7 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
 
 
               {/* Demo Classes*/}
-              
+
               <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
                 <div className={classes.chips}>
                   <FormControlLabel
@@ -2022,6 +2068,772 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                     labelPlacement="end"
                   />
                 </div>
+              </FormGroup>
+
+              {/* Demo Class History*/}
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={!permission?.courses?.isPermited}
+                        checked={permission?.courses?.demoClassHistory?.isPermited}
+                        onChange={() => {
+                          if (permission?.courses?.demoClassHistory?.isPermited) {
+                            updatePermission("permission.courses.demoClassHistory", {
+                              isPermited: false,
+                              status: false,
+                              view: false,
+                              delete: false,
+                            });
+                          } else {
+                            updatePermission("permission.courses.demoClassHistory.isPermited", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Demo Class History"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.courses?.isPermited ||
+                          !permission?.courses?.demoClassHistory?.isPermited
+                        }
+                        checked={permission?.courses?.demoClassHistory?.status}
+                        onChange={() => {
+                          if (permission?.courses?.demoClassHistory?.status) {
+                            updatePermission("permission.courses.demoClassHistory.status", false);
+                          } else {
+                            updatePermission("permission.courses.demoClassHistory.status", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.courses?.isPermited ||
+                          !permission?.courses?.demoClassHistory?.isPermited
+                        }
+                        checked={permission?.courses?.demoClassHistory?.view}
+                        onChange={() => {
+                          if (permission?.courses?.demoClassHistory?.view) {
+                            updatePermission("permission.courses.demoClassHistory.view", false);
+                          } else {
+                            updatePermission("permission.courses.demoClassHistory.view", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"View"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.courses?.isPermited ||
+                          !permission?.courses?.demoClassHistory?.isPermited
+                        }
+                        checked={permission?.courses?.demoClassHistory?.delete}
+                        onChange={() => {
+                          if (permission?.courses?.demoClassHistory?.delete) {
+                            updatePermission("permission.courses.demoClassHistory.delete", false);
+                          } else {
+                            updatePermission("permission.courses.demoClassHistory.delete", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+              </FormGroup>
+
+              {/* Live Class History*/}
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={!permission?.courses?.isPermited}
+                        checked={permission?.courses?.liveCourseHistory?.isPermited}
+                        onChange={() => {
+                          if (permission?.courses?.liveCourseHistory?.isPermited) {
+                            updatePermission("permission.courses.liveCourseHistory", {
+                              isPermited: false,
+                              status: false,
+                              view: false,
+                              delete: false,
+                            });
+                          } else {
+                            updatePermission("permission.courses.liveCourseHistory.isPermited", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Live Class History"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              {/* <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.courses?.isPermited ||
+                          !permission?.courses?.liveCourseHistory?.isPermited
+                        }
+                        checked={permission?.courses?.liveCourseHistory?.status}
+                        onChange={() => {
+                          if (permission?.courses?.liveCourseHistory?.status) {
+                            updatePermission("permission.courses.liveCourseHistory.status", false);
+                          } else {
+                            updatePermission("permission.courses.liveCourseHistory.status", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.courses?.isPermited ||
+                          !permission?.courses?.liveCourseHistory?.isPermited
+                        }
+                        checked={permission?.courses?.liveCourseHistory?.view}
+                        onChange={() => {
+                          if (permission?.courses?.liveCourseHistory?.view) {
+                            updatePermission("permission.courses.liveCourseHistory.view", false);
+                          } else {
+                            updatePermission("permission.courses.liveCourseHistory.view", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"View"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.courses?.isPermited ||
+                          !permission?.courses?.liveCourseHistory?.isPermited
+                        }
+                        checked={permission?.courses?.liveCourseHistory?.delete}
+                        onChange={() => {
+                          if (permission?.courses?.liveCourseHistory?.delete) {
+                            updatePermission("permission.courses.liveCourseHistory.delete", false);
+                          } else {
+                            updatePermission("permission.courses.liveCourseHistory.delete", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+              </FormGroup> */}
+
+              {/* Blogs*/}
+
+              <FormGroup aria-label="position" row>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={permission?.blogs?.isPermited}
+                        onChange={() => {
+                          if (permission?.blogs?.isPermited) {
+                            updatePermission("permission.blogs", {
+                              isPermited: false,
+                              viewBlogs: {
+                                isPermited: false,
+                                edit: false,
+                                delete: false,
+                                add: false,
+                                status: false,
+                              },
+                            });
+                          } else {
+                            updatePermission("permission.blogs.isPermited", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                          color: "#10395D",
+                          fontSize: "14px",
+                        }}
+                      >
+                        Blogs
+                      </span>
+                    }
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={!permission?.blogs?.isPermited}
+                        checked={permission?.blogs?.viewBlogs?.isPermited}
+                        onChange={() => {
+                          if (permission?.blogs?.viewBlogs?.isPermited) {
+                            updatePermission("permission.blogs.viewBlogs", {
+                              isPermited: false,
+                              edit: false,
+                              delete: false,
+                              add: false,
+                            });
+                          } else {
+                            updatePermission("permission.blogs.viewBlogs.isPermited", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"View Blogs"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.blogs?.isPermited ||
+                          !permission?.blogs?.viewBlogs?.isPermited
+                        }
+                        checked={permission?.blogs?.viewBlogs?.edit}
+                        onChange={() => {
+                          if (permission?.blogs?.viewBlogs?.edit) {
+                            updatePermission("permission.blogs.viewBlogs.edit", false);
+                          } else {
+                            updatePermission("permission.blogs.viewBlogs.edit", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Edit"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.blogs?.isPermited ||
+                          !permission?.blogs?.viewBlogs?.isPermited
+                        }
+                        checked={permission?.blogs?.viewBlogs?.delete}
+                        onChange={() => {
+                          if (permission?.blogs?.viewBlogs?.delete) {
+                            updatePermission("permission.blogs.viewBlogs.delete", false);
+                          } else {
+                            updatePermission("permission.blogs.viewBlogs.delete", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.blogs?.isPermited ||
+                          !permission?.blogs?.viewBlogs?.isPermited
+                        }
+                        checked={permission?.blogs?.viewBlogs?.add}
+                        onChange={() => {
+                          if (permission?.blogs?.viewBlogs?.add) {
+                            updatePermission("permission.blogs.viewBlogs.add", false);
+                          } else {
+                            updatePermission("permission.blogs.viewBlogs.add", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Add"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.blogs?.isPermited ||
+                          !permission?.blogs?.viewBlogs?.isPermited
+                        }
+                        checked={permission?.blogs?.viewBlogs?.status}
+                        onChange={() => {
+                          if (permission?.blogs?.viewBlogs?.status) {
+                            updatePermission("permission.blogs.viewBlogs.status", false);
+                          } else {
+                            updatePermission("permission.blogs.viewBlogs.status", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+              </FormGroup>
+
+              {/* Blogs Category */}
+
+              <FormGroup aria-label="position" row>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={permission?.blogsCategory?.isPermited}
+                        onChange={() => {
+                          if (permission?.blogsCategory?.isPermited) {
+                            updatePermission("permission.blogsCategory", {
+                              isPermited: false,
+                              edit: false,
+                              delete: false,
+                              add: false,
+                            });
+                          } else {
+                            updatePermission("permission.blogsCategory.isPermited", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                          color: "#10395D",
+                          fontSize: "14px",
+                        }}
+                      >
+                        Blogs Category
+                      </span>
+                    }
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.blogsCategory?.isPermited ||
+                          !permission?.blogsCategory?.isPermited
+                        }
+                        checked={permission?.blogsCategory?.edit}
+                        onChange={() => {
+                          if (permission?.blogsCategory?.edit) {
+                            updatePermission("permission.blogsCategory.edit", false);
+                          } else {
+                            updatePermission("permission.blogsCategory.edit", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Edit"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.blogsCategory?.isPermited ||
+                          !permission?.blogsCategory?.isPermited
+                        }
+                        checked={permission?.blogsCategory?.delete}
+                        onChange={() => {
+                          if (permission?.blogsCategory?.delete) {
+                            updatePermission("permission.blogsCategory.delete", false);
+                          } else {
+                            updatePermission("permission.blogsCategory.delete", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.blogsCategory?.isPermited ||
+                          !permission?.blogsCategory?.isPermited
+                        }
+                        checked={permission?.blogsCategory?.add}
+                        onChange={() => {
+                          if (permission?.blogsCategory?.add) {
+                            updatePermission("permission.blogsCategory.add", false);
+                          } else {
+                            updatePermission("permission.blogsCategory.add", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Add"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                
+
+              </FormGroup>
+
+               {/* --- Banner --- */}
+
+               <FormGroup aria-label="position" row>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={permission?.banners?.isPermited}
+                        onChange={() => {
+                          if (permission?.banners?.isPermited) {
+                            updatePermission("permission.banners", {
+                              isPermited: false,
+                              astrologerTrainingbanners: {
+                                isPermited: false,
+                                status: false,
+                                edit: false,
+                                delete: false,
+                                add: false,
+                              },
+                            });
+                          } else {
+                            updatePermission("permission.banners.isPermited", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                          color: "#10395D",
+                          fontSize: "14px",
+                        }}
+                      >
+                        Banners
+                      </span>
+                    }
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              {/* --- Astrologer Training Banner --- */}
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={!permission?.banners?.isPermited}
+                        checked={permission?.banners?.astrologerTrainingbanners?.isPermited}
+                        onChange={() => {
+                          if (permission?.banners?.astrologerTrainingbanners?.isPermited) {
+                            updatePermission("permission.banners.astrologerTrainingbanners", {
+                              isPermited: false,
+                              status: false,
+                              edit: false,
+                              delete: false,
+                              add: false,
+                            });
+                          } else {
+                            updatePermission("permission.banners.astrologerTrainingbanners.isPermited", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Astrologer Training Banners"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.banners?.isPermited ||
+                          !permission?.banners?.astrologerTrainingbanners?.isPermited
+                        }
+                        checked={permission?.banners?.astrologerTrainingbanners?.status}
+                        onChange={() => {
+                          if (permission?.banners?.astrologerTrainingbanners?.status) {
+                            updatePermission("permission.banners.astrologerTrainingbanners.status", false);
+                          } else {
+                            updatePermission("permission.banners.astrologerTrainingbanners.status", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.banners?.isPermited ||
+                          !permission?.banners?.astrologerTrainingbanners?.isPermited
+                        }
+                        checked={permission?.banners?.astrologerTrainingbanners?.edit}
+                        onChange={() => {
+                          if (permission?.banners?.astrologerTrainingbanners?.edit) {
+                            updatePermission("permission.banners.astrologerTrainingbanners.edit", false);
+                          } else {
+                            updatePermission("permission.banners.astrologerTrainingbanners.edit", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Edit"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.banners?.isPermited ||
+                          !permission?.banners?.astrologerTrainingbanners?.isPermited
+                        }
+                        checked={permission?.banners?.astrologerTrainingbanners?.delete}
+                        onChange={() => {
+                          if (permission?.banners?.astrologerTrainingbanners?.delete) {
+                            updatePermission("permission.banners.astrologerTrainingbanners.delete", false);
+                          } else {
+                            updatePermission("permission.banners.astrologerTrainingbanners.delete", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.banners?.isPermited ||
+                          !permission?.banners?.astrologerTrainingbanners?.isPermited
+                        }
+                        checked={permission?.banners?.astrologerTrainingbanners?.add}
+                        onChange={() => {
+                          if (permission?.banners?.astrologerTrainingbanners?.add) {
+                            updatePermission("permission.banners.astrologerTrainingbanners.add", false);
+                          } else {
+                            updatePermission("permission.banners.astrologerTrainingbanners.add", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Add"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+              </FormGroup>
+
+              {/* --- Astrologer  Banner --- */}
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={!permission?.banners?.isPermited}
+                        checked={permission?.banners?.astrologerbanners?.isPermited}
+                        onChange={() => {
+                          if (permission?.banners?.astrologerbanners?.isPermited) {
+                            updatePermission("permission.banners.astrologerbanners", {
+                              isPermited: false,
+                              status: false,
+                              edit: false,
+                              delete: false,
+                              add: false,
+                            });
+                          } else {
+                            updatePermission("permission.banners.astrologerbanners.isPermited", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Astrologer Banners"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.banners?.isPermited ||
+                          !permission?.banners?.astrologerbanners?.isPermited
+                        }
+                        checked={permission?.banners?.astrologerbanners?.status}
+                        onChange={() => {
+                          if (permission?.banners?.astrologerbanners?.status) {
+                            updatePermission("permission.banners.astrologerbanners.status", false);
+                          } else {
+                            updatePermission("permission.banners.astrologerbanners.status", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.banners?.isPermited ||
+                          !permission?.banners?.astrologerbanners?.isPermited
+                        }
+                        checked={permission?.banners?.astrologerbanners?.edit}
+                        onChange={() => {
+                          if (permission?.banners?.astrologerbanners?.edit) {
+                            updatePermission("permission.banners.astrologerbanners.edit", false);
+                          } else {
+                            updatePermission("permission.banners.astrologerbanners.edit", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Edit"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.banners?.isPermited ||
+                          !permission?.banners?.astrologerbanners?.isPermited
+                        }
+                        checked={permission?.banners?.astrologerbanners?.delete}
+                        onChange={() => {
+                          if (permission?.banners?.astrologerbanners?.delete) {
+                            updatePermission("permission.banners.astrologerbanners.delete", false);
+                          } else {
+                            updatePermission("permission.banners.astrologerbanners.delete", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.banners?.isPermited ||
+                          !permission?.banners?.astrologerbanners?.isPermited
+                        }
+                        checked={permission?.banners?.astrologerbanners?.add}
+                        onChange={() => {
+                          if (permission?.banners?.astrologerbanners?.add) {
+                            updatePermission("permission.banners.astrologerbanners.add", false);
+                          } else {
+                            updatePermission("permission.banners.astrologerbanners.add", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Add"}
+                    labelPlacement="end"
+                  />
+                </div>
+
               </FormGroup>
 
             </FormControl>

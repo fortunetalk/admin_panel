@@ -12,7 +12,8 @@ import Swal from "sweetalert2";
 import { connect, useDispatch } from "react-redux";
 import { getBlogCategory, updateBlogCategory, deleteBlogCategory } from "../../redux/Actions/blogCategoryActions.js";
 
-const DisplayBlogCategory = ({ appBlogCategoryData }) => {
+const DisplayBlogCategory = ({ appBlogCategoryData, adminData }) => {
+  const { user, type } = adminData || {};
   const dispatch = useDispatch();
   const classes = useStyles();
   const navigate = useNavigate();
@@ -28,6 +29,12 @@ const DisplayBlogCategory = ({ appBlogCategoryData }) => {
   }, []);
 
   const handleOpen = (rowData) => {
+
+    if (type === "subadmin" && !user.permissions.blogsCategory?.edit) {
+      alert('You do not have permission to edit.');
+      return;
+    }
+
     setOpen(true);
     setSelectedCategory({
       _id: rowData._id,
@@ -63,6 +70,10 @@ const DisplayBlogCategory = ({ appBlogCategoryData }) => {
   };
 
   const handleDelete = (blogCategoryId) => {
+    if (type === "subadmin" && !user.permissions.blogsCategory?.delete) {
+      alert('You do not have permission to delete.');
+      return;
+    }
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -128,7 +139,16 @@ const DisplayBlogCategory = ({ appBlogCategoryData }) => {
                   ),
                   tooltip: 'Add Blog Category',
                   isFreeAction: true,
-                  onClick: () => navigate("/addBlogCategory")
+                  onClick: (event, rowData) => {
+                    if (
+                      type === "subadmin" &&
+                      !user.permissions.blogsCategory?.add
+                    ) {
+                      alert('You do not have permission to add.');
+                      return;
+                    }
+                    navigate("/addBlogCategory");
+                  },
                 }
               ]}
           />
@@ -194,6 +214,7 @@ const DisplayBlogCategory = ({ appBlogCategoryData }) => {
 
 const mapStateToProps = (state) => ({
   appBlogCategoryData: state.blogCategory?.appBlogCategoryData,
+  adminData: state.admin.adminData,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

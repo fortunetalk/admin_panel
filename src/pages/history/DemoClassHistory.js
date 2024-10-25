@@ -12,9 +12,9 @@ import { connect } from "react-redux";
 import moment from "moment/moment.js";
 import { formatTimeFromDateString } from "../../utils/services.js";
 
-const DemoClassHistory = ({ dispatch, demoClassHistoryData }) => {
+const DemoClassHistory = ({ dispatch, demoClassHistoryData, adminData }) => {
   const classes = useStyles();
-
+  const { user, type } = adminData || {};
   const [viewData, setViewData] = useState(false);
   const [demoClassId, setDemoClassId] = useState("");
   const [courseId, setcourseId] = useState("");
@@ -42,6 +42,12 @@ const DemoClassHistory = ({ dispatch, demoClassHistoryData }) => {
   }, []);
 
   const handleView = (rowData) => {
+
+    if (type === "subadmin" && !user.permissions.courses?.demoClassHistory?.view) {
+      alert('You do not have permission to view.');
+      return;
+    }
+
     const date = new Date(rowData?.time);
     const hours = date.getUTCHours().toString().padStart(2, '0');  // Get UTC hours and pad with 0 if needed
     const minutes = date.getUTCMinutes().toString().padStart(2, '0');  // Get UTC minutes and pad with 0 if needed
@@ -78,6 +84,11 @@ const DemoClassHistory = ({ dispatch, demoClassHistoryData }) => {
   };
 
   const handleClickOpen = (rowData) => {
+
+    if (type === "subadmin" && !user.permissions.courses?.demoClassHistory?.status) {
+      alert('You do not have permission to change status.');
+      return;
+    }
 
     Swal.fire({
       title: 'Are you sure to Change the Status?',
@@ -191,12 +202,16 @@ const DemoClassHistory = ({ dispatch, demoClassHistoryData }) => {
               {
                 icon: "delete",
                 tooltip: "Delete Gift",
-                onClick: (event, rowData) =>
-                  dispatch(
-                    HistoryActions.deleteDemoClassHistory({
-                      id: rowData?._id,
-                    })
-                  ),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.courses?.demoClassHistory?.delete
+                  ) {
+                    alert('You do not have permission to delete.');
+                    return;
+                  }
+                  dispatch( HistoryActions.deleteDemoClassHistory({ id: rowData?._id, }) );
+                },
               },
             ]}
           />
@@ -441,6 +456,7 @@ const DemoClassHistory = ({ dispatch, demoClassHistoryData }) => {
 
 const mapStateToProps = (state) => ({
   demoClassHistoryData: state.history.demoClassHistoryData,
+  adminData: state.admin.adminData,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

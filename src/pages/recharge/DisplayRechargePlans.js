@@ -150,7 +150,7 @@ const DisplayRechargePlan = ({ dispatch, rechargeHistoryData, adminData }) => {
                   });
               })
             }
-            options={{ ...propStyles.tableStyles, paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100], filtering: true }}
+            options={{ ...propStyles.tableStyles, paging: true, pageSize: 10, pageSizeOptions: [10, 20, 50, 100, 500, 1000], filtering: true }}
             actions={[
               {
                 icon: "delete",

@@ -30,15 +30,8 @@ import { getBlogCategory } from "../../redux/Actions/blogCategoryActions.js";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-const DisplayAstroblog = ({
-  appBlogData,
-  getBlogs,
-  updateBlog,
-  deleteMultipleBlog,
-  updateBlogStatus,
-  appBlogCategoryData,
-  getBlogCategory
-}) => {
+const DisplayAstroblog = ({  appBlogData,  getBlogs, updateBlog, deleteMultipleBlog,  updateBlogStatus,  appBlogCategoryData,  getBlogCategory, adminData}) => {
+  const { user, type } = adminData || {};
   console.log(appBlogCategoryData)
   const classes = useStyles();
   const navigate = useNavigate();
@@ -76,6 +69,10 @@ const DisplayAstroblog = ({
   }, [dispatch,]);
 
   const handleOpen = (rowData) => {
+    if (type === "subadmin" && !user.permissions.blogs?.viewBlogs?.edit) {
+      alert('You do not have permission to edit.');
+      return;
+    }
     setOpen(true);
     setBlogData({
       _id: rowData?._id,
@@ -166,6 +163,10 @@ const DisplayAstroblog = ({
   };
 
   const handleClickOpen = (rowData) => {
+    if (type === "subadmin" && !user.permissions.courses?.demoClass?.status) {
+      alert('You do not have permission to change status.');
+      return;
+    }
     Swal.fire({
       title: 'Are you sure to Change the Status?',
       text: "You won't be able to revert this!",
@@ -231,12 +232,16 @@ const DisplayAstroblog = ({
               {
                 icon: "delete",
                 tooltip: "Delete Blog",
-                onClick: (event, rowData) =>
-                  dispatch(
-                    deleteBlog({
-                      blogId: rowData?._id,
-                    })
-                  ),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.blogs?.viewBlogs?.delete
+                  ) {
+                    alert('You do not have permission to delete.');
+                    return;
+                  }
+                  dispatch( deleteBlog({  blogId: rowData?._id,  })  );
+                },
               },
               {
                 icon: () => (
@@ -247,7 +252,17 @@ const DisplayAstroblog = ({
                 ),
                 tooltip: "Add Blog",
                 isFreeAction: true,
-                onClick: () => navigate("/AddAstroblog"),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.blogs?.viewBlogs?.add
+                  ) {
+                    alert('You do not have permission to add.');
+                    return;
+                  }
+                  navigate("/AddAstroblog");
+                },
+                
               },
             ]}
           />
@@ -448,7 +463,8 @@ const DisplayAstroblog = ({
 
 const mapStateToProps = (state) => ({
   appBlogData: state.blog?.appBlogData,
-  appBlogCategoryData: state.blogCategory?.appBlogCategoryData
+  appBlogCategoryData: state.blogCategory?.appBlogCategoryData,
+  adminData: state.admin.adminData,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -458,6 +474,7 @@ const mapDispatchToProps = (dispatch) => ({
   deleteMultipleBlog: (ids) => dispatch(deleteMultipleBlog(ids)),
   updateBlogStatus: (statusData) => dispatch(updateBlogStatus(statusData)),
   getBlogCategory: () => dispatch(getBlogCategory()),
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DisplayAstroblog);

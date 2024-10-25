@@ -134,7 +134,33 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
         add: false,
       },
       mcqList: false,
-      
+      demoClassHistory: {
+        isPermited: false,
+        status: false,
+        view: false,
+        delete: false,
+      },
+
+    },
+    blogs: {
+      isPermited: false,
+      viewBlogs: {
+        isPermited: false,
+        edit: false,
+        delete: false,
+        add: false,
+        status: false,
+      },
+    },
+    banners: {
+      isPermited: false,
+      astrologerTrainingbanners: {
+        isPermited: false,
+        status: false,
+        edit: false,
+        delete: false,
+        add: false,
+      },
     },
   };
 
@@ -208,7 +234,7 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
                 Permissions
               </FormLabel>
 
-                {/* Astrologers  */}
+              {/* Astrologers  */}
 
               <FormGroup aria-label="position" row>
                 <div className={classes.chips}>
@@ -427,7 +453,7 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
                     labelPlacement="end"
                   />
                 </div>
-            
+
               </FormGroup>
 
               {/* Customer  */}
@@ -530,7 +556,7 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
                     labelPlacement="end"
                   />
                 </div>
-               
+
                 <div>
                   <FormControlLabel
                     value={permissions?.customer?.listOfCustomer?.editCustomer}
@@ -637,7 +663,7 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
                     labelPlacement="end"
                   />
                 </div>
-               
+
                 <div>
                   <FormControlLabel
                     value={permissions?.customer?.chatHistory?.delete}
@@ -728,7 +754,7 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
                     labelPlacement="end"
                   />
                 </div>
-               
+
                 <div>
                   <FormControlLabel
                     value={permissions?.customer?.callHistory?.delete}
@@ -804,7 +830,7 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
               </FormGroup>
 
               <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
-               
+
                 <div>
                   <FormControlLabel
                     value={permissions?.customer?.rechargeHistory?.addRecharge}
@@ -862,7 +888,7 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
                 </div>
               </FormGroup>
 
-               {/* Call Discussion */}
+              {/* Call Discussion */}
 
               <FormGroup aria-label="position" row>
                 <div className={classes.chips}>
@@ -966,7 +992,7 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
 
               </FormGroup>
 
-               {/* Courses List */}
+              {/* Courses List */}
 
               <FormGroup aria-label="position" row>
                 <div className={classes.chips}>
@@ -1086,9 +1112,9 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
 
               </FormGroup>
 
-             {/* Add Courses */}
+              {/* Add Courses */}
 
-             <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
                 <div className={classes.chips}>
                   <FormControlLabel
                     value={"Add Courses"}
@@ -1106,7 +1132,7 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
               </FormGroup>
 
 
-               {/* Demo Class */}
+              {/* Demo Class */}
 
               <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
                 <div className={classes.chips}>
@@ -1250,7 +1276,7 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
 
               </FormGroup>
 
-               {/* Live Class */}
+              {/* Live Class */}
 
               <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
                 <div className={classes.chips}>
@@ -1466,6 +1492,543 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
                   />
                 </div>
               </FormGroup>
+
+              {/* Demo Class History */}
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permissions?.courses?.demoClassHistory?.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={!permissions?.courses?.isPermited}
+                        checked={permissions?.courses?.demoClassHistory?.isPermited}
+                      />
+                    }
+                    label={"Demo Class History"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+
+                <div>
+                  <FormControlLabel
+                    value={permissions?.courses?.demoClassHistory?.status}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.demoClassHistory?.isPermited
+                        }
+                        checked={permissions?.courses?.demoClassHistory?.status}
+                      />
+                    }
+                    label={"Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={permissions?.courses?.demoClassHistory?.view}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.demoClassHistory?.isPermited
+                        }
+                        checked={permissions?.courses?.demoClassHistory?.view}
+                      />
+                    }
+                    label={"View"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={permissions?.courses?.demoClassHistory?.delete}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.demoClassHistory?.isPermited
+                        }
+                        checked={permissions?.courses?.demoClassHistory?.delete}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+              </FormGroup>
+
+              {/* Live Class History */}
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permissions?.courses?.liveCourseHistory?.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={!permissions?.courses?.isPermited}
+                        checked={permissions?.courses?.liveCourseHistory?.isPermited}
+                      />
+                    }
+                    label={"Live Class History"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              {/* <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+
+                <div>
+                  <FormControlLabel
+                    value={permissions?.courses?.liveCourseHistory?.status}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.liveCourseHistory?.isPermited
+                        }
+                        checked={permissions?.courses?.liveCourseHistory?.status}
+                      />
+                    }
+                    label={"Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={permissions?.courses?.liveCourseHistory?.view}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.liveCourseHistory?.isPermited
+                        }
+                        checked={permissions?.courses?.liveCourseHistory?.view}
+                      />
+                    }
+                    label={"View"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={permissions?.courses?.liveCourseHistory?.delete}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.courses?.isPermited ||
+                          !permissions?.courses?.liveCourseHistory?.isPermited
+                        }
+                        checked={permissions?.courses?.liveCourseHistory?.delete}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+              </FormGroup> */}
+
+
+              {/* Blogs */}
+
+              <FormGroup aria-label="position" row>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permissions?.blogs?.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        checked={permissions?.blogs?.isPermited}
+                        disabled
+                      />
+                    }
+                    label={
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                          color: "#10395D",
+                          fontWeight: "600",
+                          fontSize: "14px",
+                        }}
+                      >
+                       Blogs
+                      </span>
+                    }
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permissions?.blogs?.viewBlogs?.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={!permissions?.blogs?.isPermited}
+                        checked={permissions?.blogs?.viewBlogs?.isPermited}
+                      />
+                    }
+                    label={" View Blogs"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+
+                <div>
+                  <FormControlLabel
+                    value={permissions?.blogs?.viewBlogs?.edit}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.blogs?.isPermited ||
+                          !permissions?.blogs?.viewBlogs?.isPermited
+                        }
+                        checked={permissions?.blogs?.viewBlogs?.edit}
+                      />
+                    }
+                    label={"Edit"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"Delete"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.blogs?.isPermited ||
+                          !permissions?.blogs?.viewBlogs?.isPermited
+                        }
+                        checked={permissions?.blogs?.viewBlogs?.delete}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"Add"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.blogs?.isPermited ||
+                          !permissions?.blogs?.viewBlogs?.isPermited
+                        }
+                        checked={permissions?.blogs?.viewBlogs?.add}
+                      />
+                    }
+                    label={"Add"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    value={"Add"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.blogs?.isPermited ||
+                          !permissions?.blogs?.viewBlogs?.isPermited
+                        }
+                        checked={permissions?.blogs?.viewBlogs?.status}
+                      />
+                    }
+                    label={"Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+              </FormGroup>
+
+              {/* Blogs Category */}
+
+              <FormGroup aria-label="position" row>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permissions?.blogsCategory?.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        checked={permissions?.blogsCategory?.isPermited}
+                        disabled
+                      />
+                    }
+                    label={
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                          color: "#10395D",
+                          fontWeight: "600",
+                          fontSize: "14px",
+                        }}
+                      >
+                       Blogs Category
+                      </span>
+                    }
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+
+                <div>
+                  <FormControlLabel
+                    value={permissions?.blogsCategory?.edit}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.blogsCategory?.isPermited ||
+                          !permissions?.blogsCategory?.isPermited
+                        }
+                        checked={permissions?.blogsCategory?.edit}
+                      />
+                    }
+                    label={"Edit"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    value={permissions?.blogsCategory?.delete}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.blogsCategory?.isPermited ||
+                          !permissions?.blogsCategory?.isPermited
+                        }
+                        checked={permissions?.blogsCategory?.delete}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    value={permissions?.blogsCategory?.add}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.blogsCategory?.isPermited ||
+                          !permissions?.blogsCategory?.isPermited
+                        }
+                        checked={permissions?.blogsCategory?.add}
+                      />
+                    }
+                    label={"Add"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+
+              </FormGroup>
+
+              {/* --- Banners ---- */}
+
+              <FormGroup aria-label="position" row>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permissions?.banners?.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        checked={permissions?.banners?.isPermited}
+                        disabled
+                      />
+                    }
+                    label={
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                          color: "#10395D",
+                          fontWeight: "600",
+                          fontSize: "14px",
+                        }}
+                      >
+                        Banners
+                      </span>
+                    }
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              {/* Astrologer Training banners */}
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permissions?.banners?.astrologerTrainingbanners?.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={!permissions?.banners?.isPermited}
+                        checked={permissions?.banners?.astrologerTrainingbanners?.isPermited}
+                      />
+                    }
+                    label={"Astrologer Training Banners"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+
+                <div>
+                  <FormControlLabel
+                    value={permissions?.banners?.astrologerTrainingbanners?.edit}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.banners?.isPermited ||
+                          !permissions?.banners?.astrologerTrainingbanners?.isPermited
+                        }
+                        checked={permissions?.banners?.astrologerTrainingbanners?.edit}
+                      />
+                    }
+                    label={"Edit"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"Delete"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.banners?.isPermited ||
+                          !permissions?.banners?.astrologerTrainingbanners?.isPermited
+                        }
+                        checked={permissions?.banners?.astrologerTrainingbanners?.delete}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"Add"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.banners?.isPermited ||
+                          !permissions?.banners?.astrologerTrainingbanners?.isPermited
+                        }
+                        checked={permissions?.banners?.astrologerTrainingbanners?.add}
+                      />
+                    }
+                    label={"Add"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+              </FormGroup>
+
+              {/* Astrologer  banners */}
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permissions?.banners?.astrologerbanners?.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={!permissions?.banners?.isPermited}
+                        checked={permissions?.banners?.astrologerbanners?.isPermited}
+                      />
+                    }
+                    label={"Astrologer Banners"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+
+                <div>
+                  <FormControlLabel
+                    value={permissions?.banners?.astrologerbanners?.edit}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.banners?.isPermited ||
+                          !permissions?.banners?.astrologerbanners?.isPermited
+                        }
+                        checked={permissions?.banners?.astrologerbanners?.edit}
+                      />
+                    }
+                    label={"Edit"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"Delete"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.banners?.isPermited ||
+                          !permissions?.banners?.astrologerbanners?.isPermited
+                        }
+                        checked={permissions?.banners?.astrologerbanners?.delete}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"Add"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.banners?.isPermited ||
+                          !permissions?.banners?.astrologerbanners?.isPermited
+                        }
+                        checked={permissions?.banners?.astrologerbanners?.add}
+                      />
+                    }
+                    label={"Add"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+              </FormGroup>
+
 
 
             </FormControl>

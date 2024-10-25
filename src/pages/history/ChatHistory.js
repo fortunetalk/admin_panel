@@ -40,7 +40,7 @@ const ChatHistory = ({
   adminData,
   isLoading
 }) => {
-  console.log("csvData",csvData);
+  console.log("csvData", csvData);
   const { user, type } = adminData || {};
   const classes = useStyles();
   const navigate = useNavigate();
@@ -679,6 +679,26 @@ const ChatHistory = ({
                   .catch((error) => reject(error));
               })
             }
+            // onChangePage={(data) => {
+            //   console.log('archi', data)
+            //   if (data == 0) {
+            //     dispatch(
+            //       HistoryActions.setChatHistoryApiPayload({
+            //         ...chatHistoryApiPayload,
+            //         page: 1,
+            //       }))
+            //     onRefreshTable();
+            //   }
+            // }}
+            onChangePage={(data) => {
+              console.log('Page change:', data);
+              
+              if (data === 0) {
+                // onRefreshTable();
+                 navigate(`/history/ChatHistory`);
+              }
+            }}
+
             options={{
               ...propStyles.tableStyles,
               paging: true,

@@ -13,6 +13,7 @@ const initialState = {
   registerLiveClassHistoryData: null,
   csvData: null,
   csvCallData: null,
+  csvRechargeData: null,
   isLoading: false,
 
 };
@@ -157,6 +158,12 @@ const history = (state = initialState, actions) => {
       return {
         ...state,
         csvCallData: payload,
+      };
+    }
+    case actionTypes.SET_DOWNLOAD_RECHARGE_HISTORY: {
+      return {
+        ...state,
+        csvRechargeData: payload,
       };
     }
 

@@ -12,9 +12,9 @@ import { connect } from "react-redux";
 import { secondsToHMS } from "../../utils/services.js";
 import moment from "moment";
 
-const DisplayLiveCourseHistory = ({ dispatch, liveCourseHistoryData }) => {
+const DisplayLiveCourseHistory = ({ dispatch, liveCourseHistoryData, adminData }) => {
   const classes = useStyles();
-
+  const { user, type } = adminData || {};
 
   useEffect(function () {
     dispatch(HistoryActions.getLiveCourseHistory());
@@ -145,6 +145,7 @@ const DisplayLiveCourseHistory = ({ dispatch, liveCourseHistoryData }) => {
 
 const mapStateToProps = (state) => ({
   liveCourseHistoryData: state.history.liveCourseHistoryData,
+  adminData: state.admin.adminData,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

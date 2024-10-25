@@ -21,7 +21,8 @@ import Swal from "sweetalert2";
 import * as astrologerTrainingBannerActions from "../../redux/Actions/astrologerTrainingBannerActions.js";
 import { connect } from "react-redux";
 
-const DisplayAstrologerTrainingBanner = ({ dispatch, astrologerTrainingBannerData}) => {
+const DisplayAstrologerTrainingBanner = ({ dispatch, astrologerTrainingBannerData,adminData}) => {
+  const { user, type } = adminData || {};
   const classes = useStyles();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -38,6 +39,11 @@ const DisplayAstrologerTrainingBanner = ({ dispatch, astrologerTrainingBannerDat
   }, []);
 
   const handleOpen = (rowData) => {
+    if (type === "subadmin" && !user.permissions.banners?.astrologerTrainingbanners?.edit) {
+      alert('You do not have permission to edit.');
+      return;
+    }
+
     setOpen(true);
     setcourseBannerId(rowData._id);
     setStatus(rowData.status);
@@ -80,6 +86,11 @@ const DisplayAstrologerTrainingBanner = ({ dispatch, astrologerTrainingBannerDat
   };
 
   const handleClickOpen = (rowData) => {
+
+    if (type === "subadmin" && !user.permissions.banners?.astrologerTrainingbanners?.status) {
+      alert('You do not have permission to change status.');
+      return;
+    }
 
     Swal.fire({
       title: 'Are you sure to Change the Status?',
@@ -173,12 +184,17 @@ const DisplayAstrologerTrainingBanner = ({ dispatch, astrologerTrainingBannerDat
               {
                 icon: "delete",
                 tooltip: "Delete Banner",
-                onClick: (event, rowData) =>
-                  dispatch(
-                    astrologerTrainingBannerActions.deleteAstrologerTrainingBanner({
-                      bannerId: rowData?._id,
-                    })
-                  ),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.banners?.astrologerTrainingbanners?.delete
+                  ) {
+                    alert('You do not have permission to delete.');
+                    return;
+                  }
+                  dispatch( astrologerTrainingBannerActions.deleteAstrologerTrainingBanner({  bannerId: rowData?._id, }) );
+                },
+
               },
               {
                 icon: () => (
@@ -189,7 +205,16 @@ const DisplayAstrologerTrainingBanner = ({ dispatch, astrologerTrainingBannerDat
                 ),
                 tooltip: "Add Banner",
                 isFreeAction: true,
-                onClick: () => navigate("/addAstrologerTrainingBanner"),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.banners?.astrologerTrainingbanners?.add
+                  ) {
+                    alert('You do not have permission to add.');
+                    return;
+                  }
+                  navigate("/addAstrologerTrainingBanner");
+                },
               },
             ]}
           />
@@ -290,6 +315,7 @@ const DisplayAstrologerTrainingBanner = ({ dispatch, astrologerTrainingBannerDat
 
 const mapStateToProps = (state) => ({
   astrologerTrainingBannerData: state.astrologerTrainingBanner.astrologerTrainingBannerData,
+  adminData: state.admin.adminData,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

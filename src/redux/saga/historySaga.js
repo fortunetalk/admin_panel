@@ -22,7 +22,8 @@ import {
   download_chat_history,
   download_call_history,
   update_admin_chat_review,
-  update_admin_call_review
+  update_admin_call_review,
+  download_recharge_history
 
 } from "../../utils/Constants";
 import { database, firestore } from "../../config/firbase";
@@ -624,6 +625,29 @@ function* getDownloadCallHistory(action) {
     console.log(e);
   }
 }
+function* getDownloadRechargeHistory(action) {
+  try {
+    const { payload } = action;
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: true });
+    const response = yield ApiRequest.postRequest({
+      url: api_url + download_recharge_history,
+      header: "json",
+      data: payload,
+    });
+
+    if (response?.success) {
+      yield put({
+        type: actionTypes.SET_DOWNLOAD_RECHARGE_HISTORY,
+        payload: response?.data?.data || [],
+      });
+    }
+
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+  } catch (e) {
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+    console.log(e);
+  }
+}
 
 function* updateAdminChatReview(actions) {
   const {reviewData , onRefreshTable } = actions.payload;
@@ -716,6 +740,7 @@ export default function* historySaga() {
   yield takeLeading(actionTypes.GET_REGISTER_LIVE_CLASS_HISTORY, getRegisterLiveClassHistory)
   yield takeLeading(actionTypes.GET_DOWNLOAD_CHAT_HISTORY, getDownloadChatHistory)
   yield takeLeading(actionTypes.GET_DOWNLOAD_CALL_HISTORY, getDownloadCallHistory)
+  yield takeLeading(actionTypes.GET_DOWNLOAD_RECHARGE_HISTORY, getDownloadRechargeHistory)
   yield takeLeading(actionTypes.UPDATE_ADMIN_CHAT_REVIEW, updateAdminChatReview)
   yield takeLeading(actionTypes.UPDATE_ADMIN_CALL_REVIEW, updateAdminCallReview)
 }

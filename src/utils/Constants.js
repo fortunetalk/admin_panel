@@ -433,6 +433,7 @@ export const recharge_history_delete = "admin/recharge/delete";
 //download CSV
 export const download_chat_history = "admin/download/chat_history";
 export const download_call_history = "admin/download/call_history";
+export const download_recharge_history = "admin/download/recharge/history";
 
 //Chat Review
 export const update_admin_chat_review = "admin/update_admin_chat_review";

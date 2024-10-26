@@ -8,6 +8,7 @@ const initialState = {
   apiPayload: null,
   adminListData: null,
   subAdminByIdData: null,
+  subAdminLogs: null,
 };
 
 const admin = (state = initialState, action) => {
@@ -69,6 +70,11 @@ const admin = (state = initialState, action) => {
       return {
         ...state,
         adminType: payload,
+      };
+    case actionTypes.SET_ADMIN_LOG_ACTIONS:
+      return {
+        ...state,
+        subAdminLogs: payload,
       };
     default:
       return state;

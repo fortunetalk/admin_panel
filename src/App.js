@@ -151,6 +151,7 @@ import AddSubAdmin from "./pages/subAdmin/AddSubAdmin";
 import DisplaySubAdmin from "./pages/subAdmin/DisplaySubAdmin";
 import ViewSubAdmin from "./pages/subAdmin/ViewSubAdmin";
 import EditSubAdmin from "./pages/subAdmin/EditSubAdmin";
+import DisplaySubAdminLogs from "./pages/subAdminLogs/DisplaySubAdminLogs";
 
 
 
@@ -163,6 +164,7 @@ function App() {
           <Route path="*" element={<> Not Ready</>} />
           <Route path="/add-sub-admin" element={<AddSubAdmin />} />
           <Route path="/display-sub-admin" element={<DisplaySubAdmin />} />
+          <Route path="/display-sub-admin-logs" element={<DisplaySubAdminLogs />} />
           <Route path="/view-sub-admin/:_id" element={<ViewSubAdmin />} />
           <Route path="/edit-sub-admin/:_id" element={<EditSubAdmin />} />
           <Route path="/addSkills" element={<AddSkills />} />
@@ -226,22 +228,14 @@ function App() {
           <Route path="/AddGift" element={<AddGift />} />
           <Route path="/call-discussion" element={<DisplayCallDiscussion />} />
           <Route path="/add-call-discussion" element={<AddCallDiscussion />} />
-
           <Route path="/displayAstrologerOffer" element={<DisplayAstrologerOffers />} />
-
           <Route path="/addAstrologerOffer" element={<AddAstrologersOffers />} />
-
-
           <Route path="/displayAstroblog" element={<DisplayAstroblog />} />
           <Route path="/AddAstroblog" element={<AddAstroblog />} />
           <Route path="/appVersion" element={<AddAppverstion />} />
-
           <Route path="/displayFaq" element={<DisplayFaq />} />
           <Route path="/AddFaq" element={<AddFaq />} />
-          <Route
-            path="/displayTermsAndConditions"
-            element={<TermsAndConditions />}
-          />
+          <Route  path="/displayTermsAndConditions" element={<TermsAndConditions />} />
           <Route path="/addTermsAndCondition" element={<AddTermsAndCondition/>} />
           <Route path="/displayPrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/addPrivacyPolicy" element={<AddPrivacyPolicy/>} />

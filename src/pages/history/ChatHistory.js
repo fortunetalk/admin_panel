@@ -488,7 +488,7 @@ const ChatHistory = ({
                   <div>
                     {rowData?.endTime
                       ? rowData?.endTime &&
-                        moment(rowData?.endTime).format("DD-MM-YY HH:mm A")
+                      moment(rowData?.endTime).format("DD-MM-YY HH:mm A")
                       : "N/A"}
                   </div>
                 ),
@@ -499,24 +499,62 @@ const ChatHistory = ({
                 title: "Review-Rating ",
                 field: "chatReviewFromAdmin",
                 filtering: false,
+                render: (rowData) => (
+                  <div>
+                    {rowData?.chatReviewFromAdmin ? rowData.chatReviewFromAdmin : " - "}
+                  </div>
+                ),
               },
               {
                 title: "Review-Concern ",
                 field: "chatConcernFromAdmin",
                 filtering: false,
+                render: (rowData) => (
+                  <div>
+                    {rowData?.chatConcernFromAdmin ? rowData.chatConcernFromAdmin : " - "}
+                  </div>
+                ),
               },
+
+
               // {
               //   title: "Status",
               //   field: "status",
-              //   // defaultFilter: chatHistoryApiPayload?.filters?.status ? [chatHistoryApiPayload?.filters?.status] : [],
               //   lookup: {
               //     COMPLETED: "COMPLETED",
               //     REJECTED: "REJECTED",
               //     ACCEPTED: "ACCEPTED",
               //     CREATED: "CREATED",
               //     ONGOING: "ON GOING",
-              //     TIMEOUT: "MISSED",
-              //     CUSTOMER_NOT_AVAILABLE: "CUSTOMER NOT AVAILABLE",
+              //     // TIMEOUT: "MISSED",
+              //     TIMEOUT: "MISSED BY ASTROLOGER",
+              //     CUSTOMER_NOT_AVAILABLE: "MISSED BY CUSTOMER",
+              //     // CUSTOMER_NOT_AVAILABLE: "CUSTOMER NOT AVAILABLE",
+              //   },
+              //   defaultFilter: chatHistoryApiPayload?.filters?.status
+              //     ? [chatHistoryApiPayload?.filters?.status]
+              //     : [],
+              //   render: (rowData) => {
+              //     const status = rowData?.status;
+              //     let color;
+
+              //     switch (status) {
+              //       case "ONGOING":
+              //         color = "green";
+              //         break;
+              //       case "REJECTED":
+              //       case "CANCELLED":
+              //         color = "red";
+              //         break;
+              //       case "COMPLETED":
+              //         color = "purple";
+              //         break;
+              //       default:
+              //         color = "black"; // Default color for other statuses
+              //         break;
+              //     }
+
+              //     return <span style={{ color }}>{status}</span>;
               //   },
               // },
 
@@ -529,13 +567,17 @@ const ChatHistory = ({
                   ACCEPTED: "ACCEPTED",
                   CREATED: "CREATED",
                   ONGOING: "ON GOING",
-                  TIMEOUT: "MISSED",
-                  CUSTOMER_NOT_AVAILABLE: "CUSTOMER NOT AVAILABLE",
+                  TIMEOUT: "MISSED BY ASTROLOGER",
+                  CUSTOMER_NOT_AVAILABLE: "MISSED BY CUSTOMER",
                 },
+                defaultFilter: chatHistoryApiPayload?.filters?.status
+                  ? [chatHistoryApiPayload?.filters?.status]
+                  : [],
                 render: (rowData) => {
                   const status = rowData?.status;
+                  let displayText = status; // Default to status
                   let color;
-
+              
                   switch (status) {
                     case "ONGOING":
                       color = "green";
@@ -547,12 +589,20 @@ const ChatHistory = ({
                     case "COMPLETED":
                       color = "purple";
                       break;
+                    case "TIMEOUT":
+                      displayText = "MISSED BY ASTROLOGER"; // Customize text for TIMEOUT
+                      color = "black"; // Optionally set a color for TIMEOUT
+                      break;
+                    case "CUSTOMER_NOT_AVAILABLE":
+                      displayText = "MISSED BY CUSTOMER"; // Customize text for CUSTOMER_NOT_AVAILABLE
+                      color = "black"; // Optionally set a color for CUSTOMER_NOT_AVAILABLE
+                      break;
                     default:
                       color = "black"; // Default color for other statuses
                       break;
                   }
-
-                  return <span style={{ color }}>{status}</span>;
+              
+                  return <span style={{ color }}>{displayText}</span>;
                 },
               },
               {
@@ -615,8 +665,8 @@ const ChatHistory = ({
                   page: chatHistoryApiPayload?.isPageOnZero
                     ? 1
                     : query.page == 0 && chatHistoryApiPayload
-                    ? chatHistoryApiPayload?.page
-                    : query.page + 1,
+                      ? chatHistoryApiPayload?.page
+                      : query.page + 1,
                   limit:
                     query.pageSize === 0
                       ? chatHistoryApiPayload
@@ -626,8 +676,8 @@ const ChatHistory = ({
                   ...filters,
                   search:
                     query.page == 0 &&
-                    chatHistoryApiPayload &&
-                    query.search.length == 0
+                      chatHistoryApiPayload &&
+                      query.search.length == 0
                       ? chatHistoryApiPayload?.search
                       : query.search,
                   searchType: chatHistoryApiPayload?.searchType || "",
@@ -643,8 +693,8 @@ const ChatHistory = ({
                     page: chatHistoryApiPayload?.isPageOnZero
                       ? 1
                       : query.page == 0 && chatHistoryApiPayload
-                      ? chatHistoryApiPayload?.page
-                      : query.page + 1,
+                        ? chatHistoryApiPayload?.page
+                        : query.page + 1,
                     limit:
                       query.pageSize === 0
                         ? chatHistoryApiPayload
@@ -654,8 +704,8 @@ const ChatHistory = ({
                     ...filters,
                     search:
                       query.page == 0 &&
-                      chatHistoryApiPayload &&
-                      query.search.length == 0
+                        chatHistoryApiPayload &&
+                        query.search.length == 0
                         ? chatHistoryApiPayload?.search
                         : query.search,
                     searchType: chatHistoryApiPayload?.searchType || "",
@@ -696,6 +746,15 @@ const ChatHistory = ({
                 );
                 onRefreshTable();
               }
+            }}
+            onChangeRowsPerPage={(data) => {
+              dispatch(
+                HistoryActions.setChatHistoryApiPayload({
+                  ...chatHistoryApiPayload,
+                  pageSize: data,
+                })
+              );
+              onRefreshTable();
             }}
             options={{
               ...propStyles.tableStyles,

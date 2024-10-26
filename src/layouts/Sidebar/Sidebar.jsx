@@ -28,6 +28,11 @@ const routes = [
     icon: <BiAbacus />,
   },
   {
+    path: "/display-sub-admin-logs",
+    name: "Sub-Admin Logs",
+    icon: <BiAbacus />,
+  },
+  {
     path: "/astrologers",
     name: "Astrologers",
     icon: <BiUser />,

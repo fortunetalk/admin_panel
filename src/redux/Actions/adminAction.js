@@ -98,3 +98,15 @@ export const setAdminType = (payload) => ({
   type: actionTypes.SET_ADMIN_TYPE,
   payload,
 });
+
+// SUB_ADMIN_LOGS
+
+export const getAdminLogs = (payload) => ({
+  type: actionTypes.GET_ADMIN_LOG_ACTIONS,
+  payload,
+});
+
+export const setAdminLogs = (payload) => ({
+  type: actionTypes.SET_ADMIN_LOG_ACTIONS,
+  payload,
+});

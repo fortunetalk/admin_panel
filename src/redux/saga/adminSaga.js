@@ -10,6 +10,7 @@ import {
   get_all_subadmin,
   subadmin_delete,
   subadmin_update,
+  get_admin_log_actions,
 } from "../../utils/Constants";
 import Swal from "sweetalert2";
 import { Colors } from "../../assets/styles";
@@ -324,6 +325,27 @@ function* getSubAdminById(actions) {
   }
 }
 
+function* getAdminLogs() {
+  try {
+    yield put({ type: actionTypes.SET_IS_LOADING, payload: false });
+    const response = yield call(ApiRequest.getRequest, {
+      url: api_url + get_admin_log_actions,
+    });
+
+    if (response.success) {
+      yield put({
+        type: actionTypes.SET_ADMIN_LOG_ACTIONS,
+        payload: response?.data.reverse(),
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  } finally {
+    yield put({ type: actionTypes.UNSET_IS_LOADING, payload: false });
+  }
+}
+
+
 export default function* adminSaga() {
   yield takeLatest(actionTypes.ADMIN_LOGIN_REQUEST, adminLogin);
   yield takeLatest(actionTypes.ADMIN_LOGOUT_REQUEST, adminLogout);
@@ -336,4 +358,5 @@ export default function* adminSaga() {
   yield takeLatest(actionTypes.SUBADMIN_DELETE, subadminDelete);
   yield takeLatest(actionTypes.SUBADMIN_UPDATE, subadminUpdate);
   yield takeLatest(actionTypes.GET_SUB_ADMIN_BY_ID, getSubAdminById);
+  yield takeLatest(actionTypes.GET_ADMIN_LOG_ACTIONS, getAdminLogs);
 }

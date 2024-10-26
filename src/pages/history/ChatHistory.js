@@ -20,10 +20,8 @@ import MaterialTable from "material-table";
 import { useNavigate } from "react-router-dom";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
-import { CloseRounded } from "@mui/icons-material";
-import Swal from "sweetalert2";
+import { CatchingPokemonSharp, CloseRounded } from "@mui/icons-material";
 import * as HistoryActions from "../../redux/Actions/historyActions.js";
-import Loader from "../../Components/loading/Loader.js";
 import { connect } from "react-redux";
 import { secondsToHMS, showNumber } from "../../utils/services.js";
 import moment from "moment";
@@ -38,7 +36,7 @@ const ChatHistory = ({
   chatHistoryApiPayload,
   csvData,
   adminData,
-  isLoading
+  isLoading,
 }) => {
   console.log("csvData", csvData);
   const { user, type } = adminData || {};
@@ -88,7 +86,7 @@ const ChatHistory = ({
       type === "subadmin" &&
       !user.permissions.customer?.chatHistory?.addReview
     ) {
-      alert('You do not have permission to add review.');
+      alert("You do not have permission to add review.");
       return;
     }
     setReview(true);
@@ -104,7 +102,7 @@ const ChatHistory = ({
       type === "subadmin" &&
       !user.permissions.customer?.chatHistory?.viewChatHistoryData
     ) {
-      alert('You do not have permission to view chat details.');
+      alert("You do not have permission to view chat details.");
       return;
     }
 
@@ -146,7 +144,7 @@ const ChatHistory = ({
       type === "subadmin" &&
       !user.permissions.customer?.chatHistory?.download
     ) {
-      alert('You do not have permission to download csv.');
+      alert("You do not have permission to download csv.");
       return;
     }
     setShowModal(true);
@@ -171,7 +169,6 @@ const ChatHistory = ({
     setStartDate("");
     setEndDate("");
     setSearchType("");
-
   };
 
   const handleFirstDropdownChange = (event) => {
@@ -244,16 +241,11 @@ const ChatHistory = ({
         searchDate: searchDate,
       };
 
-      // Store searchData in state
-      console.log("searchData", {
-        ...chatHistoryApiPayload,
-        searchType,
-        searchDate,
-      });
       if (chatHistoryApiPayload) {
         dispatch(
           HistoryActions.setChatHistoryApiPayload({
             ...chatHistoryApiPayload,
+            page: 1,
             searchType,
             searchDate,
           })
@@ -292,7 +284,7 @@ const ChatHistory = ({
       type === "subadmin" &&
       !user.permissions.customer?.chatHistory?.viewChatMessages
     ) {
-      alert('You do not have permission to View Chat Messages.');
+      alert("You do not have permission to View Chat Messages.");
       return;
     }
     navigate(`/history/fullChatHistory/${rowData.customerId}`, {
@@ -496,7 +488,7 @@ const ChatHistory = ({
                   <div>
                     {rowData?.endTime
                       ? rowData?.endTime &&
-                      moment(rowData?.endTime).format("DD-MM-YY HH:mm A")
+                        moment(rowData?.endTime).format("DD-MM-YY HH:mm A")
                       : "N/A"}
                   </div>
                 ),
@@ -587,13 +579,26 @@ const ChatHistory = ({
                   }
                 });
 
-                if (!(query.page === 0 && chatHistoryApiPayload)) {
+                console.log(query, "query");
+                console.log(chatHistoryApiPayload, "chatHistoryApiPayload");
+                if (chatHistoryApiPayload?.isPageOnZero) {
                   dispatch(
                     HistoryActions.setChatHistoryApiPayload({
+                      ...chatHistoryApiPayload,
+                      isPageOnZero: false,
+                      page: 1,
+                    })
+                  );
+                } else if (!(query.page === 0 && chatHistoryApiPayload)) {
+                  const data = chatHistoryApiPayload || {};
+                  dispatch(
+                    HistoryActions.setChatHistoryApiPayload({
+                      ...data,
                       page: query.page + 1,
                       pageSize: query.pageSize,
                       filters: filters,
                       search: query.search,
+                      isPageOnZero: false,
                     })
                   );
                 } else {
@@ -606,14 +611,12 @@ const ChatHistory = ({
                   filters = chatHistoryApiPayload?.filters;
                 }
 
-                console.log(query, "query");
-                console.log(chatHistoryApiPayload, "chatHistoryApiPayload");
-
                 console.log({
-                  page:
-                    query.page == 0 && chatHistoryApiPayload
-                      ? chatHistoryApiPayload?.page
-                      : query.page + 1,
+                  page: chatHistoryApiPayload?.isPageOnZero
+                    ? 1
+                    : query.page == 0 && chatHistoryApiPayload
+                    ? chatHistoryApiPayload?.page
+                    : query.page + 1,
                   limit:
                     query.pageSize === 0
                       ? chatHistoryApiPayload
@@ -623,10 +626,12 @@ const ChatHistory = ({
                   ...filters,
                   search:
                     query.page == 0 &&
-                      chatHistoryApiPayload &&
-                      query.search.length == 0
+                    chatHistoryApiPayload &&
+                    query.search.length == 0
                       ? chatHistoryApiPayload?.search
                       : query.search,
+                  searchType: chatHistoryApiPayload?.searchType || "",
+                  searchDate: chatHistoryApiPayload?.searchDate || "",
                 });
 
                 fetch(api_url + get_chat_history, {
@@ -635,10 +640,11 @@ const ChatHistory = ({
                     "Content-Type": "application/json",
                   },
                   body: JSON.stringify({
-                    page:
-                      query.page == 0 && chatHistoryApiPayload
-                        ? chatHistoryApiPayload?.page
-                        : query.page + 1,
+                    page: chatHistoryApiPayload?.isPageOnZero
+                      ? 1
+                      : query.page == 0 && chatHistoryApiPayload
+                      ? chatHistoryApiPayload?.page
+                      : query.page + 1,
                     limit:
                       query.pageSize === 0
                         ? chatHistoryApiPayload
@@ -648,8 +654,8 @@ const ChatHistory = ({
                     ...filters,
                     search:
                       query.page == 0 &&
-                        chatHistoryApiPayload &&
-                        query.search.length == 0
+                      chatHistoryApiPayload &&
+                      query.search.length == 0
                         ? chatHistoryApiPayload?.search
                         : query.search,
                     searchType: chatHistoryApiPayload?.searchType || "",
@@ -679,26 +685,18 @@ const ChatHistory = ({
                   .catch((error) => reject(error));
               })
             }
-            // onChangePage={(data) => {
-            //   console.log('archi', data)
-            //   if (data == 0) {
-            //     dispatch(
-            //       HistoryActions.setChatHistoryApiPayload({
-            //         ...chatHistoryApiPayload,
-            //         page: 1,
-            //       }))
-            //     onRefreshTable();
-            //   }
-            // }}
             onChangePage={(data) => {
-              console.log('Page change:', data);
-              
-              if (data === 0) {
-                // onRefreshTable();
-                 navigate(`/history/ChatHistory`);
+              console.log("archi", data);
+              if (data == 0) {
+                dispatch(
+                  HistoryActions.setChatHistoryApiPayload({
+                    ...chatHistoryApiPayload,
+                    isPageOnZero: true,
+                  })
+                );
+                onRefreshTable();
               }
             }}
-
             options={{
               ...propStyles.tableStyles,
               paging: true,
@@ -724,7 +722,7 @@ const ChatHistory = ({
                     type === "subadmin" &&
                     !user.permissions.customer?.chatHistory?.delete
                   ) {
-                    alert('You do not have permission to delete.');
+                    alert("You do not have permission to delete.");
                     return;
                   }
                   dispatch(

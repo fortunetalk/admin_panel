@@ -618,12 +618,12 @@ const ChatHistory = ({ dispatch, rechargeHistoryData , csvData, csvRechargeData,
         );
       }
 
-
 };
 
 const mapStateToProps = (state) => ({
     rechargeHistoryData: state.history.rechargeHistoryData,
     csvRechargeData: state.history.csvRechargeData,
+    isLoading: state.admin.isLoading,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

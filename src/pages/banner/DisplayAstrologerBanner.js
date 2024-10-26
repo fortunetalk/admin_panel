@@ -38,8 +38,8 @@ const DisplayAstrologerBanner = ({ dispatch, astrologerBannerData, adminData}) =
   // Open modal with specific row data
   const handleOpen = (rowData) => {
 
-    if (type === "subadmin" && !user.permissions.banners?.astrologerbanners?.status) {
-      alert('You do not have permission to change status.');
+    if (type === "subadmin" && !user.permissions.banners?.astrologerbanners?.edit) {
+      alert('You do not have permission to edit.');
       return;
     }
 
@@ -79,6 +79,12 @@ const DisplayAstrologerBanner = ({ dispatch, astrologerBannerData, adminData}) =
 
   // Confirm status change
   const handleClickOpen = (rowData) => {
+
+    if (type === "subadmin" && !user.permissions.banners?.astrologerbanners?.status) {
+      alert('You do not have permission to change status.');
+      return;
+    }
+    
     Swal.fire({
       title: "Are you sure to Change the Status?",
       text: "You won't be able to revert this!",

@@ -22,7 +22,8 @@ import * as CourseBannerActions from "../../redux/Actions/courseBannerActions.js
 import * as CourseActions from "../../redux/Actions/courseActions.js";
 import { connect } from "react-redux";
 
-const DisplayCourseBanner = ({ dispatch, courseBannerData, courseData }) => {
+const DisplayCourseBanner = ({ dispatch, courseBannerData, courseData, adminData }) => {
+  const { user, type } = adminData || {};
   const classes = useStyles();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -40,6 +41,11 @@ const DisplayCourseBanner = ({ dispatch, courseBannerData, courseData }) => {
   }, []);
 
   const handleOpen = (rowData) => {
+    if (type === "subadmin" && !user.permissions.banners?.coursesbanners?.edit) {
+      alert('You do not have permission to  edit.');
+      return;
+    }
+
     setOpen(true);
     setcourseBannerId(rowData._id);
     setStatus(rowData.status);
@@ -81,6 +87,11 @@ const DisplayCourseBanner = ({ dispatch, courseBannerData, courseData }) => {
   };
 
   const handleClickOpen = (rowData) => {
+
+    if (type === "subadmin" && !user.permissions.banners?.coursesbanners?.status) {
+      alert('You do not have permission to change status.');
+      return;
+    }
 
     Swal.fire({
       title: 'Are you sure to Change the Status?',
@@ -174,12 +185,16 @@ const DisplayCourseBanner = ({ dispatch, courseBannerData, courseData }) => {
               {
                 icon: "delete",
                 tooltip: "Delete Course Banner",
-                onClick: (event, rowData) =>
-                  dispatch(
-                    CourseBannerActions.deleteCourseBanner({
-                      bannerId: rowData?._id,
-                    })
-                  ),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.banners?.coursesbanners?.delete
+                  ) {
+                    alert('You do not have permission to delete.');
+                    return;
+                  }
+                  dispatch( CourseBannerActions.deleteCourseBanner({ bannerId: rowData?._id, }) );
+                },
               },
               {
                 icon: () => (
@@ -190,7 +205,16 @@ const DisplayCourseBanner = ({ dispatch, courseBannerData, courseData }) => {
                 ),
                 tooltip: "Add Skill",
                 isFreeAction: true,
-                onClick: () => navigate("/addCourseBanner"),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.banners?.coursesbanners?.add
+                  ) {
+                    alert('You do not have permission to add.');
+                    return;
+                  }
+                  navigate("/addCourseBanner");
+                },
               },
             ]}
           />
@@ -303,6 +327,7 @@ const DisplayCourseBanner = ({ dispatch, courseBannerData, courseData }) => {
 const mapStateToProps = (state) => ({
   courseBannerData: state.courseBanner.courseBannerData,
   courseData: state.course.courseData,
+  adminData: state.admin.adminData,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

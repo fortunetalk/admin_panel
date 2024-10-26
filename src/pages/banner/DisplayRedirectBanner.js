@@ -16,7 +16,8 @@ import { getProductCategory } from "../../redux/Actions/productCategoryActions.j
 import { getPoojaCategory } from "../../redux/Actions/poojaCategoryActions.js";
 import {getRedirectionBanners, updateRedirectBannerStatus, deleteRedirectBanner, updateRedirectBanner} from "../../redux/Actions/redirectBannerActions.js";
 
-const DisplayRedirectBanner = ({ redirectBannerData, astrologerListData, productCategoryData, poojaCategoryData }) => {
+const DisplayRedirectBanner = ({ redirectBannerData, astrologerListData, productCategoryData, poojaCategoryData, adminData}) => {
+  const { user, type } = adminData || {};
   const classes = useStyles();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -78,6 +79,12 @@ const DisplayRedirectBanner = ({ redirectBannerData, astrologerListData, product
 
 
   const handleOpen = (rowData) => {
+
+    if (type === "subadmin" && !user.permissions.banners?.redirectBanners?.edit) {
+      alert('You do not have permission to  edit.');
+      return;
+    }
+
     // setSkill_id(rowData._id);
     setBannerId(rowData._id)
     setRedirect(rowData.title);
@@ -178,6 +185,11 @@ const DisplayRedirectBanner = ({ redirectBannerData, astrologerListData, product
 
   const handleClickOpen = (rowData) => {
 
+    if (type === "subadmin" && !user.permissions.banners?.redirectBanners?.status) {
+      alert('You do not have permission to change status.');
+      return;
+    }
+
     Swal.fire({
       title: 'Are you sure to Change the Status?',
       text: "You won't be able to revert this!",
@@ -253,13 +265,16 @@ const DisplayRedirectBanner = ({ redirectBannerData, astrologerListData, product
               {
                 icon: "delete",
                 tooltip: "Delete Redirection Banner",
-                onClick: (event, rowData) =>
-                  dispatch(
-                    deleteRedirectBanner({
-                      title: rowData?.redirectionUrl,
-                      bannerId: rowData?._id,
-                    })
-                  ),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.banners?.redirectBanners?.delete
+                  ) {
+                    alert('You do not have permission to delete.');
+                    return;
+                  }
+                  dispatch(  deleteRedirectBanner({  title: rowData?.redirectionUrl, bannerId: rowData?._id, })  );
+                },
               },
               {
                 icon: () => (
@@ -270,7 +285,16 @@ const DisplayRedirectBanner = ({ redirectBannerData, astrologerListData, product
                 ),
                 tooltip: "Add Redirect Banner",
                 isFreeAction: true,
-                onClick: () => navigate("/addRedirectBanner"),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.banners?.redirectBanners?.add
+                  ) {
+                    alert('You do not have permission to add.');
+                    return;
+                  }
+                  navigate("/addRedirectBanner");
+                },
               },
             ]}
           />
@@ -533,6 +557,7 @@ const mapStateToProps = (state) => ({
   astrologerListData: state.astrologer.astrologerListData,
   productCategoryData: state.productCategory.productCategoryData,
   poojaCategoryData: state.poojaCategory.poojaCategoryData,
+  adminData: state.admin.adminData,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

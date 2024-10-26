@@ -29,7 +29,7 @@ const routes = [
   },
   {
     path: "/display-sub-admin-logs",
-    name: "Sub-Admin Logs",
+    name: "Sub-Admin Logs ",
     icon: <BiAbacus />,
   },
   {
@@ -367,11 +367,13 @@ const routes = [
         path: "/displayCourseBanner",
         name: "Course Banner",
         icon: <BiAbacus />,
+        key:"displayCourseBanner"
       },
       {
         path: "/displayRedirectBanner",
         name: "Redirect Banner",
         icon: <BiAbacus />,
+        key:"displayRedirectBanner"
       },
       {
         path: "/display-Call-Chat-Banner",
@@ -777,6 +779,17 @@ const SideBar = ({
               if (!user?.permissions?.banners?.astrologerbanners?.isPermited) {
                 subRoutes = subRoutes.filter(
                   (subRoute) => subRoute.key !== "displayAstrologerBanner"
+                );
+              }
+
+              if (!user?.permissions?.banners?.coursesbanners?.isPermited) {
+                subRoutes = subRoutes.filter(
+                  (subRoute) => subRoute.key !== "displayCourseBanner"
+                );
+              }
+              if (!user?.permissions?.banners?.redirectBanners?.isPermited) {
+                subRoutes = subRoutes.filter(
+                  (subRoute) => subRoute.key !== "displayRedirectBanner"
                 );
               }
 

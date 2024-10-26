@@ -181,6 +181,20 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
           delete: false,
           add: false,
         },
+        coursesbanners: {
+          isPermited: false,
+          status: false,
+          edit: false,
+          delete: false,
+          add: false,
+        },
+        redirectBanners: {
+          isPermited: false,
+          status: false,
+          edit: false,
+          delete: false,
+          add: false,
+        },
       },
     },
   });
@@ -2825,6 +2839,253 @@ export const EditSubAdmin = ({ dispatch, isLoading, subAdminByIdData }) => {
                             updatePermission("permission.banners.astrologerbanners.add", false);
                           } else {
                             updatePermission("permission.banners.astrologerbanners.add", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Add"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+              </FormGroup>
+
+              {/* --- Courses  Banner --- */}
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={!permission?.banners?.isPermited}
+                        checked={permission?.banners?.coursesbanners?.isPermited}
+                        onChange={() => {
+                          if (permission?.banners?.coursesbanners?.isPermited) {
+                            updatePermission("permission.banners.coursesbanners", {
+                              isPermited: false,
+                              status: false,
+                              edit: false,
+                              delete: false,
+                              add: false,
+                            });
+                          } else {
+                            updatePermission("permission.banners.coursesbanners.isPermited", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Courses Banners"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.banners?.isPermited ||
+                          !permission?.banners?.coursesbanners?.isPermited
+                        }
+                        checked={permission?.banners?.coursesbanners?.status}
+                        onChange={() => {
+                          if (permission?.banners?.coursesbanners?.status) {
+                            updatePermission("permission.banners.coursesbanners.status", false);
+                          } else {
+                            updatePermission("permission.banners.coursesbanners.status", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.banners?.isPermited ||
+                          !permission?.banners?.coursesbanners?.isPermited
+                        }
+                        checked={permission?.banners?.coursesbanners?.edit}
+                        onChange={() => {
+                          if (permission?.banners?.coursesbanners?.edit) {
+                            updatePermission("permission.banners.coursesbanners.edit", false);
+                          } else {
+                            updatePermission("permission.banners.coursesbanners.edit", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Edit"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.banners?.isPermited ||
+                          !permission?.banners?.coursesbanners?.isPermited
+                        }
+                        checked={permission?.banners?.coursesbanners?.delete}
+                        onChange={() => {
+                          if (permission?.banners?.coursesbanners?.delete) {
+                            updatePermission("permission.banners.coursesbanners.delete", false);
+                          } else {
+                            updatePermission("permission.banners.coursesbanners.delete", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.banners?.isPermited ||
+                          !permission?.banners?.coursesbanners?.isPermited
+                        }
+                        checked={permission?.banners?.coursesbanners?.add}
+                        onChange={() => {
+                          if (permission?.banners?.coursesbanners?.add) {
+                            updatePermission("permission.banners.coursesbanners.add", false);
+                          } else {
+                            updatePermission("permission.banners.coursesbanners.add", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Add"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+              </FormGroup>
+
+              {/* --- RedirectBanners  Banner --- */}
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={!permission?.banners?.isPermited}
+                        checked={permission?.banners?.redirectBanners?.isPermited}
+                        onChange={() => {
+                          if (permission?.banners?.redirectBanners?.isPermited) {
+                            updatePermission("permission.banners.redirectBanners", {
+                              isPermited: false,
+                              status: false,
+                              edit: false,
+                              delete: false,
+                              add: false,
+                            });
+                          } else {
+                            updatePermission("permission.banners.redirectBanners.isPermited", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Redirect Banners"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.banners?.isPermited ||
+                          !permission?.banners?.redirectBanners?.isPermited
+                        }
+                        checked={permission?.banners?.redirectBanners?.status}
+                        onChange={() => {
+                          if (permission?.banners?.redirectBanners?.status) {
+                            updatePermission("permission.banners.redirectBanners.status", false);
+                          } else {
+                            updatePermission("permission.banners.redirectBanners.status", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.banners?.isPermited ||
+                          !permission?.banners?.redirectBanners?.isPermited
+                        }
+                        checked={permission?.banners?.redirectBanners?.edit}
+                        onChange={() => {
+                          if (permission?.banners?.redirectBanners?.edit) {
+                            updatePermission("permission.banners.redirectBanners.edit", false);
+                          } else {
+                            updatePermission("permission.banners.redirectBanners.edit", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Edit"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.banners?.isPermited ||
+                          !permission?.banners?.redirectBanners?.isPermited
+                        }
+                        checked={permission?.banners?.redirectBanners?.delete}
+                        onChange={() => {
+                          if (permission?.banners?.redirectBanners?.delete) {
+                            updatePermission("permission.banners.redirectBanners.delete", false);
+                          } else {
+                            updatePermission("permission.banners.redirectBanners.delete", true);
+                          }
+                        }}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permission?.banners?.isPermited ||
+                          !permission?.banners?.redirectBanners?.isPermited
+                        }
+                        checked={permission?.banners?.redirectBanners?.add}
+                        onChange={() => {
+                          if (permission?.banners?.redirectBanners?.add) {
+                            updatePermission("permission.banners.redirectBanners.add", false);
+                          } else {
+                            updatePermission("permission.banners.redirectBanners.add", true);
                           }
                         }}
                       />

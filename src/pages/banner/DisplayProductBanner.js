@@ -13,7 +13,8 @@ import DialogContent from "@mui/material/DialogContent";
 import { connect } from "react-redux";
 import * as Actions from "../../redux/Actions/productBannerActions.js";
 
-const DisplayProductBanner = ({ dispatch, productBannerData }) => {
+const DisplayProductBanner = ({ dispatch, productBannerData, adminData }) => {
+  const { user, type } = adminData || {};
   const classes = useStyles();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -31,6 +32,13 @@ const DisplayProductBanner = ({ dispatch, productBannerData }) => {
   }, []);
 
   const handleOpen = (rowData) => {
+
+    if (type === "subadmin" && !user.permissions.banners?.productBanners?.edit) {
+      alert('You do not have permission to edit.');
+      return;
+    }
+
+    
     setOpen(true);
     setbannerId(rowData._id);
     setbannerTitle(rowData.title);
@@ -83,6 +91,12 @@ const DisplayProductBanner = ({ dispatch, productBannerData }) => {
   });
 
   const handleClickOpen = (rowData) => {
+
+    if (type === "subadmin" && !user.permissions.banners?.productBanners?.status) {
+      alert('You do not have permission to change status.');
+      return;
+    }
+
 
     Swal.fire({
       title: 'Are you sure to Change the Status?',
@@ -170,13 +184,17 @@ const DisplayProductBanner = ({ dispatch, productBannerData }) => {
               {
                 icon: "delete",
                 tooltip: "Delete Banner",
-                onClick: (event, rowData) =>
-                  dispatch(
-                    Actions.deleteProductBanner({
-                      bannerId: rowData?._id,
-                      title: rowData?.title,
-                    })
-                  ),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.banners?.productBanners?.delete
+                  ) {
+                    alert('You do not have permission to delete.');
+                    return;
+                  }
+                  dispatch( Actions.deleteProductBanner({  bannerId: rowData?._id,  title: rowData?.title, }) );
+                },
+
               },
               {
                 icon: () => (
@@ -187,7 +205,17 @@ const DisplayProductBanner = ({ dispatch, productBannerData }) => {
                 ),
                 tooltip: "Add Product Banner",
                 isFreeAction: true,
-                onClick: () => navigate("/addProductBanner"),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.banners?.productBanners?.add
+                  ) {
+                    alert('You do not have permission to add.');
+                    return;
+                  }
+                  navigate("/addProductBanner");
+                },
+
               },
             ]}
           />
@@ -306,6 +334,7 @@ const DisplayProductBanner = ({ dispatch, productBannerData }) => {
 
 const mapStateToProps = (state) => ({
   productBannerData: state.productBanner.productBannerData,
+  adminData: state.admin.adminData,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

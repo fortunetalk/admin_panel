@@ -13,7 +13,8 @@ import DialogContent from "@mui/material/DialogContent";
 import { connect } from "react-redux";
 import * as Actions from "../../redux/Actions/callChatBannerActions.js";
 
-const DisplayCallChatBanner = ({ dispatch, callChatBannerData }) => {
+const DisplayCallChatBanner = ({ dispatch, callChatBannerData, adminData }) => {
+  const { user, type } = adminData || {};
   const classes = useStyles();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -31,6 +32,13 @@ const DisplayCallChatBanner = ({ dispatch, callChatBannerData }) => {
   }, []);
 
   const handleOpen = (rowData) => {
+
+    if (type === "subadmin" && !user.permissions.banners?.callChatBanners?.edit) {
+      alert('You do not have permission to edit.');
+      return;
+    }
+
+
     setOpen(true);
     setbannerId(rowData._id);
     setbannerTitle(rowData.title);
@@ -83,6 +91,13 @@ const DisplayCallChatBanner = ({ dispatch, callChatBannerData }) => {
   });
 
   const handleClickOpen = (rowData) => {
+
+    if (type === "subadmin" && !user.permissions.banners?.callChatBanners?.status) {
+      alert('You do not have permission to change status.');
+      return;
+    }
+
+
 
     Swal.fire({
       title: 'Are you sure to Change the Status?',
@@ -152,7 +167,8 @@ const DisplayCallChatBanner = ({ dispatch, callChatBannerData }) => {
                   />
                 ),
               },
-              { title: "Status", field: "status", render: rowData => (
+              { title: "Status", field: "status", 
+                render: rowData => (
                 <div className={classes.statusButton}
                 style={{ backgroundColor: rowData.status === 'Active' ? '#90EE90' : '#FF7F7F '}}
                 onClick={() => handleClickOpen(rowData)}>
@@ -171,13 +187,18 @@ const DisplayCallChatBanner = ({ dispatch, callChatBannerData }) => {
               {
                 icon: "delete",
                 tooltip: "Delete Banner",
-                onClick: (event, rowData) =>
-                  dispatch(
-                    Actions.deleteCallChatBanner({
-                      bannerId: rowData?._id,
-                      title: rowData?.title,
-                    })
-                  ),
+
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.banners?.callChatBanners?.delete
+                  ) {
+                    alert('You do not have permission to delete.');
+                    return;
+                  }
+                  dispatch( Actions.deleteCallChatBanner({  bannerId: rowData?._id, title: rowData?.title,  }) );
+                },
+
               },
               {
                 icon: () => (
@@ -188,7 +209,17 @@ const DisplayCallChatBanner = ({ dispatch, callChatBannerData }) => {
                 ),
                 tooltip: "Add Call/Chat Banner",
                 isFreeAction: true,
-                onClick: () => navigate("/addCallChatBanner"),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.banners?.callChatBanners?.add
+                  ) {
+                    alert('You do not have permission to add.');
+                    return;
+                  }
+                  navigate("/addCallChatBanner");
+                },
+
               },
             ]}
           />
@@ -307,6 +338,7 @@ const DisplayCallChatBanner = ({ dispatch, callChatBannerData }) => {
 
 const mapStateToProps = (state) => ({
   callChatBannerData: state.callChatBanner.callChatBannerData,
+  adminData: state.admin.adminData,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

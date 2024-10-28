@@ -13,7 +13,8 @@ import DialogContent from "@mui/material/DialogContent";
 import { connect } from "react-redux";
 import * as Actions from "../../redux/Actions/poojaBannerActions.js";
 
-const DisplayPoojaBanner = ({ dispatch, poojaBannerData }) => {
+const DisplayPoojaBanner = ({ dispatch, poojaBannerData, adminData }) => {
+  const { user, type } = adminData || {};
   const classes = useStyles();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -31,6 +32,12 @@ const DisplayPoojaBanner = ({ dispatch, poojaBannerData }) => {
   }, []);
 
   const handleOpen = (rowData) => {
+
+    if (type === "subadmin" && !user.permissions.banners?.poojaBanners?.edit) {
+      alert('You do not have permission to edit.');
+      return;
+    }
+
     setOpen(true);
     setbannerId(rowData._id);
     setbannerTitle(rowData.title);
@@ -83,6 +90,10 @@ const DisplayPoojaBanner = ({ dispatch, poojaBannerData }) => {
   });
 
   const handleClickOpen = (rowData) => {
+    if (type === "subadmin" && !user.permissions.banners?.poojaBanners?.status) {
+      alert('You do not have permission to change status.');
+      return;
+    }
 
     Swal.fire({
       title: 'Are you sure to Change the Status?',
@@ -171,13 +182,17 @@ const DisplayPoojaBanner = ({ dispatch, poojaBannerData }) => {
               {
                 icon: "delete",
                 tooltip: "Delete Banner",
-                onClick: (event, rowData) =>
-                  dispatch(
-                    Actions.deletePoojaBanner({
-                      bannerId: rowData?._id,
-                      title: rowData?.title,
-                    })
-                  ),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.banners?.poojaBanners?.delete
+                  ) {
+                    alert('You do not have permission to delete.');
+                    return;
+                  }
+                  dispatch(  Actions.deletePoojaBanner({  bannerId: rowData?._id, title: rowData?.title, })  );
+                },
+                
               },
               {
                 icon: () => (
@@ -188,7 +203,17 @@ const DisplayPoojaBanner = ({ dispatch, poojaBannerData }) => {
                 ),
                 tooltip: "Add Pooja Banner",
                 isFreeAction: true,
-                onClick: () => navigate("/addPoojaBanner"),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.banners?.poojaBanners?.add
+                  ) {
+                    alert('You do not have permission to add.');
+                    return;
+                  }
+                  navigate("/addPoojaBanner");
+                },
+
               },
             ]}
           />
@@ -307,6 +332,7 @@ const DisplayPoojaBanner = ({ dispatch, poojaBannerData }) => {
 
 const mapStateToProps = (state) => ({
   poojaBannerData: state.poojaBanner.poojaBannerData,
+  adminData: state.admin.adminData,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

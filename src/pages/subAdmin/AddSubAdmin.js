@@ -193,6 +193,34 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
           delete: false,
           add: false,
         },
+        callChatBanners: {
+          isPermited: false,
+          status: false,
+          edit: false,
+          delete: false,
+          add: false,
+        },
+        ecommerceBanners: {
+          isPermited: false,
+          status: false,
+          edit: false,
+          delete: false,
+          add: false,
+        },
+        productBanners: {
+          isPermited: false,
+          status: false,
+          edit: false,
+          delete: false,
+          add: false,
+        },
+        poojaBanners: {
+          isPermited: false,
+          status: false,
+          edit: false,
+          delete: false,
+          add: false,
+        },
 
       },
 
@@ -420,7 +448,35 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
             delete: false,
             add: false,
           },
-  
+          callChatBanners: {
+            isPermited: false,
+            status: false,
+            edit: false,
+            delete: false,
+            add: false,
+          },
+          ecommerceBanners: {
+            isPermited: false,
+            status: false,
+            edit: false,
+            delete: false,
+            add: false,
+          },
+          productBanners: {
+            isPermited: false,
+            status: false,
+            edit: false,
+            delete: false,
+            add: false,
+          },
+          poojaBanners: {
+            isPermited: false,
+            status: false,
+            edit: false,
+            delete: false,
+            add: false,
+          },
+
         },
       },
     });
@@ -4466,6 +4522,738 @@ export const AddSubAdmin = ({ dispatch, isLoading }) => {
                             } else {
                               updatePermission(
                                 "permission.banners.redirectBanners.add",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"Add"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                </FormGroup>
+
+                {/* Chat/Call  Banners */}
+                <FormGroup
+                  aria-label="position"
+                  row
+                  style={{ marginLeft: "10px", marginRight: "10px" }}
+                >
+                  <div className={classes.chips}>
+                    <FormControlLabel
+                      value={permission.banners?.callChatBanners?.isPermited}
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={!permission.banners?.isPermited}
+                          checked={
+                            permission.banners?.callChatBanners?.isPermited
+                          }
+                          onChange={() => {
+                            if (
+                              permission.banners?.callChatBanners?.isPermited
+                            ) {
+                              updatePermission(
+                                "permission.banners.callChatBanners",
+                                {
+                                  isPermited: false,
+                                  status: false,
+                                  edit: false,
+                                  delete: false,
+                                  add: false,
+                                }
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.banners.callChatBanners.isPermited",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"Call/Chat Banners"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                </FormGroup>
+
+                <FormGroup
+                  aria-label="position"
+                  row
+                  style={{ marginLeft: "30px" }}
+                >
+                  <div>
+                    <FormControlLabel
+                      value={"Status"}
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={
+                            !permission.banners?.isPermited ||
+                            !permission.banners?.callChatBanners?.isPermited
+                          }
+                          value={permission.banners?.callChatBanners?.status}
+                          checked={permission.banners?.callChatBanners?.status}
+                          onChange={() => {
+                            if (
+                              permission.banners?.callChatBanners?.status
+                            ) {
+                              updatePermission(
+                                "permission.banners.callChatBanners.status",
+                                false
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.banners.callChatBanners.status",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"Status"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                  <div>
+                    <FormControlLabel
+                      value={"Edit"}
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={
+                            !permission.banners?.isPermited ||
+                            !permission.banners?.callChatBanners?.isPermited
+                          }
+                          value={permission.banners?.callChatBanners?.edit}
+                          checked={permission.banners?.callChatBanners?.edit}
+                          onChange={() => {
+                            if (
+                              permission.banners?.callChatBanners?.edit
+                            ) {
+                              updatePermission(
+                                "permission.banners.callChatBanners.edit",
+                                false
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.banners.callChatBanners.edit",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"Edit"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                  <div>
+                    <FormControlLabel
+                      value={"Delete"}
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={
+                            !permission.banners?.isPermited ||
+                            !permission.banners?.callChatBanners?.isPermited
+                          }
+                          value={permission.banners?.callChatBanners?.delete}
+                          checked={permission.banners?.callChatBanners?.delete}
+                          onChange={() => {
+                            if (
+                              permission.banners?.callChatBanners?.delete
+                            ) {
+                              updatePermission(
+                                "permission.banners.callChatBanners.delete",
+                                false
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.banners.callChatBanners.delete",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"Delete"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                  <div>
+                    <FormControlLabel
+                      value={"Add"}
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={
+                            !permission.banners?.isPermited ||
+                            !permission.banners?.callChatBanners?.isPermited
+                          }
+                          checked={permission.banners?.callChatBanners?.add}
+                          onChange={() => {
+                            if (
+                              permission.banners?.callChatBanners?.add
+                            ) {
+                              updatePermission(
+                                "permission.banners.callChatBanners.add",
+                                false
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.banners.callChatBanners.add",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"Add"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                </FormGroup>
+
+                {/* Ecommerce  Banners */}
+                <FormGroup
+                  aria-label="position"
+                  row
+                  style={{ marginLeft: "10px", marginRight: "10px" }}
+                >
+                  <div className={classes.chips}>
+                    <FormControlLabel
+                      value={permission.banners?.ecommerceBanners?.isPermited}
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={!permission.banners?.isPermited}
+                          checked={
+                            permission.banners?.ecommerceBanners?.isPermited
+                          }
+                          onChange={() => {
+                            if (
+                              permission.banners?.ecommerceBanners?.isPermited
+                            ) {
+                              updatePermission(
+                                "permission.banners.ecommerceBanners",
+                                {
+                                  isPermited: false,
+                                  status: false,
+                                  edit: false,
+                                  delete: false,
+                                  add: false,
+                                }
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.banners.ecommerceBanners.isPermited",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"Ecommerce Banners"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                </FormGroup>
+
+                <FormGroup
+                  aria-label="position"
+                  row
+                  style={{ marginLeft: "30px" }}
+                >
+                  <div>
+                    <FormControlLabel
+                      value={"Status"}
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={
+                            !permission.banners?.isPermited ||
+                            !permission.banners?.ecommerceBanners?.isPermited
+                          }
+                          value={permission.banners?.ecommerceBanners?.status}
+                          checked={permission.banners?.ecommerceBanners?.status}
+                          onChange={() => {
+                            if (
+                              permission.banners?.ecommerceBanners?.status
+                            ) {
+                              updatePermission(
+                                "permission.banners.ecommerceBanners.status",
+                                false
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.banners.ecommerceBanners.status",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"Status"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                  <div>
+                    <FormControlLabel
+                      value={"Edit"}
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={
+                            !permission.banners?.isPermited ||
+                            !permission.banners?.ecommerceBanners?.isPermited
+                          }
+                          value={permission.banners?.ecommerceBanners?.edit}
+                          checked={permission.banners?.ecommerceBanners?.edit}
+                          onChange={() => {
+                            if (
+                              permission.banners?.ecommerceBanners?.edit
+                            ) {
+                              updatePermission(
+                                "permission.banners.ecommerceBanners.edit",
+                                false
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.banners.ecommerceBanners.edit",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"Edit"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                  <div>
+                    <FormControlLabel
+                      value={"Delete"}
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={
+                            !permission.banners?.isPermited ||
+                            !permission.banners?.ecommerceBanners?.isPermited
+                          }
+                          value={permission.banners?.ecommerceBanners?.delete}
+                          checked={permission.banners?.ecommerceBanners?.delete}
+                          onChange={() => {
+                            if (
+                              permission.banners?.ecommerceBanners?.delete
+                            ) {
+                              updatePermission(
+                                "permission.banners.ecommerceBanners.delete",
+                                false
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.banners.ecommerceBanners.delete",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"Delete"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                  <div>
+                    <FormControlLabel
+                      value={"Add"}
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={
+                            !permission.banners?.isPermited ||
+                            !permission.banners?.ecommerceBanners?.isPermited
+                          }
+                          checked={permission.banners?.ecommerceBanners?.add}
+                          onChange={() => {
+                            if (
+                              permission.banners?.ecommerceBanners?.add
+                            ) {
+                              updatePermission(
+                                "permission.banners.ecommerceBanners.add",
+                                false
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.banners.ecommerceBanners.add",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"Add"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                </FormGroup>
+
+                {/* Product  Banners */}
+                <FormGroup
+                  aria-label="position"
+                  row
+                  style={{ marginLeft: "10px", marginRight: "10px" }}
+                >
+                  <div className={classes.chips}>
+                    <FormControlLabel
+                      value={permission.banners?.productBanners?.isPermited}
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={!permission.banners?.isPermited}
+                          checked={
+                            permission.banners?.productBanners?.isPermited
+                          }
+                          onChange={() => {
+                            if (
+                              permission.banners?.productBanners?.isPermited
+                            ) {
+                              updatePermission(
+                                "permission.banners.productBanners",
+                                {
+                                  isPermited: false,
+                                  status: false,
+                                  edit: false,
+                                  delete: false,
+                                  add: false,
+                                }
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.banners.productBanners.isPermited",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"Product Banners"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                </FormGroup>
+
+                <FormGroup
+                  aria-label="position"
+                  row
+                  style={{ marginLeft: "30px" }}
+                >
+                  <div>
+                    <FormControlLabel
+                      value={"Status"}
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={
+                            !permission.banners?.isPermited ||
+                            !permission.banners?.productBanners?.isPermited
+                          }
+                          value={permission.banners?.productBanners?.status}
+                          checked={permission.banners?.productBanners?.status}
+                          onChange={() => {
+                            if (
+                              permission.banners?.productBanners?.status
+                            ) {
+                              updatePermission(
+                                "permission.banners.productBanners.status",
+                                false
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.banners.productBanners.status",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"Status"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                  <div>
+                    <FormControlLabel
+                      value={"Edit"}
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={
+                            !permission.banners?.isPermited ||
+                            !permission.banners?.productBanners?.isPermited
+                          }
+                          value={permission.banners?.productBanners?.edit}
+                          checked={permission.banners?.productBanners?.edit}
+                          onChange={() => {
+                            if (
+                              permission.banners?.productBanners?.edit
+                            ) {
+                              updatePermission(
+                                "permission.banners.productBanners.edit",
+                                false
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.banners.productBanners.edit",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"Edit"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                  <div>
+                    <FormControlLabel
+                      value={"Delete"}
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={
+                            !permission.banners?.isPermited ||
+                            !permission.banners?.productBanners?.isPermited
+                          }
+                          value={permission.banners?.productBanners?.delete}
+                          checked={permission.banners?.productBanners?.delete}
+                          onChange={() => {
+                            if (
+                              permission.banners?.productBanners?.delete
+                            ) {
+                              updatePermission(
+                                "permission.banners.productBanners.delete",
+                                false
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.banners.productBanners.delete",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"Delete"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                  <div>
+                    <FormControlLabel
+                      value={"Add"}
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={
+                            !permission.banners?.isPermited ||
+                            !permission.banners?.productBanners?.isPermited
+                          }
+                          checked={permission.banners?.productBanners?.add}
+                          onChange={() => {
+                            if (
+                              permission.banners?.productBanners?.add
+                            ) {
+                              updatePermission(
+                                "permission.banners.productBanners.add",
+                                false
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.banners.productBanners.add",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"Add"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                </FormGroup>
+
+                {/* PoojaBanners  Banners */}
+                <FormGroup
+                  aria-label="position"
+                  row
+                  style={{ marginLeft: "10px", marginRight: "10px" }}
+                >
+                  <div className={classes.chips}>
+                    <FormControlLabel
+                      value={permission.banners?.poojaBanners?.isPermited}
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={!permission.banners?.isPermited}
+                          checked={
+                            permission.banners?.poojaBanners?.isPermited
+                          }
+                          onChange={() => {
+                            if (
+                              permission.banners?.poojaBanners?.isPermited
+                            ) {
+                              updatePermission(
+                                "permission.banners.poojaBanners",
+                                {
+                                  isPermited: false,
+                                  status: false,
+                                  edit: false,
+                                  delete: false,
+                                  add: false,
+                                }
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.banners.poojaBanners.isPermited",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"Pooja Banners"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                </FormGroup>
+
+                <FormGroup
+                  aria-label="position"
+                  row
+                  style={{ marginLeft: "30px" }}
+                >
+                  <div>
+                    <FormControlLabel
+                      value={"Status"}
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={
+                            !permission.banners?.isPermited ||
+                            !permission.banners?.poojaBanners?.isPermited
+                          }
+                          value={permission.banners?.poojaBanners?.status}
+                          checked={permission.banners?.poojaBanners?.status}
+                          onChange={() => {
+                            if (
+                              permission.banners?.poojaBanners?.status
+                            ) {
+                              updatePermission(
+                                "permission.banners.poojaBanners.status",
+                                false
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.banners.poojaBanners.status",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"Status"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                  <div>
+                    <FormControlLabel
+                      value={"Edit"}
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={
+                            !permission.banners?.isPermited ||
+                            !permission.banners?.poojaBanners?.isPermited
+                          }
+                          value={permission.banners?.poojaBanners?.edit}
+                          checked={permission.banners?.poojaBanners?.edit}
+                          onChange={() => {
+                            if (
+                              permission.banners?.poojaBanners?.edit
+                            ) {
+                              updatePermission(
+                                "permission.banners.poojaBanners.edit",
+                                false
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.banners.poojaBanners.edit",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"Edit"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                  <div>
+                    <FormControlLabel
+                      value={"Delete"}
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={
+                            !permission.banners?.isPermited ||
+                            !permission.banners?.poojaBanners?.isPermited
+                          }
+                          value={permission.banners?.poojaBanners?.delete}
+                          checked={permission.banners?.poojaBanners?.delete}
+                          onChange={() => {
+                            if (
+                              permission.banners?.poojaBanners?.delete
+                            ) {
+                              updatePermission(
+                                "permission.banners.poojaBanners.delete",
+                                false
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.banners.poojaBanners.delete",
+                                true
+                              );
+                            }
+                          }}
+                        />
+                      }
+                      label={"Delete"}
+                      labelPlacement="end"
+                    />
+                  </div>
+                  <div>
+                    <FormControlLabel
+                      value={"Add"}
+                      className={classes.checkbox}
+                      control={
+                        <Checkbox
+                          disabled={
+                            !permission.banners?.isPermited ||
+                            !permission.banners?.poojaBanners?.isPermited
+                          }
+                          checked={permission.banners?.poojaBanners?.add}
+                          onChange={() => {
+                            if (
+                              permission.banners?.poojaBanners?.add
+                            ) {
+                              updatePermission(
+                                "permission.banners.poojaBanners.add",
+                                false
+                              );
+                            } else {
+                              updatePermission(
+                                "permission.banners.poojaBanners.add",
                                 true
                               );
                             }

@@ -59,7 +59,7 @@ function* getCallDiscussion() {
       if (response?.success) {
         yield put({
           type: actionTypes.SET_CALL_DISCUSSION,
-          payload: response?.data.reverse(),
+          payload: response?.data,
         });
       }
   

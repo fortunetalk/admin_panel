@@ -13,7 +13,8 @@ import DialogContent from "@mui/material/DialogContent";
 import { connect } from "react-redux";
 import * as Actions from "../../redux/Actions/ecommerceBannerActions.js";
 
-const DisplayEcommerceBanner = ({ dispatch, ecommerceBannerData }) => {
+const DisplayEcommerceBanner = ({ dispatch, ecommerceBannerData, adminData }) => {
+  const { user, type } = adminData || {};
   const classes = useStyles();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -30,6 +31,12 @@ const DisplayEcommerceBanner = ({ dispatch, ecommerceBannerData }) => {
   }, []);
 
   const handleOpen = (rowData) => {
+
+    if (type === "subadmin" && !user.permissions.banners?.ecommerceBanners?.edit) {
+      alert('You do not have permission to edit.');
+      return;
+    }
+
     setOpen(true);
     setbannerId(rowData._id);
     setbannerTitle(rowData.title);
@@ -77,6 +84,11 @@ const DisplayEcommerceBanner = ({ dispatch, ecommerceBannerData }) => {
   });
 
   const handleClickOpen = (rowData) => {
+    
+    if (type === "subadmin" && !user.permissions.banners?.callChatBanners?.status) {
+      alert('You do not have permission to change status.');
+      return;
+    }
 
     Swal.fire({
       title: 'Are you sure to Change the Status?',
@@ -163,13 +175,16 @@ const DisplayEcommerceBanner = ({ dispatch, ecommerceBannerData }) => {
               {
                 icon: "delete",
                 tooltip: "Delete Banner",
-                onClick: (event, rowData) =>
-                  dispatch(
-                    Actions.deleteEcommerceBanner({
-                      bannerId: rowData?._id,
-                      title: rowData?.title,
-                    })
-                  ),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.banners?.ecommerceBanners?.delete
+                  ) {
+                    alert('You do not have permission to delete.');
+                    return;
+                  }
+                  dispatch( Actions.deleteEcommerceBanner({ bannerId: rowData?._id, title: rowData?.title, }) );
+                },
               },
               {
                 icon: () => (
@@ -180,7 +195,16 @@ const DisplayEcommerceBanner = ({ dispatch, ecommerceBannerData }) => {
                 ),
                 tooltip: "Add Ecommerce Banner",
                 isFreeAction: true,
-                onClick: () => navigate("/addEcommerceBanner"),
+                onClick: (event, rowData) => {
+                  if (
+                    type === "subadmin" &&
+                    !user.permissions.banners?.ecommerceBanners?.add
+                  ) {
+                    alert('You do not have permission to add.');
+                    return;
+                  }
+                  navigate("/addEcommerceBanner");
+                },
               },
             ]}
           />
@@ -283,6 +307,7 @@ const DisplayEcommerceBanner = ({ dispatch, ecommerceBannerData }) => {
 
 const mapStateToProps = (state) => ({
   ecommerceBannerData: state.ecommerceBanner.ecommerceBannerData,
+  adminData: state.admin.adminData,
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

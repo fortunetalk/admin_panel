@@ -182,6 +182,35 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
         delete: false,
         add: false,
       },
+      callChatBanners: {
+        isPermited: false,
+        status: false,
+        edit: false,
+        delete: false,
+        add: false,
+      },
+      ecommerceBanners: {
+        isPermited: false,
+        status: false,
+        edit: false,
+        delete: false,
+        add: false,
+      },
+      productBanners: {
+        isPermited: false,
+        status: false,
+        edit: false,
+        delete: false,
+        add: false,
+      },
+      poojaBanners: {
+        isPermited: false,
+        status: false,
+        edit: false,
+        delete: false,
+        add: false,
+      },
+
     },
 
   };
@@ -2268,6 +2297,382 @@ export const ViewSubAdmin = ({ dispatch, subAdminByIdData, isLoading }) => {
                           !permissions?.banners?.redirectBanners?.isPermited
                         }
                         checked={permissions?.banners?.redirectBanners?.add}
+                      />
+                    }
+                    label={"Add"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+              </FormGroup>
+
+              {/* call/Chat banners */}
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permissions?.banners?.callChatBanners?.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={!permissions?.banners?.isPermited}
+                        checked={permissions?.banners?.callChatBanners?.isPermited}
+                      />
+                    }
+                    label={"Call/Chat Banners"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+
+                <div>
+                  <FormControlLabel
+                    value={"Status"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.banners?.isPermited ||
+                          !permissions?.banners?.callChatBanners?.isPermited
+                        }
+                        checked={permissions?.banners?.callChatBanners?.status}
+                      />
+                    }
+                    label={"Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={permissions?.banners?.callChatBanners?.edit}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.banners?.isPermited ||
+                          !permissions?.banners?.callChatBanners?.isPermited
+                        }
+                        checked={permissions?.banners?.callChatBanners?.edit}
+                      />
+                    }
+                    label={"Edit"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"Delete"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.banners?.isPermited ||
+                          !permissions?.banners?.callChatBanners?.isPermited
+                        }
+                        checked={permissions?.banners?.callChatBanners?.delete}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"Add"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.banners?.isPermited ||
+                          !permissions?.banners?.callChatBanners?.isPermited
+                        }
+                        checked={permissions?.banners?.callChatBanners?.add}
+                      />
+                    }
+                    label={"Add"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+              </FormGroup>
+
+              {/* Ecommerce banners */}
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permissions?.banners?.ecommerceBanners?.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={!permissions?.banners?.isPermited}
+                        checked={permissions?.banners?.ecommerceBanners?.isPermited}
+                      />
+                    }
+                    label={"Ecommerce Banners"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+
+                <div>
+                  <FormControlLabel
+                    value={"Status"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.banners?.isPermited ||
+                          !permissions?.banners?.ecommerceBanners?.isPermited
+                        }
+                        checked={permissions?.banners?.ecommerceBanners?.status}
+                      />
+                    }
+                    label={"Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={permissions?.banners?.ecommerceBanners?.edit}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.banners?.isPermited ||
+                          !permissions?.banners?.ecommerceBanners?.isPermited
+                        }
+                        checked={permissions?.banners?.ecommerceBanners?.edit}
+                      />
+                    }
+                    label={"Edit"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"Delete"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.banners?.isPermited ||
+                          !permissions?.banners?.ecommerceBanners?.isPermited
+                        }
+                        checked={permissions?.banners?.ecommerceBanners?.delete}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"Add"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.banners?.isPermited ||
+                          !permissions?.banners?.ecommerceBanners?.isPermited
+                        }
+                        checked={permissions?.banners?.ecommerceBanners?.add}
+                      />
+                    }
+                    label={"Add"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+              </FormGroup>
+
+              {/* Product banners */}
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permissions?.banners?.productBanners?.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={!permissions?.banners?.isPermited}
+                        checked={permissions?.banners?.productBanners?.isPermited}
+                      />
+                    }
+                    label={"Product Banners"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+
+                <div>
+                  <FormControlLabel
+                    value={"Status"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.banners?.isPermited ||
+                          !permissions?.banners?.productBanners?.isPermited
+                        }
+                        checked={permissions?.banners?.productBanners?.status}
+                      />
+                    }
+                    label={"Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={permissions?.banners?.productBanners?.edit}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.banners?.isPermited ||
+                          !permissions?.banners?.productBanners?.isPermited
+                        }
+                        checked={permissions?.banners?.productBanners?.edit}
+                      />
+                    }
+                    label={"Edit"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"Delete"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.banners?.isPermited ||
+                          !permissions?.banners?.productBanners?.isPermited
+                        }
+                        checked={permissions?.banners?.productBanners?.delete}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"Add"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.banners?.isPermited ||
+                          !permissions?.banners?.productBanners?.isPermited
+                        }
+                        checked={permissions?.banners?.productBanners?.add}
+                      />
+                    }
+                    label={"Add"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+              </FormGroup>
+
+              {/* Pooja banners */}
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "10px", marginRight: "10px" }}>
+                <div className={classes.chips}>
+                  <FormControlLabel
+                    value={permissions?.banners?.poojaBanners?.isPermited}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={!permissions?.banners?.isPermited}
+                        checked={permissions?.banners?.poojaBanners?.isPermited}
+                      />
+                    }
+                    label={"Pooja Banners"}
+                    labelPlacement="end"
+                  />
+                </div>
+              </FormGroup>
+
+              <FormGroup aria-label="position" row style={{ marginLeft: "30px" }}>
+
+                <div>
+                  <FormControlLabel
+                    value={"Status"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.banners?.isPermited ||
+                          !permissions?.banners?.poojaBanners?.isPermited
+                        }
+                        checked={permissions?.banners?.poojaBanners?.status}
+                      />
+                    }
+                    label={"Status"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={permissions?.banners?.poojaBanners?.edit}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.banners?.isPermited ||
+                          !permissions?.banners?.poojaBanners?.isPermited
+                        }
+                        checked={permissions?.banners?.poojaBanners?.edit}
+                      />
+                    }
+                    label={"Edit"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"Delete"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.banners?.isPermited ||
+                          !permissions?.banners?.poojaBanners?.isPermited
+                        }
+                        checked={permissions?.banners?.poojaBanners?.delete}
+                      />
+                    }
+                    label={"Delete"}
+                    labelPlacement="end"
+                  />
+                </div>
+
+                <div>
+                  <FormControlLabel
+                    value={"Add"}
+                    className={classes.checkbox}
+                    control={
+                      <Checkbox
+                        disabled={
+                          !permissions?.banners?.isPermited ||
+                          !permissions?.banners?.poojaBanners?.isPermited
+                        }
+                        checked={permissions?.banners?.poojaBanners?.add}
                       />
                     }
                     label={"Add"}

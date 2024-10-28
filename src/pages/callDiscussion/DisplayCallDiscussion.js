@@ -136,7 +136,8 @@ const DisplayCallDiscussion = ({ dispatch, calllDiscussionData, isLoading, admin
               {
                 title: "S.No",
                 editable: "never",
-                render: rowData => Array.isArray(calllDiscussionData) ? calllDiscussionData.indexOf(rowData) + 1 : 'N/A'
+                field: "index" 
+                // render: rowData => Array.isArray(calllDiscussionData) ? calllDiscussionData.indexOf(rowData) + 1 : 'N/A'
               },
               { title: "Admin Name", field: "admin_name" },
               { title: "User Name", field: "user_name" },
